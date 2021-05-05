@@ -1,0 +1,13 @@
+{
+    "name": "Listing",
+    "alias": "listing",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Listing\\Providers\\ListingServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

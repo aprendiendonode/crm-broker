@@ -1,0 +1,58 @@
+<div class="col-md-12 ">
+            
+                <div class="row recurring_row_reject_1">
+
+
+
+                    <div class="col-md-12 all_recurrings_reject_1"><i onclick="add_single_recurring_reject(1)" style="cursor:pointer" class=" fa fa-plus float-right add_recurring_input"></i><div>
+
+                        <div class="row recurring_single_row_reject_1">
+                    
+                    
+                                                            <div class="col-md-1 remove_recurring_reject_1 remove_reject_single_1_0">
+                                    <i class="fa fa-trash mt-2" style="cursor: pointer" onclick="remove_reject_single_recurring(0,1)"> </i>
+                                 </div>
+                                <div class="form-group remove_recurring_reject_1 col-md-5  remove_reject_single_1_0">
+                                    <input value="10000" type="text" class="form-control mb-2 recurring_1_1 remove_reject_single_1_0" name="recurrings_amount_1[0]" required="">  
+                                    <input value="2021-03-23" type="date" class="form-control  recurring_1_1 remove_reject_single_1_0" name="recurrings_dates_1[0]" required="">    
+                                </div>
+                                <div class="col-md-6 remove_recurring_reject_1  remove_reject_single_1_0">
+                                </div>  
+                                                            <div class="col-md-1 remove_recurring_reject_1 remove_reject_single_1_1">
+                                    <i class="fa fa-trash mt-2" style="cursor: pointer" onclick="remove_reject_single_recurring(1,1)"> </i>
+                                 </div>
+                                <div class="form-group remove_recurring_reject_1 col-md-5  remove_reject_single_1_1">
+                                    <input value="10000" type="text" class="form-control mb-2 recurring_1_2 remove_reject_single_1_1" name="recurrings_amount_1[1]" required="">  
+                                    <input value="2021-04-23" type="date" class="form-control  recurring_1_2 remove_reject_single_1_1" name="recurrings_dates_1[1]" required="">    
+                                </div>
+                                <div class="col-md-6 remove_recurring_reject_1  remove_reject_single_1_1">
+                                </div>  
+                               
+                                
+                                            
+                        <div class="col-md-1 remove_recurring_reject_1 remove_reject_single_1_3"><i onclick="remove_reject_single_recurring(3,1)" style="cursor: pointer" class="fa fa-trash mt-2"> </i> </div><div class="form-group remove_recurring_reject_1 col-md-5  remove_reject_single_1_3"><input type="text" class="form-control mb-2 recurring_1_3  remove_reject_single_1_3" name="recurrings_amount_1[3]" required=""><input type="date" class="form-control  recurring_1_3  remove_reject_single_1_3" name="recurrings_dates_1[3]" required=""></div><div class="col-md-6 remove_recurring_reject_1  remove_reject_single_1_3 "></div></div>
+
+                    </div>
+                </div>
+                    
+                    
+        </div>
+    
+
+        
+        <div class="d-flex justify-content-start">
+        
+            <button onclick="event.preventDefault();toggle_reapprove_form(1)" type="button" class="btn  btn-outline-success waves-effect waves-light">
+            Cancel            </button>
+            <button type="submit" class="btn  btn-success waves-effect waves-light ml-2">
+
+
+
+
+
+                <span class="btn-label"><i class="mdi mdi-check-all"></i></span>Submit For Approve            </button>
+        </div>
+
+
+
+        </div>
