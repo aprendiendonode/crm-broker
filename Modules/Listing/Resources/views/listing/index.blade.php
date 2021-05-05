@@ -13,7 +13,13 @@
 
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
-   
+
+
+    {{-- <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+    --}}
     @endsection
  
 
@@ -206,26 +212,139 @@
 
         <div class="d-flex justify-content-between align-items-start mb-3">
             <div class="d-flex flex-wrap">
-                <a href="" class="list-link active">
+
+                @if(owner())
+
+                <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
                     <i class="fas fa-info-circle mr-1"></i>
-                    <div>LIVE(8)</div>
+                    <div>@lang('listing.live')({{ $live_count }})</div>
                 </a>
-                <a href="" class="list-link">
-                    <i class="fas fa-save mr-1"></i>
-                    <div>DRAFT(8)</div>
-                </a>
-                <a href="" class="list-link">
-                    <i class="fas fa-save mr-1"></i>
-                    <div>ARCHIVE(8)</div>
-                </a>
-                <a href="" class="list-link">
-                    <i class="fas fa-save mr-1"></i>
-                    <div>ALL(8)</div>
-                </a>
-                <a href="" class="list-link">
-                    <i class="fas fa-save mr-1"></i>
-                    <div>REVIEW(8)</div>
-                </a>
+              
+
+            @elseif(moderator())
+
+            <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.live')({{ $live_count }})</div>
+            </a>
+            
+            @else
+            <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.live')({{ $live_count }})</div>
+            </a>
+   
+            @endif
+
+
+
+
+            @if(owner())
+
+            <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.draft')({{ $draft_count }})</div>
+            </a>
+    
+
+            @elseif(moderator())
+
+            <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.draft')({{ $draft_count }})</div>
+            </a>
+            
+  
+            @else
+            <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.draft')({{ $draft_count }})</div>
+            </a>
+
+            @endif
+
+
+            
+            @if(owner())
+
+            <a href="{{ url('listing/controll/'.request('agency').'?status_main=review') }}" class="list-link @if(request('status_main') == 'review') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.review')({{ $review_count }})</div>
+            </a>
+    
+
+            @elseif(moderator())
+
+            <a href="{{ url('listing/controll/'.request('agency').'?status_main=review') }}" class="list-link @if(request('status_main') == 'review') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.review')({{ $review_count }})</div>
+            </a>
+            
+  
+            @else
+            <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=review') }}" class="list-link @if(request('status_main') == 'review') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.review')({{ $review_count }})</div>
+            </a>
+
+            @endif
+
+
+            
+            
+            @if(owner())
+
+            <a href="{{ url('listing/controll/'.request('agency').'?status_main=archive') }}" class="list-link @if(request('status_main') == 'archive') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.archive')({{ $archive_count }})</div>
+            </a>
+    
+
+            @elseif(moderator())
+
+            <a href="{{ url('listing/controll/'.request('agency').'?status_main=archive') }}" class="list-link @if(request('status_main') == 'archive') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.archive')({{ $archive_count }})</div>
+            </a>
+            
+  
+            @else
+            <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=archive') }}" class="list-link @if(request('status_main') == 'archive') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.archive')({{ $archive_count }})</div>
+            </a>
+
+            @endif
+
+
+            
+            
+            @if(owner())
+
+            <a href="{{ url('listing/controll/'.request('agency').'?status_main=all') }}" class="list-link @if(request('status_main') == 'all') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.all')({{ $all_count }})</div>
+            </a>
+    
+
+            @elseif(moderator())
+
+            <a href="{{ url('listing/controll/'.request('agency').'?status_main=all') }}" class="list-link @if(request('status_main') == 'all') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.all')({{ $all_count }})</div>
+            </a>
+            
+  
+            @else
+            <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=all') }}" class="list-link @if(request('status_main') == 'all') active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>@lang('listing.all')({{ $all_count }})</div>
+            </a>
+
+            @endif
+         
+   
+        
 
             </div>
 
@@ -249,7 +368,8 @@
             <table class="table table-bordered toggle-circle mb-0">
                 <thead>
                     <tr>
-                        <th>@lang('listing.id') </th>
+                        <th># </th>
+                        <th> @lang('listing.id') </th>
                         <th> @lang('listing.purpose') </th>
                         <th> @lang('listing.type') </th>
                         <th> @lang('listing.beds') </th>
@@ -269,23 +389,19 @@
                     <tbody>
     
                     @forelse($listings as $listing)
-                {{--     @php
-                        $views = $listing->view_ids;
-                        var_dump($views);
-                        dd();
-                    @endphp --}}
-               {{-- @dd(in_array( 1,old('edit_view_ids_'.$listing->id,  $views )) ) --}}
+       
                         <tr>
-                            <td>{{ $listing->ref }}</td>
-                            <td>{{ $listing->purpose }}</td>
-                            <td>{{ $listing->type_id }}</td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $listing->listing_ref }}</td>
+                            <td>{{ Str::ucfirst($listing->purpose) }}</td>
+                            <td>{{ $listing->type ? $listing->type->{'name_'.app()->getLocale()} : '' }}</td>
                             <td>{{ $listing->beds }}</td>
                             <td>{{ $listing->location }}</td>
                             <td>{{ $listing->area }}</td>
                             <td>{{ $listing->price }}</td>
-                            <td></td>
-                            <td>{{ $listing->updated_at }}</td>
-                            <td>{{ $listing->status }}</td>
+                            <td>{{ $listing->agent->{'name_'.app()->getLocale()} }}</td>
+                            <td>{{ $listing->updated_at->toFormattedDateString() }}</td>
+                            <td>{{ Str::ucfirst($listing->status) }}</td>
                             <td>
                                 @include('listing::listing.controlls')
                             </td>
@@ -325,7 +441,7 @@
                     
                         <tr class="edit_listing_{{ $listing->id }}"
                             @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
-                            <td colspan="12">
+                            <td colspan="13">
 
                                 @include('listing::listing.edit.index')
 
@@ -389,6 +505,22 @@
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script>
 
+
+
+    {{-- <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script> --}}
 
 
 
@@ -560,4 +692,24 @@
         }
 
     </script>
+
+
+
+<script>
+
+    
+
+
+ 
+
+    function editSplitLatLng(latLng,id){
+        var newString = latLng.substring(0, latLng.length-1);
+        var newString2 = newString.substring(1);
+        var trainindIdArray = newString2.split(',');
+        var lat = trainindIdArray[0];
+        var Lng  = trainindIdArray[1];
+        $("#latitude_"+id).val(lat);
+        $("#longitude_"+id).val(Lng);
+    }
+</script>
 @endpush

@@ -170,6 +170,8 @@ return [
          */
 
         Intervention\Image\ImageServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+
 
 
 
@@ -238,6 +240,8 @@ return [
         'Module' => Nwidart\Modules\Facades\Module::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+
 
 
     ],

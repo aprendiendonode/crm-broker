@@ -37,7 +37,8 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                       <button type="button" class="btn btn-primary">Email</button>
-                                                      <button type="button" class="btn btn-primary">Create</button>
+                                                      <a href="{{ url('listing/download-brochure-pdf/single/1') }}" class="btn btn-primary">Create single</a>
+                                                      <a href="{{ url('listing/download-brochure-pdf/multi/1') }}" class="btn btn-primary">Create multi</a>
                                                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                     </div>
                                                 </div><!-- /.modal-content -->
@@ -228,27 +229,9 @@
                                           }
                                         </script>
 
-    <!-- data-toggle="modal" data-target="#portals-modal" -->
-@can('edit_listing')
-<!-- <i
-  data-target="#portals-modal" data-toggle="modal"
-   data-plugin="tippy"
-   data-tippy-placement="top-start" 
-   title="Marketing Portals"
-   class="fas fa-poll cursor-pointer feather-16">
-</i> -->
   
-          <i
-            data-plugin="tippy" 
-            data-tippy-placement="top-start"
-            data-toggle="modal" data-target="#portals-modal"
-            title="Marketing Portals"
-            class="fas fa-poll cursor-pointer feather-16">
-          </i>
-   
-@endcan    
 
-@can('manage_all_listing_privileges')
+
 
   <i
     data-plugin="tippy" 
@@ -257,16 +240,16 @@
     data-target="#download-modal" data-toggle="modal"
     class="fas cursor-pointer fa-cloud-download-alt">
   </i>
-@endcan    
-@can('manage_team_listing')
-<i
+ 
+
+{{-- <i
   data-plugin="tippy" 
   data-tippy-placement="top-start" 
   title="@lang('agency.change_team')"
   class="fas fa-share-square cursor-pointer feather-16">
-</i>
-@endcan
-@can('edit_listing')
+</i> --}}
+
+
 <i
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
@@ -274,7 +257,7 @@
     data-toggle="modal" data-target="#tenancyContract-modal"
     class="far fa-file-pdf cursor-pointer feather-16">
 </i>
-@endcan
+
 
 <!-- @can('delete_listing')
   <i

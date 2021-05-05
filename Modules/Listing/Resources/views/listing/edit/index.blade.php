@@ -36,36 +36,36 @@
     @push('js')
     
     <script>
-    function editShowRentDiv(id) {
-        
-        if($('.rent-radio-'+id)[0].checked){
-            $('#rent_div_'+id)[0].style.display = "block";
-        }else {
-            $('#rent_div_'+id)[0].style.display = "none";
-        }
-    }
-    function editShowSubRentDiv(id) {
-     
-        if($('.sub-rent-checkbox-'+id)[0].checked){
-            $('#sub_rent_div_'+id)[0].style.display = "block";
-        }else {
-            $('#sub_rent_div_'+id)[0].style.display = "none";
-        }
+        function editShowRentDiv(id) {
             
-    }
-    
-    function editShowFurnishedQuestion(id){
-        question_status = $('.listing_type_'+id).find(':selected').data('furnished');
-        if(question_status == 'yes'){
-            $('.furnished_question_'+id).removeClass('d-none');
-        }else{
-            $('.furnished_question_'+id).addClass('d-none');
+            if($('.rent-radio-'+id)[0].checked){
+                $('#rent_div_'+id)[0].style.display = "block";
+            }else {
+                $('#rent_div_'+id)[0].style.display = "none";
+            }
         }
-      
-    }
-
+        function editShowSubRentDiv(id) {
+        
+            if($('.sub-rent-checkbox-'+id)[0].checked){
+                $('#sub_rent_div_'+id)[0].style.display = "block";
+            }else {
+                $('#sub_rent_div_'+id)[0].style.display = "none";
+            }
+                
+        }
+        
+        function editShowFurnishedQuestion(id){
+            question_status = $('.listing_type_'+id).find(':selected').data('furnished');
+            if(question_status == 'yes'){
+                $('.furnished_question_'+id).removeClass('d-none');
+            }else{
+                $('.furnished_question_'+id).addClass('d-none');
+            }
+        
+        }
 
     </script>
-   
+
+
  
     @endpush

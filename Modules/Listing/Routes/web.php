@@ -25,6 +25,7 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
         Route::get('locations/{agency}', 'ListingController@locations');
         Route::get('uploader/{agency}', 'ListingController@uploader');
+        Route::get('download-brochure-pdf/{type}/{agency}', 'ListingController@brochure');
     });
 });
 
