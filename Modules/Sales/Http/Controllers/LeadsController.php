@@ -3,6 +3,7 @@
 namespace Modules\Sales\Http\Controllers;
 
 use App\Imports\LeadsImport;
+use App\Models\SystemTemplate;
 use Gate;
 
 use App\Models\City;
@@ -1666,7 +1667,7 @@ class LeadsController extends Controller
             DB::commit();
 
 
-            $template = Template::where('agency_id', $lead->agency_id)->where('type', 'email')
+            $template = Template::where('agency_id', $lead->agency_id)->where('type', 'email')->where('system', 'yes')
                 ->where('slug', 'lead_task')->first();
 
 
@@ -1687,6 +1688,35 @@ class LeadsController extends Controller
                     event(new LeadTaskEvent($task, $send_to->id));
                 }
                 Notification::send($users, new LeadTaskNotification($task));
+            } else {
+                $system_template = SystemTemplate::where('slug', 'lead_task')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $lead->agency_id,
+                    'business_id' => $lead->business_id,
+                ]);
+
+                $template_with_name = str_replace('{TASK_NAME}', $lead->full_name, $template->description_en);
+                $template_with_assigned_by = str_replace('{ASSIGNED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_url = str_replace('{TASK_URL}', url('sales/leads/' . $lead->agency_id), $template_with_assigned_by);
+                $template_with_site_name = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+
+                $users = \App\Models\User::whereIn('id', $users_to_notify)->get();
+                foreach ($users as $send_to) {
+
+                    // Mail::to($send_to->email)->send(new EmailGeneral($template_with_site_name, "Lead Task Has Been Assigned To You"));
+
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, "Lead Task Has Been Assigned To You");
+
+                    event(new LeadTaskEvent($task, $send_to->id));
+                }
+                Notification::send($users, new LeadTaskNotification($task));
+
             }
 
             return back()->with(flash(trans('sales.task_assigned'), 'success'))->with('open-task-tab', $id);
@@ -2122,7 +2152,7 @@ class LeadsController extends Controller
             DB::commit();
 
 
-            $template = Template::where('agency_id', $lead->agency_id)->where('type', 'email')
+            $template = Template::where('agency_id', $lead->agency_id)->where('type', 'email')->where('system', 'yes')
                 ->where('slug', 'opportunity_assign')->first();
 
 
@@ -2143,6 +2173,36 @@ class LeadsController extends Controller
                     event(new OpportunityEvent($opportunity, $send_to->id));
                 }
                 Notification::send($users, new OpportunityNotification($opportunity));
+            } else {
+                $system_template = SystemTemplate::where('slug', 'opportunity_assign')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $lead->agency_id,
+                    'business_id' => $lead->business_id,
+                ]);
+
+
+                $template_with_name = str_replace('{OPPORTUNITY_NAME}', $opportunity->full_name, $template->description_en);
+                $template_with_assigned_by = str_replace('{ASSIGNED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_assigned_by = str_replace('{ASSIGNED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_url = str_replace('{OPPORTUNITY_URL}', url('sales/opportunities/' . $opportunity->agency_id), $template_with_assigned_by);
+                $template_with_site_name = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+
+                $users = \App\Models\User::whereIn('id', $staff)->get();
+                foreach ($users as $send_to) {
+
+                    // Mail::to($send_to->email)->send(new EmailGeneral($template_with_site_name, trans('sales.opportunity_assied_to_you')));
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, trans('sales.opportunity_assied_to_you'));
+
+                    event(new OpportunityEvent($opportunity, $send_to->id));
+                }
+                Notification::send($users, new OpportunityNotification($opportunity));
+
             }
 
 
@@ -2181,7 +2241,7 @@ class LeadsController extends Controller
 //            'staff*' => 'required|integer|exists:users,id',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'));
         }
 

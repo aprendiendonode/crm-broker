@@ -4,6 +4,7 @@ namespace Modules\Sales\Http\Repositories;
 
 use App\Models\Agency;
 use App\Jobs\SendEmail;
+use App\Models\SystemTemplate;
 use Modules\Sales\Entities\Call;
 use Illuminate\Support\Facades\DB;
 use Modules\Activity\Entities\Task;
@@ -384,7 +385,7 @@ class ClientRepo
 
 
 
-            $template = Template::where('agency_id', $client->agency_id)->where('type', 'email')
+            $template = Template::where('agency_id', $client->agency_id)->where('type', 'email')->where('system', 'yes')
                 ->where('slug', 'client_task')->first();
 
 
@@ -403,9 +404,36 @@ class ClientRepo
                     event(new ClientTaskEvent($task, $send_to->id));
                 }
                 Notification::send($users, new ClientTaskNotification($task));
+            } else {
+                $system_template = SystemTemplate::where('slug', 'client_task')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $client->agency_id,
+                    'business_id' => $client->business_id,
+                ]);
+
+                $template_with_name         = str_replace('{TASK_NAME}', $client->full_name, $template->description_en);
+                $template_with_assigned_by  = str_replace('{ASSIGNED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_url          = str_replace('{TASK_URL}', url('sales/clients/' . $client->agency_id), $template_with_assigned_by);
+                $template_with_site_name    = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+
+                $users = \App\Models\User::whereIn('id', $staff_for_notify)->get();
+
+                foreach ($users as $send_to) {
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, "Client Task Has Been Assigned To You");
+
+                    event(new ClientTaskEvent($task, $send_to->id));
+                }
+                Notification::send($users, new ClientTaskNotification($task));
+
             }
 
-            return back()->with(flash(trans('sales.task_assigned'), 'success'))->with('open-task-tab',  $id);
+                return back()->with(flash(trans('sales.task_assigned'), 'success'))->with('open-task-tab',  $id);
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-task-tab',  $id);
@@ -486,7 +514,7 @@ class ClientRepo
                 ]);
             }
             DB::commit();
-            $template = Template::where('agency_id', $client->agency_id)->where('type', 'email')
+            $template = Template::where('agency_id', $client->agency_id)->where('type', 'email')->where('system', 'yes')
                 ->where('slug', 'client_task')->first();
 
 
@@ -506,8 +534,36 @@ class ClientRepo
                 }
                 Notification::send($users, new ClientTaskNotification($task));
             }
+            else {
+                $system_template = SystemTemplate::where('slug', 'client_task')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $client->agency_id,
+                    'business_id' => $client->business_id,
+                ]);
 
-            return back()->with(flash(trans('sales.task_updated'), 'success'))->with('open-task-tab',  $id);
+                $template_with_name         = str_replace('{TASK_NAME}', $client->full_name, $template->description_en);
+                $template_with_assigned_by  = str_replace('{ASSIGNED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_url          = str_replace('{TASK_URL}', url('sales/clients/' . $client->agency_id), $template_with_assigned_by);
+                $template_with_site_name    = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+
+                $users = \App\Models\User::whereIn('id', $staff_for_notify)->get();
+
+                foreach ($users as $send_to) {
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, "Client Task Has Been UPDATED");
+
+                    event(new ClientTaskEvent($task, $send_to->id));
+                }
+                Notification::send($users, new ClientTaskNotification($task));
+
+            }
+
+                return back()->with(flash(trans('sales.task_updated'), 'success'))->with('open-task-tab',  $id);
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-task-tab',  $id);
@@ -553,7 +609,7 @@ class ClientRepo
 
 
 
-            $template = Template::where('agency_id', $client->agency_id)->where('type', 'email')
+            $template = Template::where('agency_id', $client->agency_id)->where('type', 'email')->where('system', 'yes')
                 ->where('slug', 'client_question')->first();
 
 
@@ -581,8 +637,44 @@ class ClientRepo
 
                 Notification::send($users, new ClientQuestionNotification($question));
             }
+            else {
+                $system_template = SystemTemplate::where('slug', 'client_question')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $client->agency_id,
+                    'business_id' => $client->business_id,
+                ]);
 
-            return back()->with(flash(trans('sales.question_made'), 'success'))->with('open-question-tab', $id);
+
+                $template_with_name         = str_replace('{OPPORTUNITY_NAME}', $client->full_name, $template->description_en);
+
+                $template_with_assigned_by  = str_replace('{MADE_BY}', auth()->user()->name_en, $template_with_name);
+
+                $template_with_question  = str_replace('{QUESTION}', $request->{'question_body_' . $id}, $template_with_assigned_by);
+
+                $template_with_url          = str_replace('{OPPORTUNITY_URL}', url('sales/clients/' . $client->agency_id), $template_with_question);
+                $template_with_site_name    = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+
+                $to_notify = unserialize($client->current_assign->first()->assigned_to) != null ? unserialize($client->current_assign->first()->assigned_to) : [];
+                $users = \App\Models\User::whereIn('id', $to_notify)
+                    ->where('id', '!=', auth()->user()->id)->get();
+
+                foreach ($users as $send_to) {
+
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, "New Client Question");
+
+                    event(new ClientQuestionEvent($question, $send_to->id));
+                }
+
+                Notification::send($users, new ClientQuestionNotification($question));
+            }
+
+                return back()->with(flash(trans('sales.question_made'), 'success'))->with('open-question-tab', $id);
         } catch (\Exception $e) {
 
             DB::rollback();
@@ -630,7 +722,7 @@ class ClientRepo
             DB::commit();
 
 
-            $template = Template::where('agency_id', $client->agency_id)->where('type', 'email')
+            $template = Template::where('agency_id', $client->agency_id)->where('type', 'email')->where('system', 'yes')
                 ->where('slug', 'client_answer')->first();
 
 
@@ -663,10 +755,52 @@ class ClientRepo
 
 
                 Notification::send(get_owner(), new ClientAnswerNotification($question));
+            }else {
+                $system_template = SystemTemplate::where('slug', 'client_answer')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $client->agency_id,
+                    'business_id' => $client->business_id,
+                ]);
+
+
+
+                $template_with_name         = str_replace('{OPPORTUNITY_NAME}', $client->full_name, $template->description_en);
+                $template_with_answered_by  = str_replace('{ANSWERED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_question  = str_replace('{QUESTION}', $question->question, $template_with_answered_by);
+                $template_with_answer  = str_replace('{ANSWER}',  $request->{'result_question_answer_' . $request->question_id . '_' . $request->client_id}, $template_with_question);
+                $template_with_url          = str_replace('{OPPORTUNITY_URL}', url('sales/clients/' . $client->agency_id), $template_with_answer);
+                $template_with_site_name    = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+                $to_notify = unserialize($client->current_assign->first()->assigned_to) != null ? unserialize($client->current_assign->first()->assigned_to) : [];
+                $users = \App\Models\User::whereIn('id', $to_notify)
+                    ->where('id', '!=', auth()->user()->id)
+                    ->where('id', '!=', get_owner()->id)
+                    ->get();
+
+                SendEmail::dispatch(get_owner()->email, $template_with_site_name, "New Answer");
+
+                event(new ClientAnswerEvent($question, get_owner()->id));
+
+                foreach ($users as $send_to) {
+
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, "New Client Question");
+
+                    event(new ClientQuestionEvent($question, $send_to->id));
+                }
+
+
+
+
+                Notification::send(get_owner(), new ClientAnswerNotification($question));
             }
 
 
-            return back()->with(flash(trans('sales.answer_made'), 'success'))->with('open-question-tab', $request->client_id);
+                return back()->with(flash(trans('sales.answer_made'), 'success'))->with('open-question-tab', $request->client_id);
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-question-tab', $request->client_id);
