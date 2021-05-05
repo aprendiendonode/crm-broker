@@ -261,6 +261,21 @@ return [
     /***********************End Company Setting **********************/
 
 
+    /***********************Start Notifications **********************/
+
+    'notifications' => 'Notifications',
+    'notification' => 'Notification',
+    'time' => 'Time',
+    'read_at' => 'Read at',
+    'unread' => 'Unread Notification',
+    'type' => 'Type',
+    'controls' => 'Controls',
+    'view' => 'View',
+
+    /***********************End  Notifications **********************/
+
+
+
 
 
 

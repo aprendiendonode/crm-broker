@@ -30,6 +30,11 @@ Route::middleware(['checkauth', 'authority'])->group(function () {
         Route::get('profile/{agency}', 'CompanyProfileController@index');
         Route::get('settings/{agency}', 'SettingsController@index');
     });
+
+    //notifications
+    Route::get('notifications/{agency}', 'SettingsController@notifications');
+
+
 });
 
 Route::middleware(['checkauth'])->group(function () {
@@ -64,9 +69,13 @@ Route::middleware(['checkauth'])->group(function () {
         Route::post('update-settings', 'SettingsController@update');
 
 
-
         // watermark settings
         Route::get('watermark/{agency}', 'SettingsController@watermark_edit');
         Route::post('watermark', 'SettingsController@watermark_process');
+
+
     });
+
+
 });
+

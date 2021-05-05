@@ -201,4 +201,20 @@ class SettingsController extends Controller
             return back()->withInput()->with(flash(trans('agency.something_went_wrong'), 'error'));
         }
     }
+
+
+
+
+
+
+    public function notifications($agency)
+    {
+
+        $notifications = auth()->user()->notifications;
+
+        return view('notifications',compact('notifications'));
+
+    }
+
+
 }
