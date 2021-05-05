@@ -17,9 +17,9 @@ use Modules\Sales\Entities\LeadProperty;
 class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
 {
 
-    public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency,$priority_id;
+    public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency, $priority_id;
 
-    public function __construct($source_id, $qualification_id, $type_id, $communication_id,$priority_id, $business, $agency)
+    public function __construct($source_id, $qualification_id, $type_id, $communication_id, $priority_id, $business, $agency)
     {
 
         $this->source_id = $source_id;
@@ -29,7 +29,6 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
         $this->priority_id = $priority_id;
         $this->business = $business;
         $this->agency = $agency;
-
     }
 
     /**
@@ -48,27 +47,27 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             ]);
         }
 
-        $property_id = LeadProperty::where('slug', str_replace(" ","_",strtolower($row['property_type'])))->first();
+        $property_id = LeadProperty::where('slug', str_replace(" ", "_", strtolower($row['property_type'])))->first();
         if (!$property_id) {
             $property_id = LeadProperty::create([
-                'name_en'=> ucwords($row['property_type']),
-                'name_ar'=> ucwords($row['property_type']),
-                'slug'=>  str_replace(" ","_",strtolower($row['property_type'])),
-                'agency_id'=> $this->agency,
-                'business_id'=> $this->business,
+                'name_en' => ucwords($row['property_type']),
+                'name_ar' => ucwords($row['property_type']),
+                'slug' =>  str_replace(" ", "_", strtolower($row['property_type'])),
+                'agency_id' => $this->agency,
+                'business_id' => $this->business,
             ]);
         }
 
 
-        $bedrooms = preg_replace('/[^0-9]/', '',  $row['bedrooms'])  != '' ?preg_replace('/[^0-9]/', '',  $row['bedrooms']) : null;
-        $bathrooms = preg_replace('/[^0-9]/', '',  $row['bathrooms']) != '' ?preg_replace('/[^0-9]/', '',  $row['bathrooms']) : null;
-        $parkings = preg_replace('/[^0-9]/', '',  $row['parking'])  != '' ?preg_replace('/[^0-9]/', '',  $row['parking']) : null;
-        $fullname =  explode(' ',$row['full_name']);
+        $bedrooms = preg_replace('/[^0-9]/', '',  $row['bedrooms'])  != '' ? preg_replace('/[^0-9]/', '',  $row['bedrooms']) : null;
+        $bathrooms = preg_replace('/[^0-9]/', '',  $row['bathrooms']) != '' ? preg_replace('/[^0-9]/', '',  $row['bathrooms']) : null;
+        $parkings = preg_replace('/[^0-9]/', '',  $row['parking'])  != '' ? preg_replace('/[^0-9]/', '',  $row['parking']) : null;
+        $fullname =  explode(' ', $row['full_name']);
         $first_name = $fullname[0] ?? null;
         $last_name = $fullname[1] ?? null;
 
-        $output=($row['date_of_birth']-25569)*86400;
-        $output=$output-date('Z',$output);
+        $output = ($row['date_of_birth'] - 25569) * 86400;
+        $output = $output - date('Z', $output);
 
 
         return new Lead([
@@ -102,7 +101,7 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             'address' => $row['address'],
             'po_box' => $row['po_box'],
             'nationality_id' => $nationality->id,
-            'date_of_birth' => date('Y-m-d',$output),
+            'date_of_birth' => date('Y-m-d', $output),
             'passport' => $row['passport_number'],
             'passport_expiration_date' => $row['passport_expiration_date'],
 
@@ -151,7 +150,7 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             "fax" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
             "address" => "sometimes|nullable|string",
             "po_box" => "sometimes|nullable|string|min:1|max:30",
-            ];
+        ];
     }
 
 
@@ -161,5 +160,4 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
     {
         return 100;
     }
-
 }

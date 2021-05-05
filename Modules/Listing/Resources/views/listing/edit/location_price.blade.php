@@ -52,6 +52,8 @@
                     <input type="text" class="form-control" name="edit_location_{{ $listing->id }}" id="location_input_{{ $listing->id }}"  
                     value="{{ old('edit_location_'.$listing->id,$listing->location) }}" 
                      placeholder="">
+                     <input type="hidden" name="edit_loc_lat_{{ $listing->id }}" id="latitude_{{ $listing->id }}" value="{{ old('edit_loc_lat_'.$listing->id,$listing->loc_lat) }}" >
+                     <input type="hidden" name="edit_loc_lng_{{ $listing->id }}" id="longitude_{{ $listing->id }}" value="{{ old('edit_loc_lng_'.$listing->id,$listing->loc_lng) }}">
                     <div class="text-center pl-1">
                         <i class="fas fa-map-marker-alt" style="font-size:1.2rem"  data-toggle="modal" data-target="#map-modal-{{ $listing->id }}"></i>
                     </div>

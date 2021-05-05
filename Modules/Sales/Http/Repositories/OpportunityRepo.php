@@ -1460,7 +1460,6 @@ class OpportunityRepo
             $template = Template::where('agency_id', $opportunity->agency_id)->where('type', 'email')->where('system', 'yes')
                 ->where('slug', 'opportunity_answer')->first();
 
-
             if ($template) {
 
                 $template_with_name = str_replace('{OPPORTUNITY_NAME}', $opportunity->full_name, $template->description_en);

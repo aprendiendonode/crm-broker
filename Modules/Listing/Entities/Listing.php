@@ -219,6 +219,8 @@ class Listing extends Model implements Feedable
             ],
 
 
+            "edit_loc_lat_" . $id                                  => ['sometimes', 'nullable', 'string'],
+            "edit_loc_lng_" . $id                                  => ['sometimes', 'nullable', 'string'],
             "edit_purpose_" . $id                                  => ['required', 'in:sale,rent'],
             "edit_location_" . $id                                 => ['sometimes', 'nullable', 'string'],
             "edit_city_" . $id                                     => ['required', 'string'],
@@ -264,8 +266,8 @@ class Listing extends Model implements Feedable
                 $q->where('agency_id', $request->agency_id);
             })],
             "edit_rented_" . $id                                   => ['required', 'in:yes,no'],
-            "edit_tenancy_contract_start_date_" . $id              => ['sometimes', 'nullable', 'string', 'before_or_equal:tenancy_contract_end_date', 'date_format:Y-m-d'],
-            "edit_tenancy_contract_end_date_" . $id                => ['sometimes', 'nullable', 'string', 'after_or_equal:tenancy_contract_start_date', 'date_format:Y-m-d'],
+            "edit_tenancy_contract_start_date_" . $id              => ['sometimes', 'nullable',  "before_or_equal:edit_tenancy_contract_end_date_{$id}", 'date_format:Y-m-d'],
+            "edit_tenancy_contract_end_date_" . $id                => ['sometimes', 'nullable',  "after_or_equal:edit_tenancy_contract_start_date_{$id}", 'date_format:Y-m-d'],
             "edit_tenant_id_" . $id                                => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request) {
                 $q->where('agency_id', $request->agency_id);
             })],

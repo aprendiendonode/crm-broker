@@ -29,7 +29,7 @@ use Modules\Listing\Entities\TemporaryPlan;
 use Modules\Listing\Entities\ListingDocument;
 use Modules\Listing\Entities\TemporaryListing;
 use Modules\Listing\Entities\TemporaryDocument;
-
+use PDF;
 
 class ListingRepo
 {
@@ -74,9 +74,23 @@ class ListingRepo
 
             ])->where('agency_id', $agency->id)->where('business_id', $business);
 
+
+
+
             $staffs = staff($agency->id);
 
+
+
+            if (request()->has('status_main')) {
+                $listings->where('status', request()->status_main);
+            }
+
             $listings = $listings->paginate($per_page);
+            $all_count = Listing::where('agency_id', $agency->id)->count();
+            $draft_count = Listing::where('status', 'draft')->where('agency_id', $agency->id)->count();
+            $live_count = Listing::where('status', 'live')->where('agency_id', $agency->id)->count();
+            $review_count = Listing::where('status', 'review')->where('agency_id', $agency->id)->count();
+            $archive_count = Listing::where('status', 'archive')->where('agency_id', $agency->id)->count();
 
             $agency = $agency->id;
             return view(
@@ -96,7 +110,12 @@ class ListingRepo
                     'cheques',
                     'landlords',
                     'tenants',
-                    'portals'
+                    'portals',
+                    'all_count',
+                    'archive_count',
+                    'review_count',
+                    'draft_count',
+                    'live_count'
                 )
             );
         } catch (\Exception $e) {
@@ -916,6 +935,18 @@ class ListingRepo
             DB::rollBack();
             dd($e->getMessage());
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab',  $id);
+        }
+    }
+
+
+    public function brochure($request, $type)
+    {
+        if ($type == 'single') {
+            $pdf = PDF::loadView('listing::listing.brochure_single');
+            return $pdf->download('single.pdf');
+        } else {
+            $pdf = PDF::loadView('listing::listing.brochure_multi');
+            return $pdf->download('multi.pdf');
         }
     }
 }

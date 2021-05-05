@@ -97,4 +97,8 @@ class ListingController extends Controller
     {
         return $repository->update($request, $id);
     }
+    public function brochure(Request $request, $type, $agency, ListingRepo $repository)
+    {
+        return $repository->brochure($request, $type, $agency);
+    }
 }
