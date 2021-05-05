@@ -178,6 +178,37 @@
                     </div>
 
 
+                    <div class="col-md-12">
+                        <div class="form-group ">
+
+
+                            <label class="text-muted font-weight-medium" for="">@lang('sales.priority')</label>
+
+
+                            <div class="d-flex justify-content-between">
+
+
+                                <div style="flex:4">
+                                    <select class="form-control select2 select_priority_id" name="priority_id"
+                                            data-placeholder="@lang('sales.priority')"
+                                            data-toggle="select2" required>
+                                        <option name=""></option>
+
+                                        @forelse($agency->lead_priorities as $priority)
+                                            <option @if(old('priority_id') == $priority->id) selected
+                                                    @endif value="{{ $priority->id}}">{{ $priority->{'name_'.app()->getLocale()} }}</option>
+                                        @empty
+
+                                        @endforelse
+
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
                     {{--<div class="col-md-12">--}}
 
                     {{--<div class="form-check">--}}

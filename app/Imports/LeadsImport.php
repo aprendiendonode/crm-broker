@@ -5,29 +5,28 @@ namespace App\Imports;
 
 use App\Models\Country;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Illuminate\Validation\Rule;
 use Modules\Sales\Entities\Lead;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Modules\Sales\Entities\LeadPriority;
 use Modules\Sales\Entities\LeadProperty;
 
-class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
-//class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
+//class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation, WithHeadingRow
+class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
 {
 
-    public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency;
+    public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency,$priority_id;
 
-    public function __construct($source_id, $qualification_id, $type_id, $communication_id, $business, $agency)
+    public function __construct($source_id, $qualification_id, $type_id, $communication_id,$priority_id, $business, $agency)
     {
 
         $this->source_id = $source_id;
         $this->qualification_id = $qualification_id;
         $this->type_id = $type_id;
         $this->communication_id = $communication_id;
+        $this->priority_id = $priority_id;
         $this->business = $business;
         $this->agency = $agency;
 
@@ -49,24 +48,27 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             ]);
         }
 
-        $property_id = LeadProperty::firstOrCreate([
-            'name_en', ucwords($row['property_type']),
-            'name_ar', ucwords($row['property_type']),
-            'slug', str_replace(" ", "_", strtolower($row['property_type'])),
-            'agency_id', $this->agency,
-            'business_id ', $this->business,
-        ]);
+        $property_id = LeadProperty::where('slug', str_replace(" ","_",strtolower($row['property_type'])))->first();
+        if (!$property_id) {
+            $property_id = LeadProperty::create([
+                'name_en'=> ucwords($row['property_type']),
+                'name_ar'=> ucwords($row['property_type']),
+                'slug'=>  str_replace(" ","_",strtolower($row['property_type'])),
+                'agency_id'=> $this->agency,
+                'business_id'=> $this->business,
+            ]);
+        }
 
 
-        $bedrooms = preg_replace('/[^0-9]/', '', $row['bedrooms']) != '' ? preg_replace('/[^0-9]/', '', $row['bedrooms']) : null;
-        $bathrooms = preg_replace('/[^0-9]/', '', $row['bathrooms']) != '' ? preg_replace('/[^0-9]/', '', $row['bathrooms']) : null;
-        $parkings = preg_replace('/[^0-9]/', '', $row['parking']) != '' ? preg_replace('/[^0-9]/', '', $row['parking']) : null;
-        $fullname = explode(' ', $row['full_name']);
+        $bedrooms = preg_replace('/[^0-9]/', '',  $row['bedrooms'])  != '' ?preg_replace('/[^0-9]/', '',  $row['bedrooms']) : null;
+        $bathrooms = preg_replace('/[^0-9]/', '',  $row['bathrooms']) != '' ?preg_replace('/[^0-9]/', '',  $row['bathrooms']) : null;
+        $parkings = preg_replace('/[^0-9]/', '',  $row['parking'])  != '' ?preg_replace('/[^0-9]/', '',  $row['parking']) : null;
+        $fullname =  explode(' ',$row['full_name']);
         $first_name = $fullname[0] ?? null;
         $last_name = $fullname[1] ?? null;
 
-        $output = ($row['date_of_birth'] - 25569) * 86400;
-        $output = $output - date('Z', $output);
+        $output=($row['date_of_birth']-25569)*86400;
+        $output=$output-date('Z',$output);
 
 
         return new Lead([
@@ -100,7 +102,7 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             'address' => $row['address'],
             'po_box' => $row['po_box'],
             'nationality_id' => $nationality->id,
-            'date_of_birth' => date('Y-m-d', $output),
+            'date_of_birth' => date('Y-m-d',$output),
             'passport' => $row['passport_number'],
             'passport_expiration_date' => $row['passport_expiration_date'],
 
@@ -108,7 +110,8 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             "type_id" => $this->type_id,
             "qualification_id" => $this->qualification_id,
             "communication_id" => $this->communication_id,
-            "priority_id" => $property_id->id,
+            "priority_id" => $this->priority_id,
+            "property_id" => $property_id->id,
             "agency_id" => $this->agency,
             'business_id' => $this->business,
 
@@ -148,15 +151,15 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             "fax" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
             "address" => "sometimes|nullable|string",
             "po_box" => "sometimes|nullable|string|min:1|max:30",
-        ];
+            ];
     }
 
-//    public function batchSize(): int
-//    {
-//        return 20;
-//    }
-//
-//
+    public function batchSize(): int
+    {
+        return 20;
+    }
+
+
     public function chunkSize(): int
     {
         return 20;

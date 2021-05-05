@@ -2237,6 +2237,7 @@ class LeadsController extends Controller
             "type_id" => "required|integer|exists:lead_types,id",
             "qualification_id" => "required|integer|exists:lead_qualifications,id",
             "communication_id" => "required|integer|exists:lead_communications,id",
+            "priority_id" => "required|integer|exists:lead_priorities,id",
 //            'staff' => 'required|array',
 //            'staff*' => 'required|integer|exists:users,id',
         ]);
@@ -2254,9 +2255,22 @@ class LeadsController extends Controller
             $request->qualification_id,
             $request->type_id,
             $request->communication_id,
+            $request->priority_id,
             $business,
             $agency
         ), $request->file);
+
+
+
+//        Excel::Import(new LeadsImport(
+//            $request->source_id,
+//            $request->qualification_id,
+//            $request->type_id,
+//            $request->communication_id,
+//            $request->priority_id,
+//            $business,
+//            $agency
+//        ), $request->file);
 
         return back()->with(flash(trans('sales.leads_imported'), 'success'));
     }
