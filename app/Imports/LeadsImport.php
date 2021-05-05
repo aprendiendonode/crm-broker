@@ -5,28 +5,28 @@ namespace App\Imports;
 
 use App\Models\Country;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Illuminate\Validation\Rule;
 use Modules\Sales\Entities\Lead;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Modules\Sales\Entities\LeadPriority;
 use Modules\Sales\Entities\LeadProperty;
 
+//class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation, WithHeadingRow
 class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
 {
 
-    public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency;
+    public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency, $priority_id;
 
-    public function __construct($source_id, $qualification_id, $type_id, $communication_id, $business, $agency)
+    public function __construct($source_id, $qualification_id, $type_id, $communication_id, $priority_id, $business, $agency)
     {
 
         $this->source_id = $source_id;
         $this->qualification_id = $qualification_id;
         $this->type_id = $type_id;
         $this->communication_id = $communication_id;
+        $this->priority_id = $priority_id;
         $this->business = $business;
         $this->agency = $agency;
     }
@@ -47,14 +47,14 @@ class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithVa
             ]);
         }
 
-        $property_id = LeadProperty::where('slug', ucwords($row['property_type']))->first();
+        $property_id = LeadProperty::where('slug', str_replace(" ", "_", strtolower($row['property_type'])))->first();
         if (!$property_id) {
             $property_id = LeadProperty::create([
-                'name_en', ucwords($row['property_type']),
-                'name_ar', ucwords($row['property_type']),
-                'slug',  str_replace(" ", "_", strtolower($row['property_type'])),
-                'agency_id', $this->agency,
-                'business_id ', $this->business,
+                'name_en' => ucwords($row['property_type']),
+                'name_ar' => ucwords($row['property_type']),
+                'slug' =>  str_replace(" ", "_", strtolower($row['property_type'])),
+                'agency_id' => $this->agency,
+                'business_id' => $this->business,
             ]);
         }
 
@@ -109,7 +109,8 @@ class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithVa
             "type_id" => $this->type_id,
             "qualification_id" => $this->qualification_id,
             "communication_id" => $this->communication_id,
-            "priority_id" => $property_id->id,
+            "priority_id" => $this->priority_id,
+            "property_id" => $property_id->id,
             "agency_id" => $this->agency,
             'business_id' => $this->business,
 

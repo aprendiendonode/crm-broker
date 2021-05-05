@@ -96,6 +96,7 @@
                             </i>
 
 
+                            @if($template->system == 'no')
                             <i
                                     data-plugin="tippy"
                                     data-tippy-placement="top-start"
@@ -104,6 +105,7 @@
 
                                     class="fe-trash cursor-pointer feather-16">
                             </i>
+                            @endif
 
                         </td>
 
