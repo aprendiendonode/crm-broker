@@ -157,7 +157,7 @@ class TemplatesController extends Controller
      */
     public function destroy()
     {
-        Template::findorfail(request('template_id'))->delete();
+        Template::where('id',request('template_id'))->where('system','no')->delete();
 
         return back()->withInput()->with(flash(trans('settings.template_delete'), 'success'));
     }
