@@ -133,4 +133,24 @@ return [
 
 
 
+
+    ////////////////////////Start Share Listing////////////////////////
+    'share_listing'     =>  'Share Listing',
+    'title'             =>  'Title',
+    'agency'            =>  'Agency',
+    'controls'          =>  'Controls',
+    'emirate'           =>  'Emirate',
+    'keywords'          =>  'Keywords',
+    'added'             =>  'Added',
+    'from'              =>  'From',
+    'to'                =>  'To',
+    'min'               =>  'Min',
+    'max'               =>  'Max',
+    'view'              =>  'View',
+    'contact_client'    =>  'Contact Client',
+    'send_mail_confirmation'    =>  'Are you sure to Send Inquiry against this property.',
+    'confirm_send_mail'    =>  'Confirm',
+    /////////////////////////End Share Listing////////////////////////
+
+
 ];

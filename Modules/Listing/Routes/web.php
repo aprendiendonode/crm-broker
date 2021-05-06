@@ -63,5 +63,8 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.modify-listing-document-title');
         Route::post('remove-listing-temporary-photo', 'ListingController@remove_listing_temporary_photo')
             ->name('listings.remove-listing-temporary-photo');
+
+        Route::get('share/{agency}','ListingController@share_listing')
+            ->name('listings.share');
     });
 });

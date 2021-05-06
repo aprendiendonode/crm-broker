@@ -105,4 +105,8 @@ class ListingController extends Controller
     {
         return $repository->remove_listing_temporary_photo($request);
     }
+    public function share_listing($agency, ListingRepo $repository)
+    {
+        return $repository->share_listing($agency);
+    }
 }
