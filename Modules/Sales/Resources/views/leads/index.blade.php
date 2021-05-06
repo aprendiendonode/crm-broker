@@ -392,6 +392,7 @@
             twelvehour :false
         });
 
+
         if($('#nationality_id').val() != '') {
 
             toggleCountryData();

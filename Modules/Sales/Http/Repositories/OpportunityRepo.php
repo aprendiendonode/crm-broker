@@ -120,6 +120,10 @@ class OpportunityRepo
                     ->orWhere('fax', request('filter_phone'));
             });
         }
+        if (request('id')) {
+
+            $opportunities->where('id',request('id'));
+        }
         if (request('filter_name') != null) {
             $opportunities->where(function ($query) {
                 $query->where('first_name', 'like', '%' . request('filter_name') . '%')
@@ -1235,9 +1239,9 @@ class OpportunityRepo
 
                 SendEmail::dispatch(get_owner()->email, $template_with_site_name, "Opportunity Result Report Has Been Confirmed");
                 // Mail::to(get_owner()->email)->send(new EmailGeneral($template_with_site_name, "Opportunity Result Report Has Been Confirmed"));
-                event(new OpportunityResultEvent($result, get_owner()->id));
+                event(new OpportunityResultEvent($result, get_owner()->id,$opportunity));
                 // }
-                Notification::send(get_owner(), new OpportunityResultNotification($result));
+                Notification::send(get_owner(), new OpportunityResultNotification($result,$opportunity));
             } else {
                 $system_template = SystemTemplate::where('slug', 'opportunity_result')->first();
                 $template = Template::create([
@@ -1264,9 +1268,9 @@ class OpportunityRepo
 
                 SendEmail::dispatch(get_owner()->email, $template_with_site_name, "Opportunity Result Report Has Been Confirmed");
                 // Mail::to(get_owner()->email)->send(new EmailGeneral($template_with_site_name, "Opportunity Result Report Has Been Confirmed"));
-                event(new OpportunityResultEvent($result, get_owner()->id));
+                event(new OpportunityResultEvent($result, get_owner()->id,$opportunity));
                 // }
-                Notification::send(get_owner(), new OpportunityResultNotification($result));
+                Notification::send(get_owner(), new OpportunityResultNotification($result,$opportunity));
             }
 
             return back()->with(flash(trans('sales.result_report_updated'), 'success'))->with('open-result-tab', $id);
@@ -1373,10 +1377,10 @@ class OpportunityRepo
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "New Opportunity Question");
 
-                    event(new OpportunityQuestionEvent($question, $send_to->id));
+                    event(new OpportunityQuestionEvent($question, $send_to->id,$opportunity));
                 }
 
-                Notification::send($users, new OpportunityQuestionNotification($question));
+                Notification::send($users, new OpportunityQuestionNotification($question,$opportunity));
             } else {
                 $system_template = SystemTemplate::where('slug', 'opportunity_question')->first();
                 $template = Template::create([
@@ -1402,14 +1406,15 @@ class OpportunityRepo
                 $users = \App\Models\User::whereIn('id', $to_notify)
                     ->where('id', '!=', auth()->user()->id)->get();
 
+
                 foreach ($users as $send_to) {
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "New Opportunity Question");
 
-                    event(new OpportunityQuestionEvent($question, $send_to->id));
+                    event(new OpportunityQuestionEvent($question, $send_to->id,$opportunity));
                 }
 
-                Notification::send($users, new OpportunityQuestionNotification($question));
+                Notification::send($users, new OpportunityQuestionNotification($question,$opportunity));
             }
 
             return back()->with(flash(trans('sales.question_made'), 'success'))->with('open-question-tab', $id);
@@ -1481,17 +1486,17 @@ class OpportunityRepo
 
                 SendEmail::dispatch(get_owner()->email, $template_with_site_name, "New Answer");
 
-                event(new OpportunityAnswerEvent($question, get_owner()->id));
+                event(new OpportunityAnswerEvent($question, get_owner()->id,$opportunity));
 
                 foreach ($users as $send_to) {
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "New Opportunity Question");
 
-                    event(new OpportunityQuestionEvent($question, $send_to->id));
+                    event(new OpportunityQuestionEvent($question, $send_to->id,$opportunity));
                 }
 
 
-                Notification::send(get_owner(), new OpportunityAnswerNotification($question));
+                Notification::send(get_owner(), new OpportunityAnswerNotification($question,$opportunity));
             } else {
                 $system_template = SystemTemplate::where('slug', 'opportunity_answer')->first();
                 $template = Template::create([
@@ -1524,17 +1529,17 @@ class OpportunityRepo
 
                 SendEmail::dispatch(get_owner()->email, $template_with_site_name, "New Answer");
 
-                event(new OpportunityAnswerEvent($question, get_owner()->id));
+                event(new OpportunityAnswerEvent($question, get_owner()->id,$opportunity));
 
                 foreach ($users as $send_to) {
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "New Opportunity Question");
 
-                    event(new OpportunityQuestionEvent($question, $send_to->id));
+                    event(new OpportunityQuestionEvent($question, $send_to->id,$opportunity));
                 }
 
 
-                Notification::send(get_owner(), new OpportunityAnswerNotification($question));
+                Notification::send(get_owner(), new OpportunityAnswerNotification($question,$opportunity));
 
             }
 

@@ -16,18 +16,20 @@ class OpportunityResultEvent implements ShouldBroadcast
     public $opportunity_task_id;
     public $id;
     public $type;
+    public $opportunity;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($opportunity_task, $id)
+    public function __construct($opportunity_task, $id,$opportunity)
     {
         $this->opportunity_task_id = $opportunity_task->id;
         $this->id        = $id;
         $this->type      = 'result';
         $this->message   = 'A New Opportunity Result Has Been Confirmed To You';
+        $this->opportunity   = $opportunity->id;
     }
 
     /**

@@ -174,4 +174,7 @@ Route::middleware(['checkauth'])->group(function () {
             $user->givePermissionTo($permission);
         }
     });
+
+    Route::post('update_notification', 'Controller@change_Notify_status');
+
 });

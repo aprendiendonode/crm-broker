@@ -15,15 +15,17 @@ class OpportunityResultNotification extends Notification
 
 
     public $opportunity_result;
+    public $opportunity;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($opportunity_result)
+    public function __construct($opportunity_result,$opportunity)
     {
         $this->opportunity_result = $opportunity_result;
+        $this->opportunity = $opportunity;
     }
 
     /**
@@ -45,7 +47,8 @@ class OpportunityResultNotification extends Notification
         return [
             'message' => 'A New Opportunity Result Has Been Confirmed To You',
             'opportunity_result_id' => $this->opportunity_result->id,
-            'type'    => 'result'
+            'type'    => 'result',
+            'opportunity_id' => $this->opportunity->id
         ];
     }
 }

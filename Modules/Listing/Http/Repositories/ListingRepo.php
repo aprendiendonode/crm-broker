@@ -1057,4 +1057,11 @@ class ListingRepo
             }
         }
     }
+
+
+
+    public function share_listing($agency)
+    {
+        return view('listing::listing.share_listing');
+    }
 }

@@ -15,15 +15,17 @@ class OpportunityQuestionNotification extends Notification
 
 
     public $opportunity_question;
+    public $opportunity;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($opportunity_question)
+    public function __construct($opportunity_question,$opportunity)
     {
         $this->opportunity_question = $opportunity_question;
+        $this->opportunity = $opportunity;
     }
 
     /**
@@ -46,6 +48,7 @@ class OpportunityQuestionNotification extends Notification
 
             'message' => 'A New Opportunity Question Has Been Made By Management',
             'opportunity_question_id' => $this->opportunity_question->id,
+            'opportunity_id' => $this->opportunity->id,
             'type'    => 'question'
         ];
     }

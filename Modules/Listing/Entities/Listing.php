@@ -225,12 +225,12 @@ class Listing extends Model implements Feedable
             "edit_location_" . $id                                 => ['sometimes', 'nullable', 'string'],
             "edit_city_" . $id                                     => ['required', 'string'],
             "edit_community_" . $id                                => ['required', 'string'],
-            "edit_unit_no_" . $id                                     => ['sometimes', 'nullable', 'string'],
-            "edit_plot_no_" . $id                                     => ['sometimes', 'nullable', 'string'],
-            "edit_street_no_" . $id                                   => ['sometimes', 'nullable', 'string'],
+            "edit_unit_no_" . $id                                  => ['sometimes', 'nullable', 'string'],
+            "edit_plot_no_" . $id                                  => ['sometimes', 'nullable', 'string'],
+            "edit_street_no_" . $id                                => ['sometimes', 'nullable', 'string'],
             "edit_portals_" . $id                                  => ['sometimes', 'nullable', 'array'],
-            "edit_view_ids_" . $id                                  => ['sometimes', 'nullable', 'array'],
-            "edit_view_ids_" . $id . ".*"                               => ['sometimes', 'nullable', Rule::exists('listing_views', 'id')->where(function ($q) use ($request) {
+            "edit_view_ids_" . $id                                 => ['sometimes', 'nullable', 'array'],
+            "edit_view_ids_" . $id . ".*"                          => ['sometimes', 'nullable', Rule::exists('listing_views', 'id')->where(function ($q) use ($request) {
                 $q->where('agency_id', $request->agency_id);
             })],
             "edit_price_" . $id                                    => ['required', 'string'],

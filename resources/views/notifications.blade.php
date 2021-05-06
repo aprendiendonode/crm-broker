@@ -11,7 +11,7 @@
     <link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css">
 
-
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
 
 @endsection
 @section('content')
@@ -42,7 +42,6 @@
                 <tbody>
 
                 @forelse($notifications as $notify)
-
                     <tr>
                         <td>
                             <abbr title="{{ $notify->data['message']  ?? '' }}"> @if(array_key_exists('type',$notify->data)){{ substr( $notify->data['message'] ,0,35).'...' ?? '' }}@endif</abbr>
@@ -52,30 +51,24 @@
                         <td>{{  $notify->created_at->toFormattedDateString() }}</td>
                         <td>
                             <i
-                            @if( $notify->data['type'] == 'opportunity')
-{{--                                <a href="{{ url('sales/opportunities/'.request('agency'))->with('open-call-tab', $notify->data['opportunity_answer_id']) }}">--}}
-                                    onclick="goToLink('opportunity',{{$notify->data['opportunity_answer_id']}})"
-                            @elseif( $notify->data['type'] == 'task')
-{{--                                <a href="{{ url('activity/tasks/'.request('agency'))->with('open-call-tab', $notify->data['lead_task_id']) }}">--}}
-                                    onclick="goToLink('task',{{$notify->data['lead_task_id']}})"
-                            @elseif( $notify->data['type'] == 'assign')
-{{--                                <a href="{{ url('sales/opportunities/'.request('agency'))->with('open-call-tab', $notify->data['opportunity_id']) }}">--}}
-                                    onclick="goToLink('assign',{{$notify->data['opportunity_id']}})"
-                            @elseif( $notify->data['type'] == 'answer')
-{{--                                <a href="{{ url('sales/opportunities/'.request('agency'))->with('open-call-tab', $notify->data['opportunity_answer_id']) }}">--}}
-                                    onclick="goToLink('answer',{{$notify->data['opportunity_answer_id']}})"
-                            @elseif( $notify->data['type'] == 'result')
-{{--                                <a href="{{ url('sales/opportunities/'.request('agency'))->with('open-call-tab', $notify->data['opportunity_result_id']) }}">--}}
-                                    onclick="goToLink('result',{{$notify->data['opportunity_result_id']}})"
-                            @elseif( $notify->data['type'] == 'question')
-{{--                                <a href="{{ url('sales/opportunities/'.request('agency'))->with('open-call-tab', $notify->data['opportunity_answer_id']) }}">--}}
-                                    onclick="goToLink('question',{{$notify->data['opportunity_answer_id']}})"
-                            @endif
+                                    @if( $notify->data['type'] == 'opportunity')
+                                    onclick="changeNotifyStatus('opportunity',{{$notify->data['opportunity_id'] ?? '' }},'{{ $notify->id}}')"
+                                    @elseif( $notify->data['type'] == 'task')
+                                    onclick="changeNotifyStatus('task',{{$notify->data['lead_task_id'] ?? '' }},'{{ $notify->id}}')"
+                                    @elseif( $notify->data['type'] == 'assign')
+                                    onclick="changeNotifyStatus('assign',{{$notify->data['opportunity_id'] ?? '' }},'{{ $notify->id}}')"
+                                    @elseif( $notify->data['type'] == 'answer')
+                                    onclick="changeNotifyStatus('answer',{{$notify->data['opportunity_id'] ?? '' }},'{{ $notify->id}}')"
+                                    @elseif( $notify->data['type'] == 'result')
+                                    onclick="changeNotifyStatus('result',{{$notify->data['opportunity_id'] ?? '' }},'{{ $notify->id}}')"
+                                    @elseif( $notify->data['type'] == 'question')
+                                    onclick="changeNotifyStatus('question',{{$notify->data['opportunity_id'] ?? '' }},'{{$notify->id}}')"
+                                    @endif
 
 
-                                            title="@lang('agency.view')"
-                                            class="fe-eye cursor-pointer feather-16">
-                                    </i>
+                                    title="@lang('agency.view')"
+                                    class="fe-eye cursor-pointer feather-16">
+                            </i>
                         </td>
                     </tr>
 
@@ -104,16 +97,52 @@
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
     <script>
-        function goToLink(type,id){
+        function goToLink(type, id) {
             var url = '';
-            if(type == 'task'){
-                url = "{{url('activity/tasks/'.request('agency'))}}";
-                location.replace(url+'?ssss=')
+            if (type == 'task') {
+                url = @json(url('activity/tasks/'.request('agency')).'?id=');
+                location.replace(url + id);
             }
-            else {
-                url = "{{url('sales/opportunities/'.request('agency'))}}";
-                location.replace(url)
+            else if (type == 'assign') {
+                url = @json(url('sales/opportunities/'.request('agency').'?id=') );
+                location.replace(url + id);
             }
+            else if (type == 'result') {
+                sessionStorage.setItem('open-result-tab', id);
+                url = @json(url('sales/opportunities/'.request('agency').'?id=') );
+                location.replace(url + id);
+            }
+            else if (type == 'question') {
+                sessionStorage.setItem('open-question-tab', id);
+                url = @json(url('sales/opportunities/'.request('agency').'?id=') );
+                location.replace(url + id);
+            }
+            else if (type == 'answer') {
+                sessionStorage.setItem('open-question-tab', id);
+                url = @json(url('sales/opportunities/'.request('agency').'?id=') );
+                location.replace(url + id);
+            }
+        }
+
+
+        function changeNotifyStatus(type, id, notify) {
+
+            let _token = $('meta[name="csrf-token"]').attr('content');
+            const url = @json(url('update_notification'));
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {
+                    notify: notify,
+                    _token: _token
+                },
+                success: function (response) {
+                    if (response) {
+                        goToLink(type,id);
+                    }
+                },
+            });
+
         }
     </script>
 

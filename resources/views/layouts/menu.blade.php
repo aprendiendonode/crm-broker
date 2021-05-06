@@ -296,7 +296,20 @@
                             </li>
                             @endif
 
+                            @if(owner())
+                                <li>
+                                    <a href="{{ url('listing/share/'.request('agency')) }}">@lang('listing.share_listing')</a>
+                                </li>
 
+                            @elseif(moderator())
+                                <li>
+                                    <a href="{{ url('listing/share/'.request('agency')) }}">@lang('listing.share_listing')</a>
+                                </li>
+                            @else
+                                <li>
+                                    <a href="{{ url('listing/share/'.auth()->user()->agency_id) }}">@lang('listing.share_listing')</a>
+                                </li>
+                            @endif
 
                             <li>
 

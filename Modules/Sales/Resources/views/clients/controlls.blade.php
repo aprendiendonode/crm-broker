@@ -47,17 +47,17 @@
   </i>
 @endcan --}}
 
-@can('edit_client')
-  <i
+{{--@can('edit_client')--}}
+  {{--<i--}}
 
-    onclick="event.preventDefault();table_row_show('question_{{ $client->id }}')"
-    data-plugin="tippy" 
-    data-tippy-placement="top-start" 
-    title="@lang('sales.question')"
+    {{--onclick="event.preventDefault();table_row_show('question_{{ $client->id }}')"--}}
+    {{--data-plugin="tippy" --}}
+    {{--data-tippy-placement="top-start" --}}
+    {{--title="@lang('sales.question')"--}}
 
-    class="fas fa-question cursor-pointer feather-16 px-1">
-  </i>
-@endcan  
+    {{--class="fas fa-question cursor-pointer feather-16 px-1">--}}
+  {{--</i>--}}
+{{--@endcan  --}}
 
 {{--@can('edit_client')--}}
 {{--<i--}}

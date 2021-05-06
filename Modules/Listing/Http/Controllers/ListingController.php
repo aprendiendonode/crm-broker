@@ -113,4 +113,8 @@ class ListingController extends Controller
     {
         return $this->repository->update_listing_temporary_active($request);
     }
+    public function share_listing($agency, ListingRepo $repository)
+    {
+        return $repository->share_listing($agency);
+    }
 }

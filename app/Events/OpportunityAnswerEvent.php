@@ -16,18 +16,20 @@ class OpportunityAnswerEvent implements ShouldBroadcast
     public $opportunity_answer_id;
     public $id;
     public $type;
+    public $opportunity;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($opportunity_answer, $id)
+    public function __construct($opportunity_answer, $id,$opportunity)
     {
         $this->opportunity_answer_id = $opportunity_answer->id;
         $this->id        = $id;
         $this->type      = 'answer';
         $this->message   = 'Opportunity Answer Has Been Made By ' . auth()->user()->name_en;
+        $this->opportunity   =  $opportunity;
     }
 
     /**

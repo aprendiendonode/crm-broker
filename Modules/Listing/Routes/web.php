@@ -65,5 +65,9 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.remove-listing-temporary');
         Route::post('update-listing-temporary-active', 'ListingController@update_listing_temporary_active')
             ->name('listings.update-listing-temporary-active');
+
+
+        Route::get('share/{agency}', 'ListingController@share_listing')
+            ->name('listings.share');
     });
 });
