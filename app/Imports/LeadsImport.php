@@ -13,8 +13,8 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Modules\Sales\Entities\LeadProperty;
 
-//class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation, WithHeadingRow
-class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
+//class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow
+class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
 {
 
     public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency, $priority_id;
@@ -153,14 +153,11 @@ class LeadsImport implements ToModel, WithBatchInserts, WithChunkReading, WithVa
         ];
     }
 
-    public function batchSize(): int
-    {
-        return 20;
-    }
+
 
 
     public function chunkSize(): int
     {
-        return 20;
+        return 100;
     }
 }

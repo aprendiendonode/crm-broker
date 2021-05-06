@@ -29,4 +29,5 @@ class Controller extends BaseController
             return back()->withInput()->with(flash(trans('agency.something_went_wrong'), 'error'))->with('open-tab', 'yes');
         }
     }
+
 }

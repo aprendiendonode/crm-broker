@@ -100,7 +100,7 @@
                       </div>
 
                       <!-- All-->
-                      <a href="javascript:void(0);"
+                      <a href="{{url('notifications',request('agency'))}}"
                          class="dropdown-item text-center text-primary notify-item notify-all">
                           @lang('sales.view_all')
                           <i class="fe-arrow-right"></i>
