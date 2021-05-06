@@ -933,7 +933,6 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_modified'), 'success'))->with('open-edit-tab',  $id);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab',  $id);
         }
     }
@@ -947,6 +946,28 @@ class ListingRepo
         } else {
             $pdf = PDF::loadView('listing::listing.brochure_multi');
             return $pdf->download('multi.pdf');
+        }
+    }
+
+
+
+
+    public function remove_listing_temporary_photo($request)
+    {
+        if ($request->ajax()) {
+
+            try {
+                DB::beginTransaction();
+                TemporaryListing::findOrFail($request->id)->delete();
+
+                DB::commit();
+
+                return response()->json(['message' => trans('listing.photo_removed')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
         }
     }
 }

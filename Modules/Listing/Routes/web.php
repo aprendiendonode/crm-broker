@@ -61,5 +61,7 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
         Route::post('upload-documents', 'ListingController@temporary_documents')->name('listing.temporary-documents');
         Route::post('modify-listing-document-title', 'ListingController@modify_document_title')
             ->name('listings.modify-listing-document-title');
+        Route::post('remove-listing-temporary-photo', 'ListingController@remove_listing_temporary_photo')
+            ->name('listings.remove-listing-temporary-photo');
     });
 });

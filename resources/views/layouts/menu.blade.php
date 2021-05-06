@@ -283,16 +283,16 @@
                     <ul class="nav-second-level">
                         @if(owner())
                             <li>
-                                <a href="{{ url('listing/controll/'.request('agency')) }}">@lang('listing.manage_listing')</a>
+                                <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}">@lang('listing.manage_listing')</a>
                             </li>
                         
                             @elseif(moderator())
                             <li>
-                                <a href="{{ url('listing/controll/'.request('agency')) }}">@lang('listing.manage_listing')</a>
+                                <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}">@lang('listing.manage_listing')</a>
                             </li>
                             @else
                             <li>
-                                <a href="{{ url('listing/controll/'.auth()->user()->agency_id) }}">@lang('listing.manage_listing')</a>
+                                <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=live') }}">@lang('listing.manage_listing')</a>
                             </li>
                             @endif
 

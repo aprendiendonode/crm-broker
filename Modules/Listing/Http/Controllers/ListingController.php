@@ -101,4 +101,8 @@ class ListingController extends Controller
     {
         return $repository->brochure($request, $type, $agency);
     }
+    public function remove_listing_temporary_photo(Request $request, ListingRepo $repository)
+    {
+        return $repository->remove_listing_temporary_photo($request);
+    }
 }

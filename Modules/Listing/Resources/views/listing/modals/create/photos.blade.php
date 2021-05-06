@@ -64,7 +64,7 @@
             
             <div class="modal-footer">  
                 <button type="button" class="btn btn-light" data-dismiss="modal">@lang('listing.close')</button>
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
                     @lang('listing.done')
                 </button>
             </div>
@@ -116,13 +116,14 @@
     justify-content: space-between;
     flex-direction: column;
     height: 100%;">
-    <div class="with-watermark">
-        <img class=" preview-img w-50 m-auto" src="" alt="Generic placeholder image">
 
+<i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" onclick="return confirm('are you sure ?') ? removePhoto(this) : false"></i> 
+   <div class="with-watermark">
+        <img class=" preview-img w-50 m-auto" src="" alt="Generic placeholder image">
+        <input type="hidden" class="photo-id" >
     </div>
     <div class="no-watermark d-none">
         <img class=" preview-img w-50 m-auto" src="" alt="Generic placeholder image">
-
     </div>
 
     <input type="hidden" name="photos[]" class="listing_photos">
@@ -211,13 +212,15 @@ $(function(){
 
       var img = $('#uploaderFile' + id+' .with-watermark').find('img');
       var link = $('#uploaderFile' + id+' .with-enlarg-watermark').find('a');
-      var path = '{{asset("temporary/listings")}}/'+ data.photo.watermark
+      var path = '{{asset("temporary/listings")}}/'+ data.photo.folder+'/'+ data.photo.watermark
       img.attr('src',path);
       link.attr('href',path);
       $('#uploaderFile' + id).find('.watermark').attr('id','watermark-uploaderFile' + id)
+      $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)
+      $('#uploaderFile' + id).find('.photo-id').val( data.photo.id)
       var img = $('#uploaderFile' + id +' .no-watermark').find('img');
       var link = $('#uploaderFile' + id+' .no-enlarg-watermark').find('a');
-      var path = '{{asset("temporary/listings")}}/'+ data.photo.main
+      var path = '{{asset("temporary/listings")}}/'+ data.photo.folder+'/'+ data.photo.main
 
       link.attr('href',path);
       img.attr('src',path);
@@ -243,6 +246,31 @@ function toggleWatermark(input){
  $('#'+sliced_id+' .no-watermark').toggleClass('d-none')
  $('#'+sliced_id+' .with-enlarg-watermark').toggleClass('d-none')
  $('#'+sliced_id+' .no-enlarg-watermark').toggleClass('d-none')
+}
+
+
+function removePhoto(input){
+    var id         = input.id
+    var sliced_id  = id.slice(7);
+    var  photo_id = $('#'+sliced_id+' .photo-id').val();
+    $.ajax({
+        url:'{{  route("listings.remove-listing-temporary-photo") }}',
+        type:'POST',
+        data:{
+            _token: '{{ csrf_token() }}',
+            id    : photo_id,
+         
+        },
+        success: function(data){
+            
+            $('#'+sliced_id).remove();
+        
+        },
+        error: function(error){
+        
+        },
+    })
+
 }
 </script>
 
