@@ -16,18 +16,20 @@ class OpportunityQuestionEvent implements ShouldBroadcast
     public $opportunity_question_id;
     public $id;
     public $type;
+    public $opportunity;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($opportunity_question, $id)
+    public function __construct($opportunity_question, $id,$opportunity)
     {
         $this->opportunity_question_id = $opportunity_question->id;
         $this->id        = $id;
         $this->type      = 'question';
         $this->message   = 'A New Opportunity Question Has Been Made By Management';
+        $this->opportunity   = $opportunity;
     }
 
     /**

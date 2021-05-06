@@ -15,15 +15,17 @@ class OpportunityAnswerNotification extends Notification
 
 
     public $opportunity_answer;
+    public $opportunity;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($opportunity_answer)
+    public function __construct($opportunity_answer,$opportunity)
     {
         $this->opportunity_answer = $opportunity_answer;
+        $this->opportunity = $opportunity->id;
     }
 
     /**
@@ -46,7 +48,9 @@ class OpportunityAnswerNotification extends Notification
 
             'message' => 'Opportunity Answer Has Been Made Staff',
             'opportunity_answer_id' => $this->opportunity_answer->id,
-            'type'    => 'answer'
+            'opportunity_id' => $this->opportunity->id,
+            'type'    => 'answer',
+
         ];
     }
 }

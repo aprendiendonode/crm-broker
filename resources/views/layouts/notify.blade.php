@@ -27,7 +27,7 @@
 
 
                           @if( $notify->data['type'] == 'opportunity')
-                              <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('opportunity',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                         <i class="fab fa-opera"></i>
                                       </div>
@@ -40,7 +40,7 @@
                           
 
                           @if( $notify->data['type'] == 'task')
-                              <a href="{{ url('activity/tasks/'.request('agency')) }}" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('task',{{$notify->data['lead_task_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                         <i class="fab fa-tumblr"></i>
                                       </div>
@@ -50,7 +50,7 @@
                                     </a>
                           @endif 
                           @if( $notify->data['type'] == 'assign')
-                              <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('assign',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                         <i class="fab fa-atlassian"></i>
                                       </div>
@@ -61,7 +61,7 @@
                           @endif 
 
                           @if( $notify->data['type'] == 'answer')
-                          <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="dropdown-item notify-item">
+                          <a href="#" onclick="changeNotifyStatus('answer',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
                               <div class="notify-icon bg-secondary">
                                     <i class="fab fa-atlassian"></i>
                                   </div>
@@ -71,7 +71,7 @@
                                 </a>
                       @endif
                           @if( $notify->data['type'] == 'result')
-                              <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('result',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                         <i class="fab fa-r-project"></i>
                                       </div>
@@ -81,7 +81,7 @@
                                     </a>
                           @endif 
                           @if( $notify->data['type'] == 'question')
-                              <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('question',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                     <i class="fab fa-quora"></i> 
                                    </div>
@@ -190,14 +190,14 @@
 
 
       html += '<a href="'+url+'" class="dropdown-item notify-item"><div class="notify-icon bg-secondary">\
-              <i class="'+classFa+'"></i>'
+              <i class="'+classFa+'"></i>';
       html += '</div>';
       html += '<p class="notify-details">'+data.message;
       html += '<small class="text-muted">'+now;
       html +=  '</small></p> </a>';
    
-      $('.notification-count').text( parseInt($('.notification-count').text()) + 1 )
-      $('.noti-scroll .simplebar-content').prepend(html)
+      $('.notification-count').text( parseInt($('.notification-count').text()) + 1 );
+      $('.noti-scroll .simplebar-content').prepend(html);
 
       var src = "{{asset('audio/notification.mp3')}}";
       var audio = new Audio(src);
@@ -208,5 +208,55 @@
 
 
 
+</script>
+
+<script>
+    function goToLink(type, id) {
+        var url = '';
+        if (type == 'task') {
+            url = @json(url('activity/tasks/'.request('agency')).'?id=');
+            location.replace(url + id);
+        }
+        else if (type == 'assign') {
+            url = @json(url('sales/opportunities/'.request('agency').'?id=') );
+            location.replace(url + id);
+        }
+        else if (type == 'result') {
+            sessionStorage.setItem('open-result-tab', id);
+            url = @json(url('sales/opportunities/'.request('agency').'?id=') );
+            location.replace(url + id);
+        }
+        else if (type == 'question') {
+            sessionStorage.setItem('open-question-tab', id);
+            url = @json(url('sales/opportunities/'.request('agency').'?id=') );
+            location.replace(url + id);
+        }
+        else if (type == 'answer') {
+            sessionStorage.setItem('open-question-tab', id);
+            url = @json(url('sales/opportunities/'.request('agency').'?id=') );
+            location.replace(url + id);
+        }
+    }
+
+
+    function changeNotifyStatus(type, id, notify) {
+
+        let _token = $('meta[name="csrf-token"]').attr('content');
+        const url = @json(url('update_notification'));
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: {
+                notify: notify,
+                _token: _token
+            },
+            success: function (response) {
+                if (response) {
+                    goToLink(type,id);
+                }
+            },
+        });
+
+    }
 </script>
 @endpush

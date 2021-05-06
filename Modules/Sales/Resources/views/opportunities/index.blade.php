@@ -492,6 +492,7 @@
 
 <script>
     $(document).ready(function() {
+
         $('.select2').select2();
         $('.select2-multiple').select2();
         $(".basic-datepicker").flatpickr();
@@ -499,18 +500,31 @@
             twelvehour :false
         });
 
-    
-        $(".foo-filtering").footable()
-        $(".foo-assign").footable()
-        $(".foo-task").footable()
-        $(".foo-assign-history").footable()
-        $(".foo-call").footable()
-        $(".foo-question").footable()
-        $(".foo-result").footable()
-     
-        
-        
-        
+
+        $(".foo-filtering").footable();
+        $(".foo-assign").footable();
+        $(".foo-task").footable();
+        $(".foo-assign-history").footable();
+        $(".foo-call").footable();
+        $(".foo-question").footable();
+        $(".foo-result").footable();
+
+        if(sessionStorage.getItem('open-call-tab')){
+            $('.call_'+sessionStorage.getItem('open-call-tab')).removeClass('d-none');
+            sessionStorage.removeItem('open-call-tab')
+        }
+
+        if(sessionStorage.getItem('open-result-tab')){
+            $('.result_'+sessionStorage.getItem('open-result-tab')).removeClass('d-none');
+            sessionStorage.removeItem('open-result-tab')
+        }
+
+        if(sessionStorage.getItem('open-question-tab')){
+            $('.question_'+sessionStorage.getItem('open-question-tab')).removeClass('d-none');
+            sessionStorage.removeItem('open-question-tab')
+        }
+
+
     })
 </script>
 

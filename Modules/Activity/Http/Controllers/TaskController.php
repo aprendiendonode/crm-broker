@@ -45,7 +45,10 @@ class TaskController extends Controller
 
             $tasks = $tasks_completed;
         }
-
+        if(request('id'))
+        {
+            $tasks->where('id', request('id'));
+        }
         // static status
         //        if (request('action') == 'up_coming'){
         //
