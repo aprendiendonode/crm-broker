@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="col-sm-12">
-                    <label class="mb-1 font-weight-medium text-muted">@lang('listing.keywords')</label>
+                    <label class="mb-1 font-weight-medium text-muted">@lang('listing.keywords')  <i title="{{trans('listing.keyword_info')}}" class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" ></i> </label>
 
                     <input type="text" name="keywords" id="autocomplete-ajax"
                            placeholder="{{trans('listing.keywords')}}"

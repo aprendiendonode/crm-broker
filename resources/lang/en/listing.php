@@ -150,6 +150,7 @@ return [
     'contact_client'    =>  'Contact Client',
     'send_mail_confirmation'    =>  'Are you sure to Send Inquiry against this property.',
     'confirm_send_mail'    =>  'Confirm',
+    'keyword_info'    =>  'Search in title and description',
     /////////////////////////End Share Listing////////////////////////
 
 

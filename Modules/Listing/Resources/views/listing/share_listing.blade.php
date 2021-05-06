@@ -53,14 +53,16 @@
                         <td>Sale</td>
                         <td>Apartment</td>
                         <td>610 K / 2 Beds / Lake View / Dubai Gate 2</td>
-                        <td>New Dubai Gate 2</td>
+                        <td>New Dubai Gate 2
+                            <i title="610 K / 2 Beds / Lake View / Dubai Gate 2" class="fas fa-info-circle mr-2 " data-toggle="tooltip" data-placement="top" ></i>
+                        </td>
                         <td>755</td>
                         <td>610,000</td>
                         <td>06/05/21</td>
                         <td>AKT Real Estate Broker</td>
                         <td>
                             <a href="#" target="_blank">
-                                <i title="{{trans('listing.view')}}" class="fas fa-external-link-alt mr-2"></i>
+                                <i title="{{trans('listing.view')}}" class="fas fa-external-link-alt mr-2 " data-toggle="tooltip" data-placement="top" ></i>
                             </a>
 
                             <i
@@ -146,7 +148,10 @@
         $(document).ready(function () {
             $('.select2').select2();
             $(".basic-datepicker").flatpickr();
-        })
+        });
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
     </script>
 
 @endpush
