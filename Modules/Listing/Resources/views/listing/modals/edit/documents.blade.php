@@ -239,13 +239,14 @@ console.log(id)
                 return;
             }
 $.ajax({
-    url:'{{  route("listings.modify-listing-document-title") }}',
+    url:'{{  route("listings.modify-listing-title") }}',
     type:'POST',
     data:{
         _token: '{{ csrf_token() }}',
         id    : id.id,
         title : title,
         table : table,
+        type : 'document'
     },
     success: function(data){
     $('#rename_' + id.id).val('');

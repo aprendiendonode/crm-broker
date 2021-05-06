@@ -12,17 +12,21 @@ use Modules\Listing\Http\Repositories\ListingRepo;
 class ListingController extends Controller
 {
 
-
-    public function index($agency, ListingRepo $repo)
+    protected $repository;
+    function __construct(ListingRepo $repository)
+    {
+        $this->repository = $repository;
+    }
+    public function index($agency)
     {
         abort_if(Gate::denies('view_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return $repo->index($agency);
+        return $this->repository->index($agency);
     }
 
-    public function store(Request $request, ListingRepo $repo)
+    public function store(Request $request)
     {
         abort_if(Gate::denies('add_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return $repo->store($request);
+        return $this->repository->store($request);
     }
 
 
@@ -76,33 +80,37 @@ class ListingController extends Controller
     }
 
 
-    public function temporary_photos(Request $request, ListingRepo $repository)
+    public function temporary_photos(Request $request)
     {
-        return $repository->temporary_photos($request);
+        return $this->repository->temporary_photos($request);
     }
-    public function temporary_plans(Request $request, ListingRepo $repository)
+    public function temporary_plans(Request $request)
     {
-        return $repository->temporary_plans($request);
+        return $this->repository->temporary_plans($request);
     }
-    public function temporary_documents(Request $request, ListingRepo $repository)
+    public function temporary_documents(Request $request)
     {
-        return $repository->temporary_documents($request);
+        return $this->repository->temporary_documents($request);
     }
-    public function modify_document_title(Request $request, ListingRepo $repository)
+    public function modify_title(Request $request)
     {
-        return $repository->modify_document_title($request);
+        return $this->repository->modify_title($request);
     }
 
-    public function update(Request $request, $id, ListingRepo $repository)
+    public function update(Request $request, $id)
     {
-        return $repository->update($request, $id);
+        return $this->repository->update($request, $id);
     }
-    public function brochure(Request $request, $type, $agency, ListingRepo $repository)
+    public function brochure(Request $request, $type, $agency)
     {
-        return $repository->brochure($request, $type, $agency);
+        return $this->repository->brochure($request, $type, $agency);
     }
-    public function remove_listing_temporary_photo(Request $request, ListingRepo $repository)
+    public function remove_listing_temporary(Request $request)
     {
-        return $repository->remove_listing_temporary_photo($request);
+        return $this->repository->remove_listing_temporary($request);
+    }
+    public function update_listing_temporary_active(Request $request)
+    {
+        return $this->repository->update_listing_temporary_active($request);
     }
 }

@@ -1,9 +1,13 @@
 <div id="documents-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="documents-modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-full-width">
         <div class="modal-content">
+
+
+
             <div class="modal-header py-2">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
+
             <div class="modal-body">
                 <div class="text-center mb-3">
                     <i class="far fa-file-pdf fa-2x"></i>
@@ -27,12 +31,16 @@
                         <ul class="list-unstyled p-2 d-flex row mx-0" id="document-files">
                           <!-- <div class="row" id="files"> -->
                             {{-- <li class="text-muted text-center empty">No files uploaded.</li> --}}
-                          <!-- </div> -->
                         </ul>
+                    </div> 
                       </div>
                     </div>
-                  </div><!-- /file list -->
+                
             
+
+
+
+
 
 
 
@@ -60,6 +68,7 @@
 
                 </p>
             </div>
+        </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary">@lang('listing.done')</button>
             </div>
@@ -74,7 +83,8 @@
     justify-content: space-between;
     flex-direction: column;
     height: 100%;">
-
+ <input type="hidden" class="document-id" >
+ <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this) : false"></i> 
     <div class="document">
             <i class="fa fa-file-contract fa-4x "></i>
     </div>
@@ -168,6 +178,8 @@
     $('#documentUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.document.id)
     $('#documentUploaderFile' + id).find('.title').attr('id','title_'+data.document.id)
 
+    $('#documentUploaderFile' + id).find('.remove-document').attr('id','remove-documentUploaderFile' + id)
+      $('#documentUploaderFile' + id).find('.document-id').val( data.document.id)
 
     },
     onUploadError: function(id, xhr, status, message){
@@ -186,13 +198,14 @@
         return;
     }
     $.ajax({
-        url:'{{  route("listings.modify-listing-document-title") }}',
+        url:'{{  route("listings.modify-listing-title") }}',
         type:'POST',
         data:{
             _token: '{{ csrf_token() }}',
             id    : id.id,
             title : title,
             table : table,
+            type  : 'document'
         },
         success: function(data){
         $('#rename_' + id.id).val('');
@@ -209,6 +222,33 @@
         },
     })
     }
+
+
+
+    function removeDocument(input){
+            var id         = input.id
+            var sliced_id  = id.slice(7);
+            var  document_id = $('#'+sliced_id+' .document-id').val();
+            $.ajax({
+                url:'{{  route("listings.remove-listing-temporary") }}',
+                type:'POST',
+                data:{
+                    _token: '{{ csrf_token() }}',
+                    id    : document_id,
+                    type : 'document'
+                
+                },
+                success: function(data){
+                    
+                    $('#'+sliced_id).remove();
+                
+                },
+                error: function(error){
+                
+                },
+            })
+
+}
 
  </script>
 

@@ -69,7 +69,7 @@
                                                         <input type="checkbox" checked name="waterMark"
                                                          class="plan-watermark" 
                                                          id="watermark-planUploaderFile{{ $uniq_id }}"
-                                                         onchange="togglePlanWatermark(this)">
+                                                         onchange="editTogglePlanWatermark(this)">
                                                     </div>
                                                     </div>
                                                 </div>
@@ -171,7 +171,7 @@
             <div>
             <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">WaterMark</label>
-                <input type="checkbox" checked name="waterMark" class="plan-watermark" onchange="togglePlanWatermark(this)">
+                <input type="checkbox" checked name="waterMark" class="plan-watermark" onchange="editTogglePlanWatermark(this)">
             </div>
             </div>
         </div>
@@ -259,7 +259,7 @@ $(function(){
     });
 
 
-    function togglePlanWatermark(input){
+    function editTogglePlanWatermark(input){
         var id         = input.id
         var sliced_id  = id.slice(10);
         $('#'+sliced_id+' .plan-with-watermark').toggleClass('d-none')

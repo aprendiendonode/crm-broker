@@ -654,7 +654,7 @@ class ListingRepo
     }
 
 
-    public function modify_document_title($request)
+    public function modify_title($request)
     {
 
         if ($request->ajax()) {
@@ -665,7 +665,8 @@ class ListingRepo
 
                     'title'          => ['required', 'string', 'max:225'],
                     'id'             => ['required', 'integer'],
-                    'table'          => ['required', 'string', 'max:225'],
+                    'table'          => ['required', 'string', 'max:225', 'in:temporary_document,temporary_plan'],
+                    'type'          => ['required', 'string', 'max:225', 'in:document,plan'],
 
                 ]);
 
@@ -673,16 +674,32 @@ class ListingRepo
                     return response()->json(['message' => $validator->errors()->all()[0]], 400);
                 }
                 $document = '';
-                if ($request->table == 'temporary_document') {
 
-                    $document = TemporaryDocument::findOrFail($request->id)->update([
-                        'title'  => $request->title,
-                    ]);
-                } else {
-                    $document = ListingDocument::findOrFail($request->id)->update([
-                        'title'  => $request->title,
-                    ]);
+                if ($request->type == 'document') {
+                    if ($request->table == 'temporary_document') {
+
+                        $document = TemporaryDocument::findOrFail($request->id)->update([
+                            'title'  => $request->title,
+                        ]);
+                    } else {
+                        $document = ListingDocument::findOrFail($request->id)->update([
+                            'title'  => $request->title,
+                        ]);
+                    }
                 }
+                if ($request->type == 'plan') {
+                    if ($request->table == 'temporary_plan') {
+
+                        $plan = TemporaryPlan::findOrFail($request->id)->update([
+                            'title'  => $request->title,
+                        ]);
+                    } else {
+                        $plan = ListingPlan::findOrFail($request->id)->update([
+                            'title'  => $request->title,
+                        ]);
+                    }
+                }
+
 
                 DB::commit();
 
@@ -952,17 +969,87 @@ class ListingRepo
 
 
 
-    public function remove_listing_temporary_photo($request)
+    public function remove_listing_temporary($request)
     {
         if ($request->ajax()) {
 
             try {
                 DB::beginTransaction();
-                TemporaryListing::findOrFail($request->id)->delete();
+
+                if ($request->table == 'temporary') {
+
+                    if ($request->type == 'photo') {
+                        $photo = TemporaryListing::findOrFail($request->id);
+
+                        deleteDirectory(public_path("temporary/listings/" . $photo->folder));
+                        $photo->delete();
+                    }
+                    if ($request->type == 'plan') {
+                        TemporaryPlan::findOrFail($request->id)->delete();
+                    }
+                    if ($request->type == 'document') {
+                        TemporaryDocument::findOrFail($request->id)->delete();
+                    }
+                }
+                if ($request->table == 'main') {
+
+                    if ($request->type == 'photo') {
+                        $photo = ListingPhoto::findOrFail($request->id);
+                        deleteDirectory(public_path('listings/photos/agency_' . $photo->listing->agency_id . '/listing_' . $photo->listing->id . '/photo_' . $photo->id));
+                        $photo->delete();
+                    }
+                    if ($request->type == 'plan') {
+                        ListingPlan::findOrFail($request->id)->delete();
+                    }
+                    if ($request->type == 'document') {
+                        ListingDocument::findOrFail($request->id)->delete();
+                    }
+                }
+                DB::commit();
+
+                return response()->json(['message' => trans('listing.removed')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+
+
+    public function update_listing_temporary_active($request)
+    {
+        if ($request->ajax()) {
+
+            try {
+
+                DB::beginTransaction();
+                if ($request->table == 'temporary') {
+                    if ($request->type == 'photo') {
+                        $photo = TemporaryListing::findOrFail($request->id);
+                        $photo->update(['active' =>  $photo->active == 'watermark' ? 'main' : 'watermark']);
+                    }
+                    if ($request->type == 'plan') {
+                        $plan = TemporaryPlan::findOrFail($request->id);
+                        $plan->update(['active' =>  $plan->active == 'watermark' ? 'main' : 'watermark']);
+                    }
+                }
+
+
+                if ($request->table == 'main') {
+                    if ($request->type == 'photo') {
+                        $photo = ListingPhoto::findOrFail($request->id);
+                        $photo->update(['active' =>  $photo->active == 'watermark' ? 'main' : 'watermark']);
+                    }
+                    if ($request->type == 'plan') {
+                        $plan = ListingPlan::findOrFail($request->id);
+                        $plan->update(['active' =>  $plan->active == 'watermark' ? 'main' : 'watermark']);
+                    }
+                }
+
 
                 DB::commit();
 
-                return response()->json(['message' => trans('listing.photo_removed')], 200);
+                return response()->json(['message' => trans('listing.updated')], 200);
             } catch (\Exception $e) {
                 DB::rollback();
 

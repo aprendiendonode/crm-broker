@@ -59,9 +59,11 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
         Route::post('upload-image', 'ListingController@temporary_photos')->name('listing.temporary-photos');
         Route::post('upload-plans', 'ListingController@temporary_plans')->name('listing.temporary-plans');
         Route::post('upload-documents', 'ListingController@temporary_documents')->name('listing.temporary-documents');
-        Route::post('modify-listing-document-title', 'ListingController@modify_document_title')
-            ->name('listings.modify-listing-document-title');
-        Route::post('remove-listing-temporary-photo', 'ListingController@remove_listing_temporary_photo')
-            ->name('listings.remove-listing-temporary-photo');
+        Route::post('modify-listing-title', 'ListingController@modify_title')
+            ->name('listings.modify-listing-title');
+        Route::post('remove-listing-temporary', 'ListingController@remove_listing_temporary')
+            ->name('listings.remove-listing-temporary');
+        Route::post('update-listing-temporary-active', 'ListingController@update_listing_temporary_active')
+            ->name('listings.update-listing-temporary-active');
     });
 });
