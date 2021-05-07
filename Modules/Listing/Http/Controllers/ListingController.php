@@ -133,4 +133,16 @@ class ListingController extends Controller
     {
         return $repository->block($request);
     }
+    public function unblock(Request $request, ListingRepo $repository)
+    {
+        return $repository->unblock($request);
+    }
+    public function old_requests($agency, ListingRepo $repository)
+    {
+        return $repository->old_requests($agency);
+    }
+    public function black_listed($agency, ListingRepo $repository)
+    {
+        return $repository->black_listed($agency);
+    }
 }

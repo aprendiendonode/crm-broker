@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title',trans('listing.requests'))
+@section('title',trans('listing.old_requests'))
 @section('css')
 
 
@@ -17,31 +17,32 @@
 
         <div class="d-flex justify-content-between mb-3">
             <h4>
-                @lang('listing.requests')
+                @lang('listing.old_requests')
             </h4>
 
 
-            <a href="#" class="list-link active">
-                <i class="fas fa-save mr-1"></i>
-                <div>@lang('listing.requests')</div>
-            </a>
+
             @if(owner())
-                <a href="{{ url('listing/old_requests/'.request('agency')) }}" class="list-link">
+                <a href="{{ url('listing/requests/'.request('agency')) }}" class="list-link">
                     <i class="fas fa-save mr-1"></i>
-                    <div>@lang('listing.old_requests')</div>
+                    <div>@lang('listing.requests')</div>
                 </a>
             @elseif(moderator())
-                <a href="{{ url('listing/old_requests/'.request('agency')) }}" class="list-link">
+                <a href="{{ url('listing/requests/'.request('agency')) }}" class="list-link">
                     <i class="fas fa-save mr-1"></i>
-                    <div>@lang('listing.old_requests')</div>
+                    <div>@lang('listing.requests')</div>
                 </a>
             @else
-                <a href="{{ url('listing/old_requests/'.auth()->user()->agency_id) }}" class="list-link">
+                <a href="{{ url('listing/requests/'.auth()->user()->agency_id) }}" class="list-link">
                     <i class="fas fa-save mr-1"></i>
-                    <div>@lang('listing.old_requests')</div>
+                    <div>@lang('listing.requests')</div>
                 </a>
             @endif
 
+            <a href="#" class="list-link active">
+                <i class="fas fa-save mr-1"></i>
+                <div>@lang('listing.old_requests')</div>
+            </a>
 
 
             @if(owner())
@@ -72,36 +73,19 @@
                 <thead>
                 <tr>
                     <th>@lang('listing.agency') </th>
-                    <th> @lang('listing.controls') </th>
+                    <th>@lang('listing.response') </th>
 
                 </tr>
                 </thead>
                 <tbody>
-                @forelse($agencies as $agency)
-                   @if($sender->id != $agency->id && !in_array($agency->id,$blocked_from) && !in_array($agency->id,$blocked_to) )
+                @forelse($requests as $request)
+
                        <tr>
-                           <td>{{$agency->company_name_en ?? '' }}</td>
-                           <td>
+                           <td>{{$request->receiver->company_name_en ?? '' }}</td>
+                           <td>{{ucfirst($request->response) ?? '' }}</td>
 
-
-                               <i
-                                   title="{{trans('listing.send_request')}}"
-                                   data-toggle="modal" data-target="#send_mail-alert-modal_{{$agency->id ?? ''}}"
-
-                                   class="fas fa-envelope cursor-pointer mr-2">
-                               </i>
-
-                               <i
-                                   title="{{trans('listing.block')}}"
-                                   data-toggle="modal" data-target="#block_agency-alert-modal_{{$agency->id ?? ''}}"
-
-                                   class="fas fa-user-lock cursor-pointer">
-                               </i>
-                           </td>
                        </tr>
 
-                    @include('listing::listing.share_request_modals')
-                   @endif
                 @empty
                 @endforelse
                 </tbody>
@@ -109,7 +93,7 @@
 
         </div>
         <div class="mt-2">
-            {{ $agencies->links() }}
+            {{ $requests->links() }}
         </div>
     </div>
 @endsection

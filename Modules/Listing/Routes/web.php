@@ -77,5 +77,11 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.block');
         Route::get('request_response/{response}/{id}', 'ListingController@request_response')
             ->name('listings.request_response');
+        Route::get('old_requests/{agency}', 'ListingController@old_requests')
+            ->name('listings.old_requests');
+        Route::get('black_listed/{agency}', 'ListingController@black_listed')
+            ->name('listings.black_listed');
+        Route::post('unblock', 'ListingController@unblock')
+            ->name('listings.unblock');
     });
 });

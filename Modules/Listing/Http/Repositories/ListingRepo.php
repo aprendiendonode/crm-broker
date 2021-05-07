@@ -1059,6 +1059,7 @@ class ListingRepo
 
     public function share_listing($agency)
     {
+
         return view('listing::listing.share_listing');
     }
 
@@ -1077,6 +1078,8 @@ class ListingRepo
         $sender = Agency::where('id',$agency)->with('black_listed_to','black_listed_from')->first();
         $blocked_from = $sender->black_listed_from->pluck('black_listed_agency_id')->toArray();
         $blocked_to = $sender->black_listed_to->pluck('agency_id')->toArray();
+
+
         return view('listing::listing.requests', compact('agencies', 'sender','blocked_from','blocked_to'));
     }
 
@@ -1192,5 +1195,47 @@ class ListingRepo
 
 
     }
+
+
+
+    public function old_requests($agency)
+    {
+        $per_page = 10;
+
+        $requests = \App\Models\Request::where('sender_id',$agency)->paginate($per_page);
+
+        return view('listing::listing.old_requests', compact('requests'));
+    }
+
+
+    public function black_listed($agency)
+    {
+        $per_page = 10;
+
+        $black_listed_agencies = BlackList::where('agency_id',$agency)->paginate($per_page);
+
+        return view('listing::listing.black_listed', compact('black_listed_agencies'));
+    }
+
+
+    public function unblock($request)
+    {
+
+        DB::beginTransaction();
+        try {
+
+            BlackList::findorfail($request->id)->delete();
+
+
+            DB::commit();
+            return back()->with(flash(trans('listing.unblock_applied'), 'success'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
+        }
+
+
+    }
+
 
 }
