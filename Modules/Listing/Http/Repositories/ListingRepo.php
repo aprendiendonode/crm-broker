@@ -651,63 +651,6 @@ class ListingRepo
     }
 
 
-    public function modify_title($request)
-    {
-
-        if ($request->ajax()) {
-            DB::beginTransaction();
-
-            try {
-                $validator = Validator::make($request->all(), [
-
-                    'title' => ['required', 'string', 'max:225'],
-                    'id' => ['required', 'integer'],
-                    'table' => ['required', 'string', 'max:225', 'in:temporary_document,temporary_plan'],
-                    'type' => ['required', 'string', 'max:225', 'in:document,plan'],
-
-                ]);
-
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
-                }
-                $document = '';
-
-                if ($request->type == 'document') {
-                    if ($request->table == 'temporary_document') {
-
-                        $document = TemporaryDocument::findOrFail($request->id)->update([
-                            'title' => $request->title,
-                        ]);
-                    } else {
-                        $document = ListingDocument::findOrFail($request->id)->update([
-                            'title' => $request->title,
-                        ]);
-                    }
-                }
-                if ($request->type == 'plan') {
-                    if ($request->table == 'temporary_plan') {
-
-                        $plan = TemporaryPlan::findOrFail($request->id)->update([
-                            'title' => $request->title,
-                        ]);
-                    } else {
-                        $plan = ListingPlan::findOrFail($request->id)->update([
-                            'title' => $request->title,
-                        ]);
-                    }
-                }
-
-
-                DB::commit();
-
-                return response()->json(['message' => trans('listing.title_modified'), 'data' => $document], 200);
-            } catch (\Exception $e) {
-                DB::rollback();
-
-                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
-            }
-        }
-    }
 
 
     public function update($request, $id)
@@ -1249,5 +1192,5 @@ class ListingRepo
 
 
     }
-}
+
 }
