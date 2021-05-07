@@ -71,7 +71,7 @@
                                                 @if($photo->active == 'watermark') checked @endif
                                                 name="waterMark"
                                                  id="watermark-uploaderFile{{ $uniq_id }}"
-                                                 class="watermark" onchange="EditToggleWatermark(this)">
+                                                 class="watermark" onchange="toggleWatermark(this,'main')">
                                                 </div>
                                             </div>
                                             </div>
@@ -211,7 +211,7 @@
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">@lang('listing.watermark')</label>
-                <input type="checkbox" checked name="waterMark" class="watermark" onchange="EditToggleWatermark(this)">
+                <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this,'temporary')">
               </div>
             </div>
           </div>

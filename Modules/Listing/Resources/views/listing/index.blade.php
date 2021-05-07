@@ -742,8 +742,139 @@ function removePhoto(input,table){
 }
 
 
+function removeDocument(input,table){
+    
+            var id         = input.id
+            var sliced_id  = id.slice(7);
+            var  document_id = $('#'+sliced_id+' .document-id').val();
+            $.ajax({
+                url:'{{  route("listings.remove-listing-temporary") }}',
+                type:'POST',
+                data:{
+                    _token: '{{ csrf_token() }}',
+                    id    : document_id,
+                    type  : 'document',
+                    table : table
+                
+                },
+                success: function(data){
+                    
+                    $('#'+sliced_id).remove();
+                
+                },
+                error: function(error){
+                
+                },
+            })
 
-function EditToggleWatermark(input){
+}
+
+
+
+
+function removePlan(input,table){
+            var id         = input.id
+            var sliced_id  = id.slice(7);
+            var  plan_id = $('#'+sliced_id+' .plan-id').val();
+            $.ajax({
+                url:'{{  route("listings.remove-listing-temporary") }}',
+                type:'POST',
+                data:{
+                    _token: '{{ csrf_token() }}',
+                    id    : plan_id,
+                    type : 'plan',
+                    table : table
+                
+                },
+                success: function(data){
+                    
+                    $('#'+sliced_id).remove();
+                
+                },
+                error: function(error){
+                
+                },
+            })
+
+}
+
+
+function modifyName(id,table,type){
+
+    var title = $('#rename_' + id.id).val();
+
+    if(title === ''){
+        return;
+    }
+    $.ajax({
+        url:'{{  route("listings.modify-listing-title") }}',
+        type:'POST',
+        data:{
+            _token: '{{ csrf_token() }}',
+            id    : id.id,
+            title : title,
+            table : table,
+            type  : type
+        },
+        success: function(data){
+        $('#rename_' + id.id).val('');
+        $('#title_' + id.id).text(title);
+        $('#save_success_' + id.id).text(data.message);
+        $('#save_success_' + id.id).removeClass('d-none');
+        setTimeout(function () {
+            $('#save_success_' + id.id).addClass('d-none');
+        },2000)
+
+        },
+        error: function(error){
+        
+        },
+    })
+}
+
+
+
+
+function togglePlanWatermark(input,table){
+        var id         = input.id
+        var sliced_id  = id.slice(10);
+        var  plan_id = $('#'+sliced_id+' .plan-id').val();
+
+
+    $.ajax({
+        url:'{{  route("listings.update-listing-temporary-active") }}',
+        type:'POST',
+        data:{
+            _token: '{{ csrf_token() }}',
+            id    : plan_id,
+            type : 'plan',
+            table : table
+         
+        },
+        success: function(data){
+            
+                //TODO request ajax to change which one of the should be on to use later
+            $('#'+sliced_id+' .plan-with-watermark').toggleClass('d-none')
+            $('#'+sliced_id+' .plan-no-watermark').toggleClass('d-none')
+            $('#'+sliced_id+' .plan-with-enlarg-watermark').toggleClass('d-none')
+            $('#'+sliced_id+' .plan-no-enlarg-watermark').toggleClass('d-none')
+        
+
+        
+        },
+        error: function(error){
+        
+        },
+    })
+
+
+}
+  
+
+
+
+
+function toggleWatermark(input,table){
     var id         = input.id
     var sliced_id  = id.slice(10);
     var  photo_id = $('#'+sliced_id+' .photo-id').val();
@@ -756,7 +887,7 @@ function EditToggleWatermark(input){
             _token: '{{ csrf_token() }}',
             id    : photo_id,
             type:'photo',
-            table:'main'
+            table:table
          
         },
         success: function(data){

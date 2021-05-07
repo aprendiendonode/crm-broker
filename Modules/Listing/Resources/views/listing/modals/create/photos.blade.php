@@ -141,7 +141,7 @@
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">WaterMark</label>
-                <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this)">
+                <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this,'temporary')">
               </div>
             </div>
           </div>
@@ -239,39 +239,6 @@ $(function(){
   });
 });
 
-
-function toggleWatermark(input){
- var id         = input.id
- var sliced_id  = id.slice(10);
- var  photo_id = $('#'+sliced_id+' .photo-id').val();
- //TODO request ajax to change which one of the should be on to use later
-
-
- $.ajax({
-        url:'{{  route("listings.update-listing-temporary-active") }}',
-        type:'POST',
-        data:{
-            _token: '{{ csrf_token() }}',
-            id    : photo_id,
-            type:'photo',
-            table : 'temporary'
-         
-        },
-        success: function(data){
-            
-          $('#'+sliced_id+' .with-watermark').toggleClass('d-none')
-          $('#'+sliced_id+' .no-watermark').toggleClass('d-none')
-          $('#'+sliced_id+' .with-enlarg-watermark').toggleClass('d-none')
-          $('#'+sliced_id+' .no-enlarg-watermark').toggleClass('d-none')
-        
-        },
-        error: function(error){
-        
-        },
-    })
-
-
-}
 
 
 </script>

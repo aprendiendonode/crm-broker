@@ -35,7 +35,12 @@
                                             justify-content: space-between;
                                             flex-direction: column;
                                             height: 100%;">
-                                            <div class="plan-with-watermark">
+                                                <input type="hidden" class="plan-id" value="{{ $plan->id }}" >
+                                                <i 
+                                                id="remove-planUploaderFile{{ $uniq_id }}"
+                                                class="far fa-times-circle cursor-pointer text-danger fa-2x remove-plan"
+                                                 onclick="return confirm('are you sure ?') ? removePlan(this,'main') : false;"></i> 
+                                            <div class="plan-with-watermark @if($plan->active != 'watermark') d-none @endif">
                                                 <img class=" preview-img w-50 m-auto"
                                                
                                                  src="{{ asset('listings/plans/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/plan_'.$plan->id.'/'.$plan->watermark)  }}"
@@ -43,7 +48,7 @@
                                                  alt="Generic placeholder image">
 
                                             </div>
-                                            <div class="plan-no-watermark d-none">
+                                            <div class="plan-no-watermark @if($plan->active == 'watermark') d-none @endif">
                                                 <img class=" preview-img w-50 m-auto" 
                                                 src="{{ asset('listings/plans/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/plan_'.$plan->id.'/'.$plan->main)  }}"
 
@@ -54,25 +59,56 @@
                                             <input type="hidden" name="edit_floor_plans_{{ $listing->id }}[]" class="listing_plans">
 
                                                 <div class="media-body mb-1">
+                                                    <div class="d-flex justify-content-between my-2">
+    
+                                                        <div>
+                                                        <div class="form-group mb-0 title"
+                                                        id="title_{{ $plan->id }}"
+                                                        >
+                                                        {{ $plan->title ? Str::ucfirst( $plan->title) : trans('listing.no_title') }}
+                                                    </div>
+                                                        </div>
+                                                    </div>
+
+
                                                 <div class="d-flex justify-content-between my-2">
-                                                    <div class="plan-with-enlarg-watermark">
+                                                    <div class="plan-with-enlarg-watermark @if($plan->active != 'watermark') d-none @endif">
                                                         
                                                         <a target="_blank" href="{{ asset('listings/plans/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/plan_'.$plan->id.'/'.$plan->watermark)  }}">enlarg</a>
 
                                                     </div>
-                                                    <div class="d-none plan-no-enlarg-watermark">
+                                                    <div class="@if($plan->active == 'watermark') d-none @endif  plan-no-enlarg-watermark">
                                                         <a target="_blank" href="{{ asset('listings/plans/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/plan_'.$plan->id.'/'.$plan->main)  }}">enlarg</a>
                                                     </div>
                                                     <div>
                                                     <div class="form-group mb-0">
                                                         <label for="waterMark" class="mb-0">WaterMark</label>
-                                                        <input type="checkbox" checked name="waterMark"
+                                                        <input type="checkbox"
+                                                        @if($plan->active == 'watermark') checked @endif 
+                                                          name="waterMark"
                                                          class="plan-watermark" 
                                                          id="watermark-planUploaderFile{{ $uniq_id }}"
-                                                         onchange="editTogglePlanWatermark(this)">
+                                                         onchange="togglePlanWatermark(this,'main')">
                                                     </div>
                                                     </div>
                                                 </div>
+
+
+                                                
+                                              
+                                                <div class="mb-2 d-flex justify-content-start">
+                                                    <input
+                                                    id="rename_{{ $plan->id }}"
+                                                     type="text"
+                                                     class="form-control rename_value"
+                                                     placeholder="@lang('listing.enter_title')">
+                                                    <i 
+                                                    id="{{ $plan->id }}"
+                                                    class="fa fa-check text-success mt-2 ml-2 cursor-pointer rename" 
+                                                    
+                                                    onclick="event.preventDefault();modifyName(this,'listing_plans','plan')"></i>
+                                                </div>
+                                                <div class="text-success save-title-success"  id="save_success_{{ $plan->id }}" > </div>
                                                 
 
                                                 <hr class="mt-1 mb-1" />
@@ -147,6 +183,8 @@
     justify-content: space-between;
     flex-direction: column;
     height: 100%;">
+    <input type="hidden" class="plan-id" >
+    <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-plan" onclick="return confirm('are you sure ?') ? removePlan(this,'temporary') : false"></i> 
     <div class="plan-with-watermark">
         <img class=" preview-img w-50 m-auto" src="" alt="Generic placeholder image">
 
@@ -159,22 +197,45 @@
     <input type="hidden" name="edit_floor_plans_{{ $listing->id }}[]" class="listing_plans">
 
         <div class="media-body mb-1">
-        <div class="d-flex justify-content-between my-2">
-            <div class="plan-with-enlarg-watermark">
-                
-                <a target="_blank" href="">enlarg</a>
 
+
+            <div class="d-flex justify-content-between my-2">
+    
+                <div>
+                <div class="form-group mb-0 title">
+                @lang('listing.no_title')
+                </div>
+                </div>
             </div>
-            <div class="d-none plan-no-enlarg-watermark">
-                <a target="_blank" href="">enlarg</a>
+
+
+
+            <div class="d-flex justify-content-between my-2">
+                <div class="plan-with-enlarg-watermark">
+                    
+                    <a target="_blank" href="">enlarg</a>
+
+                </div>
+                <div class="d-none plan-no-enlarg-watermark">
+                    <a target="_blank" href="">enlarg</a>
+                </div>
+                <div>
+                <div class="form-group mb-0">
+                    <label for="waterMark" class="mb-0">WaterMark</label>
+                    <input type="checkbox" checked name="waterMark" class="plan-watermark" onchange="togglePlanWatermark(this,'temporary')">
+                </div>
+                </div>
             </div>
-            <div>
-            <div class="form-group mb-0">
-                <label for="waterMark" class="mb-0">WaterMark</label>
-                <input type="checkbox" checked name="waterMark" class="plan-watermark" onchange="editTogglePlanWatermark(this)">
-            </div>
-            </div>
+
+        <div class="mb-2 d-flex justify-content-start">
+            <input type="text" class="form-control rename_value"  placeholder="@lang('listing.enter_title')">
+            <i 
+            class="fa fa-check text-success mt-2 ml-2 cursor-pointer rename" 
+            
+            onclick="event.preventDefault();modifyName(this,'temporary_plans','plan')"></i>
         </div>
+
+        <div class="text-success save-title-success" > </div>
         
 
         <div class="progress mb-2">
@@ -231,6 +292,12 @@ $(function(){
             edit_plan_ui_multi_update_file_status(id, 'success', 'Upload Complete',listing_id);
             edit_plan_ui_multi_update_file_progress(id, 100, 'success', false,listing_id);
 
+
+            $('#planUploaderFile' + id).find('.rename').attr('id',data.plan.id)
+            $('#planUploaderFile' + id).find('.rename_value').attr('id','rename_'+data.plan.id)
+            $('#planUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.plan.id)
+            $('#planUploaderFile' + id).find('.title').attr('id','title_'+data.plan.id)
+
             var img = $('#planUploaderFile' + id+' .plan-with-watermark').find('img');
             var link = $('#planUploaderFile' + id+' .plan-with-enlarg-watermark').find('a');
             var path = '{{asset("temporary/plans")}}/'+data.plan.folder +'/'+data.plan.watermark
@@ -246,6 +313,9 @@ $(function(){
             $('#planUploaderFile' + id + ' .listing_plans').val(data.plan.folder);
 
 
+            $('#planUploaderFile' + id).find('.remove-plan').attr('id','remove-planUploaderFile' + id)
+            $('#planUploaderFile' + id).find('.plan-id').val( data.plan.id)
+
         },
         onUploadError: function(id, xhr, status, message){
             edit_plan_ui_multi_update_file_status(id, 'danger', message,listing_id);
@@ -259,14 +329,6 @@ $(function(){
     });
 
 
-    function editTogglePlanWatermark(input){
-        var id         = input.id
-        var sliced_id  = id.slice(10);
-        $('#'+sliced_id+' .plan-with-watermark').toggleClass('d-none')
-        $('#'+sliced_id+' .plan-no-watermark').toggleClass('d-none')
-        $('#'+sliced_id+' .plan-with-enlarg-watermark').toggleClass('d-none')
-        $('#'+sliced_id+' .plan-no-enlarg-watermark').toggleClass('d-none')
-    }
 
 
 

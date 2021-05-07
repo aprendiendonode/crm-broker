@@ -84,7 +84,7 @@
     flex-direction: column;
     height: 100%;">
  <input type="hidden" class="document-id" >
- <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this) : false"></i> 
+ <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this,'temporary') : false"></i> 
     <div class="document">
             <i class="fa fa-file-contract fa-4x "></i>
     </div>
@@ -114,7 +114,7 @@
             <i 
             class="fa fa-check text-success mt-2 ml-2 cursor-pointer document_rename" 
             
-            onclick="event.preventDefault();documentModifyName(this,'temporary_document')"></i>
+            onclick="event.preventDefault();modifyName(this,'temporary_documents','document')"></i>
         </div>
         <div class="text-success save-title-success" > </div>
         
@@ -190,65 +190,9 @@
     });
     });
 
-    function documentModifyName(id,table){
-
-    var title = $('#rename_' + id.id).val();
-
-    if(title === ''){
-        return;
-    }
-    $.ajax({
-        url:'{{  route("listings.modify-listing-title") }}',
-        type:'POST',
-        data:{
-            _token: '{{ csrf_token() }}',
-            id    : id.id,
-            title : title,
-            table : table,
-            type  : 'document'
-        },
-        success: function(data){
-        $('#rename_' + id.id).val('');
-        $('#title_' + id.id).text(title);
-        $('#save_success_' + id.id).text(data.message);
-        $('#save_success_' + id.id).removeClass('d-none');
-        setTimeout(function () {
-            $('#save_success_' + id.id).addClass('d-none');
-        },2000)
-
-        },
-        error: function(error){
-        
-        },
-    })
-    }
 
 
 
-    function removeDocument(input){
-            var id         = input.id
-            var sliced_id  = id.slice(7);
-            var  document_id = $('#'+sliced_id+' .document-id').val();
-            $.ajax({
-                url:'{{  route("listings.remove-listing-temporary") }}',
-                type:'POST',
-                data:{
-                    _token: '{{ csrf_token() }}',
-                    id    : document_id,
-                    type : 'document'
-                
-                },
-                success: function(data){
-                    
-                    $('#'+sliced_id).remove();
-                
-                },
-                error: function(error){
-                
-                },
-            })
-
-}
 
  </script>
 
