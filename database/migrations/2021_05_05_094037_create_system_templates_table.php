@@ -98,6 +98,13 @@ class CreateSystemTemplatesTable extends Migration
             'description_ar' => '<p>Hi there,</p><p> Answer Has Been Made By : {ANSWERED_BY} To. </p><p>Question : {QUESTION} .</p><p>Answer Is : {Answer} .</p><p>Opportunity Name : {OPPORTUNITY_NAME} .</p><p>You can view this Answer by logging in to the portal using the link below.</p><p><br><a href="{OPPORTUNITY_URL}"><strong>View Task</strong></a><br><br>Regards<br>The {SITE_NAME} Team</p>',
             'slug' => 'client_answer'
         ]);
+        SystemTemplate::create([
+            'title' => 'Share Request',
+            'type' => 'email',
+            'description_en' => '<p> This {AGENCY} Request to share listing with you?</p><a href="{ACTION_URL}">Accept</a><a href="{REFUSE_URL}">Refuse</a><a href="{BLOCK_URL}">block</a>',
+            'description_ar' => '<p> This {AGENCY} Request to share listing with you?</p><a href="{ACTION_URL}">Accept</a><a href="{REFUSE_URL}">Refuse</a><a href="{BLOCK_URL}">block</a>',
+            'slug' => 'share_request'
+        ]);
     }
 
     /**

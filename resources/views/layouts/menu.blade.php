@@ -311,6 +311,21 @@
                                 </li>
                             @endif
 
+                            @if(owner())
+                                <li>
+                                    <a href="{{ url('listing/requests/'.request('agency')) }}">@lang('listing.requests')</a>
+                                </li>
+
+                            @elseif(moderator())
+                                <li>
+                                    <a href="{{ url('listing/requests/'.request('agency')) }}">@lang('listing.requests')</a>
+                                </li>
+                            @else
+                                <li>
+                                    <a href="{{ url('listing/requests/'.auth()->user()->agency_id) }}">@lang('listing.requests')</a>
+                                </li>
+                            @endif
+
                             <li>
 
                                 <a href="#sidebarlistingSetting" data-toggle="collapse">

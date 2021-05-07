@@ -2,6 +2,10 @@
 
 namespace Modules\Listing\Http\Repositories;
 
+use App\Mail\ShareRequest;
+use App\Models\BlackList;
+use App\Models\SystemTemplate;
+use App\Models\Template;
 use File;
 use Gate;
 use App\Models\Agency;
@@ -10,6 +14,8 @@ use App\Jobs\SendEmail;
 
 use App\Models\Business;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\Client;
@@ -38,8 +44,8 @@ class ListingRepo
 
         try {
             $pagination = true;
-            $business  = auth()->user()->business_id;
-            $per_page  = 15;
+            $business = auth()->user()->business_id;
+            $per_page = 15;
 
             $agency = Agency::with([
                 'lead_sources',
@@ -54,19 +60,19 @@ class ListingRepo
 
             ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
-            $listing_types              = DB::table('listing_types')->get();
-            $lead_sources               = $agency->lead_sources;
-            $task_status                = $agency->task_status;
-            $task_types                 = $agency->task_types;
-            $listing_views              = $agency->listing_views;
-            $developers                 = $agency->developers;
-            $cheques                    = $agency->cheques;
-            $landlords                  = $agency->landlords;
-            $tenants                    = $agency->tenants;
-            $portals                    =  DB::table('portals')->get();
+            $listing_types = DB::table('listing_types')->get();
+            $lead_sources = $agency->lead_sources;
+            $task_status = $agency->task_status;
+            $task_types = $agency->task_types;
+            $listing_views = $agency->listing_views;
+            $developers = $agency->developers;
+            $cheques = $agency->cheques;
+            $landlords = $agency->landlords;
+            $tenants = $agency->tenants;
+            $portals = DB::table('portals')->get();
 
             $listings = Listing::with([
-                'tasks',  'agent',
+                'tasks', 'agent',
                 'tasks.addBy',
                 'tasks.staff',
                 'type',
@@ -75,10 +81,7 @@ class ListingRepo
             ])->where('agency_id', $agency->id)->where('business_id', $business);
 
 
-
-
             $staffs = staff($agency->id);
-
 
 
             if (request()->has('status_main')) {
@@ -136,31 +139,31 @@ class ListingRepo
         DB::beginTransaction();
         try {
 
-            $video_title        = $request->video_title;
-            $video_link         = $request->video_link;
-            $video_host         = $request->video_host;
-            $cheque_date        = $request->cheque_date;
-            $cheque_amount      = $request->cheque_amount;
-            $cheque_percentage  = $request->cheque_percentage;
-            $documents          = $request->documents;
-            $floor_plans        = $request->floor_plans;
-            $photos             = $request->photos;
+            $video_title = $request->video_title;
+            $video_link = $request->video_link;
+            $video_host = $request->video_host;
+            $cheque_date = $request->cheque_date;
+            $cheque_amount = $request->cheque_amount;
+            $cheque_percentage = $request->cheque_percentage;
+            $documents = $request->documents;
+            $floor_plans = $request->floor_plans;
+            $photos = $request->photos;
 
             $validator = Validator::make($request->all(), Listing::store_validation($request));
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-tab', '');
             }
 
-            if (count($cheque_date) != count($cheque_amount) ||  count($cheque_date) != count($cheque_percentage)) {
+            if (count($cheque_date) != count($cheque_amount) || count($cheque_date) != count($cheque_percentage)) {
                 return back()->withInput()->with(flash(trans('listing.cheque_inputs_invalid'), 'danger'))
                     ->with('open-tab', '');
             }
-            if (count($video_host) != count($video_link) ||  count($video_host) != count($video_title)) {
+            if (count($video_host) != count($video_link) || count($video_host) != count($video_title)) {
                 return back()->withInput()->with(flash(trans('listing.video_inputs_invalid'), 'danger'))
                     ->with('open-tab', '');
             }
 
-            $inputs             = $validator->validated();
+            $inputs = $validator->validated();
             unset($inputs['video_title']);
             unset($inputs['video_link']);
             unset($inputs['video_host']);
@@ -192,12 +195,12 @@ class ListingRepo
                 foreach ($photos as $folder) {
                     $photo = TemporaryListing::where('folder', $folder)->first();
                     if ($photo) {
-                        $moved =  ListingPhoto::create(
+                        $moved = ListingPhoto::create(
                             [
                                 'listing_id' => $listing->id,
-                                'main'       => $photo->main,
-                                'watermark'  => $photo->watermark,
-                                'active'     => $photo->active,
+                                'main' => $photo->main,
+                                'watermark' => $photo->watermark,
+                                'active' => $photo->active,
                             ]
                         );
 
@@ -212,7 +215,7 @@ class ListingRepo
                             if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"))) {
                                 mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"));
                             }
-                            $new_folder =  public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
+                            $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
                             foreach ($files as $file) {
                                 File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
                             }
@@ -237,13 +240,13 @@ class ListingRepo
                 foreach ($floor_plans as $folder) {
                     $plan = TemporaryPlan::where('folder', $folder)->first();
                     if ($plan) {
-                        $moved =  ListingPlan::create(
+                        $moved = ListingPlan::create(
                             [
                                 'listing_id' => $listing->id,
-                                'main'       => $plan->main,
-                                'watermark'  => $plan->watermark,
-                                'active'     => $plan->active,
-                                'title'      => $plan->title,
+                                'main' => $plan->main,
+                                'watermark' => $plan->watermark,
+                                'active' => $plan->active,
+                                'title' => $plan->title,
                             ]
                         );
 
@@ -259,7 +262,7 @@ class ListingRepo
                             if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"))) {
                                 mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"));
                             }
-                            $new_folder =  public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id");
+                            $new_folder = public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id");
                             foreach ($files as $file) {
                                 File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
                             }
@@ -285,11 +288,11 @@ class ListingRepo
                 foreach ($documents as $folder) {
                     $document = TemporaryDocument::where('folder', $folder)->first();
                     if ($document) {
-                        $moved =  ListingDocument::create(
+                        $moved = ListingDocument::create(
                             [
-                                'listing_id'     => $listing->id,
-                                'document'       => $document->document,
-                                'title'          => $document->title,
+                                'listing_id' => $listing->id,
+                                'document' => $document->document,
+                                'title' => $document->title,
                             ]
                         );
 
@@ -305,7 +308,7 @@ class ListingRepo
                             if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"))) {
                                 mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"));
                             }
-                            $new_folder =  public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id");
+                            $new_folder = public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id");
                             foreach ($files as $file) {
                                 File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
                             }
@@ -325,9 +328,9 @@ class ListingRepo
                     foreach ($video_title as $key => $title) {
                         ListingVideo::create([
                             'listing_id' => $listing->id,
-                            'title'      => $title,
-                            'host'       => $video_host[$key],
-                            'link'       => $video_link[$key],
+                            'title' => $title,
+                            'host' => $video_host[$key],
+                            'link' => $video_link[$key],
                         ]);
                     }
                 }
@@ -338,9 +341,9 @@ class ListingRepo
                     foreach ($cheque_date as $key => $date) {
                         ListingChequeCalculator::create([
                             'listing_id' => $listing->id,
-                            'date'       => $date,
-                            'value'      => $cheque_amount[$key],
-                            'percent'    => $cheque_percentage[$key],
+                            'date' => $date,
+                            'value' => $cheque_amount[$key],
+                            'percent' => $cheque_percentage[$key],
                         ]);
                     }
                 }
@@ -350,12 +353,9 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_created'), 'success'));
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab',  '');
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
         }
     }
-
-
-
 
 
     public function tenant($request)
@@ -367,13 +367,13 @@ class ListingRepo
             try {
                 $validator = Validator::make($request->all(), [
 
-                    'name'          => ['required', 'string', 'max:225'],
-                    'email'         => ['sometimes', 'nullable', 'email', 'string', 'max:225'],
-                    'phone'         => ['sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
-                    'salutation'    => ['required', 'string', 'in:Mr,Mrs,Ms,Miss'],
-                    'source_id'     => ['sometimes', 'nullable', 'string', 'exists:lead_sources,id'],
-                    'agency'        => ['required', 'integer', 'exists:agencies,id'],
-                    'business'      => ['required', 'integer', 'exists:businesses,id']
+                    'name' => ['required', 'string', 'max:225'],
+                    'email' => ['sometimes', 'nullable', 'email', 'string', 'max:225'],
+                    'phone' => ['sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
+                    'salutation' => ['required', 'string', 'in:Mr,Mrs,Ms,Miss'],
+                    'source_id' => ['sometimes', 'nullable', 'string', 'exists:lead_sources,id'],
+                    'agency' => ['required', 'integer', 'exists:agencies,id'],
+                    'business' => ['required', 'integer', 'exists:businesses,id']
                 ]);
 
 
@@ -390,16 +390,16 @@ class ListingRepo
 
                 $tenant = Client::create([
 
-                    'name'             => $request->name,
-                    'email1'           => $request->email,
-                    'phone1'           => $request->phone,
-                    'salutation'       => $request->salutation,
-                    'converted_by'     => auth()->user()->id,
-                    'was_lead'         => 'no',
-                    "source_id"        => $request->source_id,
-                    'type_id'          => $tenant_type->id,
-                    "business_id"      => $request->business,
-                    "agency_id"        => $request->agency,
+                    'name' => $request->name,
+                    'email1' => $request->email,
+                    'phone1' => $request->phone,
+                    'salutation' => $request->salutation,
+                    'converted_by' => auth()->user()->id,
+                    'was_lead' => 'no',
+                    "source_id" => $request->source_id,
+                    'type_id' => $tenant_type->id,
+                    "business_id" => $request->business,
+                    "agency_id" => $request->agency,
 
                 ]);
 
@@ -413,6 +413,7 @@ class ListingRepo
             }
         }
     }
+
     public function landlord($request)
     {
         if ($request->ajax()) {
@@ -422,13 +423,13 @@ class ListingRepo
             try {
                 $validator = Validator::make($request->all(), [
 
-                    'name'          => ['required', 'string', 'max:225'],
-                    'email'         => ['sometimes', 'nullable', 'email', 'string', 'max:225'],
-                    'phone'         => ['sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
-                    'salutation'    => ['required', 'string', 'in:Mr,Mrs,Ms,Miss'],
-                    'source_id'     => ['sometimes', 'nullable', 'string', 'exists:lead_sources,id'],
-                    'agency'        => ['required', 'integer', 'exists:agencies,id'],
-                    'business'      => ['required', 'integer', 'exists:businesses,id']
+                    'name' => ['required', 'string', 'max:225'],
+                    'email' => ['sometimes', 'nullable', 'email', 'string', 'max:225'],
+                    'phone' => ['sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
+                    'salutation' => ['required', 'string', 'in:Mr,Mrs,Ms,Miss'],
+                    'source_id' => ['sometimes', 'nullable', 'string', 'exists:lead_sources,id'],
+                    'agency' => ['required', 'integer', 'exists:agencies,id'],
+                    'business' => ['required', 'integer', 'exists:businesses,id']
                 ]);
 
 
@@ -445,16 +446,16 @@ class ListingRepo
 
                 $landlord = Client::create([
 
-                    'name'             => $request->name,
-                    'email1'           => $request->email,
-                    'phone1'           => $request->phone,
-                    'salutation'       => $request->salutation,
-                    'converted_by'     => auth()->user()->id,
-                    'was_lead'         => 'no',
-                    "source_id"        => $request->source_id,
-                    'type_id'          => $landlord_type->id,
-                    "business_id"      => $request->business,
-                    "agency_id"        => $request->agency,
+                    'name' => $request->name,
+                    'email1' => $request->email,
+                    'phone1' => $request->phone,
+                    'salutation' => $request->salutation,
+                    'converted_by' => auth()->user()->id,
+                    'was_lead' => 'no',
+                    "source_id" => $request->source_id,
+                    'type_id' => $landlord_type->id,
+                    "business_id" => $request->business,
+                    "agency_id" => $request->agency,
 
                 ]);
 
@@ -478,11 +479,11 @@ class ListingRepo
             try {
                 $validator = Validator::make($request->all(), [
 
-                    'name_en'          => ['required', 'string', 'max:225'],
-                    'name_ar'          => ['sometimes', 'nullable', 'string', 'max:225'],
+                    'name_en' => ['required', 'string', 'max:225'],
+                    'name_ar' => ['sometimes', 'nullable', 'string', 'max:225'],
 
-                    'agency'        => ['required', 'integer', 'exists:agencies,id'],
-                    'business'      => ['required', 'integer', 'exists:businesses,id']
+                    'agency' => ['required', 'integer', 'exists:agencies,id'],
+                    'business' => ['required', 'integer', 'exists:businesses,id']
                 ]);
 
 
@@ -491,15 +492,14 @@ class ListingRepo
                 }
 
 
-
                 $developer = Developer::create([
 
-                    'name_en'             => $request->name_en,
-                    'slug'             => \Str::slug($request->name_en),
-                    'name_ar'             => $request->name_ar,
+                    'name_en' => $request->name_en,
+                    'slug' => \Str::slug($request->name_en),
+                    'name_ar' => $request->name_ar,
 
-                    "business_id"      => $request->business,
-                    "agency_id"        => $request->agency,
+                    "business_id" => $request->business,
+                    "agency_id" => $request->agency,
 
                 ]);
 
@@ -515,7 +515,6 @@ class ListingRepo
     }
 
 
-
     public function temporary_photos($request)
     {
         if (request()->has('file')) {
@@ -527,7 +526,7 @@ class ListingRepo
                 mkdir(public_path("temporary/listings"));
             }
 
-            $photo      = request()->file('file');
+            $photo = request()->file('file');
             $photo_name = str_replace([' ', '_'], '-', $photo->getClientOriginalName());
 
             $main_tmp_folder = auth()->user()->business_id . '-main' . '-' . uniqid() . '-' . now()->timestamp;
@@ -536,7 +535,7 @@ class ListingRepo
                 mkdir(public_path('temporary/listings/' . $main_tmp_folder));
             }
 
-            $path  = public_path('temporary/listings/' . $main_tmp_folder);
+            $path = public_path('temporary/listings/' . $main_tmp_folder);
             $photo->move($path, $photo_name);
 
 
@@ -553,16 +552,17 @@ class ListingRepo
                 ->save($with_watermark_tmp_folder_path);
 
             $temporary_photo = TemporaryListing::create([
-                'folder'    => $main_tmp_folder,
-                'main'      => $photo_name,
-                'watermark' =>  'mainWatermark-' . $photo_name,
-                'active'    => 'watermark',
+                'folder' => $main_tmp_folder,
+                'main' => $photo_name,
+                'watermark' => 'mainWatermark-' . $photo_name,
+                'active' => 'watermark',
             ]);
             return [
                 'photo' => $temporary_photo
             ];
         }
     }
+
     public function temporary_plans($request)
     {
 
@@ -576,7 +576,7 @@ class ListingRepo
                 mkdir(public_path("temporary/plans"));
             }
 
-            $plan      = request()->file('file');
+            $plan = request()->file('file');
             $plan_name = str_replace([' ', '_'], '-', $plan->getClientOriginalName());
 
             $main_tmp_folder = auth()->user()->business_id . '-main' . '-' . uniqid() . '-' . now()->timestamp;
@@ -585,7 +585,7 @@ class ListingRepo
                 mkdir(public_path('temporary/plans/' . $main_tmp_folder));
             }
 
-            $path  = public_path('temporary/plans/' . $main_tmp_folder);
+            $path = public_path('temporary/plans/' . $main_tmp_folder);
             $plan->move($path, $plan_name);
 
 
@@ -602,19 +602,16 @@ class ListingRepo
                 ->save($with_watermark_tmp_folder_path);
 
             $temporary_plan = TemporaryPlan::create([
-                'folder'    => $main_tmp_folder,
-                'main'      =>  $plan_name,
-                'watermark' =>  'mainWatermark-' . $plan_name,
-                'active'    => 'watermark',
+                'folder' => $main_tmp_folder,
+                'main' => $plan_name,
+                'watermark' => 'mainWatermark-' . $plan_name,
+                'active' => 'watermark',
             ]);
             return [
                 'plan' => $temporary_plan
             ];
         }
     }
-
-
-
 
 
     public function temporary_documents($request)
@@ -630,7 +627,7 @@ class ListingRepo
                 mkdir(public_path("temporary/documents"));
             }
 
-            $document      = request()->file('file');
+            $document = request()->file('file');
             $document_name = str_replace([' ', '_'], '-', $document->getClientOriginalName());
 
             $main_tmp_folder = auth()->user()->business_id . '-main' . '-' . uniqid() . '-' . now()->timestamp;
@@ -639,12 +636,12 @@ class ListingRepo
                 mkdir(public_path('temporary/documents/' . $main_tmp_folder));
             }
 
-            $path  = public_path('temporary/documents/' . $main_tmp_folder);
+            $path = public_path('temporary/documents/' . $main_tmp_folder);
             $document->move($path, $document_name);
 
             $temporary_document = TemporaryDocument::create([
-                'folder'    => $main_tmp_folder,
-                'document'      =>  $document_name,
+                'folder' => $main_tmp_folder,
+                'document' => $document_name,
 
             ]);
             return [
@@ -663,10 +660,10 @@ class ListingRepo
             try {
                 $validator = Validator::make($request->all(), [
 
-                    'title'          => ['required', 'string', 'max:225'],
-                    'id'             => ['required', 'integer'],
-                    'table'          => ['required', 'string', 'max:225', 'in:temporary_document,temporary_plan'],
-                    'type'          => ['required', 'string', 'max:225', 'in:document,plan'],
+                    'title' => ['required', 'string', 'max:225'],
+                    'id' => ['required', 'integer'],
+                    'table' => ['required', 'string', 'max:225', 'in:temporary_document,temporary_plan'],
+                    'type' => ['required', 'string', 'max:225', 'in:document,plan'],
 
                 ]);
 
@@ -679,11 +676,11 @@ class ListingRepo
                     if ($request->table == 'temporary_document') {
 
                         $document = TemporaryDocument::findOrFail($request->id)->update([
-                            'title'  => $request->title,
+                            'title' => $request->title,
                         ]);
                     } else {
                         $document = ListingDocument::findOrFail($request->id)->update([
-                            'title'  => $request->title,
+                            'title' => $request->title,
                         ]);
                     }
                 }
@@ -691,11 +688,11 @@ class ListingRepo
                     if ($request->table == 'temporary_plan') {
 
                         $plan = TemporaryPlan::findOrFail($request->id)->update([
-                            'title'  => $request->title,
+                            'title' => $request->title,
                         ]);
                     } else {
                         $plan = ListingPlan::findOrFail($request->id)->update([
-                            'title'  => $request->title,
+                            'title' => $request->title,
                         ]);
                     }
                 }
@@ -713,9 +710,6 @@ class ListingRepo
     }
 
 
-
-
-
     public function update($request, $id)
     {
         // dd($request->all());
@@ -725,31 +719,31 @@ class ListingRepo
         DB::beginTransaction();
         try {
 
-            $video_title        = $request->{'edit_video_title_' . $id};
-            $video_link         = $request->{'edit_video_link_' . $id};
-            $video_host         = $request->{'edit_video_host_' . $id};
-            $cheque_date        = $request->{'edit_cheque_date_' . $id};
-            $cheque_amount      = $request->{'edit_cheque_amount_' . $id};
-            $cheque_percentage  = $request->{'edit_cheque_percentage_' . $id};
-            $documents          = $request->{'edit_documents_' . $id};
-            $floor_plans        = $request->{'edit_floor_plans_' . $id};
-            $photos             = $request->{'edit_photos_' . $id};
+            $video_title = $request->{'edit_video_title_' . $id};
+            $video_link = $request->{'edit_video_link_' . $id};
+            $video_host = $request->{'edit_video_host_' . $id};
+            $cheque_date = $request->{'edit_cheque_date_' . $id};
+            $cheque_amount = $request->{'edit_cheque_amount_' . $id};
+            $cheque_percentage = $request->{'edit_cheque_percentage_' . $id};
+            $documents = $request->{'edit_documents_' . $id};
+            $floor_plans = $request->{'edit_floor_plans_' . $id};
+            $photos = $request->{'edit_photos_' . $id};
 
             $validator = Validator::make($request->all(), Listing::update_validation($request, $id));
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-edit-tab', $id);
             }
 
-            if (count($cheque_date) != count($cheque_amount) ||  count($cheque_date) != count($cheque_percentage)) {
+            if (count($cheque_date) != count($cheque_amount) || count($cheque_date) != count($cheque_percentage)) {
                 return back()->withInput()->with(flash(trans('listing.cheque_inputs_invalid'), 'danger'))
                     ->with('open-edit-tab', $id);
             }
-            if (count($video_host) != count($video_link) ||  count($video_host) != count($video_title)) {
+            if (count($video_host) != count($video_link) || count($video_host) != count($video_title)) {
                 return back()->withInput()->with(flash(trans('listing.video_inputs_invalid'), 'danger'))
                     ->with('open-edit-tab', $id);
             }
 
-            $inputs             = $validator->validated();
+            $inputs = $validator->validated();
             unset($inputs['edit_video_title_' . $id]);
             unset($inputs['edit_video_link_' . $id]);
             unset($inputs['edit_video_host_' . $id]);
@@ -786,12 +780,12 @@ class ListingRepo
                 foreach ($photos as $folder) {
                     $photo = TemporaryListing::where('folder', $folder)->first();
                     if ($photo) {
-                        $moved =  ListingPhoto::create(
+                        $moved = ListingPhoto::create(
                             [
                                 'listing_id' => $listing->id,
-                                'main'       => $photo->main,
-                                'watermark'  => $photo->watermark,
-                                'active'     => $photo->active,
+                                'main' => $photo->main,
+                                'watermark' => $photo->watermark,
+                                'active' => $photo->active,
                             ]
                         );
 
@@ -806,7 +800,7 @@ class ListingRepo
                             if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"))) {
                                 mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"));
                             }
-                            $new_folder =  public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
+                            $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
                             foreach ($files as $file) {
                                 File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
                             }
@@ -831,13 +825,13 @@ class ListingRepo
                 foreach ($floor_plans as $folder) {
                     $plan = TemporaryPlan::where('folder', $folder)->first();
                     if ($plan) {
-                        $moved =  ListingPlan::create(
+                        $moved = ListingPlan::create(
                             [
                                 'listing_id' => $listing->id,
-                                'main'       => $plan->main,
-                                'watermark'  => $plan->watermark,
-                                'active'     => $plan->active,
-                                'title'      => $plan->title,
+                                'main' => $plan->main,
+                                'watermark' => $plan->watermark,
+                                'active' => $plan->active,
+                                'title' => $plan->title,
                             ]
                         );
 
@@ -853,7 +847,7 @@ class ListingRepo
                             if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"))) {
                                 mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"));
                             }
-                            $new_folder =  public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id");
+                            $new_folder = public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id");
                             foreach ($files as $file) {
                                 File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
                             }
@@ -879,11 +873,11 @@ class ListingRepo
                 foreach ($documents as $folder) {
                     $document = TemporaryDocument::where('folder', $folder)->first();
                     if ($document) {
-                        $moved =  ListingDocument::create(
+                        $moved = ListingDocument::create(
                             [
-                                'listing_id'     => $listing->id,
-                                'document'       => $document->document,
-                                'title'          => $document->title,
+                                'listing_id' => $listing->id,
+                                'document' => $document->document,
+                                'title' => $document->title,
                             ]
                         );
 
@@ -899,7 +893,7 @@ class ListingRepo
                             if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"))) {
                                 mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"));
                             }
-                            $new_folder =  public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id");
+                            $new_folder = public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id");
                             foreach ($files as $file) {
                                 File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
                             }
@@ -922,9 +916,9 @@ class ListingRepo
                     foreach ($video_title as $key => $title) {
                         ListingVideo::create([
                             'listing_id' => $listing->id,
-                            'title'      => $title,
-                            'host'       => $video_host[$key],
-                            'link'       => $video_link[$key],
+                            'title' => $title,
+                            'host' => $video_host[$key],
+                            'link' => $video_link[$key],
                         ]);
                     }
                 }
@@ -938,19 +932,19 @@ class ListingRepo
                     foreach ($cheque_date as $key => $date) {
                         ListingChequeCalculator::create([
                             'listing_id' => $listing->id,
-                            'date'       => $date,
-                            'value'      => $cheque_amount[$key],
-                            'percent'    => $cheque_percentage[$key],
+                            'date' => $date,
+                            'value' => $cheque_amount[$key],
+                            'percent' => $cheque_percentage[$key],
                         ]);
                     }
                 }
             }
 
             DB::commit();
-            return back()->with(flash(trans('listing.listing_modified'), 'success'))->with('open-edit-tab',  $id);
+            return back()->with(flash(trans('listing.listing_modified'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab',  $id);
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }
 
@@ -965,8 +959,6 @@ class ListingRepo
             return $pdf->download('multi.pdf');
         }
     }
-
-
 
 
     public function remove_listing_temporary($request)
@@ -1026,11 +1018,11 @@ class ListingRepo
                 if ($request->table == 'temporary') {
                     if ($request->type == 'photo') {
                         $photo = TemporaryListing::findOrFail($request->id);
-                        $photo->update(['active' =>  $photo->active == 'watermark' ? 'main' : 'watermark']);
+                        $photo->update(['active' => $photo->active == 'watermark' ? 'main' : 'watermark']);
                     }
                     if ($request->type == 'plan') {
                         $plan = TemporaryPlan::findOrFail($request->id);
-                        $plan->update(['active' =>  $plan->active == 'watermark' ? 'main' : 'watermark']);
+                        $plan->update(['active' => $plan->active == 'watermark' ? 'main' : 'watermark']);
                     }
                 }
 
@@ -1038,11 +1030,11 @@ class ListingRepo
                 if ($request->table == 'main') {
                     if ($request->type == 'photo') {
                         $photo = ListingPhoto::findOrFail($request->id);
-                        $photo->update(['active' =>  $photo->active == 'watermark' ? 'main' : 'watermark']);
+                        $photo->update(['active' => $photo->active == 'watermark' ? 'main' : 'watermark']);
                     }
                     if ($request->type == 'plan') {
                         $plan = ListingPlan::findOrFail($request->id);
-                        $plan->update(['active' =>  $plan->active == 'watermark' ? 'main' : 'watermark']);
+                        $plan->update(['active' => $plan->active == 'watermark' ? 'main' : 'watermark']);
                     }
                 }
 
@@ -1059,9 +1051,139 @@ class ListingRepo
     }
 
 
-
     public function share_listing($agency)
     {
         return view('listing::listing.share_listing');
+    }
+
+
+    public function requests($agency)
+    {
+        $per_page = 10;
+        $agencies = Agency::where(function ($q) {
+            $q->whereHas('receive_requests', function ($q) {
+                return $q->where('response', 'refused');
+            })->orDoesntHave('receive_requests');
+        })->with('black_listed_to','black_listed_from');
+
+        $agencies = $agencies->where('id', '!=', $agency)->paginate($per_page);
+
+        $sender = Agency::where('id',$agency)->with('black_listed_to','black_listed_from')->first();
+        $blocked_from = $sender->black_listed_from->pluck('black_listed_agency_id')->toArray();
+        $blocked_to = $sender->black_listed_to->pluck('agency_id')->toArray();
+        return view('listing::listing.requests', compact('agencies', 'sender','blocked_from','blocked_to'));
+    }
+
+    public function request_response($response, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $share_request = \App\Models\Request::findOrFail($id);
+            if ($response == 'block') {
+                $agency = Agency::findOrFail($share_request->receiver_id);
+                $blocked_agency = Agency::findOrFail($share_request->sender_id);
+
+                BlackList::create([
+                    'agency_id' => $agency->id,
+                    'black_listed_agency_id' => $blocked_agency->id
+                ]);
+
+                $share_request->update([
+                    'response' => 'refused'
+                ]);
+
+            } else {
+                $share_request->update([
+                    'response' => $response
+                ]);
+            }
+
+
+            DB::commit();
+            return redirect(route('listings.requests', $share_request->receiver_id))->with(flash(trans('listing.request_replied'), 'success'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
+        }
+
+    }
+
+    public function send_request($request)
+    {
+
+        DB::beginTransaction();
+        try {
+            $agency = Agency::findOrFail($request->agency_id);
+
+
+            $template = Template::where('agency_id', $request->sender_id)->where('type', 'email')->where('system', 'yes')
+                ->where('slug', 'share_request')->first();
+
+
+            $share_request = \App\Models\Request::create([
+                'sender_id' => $request->sender_id,
+                'receiver_id' => $agency->id,
+                'response' => 'pending',
+            ]);
+
+
+            if ($template) {
+
+                $template_with_name = str_replace('{AGENCY}', $agency->company_name_en ?? '', $template->description_en);
+                $template_with_action_url = str_replace('{ACTION_URL}', route('listings.request_response', ['accepted', $share_request]), $template_with_name);
+                $template_with_refused_url = str_replace('{REFUSE_URL}', route('listings.request_response', ['refused', $share_request]), $template_with_action_url);
+                $template_with_block_url = str_replace('{BLOCK_URL}', route('listings.request_response', ['block', $share_request]), $template_with_refused_url);
+                Mail::to($agency->company_email)->send(new ShareRequest($template_with_block_url, "Listing Share Request"));
+            } else {
+                $system_template = SystemTemplate::where('slug', 'share_request')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $request->sender_id,
+                    'business_id' => auth()->user()->business_id,
+                ]);
+
+                $template_with_name = str_replace('{AGENCY}', $agency->company_name_en ?? '', $template->description_en);
+                $template_with_action_url = str_replace('{ACTION_URL}', route('listings.request_response', ['accepted', $share_request]), $template_with_name);
+                $template_with_refused_url = str_replace('{REFUSE_URL}', route('listings.request_response', ['refused', $share_request]), $template_with_action_url);
+                $template_with_block_url = str_replace('{BLOCK_URL}', route('listings.request_response', ['block', $share_request]), $template_with_refused_url);
+                Mail::to($agency->company_email)->send(new ShareRequest($template_with_block_url, "Listing Share Request"));
+            }
+            DB::commit();
+            return back()->with(flash(trans('listing.request_sent'), 'success'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
+        }
+
+
+    }
+
+    public function block($request)
+    {
+
+        DB::beginTransaction();
+        try {
+            $agency = Agency::findOrFail($request->sender_id);
+            $blocked_agency = Agency::findOrFail($request->agency_id);
+
+            BlackList::create([
+                'agency_id' => $agency->id,
+                'black_listed_agency_id' => $blocked_agency->id
+            ]);
+
+
+            DB::commit();
+            return back()->with(flash(trans('listing.block_applied'), 'success'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
+        }
+
+
     }
 }

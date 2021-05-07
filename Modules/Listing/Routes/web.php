@@ -69,5 +69,13 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
 
         Route::get('share/{agency}', 'ListingController@share_listing')
             ->name('listings.share');
+        Route::get('requests/{agency}', 'ListingController@requests')
+            ->name('listings.requests');
+        Route::post('send_request', 'ListingController@send_request')
+            ->name('listings.send_request');
+        Route::post('block', 'ListingController@block')
+            ->name('listings.block');
+        Route::get('request_response/{response}/{id}', 'ListingController@request_response')
+            ->name('listings.request_response');
     });
 });

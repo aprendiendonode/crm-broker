@@ -117,4 +117,20 @@ class ListingController extends Controller
     {
         return $repository->share_listing($agency);
     }
+    public function requests($agency, ListingRepo $repository)
+    {
+        return $repository->requests($agency);
+    }
+    public function send_request(Request $request, ListingRepo $repository)
+    {
+        return $repository->send_request($request);
+    }
+    public function request_response($response,$id, ListingRepo $repository)
+    {
+        return $repository->request_response($response,$id);
+    }
+    public function block(Request $request, ListingRepo $repository)
+    {
+        return $repository->block($request);
+    }
 }
