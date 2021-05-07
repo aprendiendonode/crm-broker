@@ -123,7 +123,7 @@
     flex-direction: column;
     height: 100%;">
      <input type="hidden" class="plan-id" >
-     <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-plan" onclick="return confirm('are you sure ?') ? removePlan(this) : false"></i> 
+     <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-plan" onclick="return confirm('are you sure ?') ? removePlan(this,'temporary') : false"></i> 
     <div class="plan-with-watermark">
         <img class=" preview-img w-50 m-auto" src="" alt="Generic placeholder image">
 
@@ -160,17 +160,19 @@
 
 
             <div class="mb-2 d-flex justify-content-start">
-                <input type="text" class="form-control plan_rename_value"  placeholder="@lang('listing.enter_title')">
+                <input type="text" class="form-control rename_value"  placeholder="@lang('listing.enter_title')">
                 <i 
-                class="fa fa-check text-success mt-2 ml-2 cursor-pointer plan_rename" 
+                class="fa fa-check text-success mt-2 ml-2 cursor-pointer rename" 
                 
-                onclick="event.preventDefault();planModifyName(this,'temporary_plan')"></i>
+                onclick="event.preventDefault();modifyName(this,'temporary_plans','plan')"></i>
             </div>
-            <div class="text-success plan-save-title-success" > </div>
+            <div class="text-success save-title-success" > </div>
+
+
             <div>
             <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">WaterMark</label>
-                <input type="checkbox" checked name="waterMark" class="plan-watermark" onchange="togglePlanWatermark(this)">
+                <input type="checkbox" checked name="waterMark" class="plan-watermark" onchange="togglePlanWatermark(this,'temporary')">
             </div>
             </div>
         </div>
@@ -241,9 +243,9 @@
 
 
     
-    $('#planUploaderFile' + id).find('.plan_rename').attr('id',data.plan.id)
-    $('#planUploaderFile' + id).find('.plan_rename_value').attr('id','rename_'+data.plan.id)
-    $('#planUploaderFile' + id).find('.plan-save-title-success').attr('id','save_success_'+data.plan.id)
+    $('#planUploaderFile' + id).find('.rename').attr('id',data.plan.id)
+    $('#planUploaderFile' + id).find('.rename_value').attr('id','rename_'+data.plan.id)
+    $('#planUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.plan.id)
     $('#planUploaderFile' + id).find('.title').attr('id','title_'+data.plan.id)
 
     var img = $('#planUploaderFile' + id+' .plan-with-watermark').find('img');
@@ -278,102 +280,8 @@
     });
 
 
-    function togglePlanWatermark(input){
-        var id         = input.id
-        var sliced_id  = id.slice(10);
-        var  plan_id = $('#'+sliced_id+' .plan-id').val();
-        console.log(plan_id)
 
 
-    $.ajax({
-        url:'{{  route("listings.update-listing-temporary-active") }}',
-        type:'POST',
-        data:{
-            _token: '{{ csrf_token() }}',
-            id    : plan_id,
-            type : 'plan'
-         
-        },
-        success: function(data){
-            
-                //TODO request ajax to change which one of the should be on to use later
-            $('#'+sliced_id+' .plan-with-watermark').toggleClass('d-none')
-            $('#'+sliced_id+' .plan-no-watermark').toggleClass('d-none')
-            $('#'+sliced_id+' .plan-with-enlarg-watermark').toggleClass('d-none')
-            $('#'+sliced_id+' .plan-no-enlarg-watermark').toggleClass('d-none')
-        
-
-        
-        },
-        error: function(error){
-        
-        },
-    })
-
-
-}
-  
-
-    function removePlan(input){
-            var id         = input.id
-            var sliced_id  = id.slice(7);
-            var  plan_id = $('#'+sliced_id+' .plan-id').val();
-            $.ajax({
-                url:'{{  route("listings.remove-listing-temporary") }}',
-                type:'POST',
-                data:{
-                    _token: '{{ csrf_token() }}',
-                    id    : plan_id,
-                    type : 'plan'
-                
-                },
-                success: function(data){
-                    
-                    $('#'+sliced_id).remove();
-                
-                },
-                error: function(error){
-                
-                },
-            })
-
-}
-
-
-
-
-function planModifyName(id,table){
-
-var title = $('#rename_' + id.id).val();
-
-if(title === ''){
-    return;
-}
-$.ajax({
-    url:'{{  route("listings.modify-listing-title") }}',
-    type:'POST',
-    data:{
-        _token: '{{ csrf_token() }}',
-        id    : id.id,
-        title : title,
-        table : table,
-        type  : 'plan' 
-    },
-    success: function(data){
-    $('#rename_' + id.id).val('');
-    $('#title_' + id.id).text(title);
-    $('#save_success_' + id.id).text(data.message);
-    $('#save_success_' + id.id).removeClass('d-none');
-    setTimeout(function () {
-        $('#save_success_' + id.id).addClass('d-none');
-    },2000)
-
-    },
-    error: function(error){
-    
-    },
-})
-}
 </script>
 
 

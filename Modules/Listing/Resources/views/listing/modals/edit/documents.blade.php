@@ -33,7 +33,11 @@
                                     justify-content: space-between;
                                     flex-direction: column;
                                     height: 100%;">
-                                
+                                <input type="hidden" class="document-id" value="{{ $document->id }}" >
+                                <i
+                                id="remove-documentUploaderFile{{ $uniq_id }}"
+
+                                 class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this,'main') : false"></i> 
                                     <div class="document">
                                         <i class="fa fa-file-contract fa-4x "></i>
                                     </div>
@@ -61,7 +65,7 @@
                                             <i 
                                             class="fa fa-check text-success mt-2 ml-2 cursor-pointer document_rename" 
                                             id="{{ $document->id }}"
-                                            onclick="event.preventDefault();editDocumentModifyName(this,'listing_documents')"></i>
+                                            onclick="event.preventDefault();modifyName(this,'listing_documents','document')"></i>
                                         </div>
                                         <div class="text-success save-title-success" id="save_success_{{ $document->id }}" > </div>
                                         
@@ -129,7 +133,8 @@
     justify-content: space-between;
     flex-direction: column;
     height: 100%;">
-
+<input type="hidden" class="document-id" >
+<i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this,'temporary') : false"></i> 
     <div class="document">
         <i class="fa fa-file-contract fa-4x "></i>
     </div>
@@ -141,7 +146,7 @@
     
             <div>
             <div class="form-group mb-0 title">
-            @lang('listing.no_title')
+             @lang('listing.no_title')
             </div>
             </div>
         </div>
@@ -159,7 +164,7 @@
             <i 
             class="fa fa-check text-success mt-2 ml-2 cursor-pointer document_rename" 
            
-            onclick="event.preventDefault();editDocumentModifyName(this,'listing_documents')"></i>
+            onclick="event.preventDefault();modifyName(this,'temporary_documents','document')"></i>
         </div>
         <div class="text-success save-title-success" > </div>
         
@@ -220,6 +225,8 @@
     $('#documentUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.document.id)
     $('#documentUploaderFile' + id).find('.title').attr('id','title_'+data.document.id)
 
+    $('#documentUploaderFile' + id).find('.remove-document').attr('id','remove-documentUploaderFile' + id)
+    $('#documentUploaderFile' + id).find('.document-id').val( data.document.id)
 
     },
     onUploadError: function(id, xhr, status, message){
@@ -231,38 +238,6 @@
     });
 
 
-    function editDocumentModifyName(id,table){
-console.log(id)
-            var title = $('#rename_' + id.id).val();
-
-            if(title === ''){
-                return;
-            }
-$.ajax({
-    url:'{{  route("listings.modify-listing-title") }}',
-    type:'POST',
-    data:{
-        _token: '{{ csrf_token() }}',
-        id    : id.id,
-        title : title,
-        table : table,
-        type : 'document'
-    },
-    success: function(data){
-    $('#rename_' + id.id).val('');
-    $('#title_' + id.id).text(title);
-    $('#save_success_' + id.id).text(data.message);
-    $('#save_success_' + id.id).removeClass('d-none');
-    setTimeout(function () {
-        $('#save_success_' + id.id).addClass('d-none');
-    },2000)
-
-    },
-    error: function(error){
-    
-    },
-})
-}
 
 </script>
 
