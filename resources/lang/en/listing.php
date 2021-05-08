@@ -80,7 +80,7 @@ return [
     'plot_area'             => 'Plot Area',
     'deposite'              => 'Deposite',
     'cheque'                => 'Cheque',
-    'listing_features'      => 'Listing Features',
+    'listing_features'      => 'Listing Features (:attribute)',
     'recreation_family'     => 'Recreation and Family',
     'barbeque_area'         => 'BarbequeArea',
     'day_care_center'       => 'Day Care Center',
@@ -130,6 +130,11 @@ return [
     'title_modified'              => 'Title Modified',
     'has_furnished_question'    => 'Has Furnished Question',
     'no_furnished_question'    => 'No Furnished Question',
+    'portals'         => 'Portals (:attribute)',
+    'videos'         => 'Videos (:attribute)',
+    'documents'         => 'Documents (:attribute)',
+    'photos'         => 'Photos (:attribute)',
+    'floor_plans'         => 'Floor Plans (:attribute)',
 
 
 

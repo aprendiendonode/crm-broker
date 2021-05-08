@@ -56,6 +56,7 @@ class ListingRepo
                 'listing_views',
                 'developers',
                 'cheques',
+                'descriptionTemplates'
 
 
             ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
@@ -69,6 +70,7 @@ class ListingRepo
             $cheques = $agency->cheques;
             $landlords = $agency->landlords;
             $tenants = $agency->tenants;
+            $descriptionTemplates = $agency->descriptionTemplates;
             $portals = DB::table('portals')->get();
 
             $listings = Listing::with([
@@ -94,11 +96,12 @@ class ListingRepo
             $live_count = Listing::where('status', 'live')->where('agency_id', $agency->id)->count();
             $review_count = Listing::where('status', 'review')->where('agency_id', $agency->id)->count();
             $archive_count = Listing::where('status', 'archive')->where('agency_id', $agency->id)->count();
-
+            $agency_data = $agency;
             $agency = $agency->id;
             return view(
                 'listing::listing.index',
                 compact(
+                    'agency_data',
                     'staffs',
                     'listing_types',
                     'listing_views',
@@ -118,7 +121,8 @@ class ListingRepo
                     'archive_count',
                     'review_count',
                     'draft_count',
-                    'live_count'
+                    'live_count',
+                    'descriptionTemplates'
                 )
             );
         } catch (\Exception $e) {
@@ -1071,16 +1075,16 @@ class ListingRepo
             $q->whereHas('receive_requests', function ($q) {
                 return $q->where('response', 'refused');
             })->orDoesntHave('receive_requests');
-        })->with('black_listed_to','black_listed_from');
+        })->with('black_listed_to', 'black_listed_from');
 
         $agencies = $agencies->where('id', '!=', $agency)->paginate($per_page);
 
-        $sender = Agency::where('id',$agency)->with('black_listed_to','black_listed_from')->first();
+        $sender = Agency::where('id', $agency)->with('black_listed_to', 'black_listed_from')->first();
         $blocked_from = $sender->black_listed_from->pluck('black_listed_agency_id')->toArray();
         $blocked_to = $sender->black_listed_to->pluck('agency_id')->toArray();
 
 
-        return view('listing::listing.requests', compact('agencies', 'sender','blocked_from','blocked_to'));
+        return view('listing::listing.requests', compact('agencies', 'sender', 'blocked_from', 'blocked_to'));
     }
 
     public function request_response($response, $id)
@@ -1100,7 +1104,6 @@ class ListingRepo
                 $share_request->update([
                     'response' => 'refused'
                 ]);
-
             } else {
                 $share_request->update([
                     'response' => $response
@@ -1114,7 +1117,6 @@ class ListingRepo
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
         }
-
     }
 
     public function send_request($request)
@@ -1168,8 +1170,6 @@ class ListingRepo
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
         }
-
-
     }
 
     public function block($request)
@@ -1192,8 +1192,6 @@ class ListingRepo
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
         }
-
-
     }
 
 
@@ -1202,7 +1200,7 @@ class ListingRepo
     {
         $per_page = 10;
 
-        $requests = \App\Models\Request::where('sender_id',$agency)->paginate($per_page);
+        $requests = \App\Models\Request::where('sender_id', $agency)->paginate($per_page);
 
         return view('listing::listing.old_requests', compact('requests'));
     }
@@ -1212,7 +1210,7 @@ class ListingRepo
     {
         $per_page = 10;
 
-        $black_listed_agencies = BlackList::where('agency_id',$agency)->paginate($per_page);
+        $black_listed_agencies = BlackList::where('agency_id', $agency)->paginate($per_page);
 
         return view('listing::listing.black_listed', compact('black_listed_agencies'));
     }
@@ -1233,9 +1231,5 @@ class ListingRepo
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
         }
-
-
     }
-
-
 }

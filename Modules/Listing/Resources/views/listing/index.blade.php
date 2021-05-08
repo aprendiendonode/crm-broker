@@ -13,7 +13,21 @@
 
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
+    <style>
+        .toggle.android {
+            border-radius: 0px;
+        }
 
+        .toggle.android .toggle-handle {
+            border-radius: 0px;
+        }
+
+
+        .description-profile-modal 
+        .ck-editor__editable_inline {
+                min-height: 350px;
+        }
+    </style>
 
     {{-- <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
@@ -389,7 +403,7 @@
                     <tbody>
     
                     @forelse($listings as $listing)
-       
+      
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $listing->listing_ref }}</td>
@@ -532,6 +546,7 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap" async>
     </script>
+    
     <script>
         $(document).ready(function () {
             $('.select2').select2();
@@ -541,14 +556,14 @@
             for (var i = 0; i < listings.data.length; i++) {
 
                 ClassicEditor
-                    .create(document.querySelector('#description_edit_en_' + listings.data[i].id))
+                    .create(document.querySelector('#edit_description_en_' + listings.data[i].id))
                     .then()
                     .catch(error => {
 
                     });
 
                 ClassicEditor
-                    .create(document.querySelector('#description_edit_ar_' + listings.data[i].id), {
+                    .create(document.querySelector('#edit_description_ar_' + listings.data[i].id), {
                         language: 'ar'
                     })
                     .then()
@@ -652,9 +667,28 @@
                 //english
                 $('.description_en').removeClass('d-none');
                 $('.description_ar').addClass('d-none');
+                $('.en-button').removeClass('d-none');
+                $('.ar-button').addClass('d-none');
+
+                $('.agent-profile-en').removeClass('d-none');
+                $('.agent-profile-ar').addClass('d-none');
+                $('.features_copy_en').removeClass('d-none');
+                $('.features_copy_ar').addClass('d-none');
+                $('.templates-en').removeClass('d-none');
+                $('.templates-ar').addClass('d-none');
             } else {
                 $('.description_en').addClass('d-none');
                 $('.description_ar').removeClass('d-none');
+                $('.ar-button').removeClass('d-none');
+                $('.en-button').addClass('d-none');
+
+                $('.agent-profile-ar').removeClass('d-none');
+                $('.agent-profile-en').addClass('d-none');
+                $('.features_copy_ar').removeClass('d-none');
+                $('.features_copy_en').addClass('d-none');
+
+                $('.templates-ar').removeClass('d-none');
+                $('.templates-en').addClass('d-none');
 
 
             }
@@ -678,14 +712,35 @@
 
 
         function toggle_edit_desc(id) {
-            type = $('.description_edit_' + id).prop('checked');
+            type = $('.edit-toggle-description-' + id).prop('checked');
             if (type == true) {
                 //english
-                $('.description_edit_en_' + id).removeClass('d-none');
-                $('.description_edit_ar_' + id).addClass('d-none');
+                $('.edit_description_en_' + id).removeClass('d-none');
+                $('.edit_description_ar_' + id).addClass('d-none');
+
+                $('.en-button-'+id).removeClass('d-none');
+                $('.ar-button-'+id).addClass('d-none');
+
+                $('.agent-profile-en-'+id).removeClass('d-none');
+                $('.agent-profile-ar-'+id).addClass('d-none');
+                $('.features_copy_en_'+id).removeClass('d-none');
+                $('.features_copy_ar_'+id).addClass('d-none');
+                $('.templates-en-'+id).removeClass('d-none');
+                $('.templates-ar-'+id).addClass('d-none');
             } else {
-                $('.description_edit_en_' + id).addClass('d-none');
-                $('.description_edit_ar_' + id).removeClass('d-none');
+                $('.edit_description_en_' + id).addClass('d-none');
+                $('.edit_description_ar_' + id).removeClass('d-none');
+
+                $('.ar-button-'+id).removeClass('d-none');
+                $('.en-button-'+id).addClass('d-none');
+
+                $('.agent-profile-ar-'+id).removeClass('d-none');
+                $('.agent-profile-en-'+id).addClass('d-none');
+                $('.features_copy_ar_'+id).removeClass('d-none');
+                $('.features_copy_en_'+id).addClass('d-none');
+
+                $('.templates-ar-'+id).removeClass('d-none');
+                $('.templates-en-'+id).addClass('d-none');
 
 
             }
@@ -770,8 +825,6 @@ function removeDocument(input,table){
 }
 
 
-
-
 function removePlan(input,table){
             var id         = input.id
             var sliced_id  = id.slice(7);
@@ -832,9 +885,6 @@ function modifyName(id,table,type){
     })
 }
 
-
-
-
 function togglePlanWatermark(input,table){
         var id         = input.id
         var sliced_id  = id.slice(10);
@@ -869,11 +919,7 @@ function togglePlanWatermark(input,table){
 
 
 }
-  
-
-
-
-
+ 
 function toggleWatermark(input,table){
     var id         = input.id
     var sliced_id  = id.slice(10);
@@ -909,4 +955,210 @@ function toggleWatermark(input,table){
 
     }
 </script>
+@endpush
+
+
+@push('js')
+    <script>
+
+        function editshowCompanyProfile(inputSelf,type,id){
+          
+                if(type == 'ar'){
+
+                    if( $('.agency-profile-ar-'+id).data('agencyprofile') === ''){
+                    var message = @json(trans('listing.no_arabic_profile_for_agency'));
+                    $('.agency-profile-message-ar-'+id).text(message)
+                    return;
+                    }
+                   
+                    const domEditableElement = document.querySelector( '.description-profile-modal-'+id+' .edit_description_ar_'+id+' .ck-editor__editable' );
+                    const editorInstance = domEditableElement.ckeditorInstance;
+                    const htmlDP = editorInstance.data.processor;
+                    const viewFragment = htmlDP.toView($('.agency-profile-ar-'+id).data('agencyprofile'));
+                    const modelFragment = editorInstance.data.toModel( viewFragment );
+                    const insertPosition = editorInstance.model.document.selection.getFirstPosition();
+                    editorInstance.model.insertContent(modelFragment, insertPosition);
+                }else{
+                    if( $('.agency-profile-en-'+id).data('agencyprofile') === ''){
+                    var message = @json(trans('listing.no_english_profile_for_agency'));
+                    $('.agency-profile-message-en-'+id).text(message)
+                    return;
+                    }
+                    const domEditableElement = document.querySelector( '.description-profile-modal-'+id+'  .edit_description_en_'+id+' .ck-editor__editable' );
+                    const editorInstance = domEditableElement.ckeditorInstance;
+                    const htmlDP = editorInstance.data.processor;
+                    const viewFragment = htmlDP.toView($('.agency-profile-en-'+id).data('agencyprofile'));
+                    const modelFragment = editorInstance.data.toModel( viewFragment );
+                    const insertPosition = editorInstance.model.document.selection.getFirstPosition();
+                    editorInstance.model.insertContent(modelFragment, insertPosition); 
+                }
+
+        }
+
+        function editshowAgentProfile(inputSelf,type,id){
+
+
+            if(type == 'ar'){
+                if($('.agent-profile-ar-'+id).find(':selected').data('agentprofile') == ''){
+                    var message = @json(trans('listing.no_arabic_profile_for_agent'));
+                    $('.agent-profile-message-ar-'+id).text(message)
+                    return;
+                    }
+                    const domEditableElement = document.querySelector( '.description-profile-modal-'+id+' .edit_description_ar_'+id+' .ck-editor__editable' );
+                    const editorInstance = domEditableElement.ckeditorInstance;
+                    const htmlDP = editorInstance.data.processor;
+                    const viewFragment = htmlDP.toView($('.agent-profile-ar-'+id).find(':selected').data('agentprofile'));
+                    const modelFragment = editorInstance.data.toModel( viewFragment );
+                    const insertPosition = editorInstance.model.document.selection.getFirstPosition();
+                    editorInstance.model.insertContent(modelFragment, insertPosition);
+                }else{
+                    // typeof car.color === 'undefined'
+                       if($('.agent-profile-en').find(':selected').data('agentprofile') == ''){
+                            var message = @json(trans('listing.no_english_profile_for_agent'));
+                            $('.agent-profile-message-en-'+id).text(message)
+                            return;
+                    }
+                    const domEditableElement = document.querySelector( '.description-profile-modal-'+id+'  .edit_description_en_'+id+' .ck-editor__editable' );
+                    const editorInstance = domEditableElement.ckeditorInstance;
+                    const htmlDP = editorInstance.data.processor;
+                    const viewFragment = htmlDP.toView($('.agent-profile-en-'+id).find(':selected').data('agentprofile'));
+                    const modelFragment = editorInstance.data.toModel( viewFragment );
+                    const insertPosition = editorInstance.model.document.selection.getFirstPosition();
+                    editorInstance.model.insertContent(modelFragment, insertPosition); 
+                }
+        }
+
+
+    
+        function editloadCheckedFeatures(type,id){
+
+
+            
+            var  checkboxesFeature = $('.choosen-features-'+id+':checkbox:checked ').map(function() {
+                var name = this.name.replace('"',""); 
+                name = name .replace('edit_features_'+id,""); 
+                name = name .replace("[",""); 
+                name = name .replace("]",""); 
+                name = name .replace(/_/g," "); 
+
+                const words = name.split(" ");
+
+                for (let i = 0; i < words.length; i++) {
+                    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+                }
+
+                  name = words.join(" ");
+               
+                return name;
+            }).get();
+           var  inputsFeature = $('.choosen-features-inputs-'+id).map(function() {
+
+                        if(this.value != ''){
+
+                            var name = this.name.replace('"',""); 
+                            name = name .replace('edit_features_'+id,""); 
+                            name = name .replace("[",""); 
+                            name = name .replace("]",""); 
+                            name = name .replace(/_/g," "); 
+
+                            const words = name.split(" ");
+
+                            for (let i = 0; i < words.length; i++) {
+                                words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+                            }
+
+                            name = words.join(" ");
+                        
+                           
+                            return name+' ( '+ this.value +')';
+                        }
+                                          
+                }).get();
+
+           var  selectsFeature = $('.choosen-features-select-'+id).map(function() {
+            if(this.value != ''){
+                var name = this.name.replace('"',""); 
+                name = name .replace('edit_features_'+id,""); 
+                name = name .replace("[",""); 
+                name = name .replace("]",""); 
+                name = name .replace(/_/g," "); 
+
+                const words = name.split(" ");
+
+                for (let i = 0; i < words.length; i++) {
+                    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+                }
+
+                  name = words.join(" ");
+               
+                return name+' ( '+ this.value +')';
+            }
+                          
+             
+              }).get(); 
+
+             var merged =  inputsFeature.concat(checkboxesFeature);
+             var all =  merged.concat(selectsFeature);
+           
+              if(all.length > 0){
+                  
+                  var ul_html = '';
+                  ul_html+= '<ul>';
+                        for (let index = 0; index < all.length; index++) {
+                           
+                            ul_html += '<li>' + all[index]+'</li>'; 
+                            
+                        }
+    
+                  ul_html+= '</ul>';
+                  const domEditableElement = document.querySelector( '.description-profile-modal-'+id+' .edit_description_'+type+'_'+id+' .ck-editor__editable' );
+
+                    const editorInstance = domEditableElement.ckeditorInstance;
+                    const htmlDP = editorInstance.data.processor;
+                    const viewFragment = htmlDP.toView(ul_html);
+                    const modelFragment = editorInstance.data.toModel( viewFragment );
+                    const insertPosition = editorInstance.model.document.selection.getFirstPosition();
+                    editorInstance.model.insertContent(modelFragment, insertPosition); 
+              }else {
+                
+                            var message = @json(trans('listing.choose_features_to_copy'));
+                            $('.features_copy_message_'+type+'_'+id).text(message)
+                            return;
+               
+              }
+        }
+
+
+        function editshowTemplates(type,id){
+            if(type == 'ar'){
+                if($('.load-templates-ar-'+id).find(':selected').data('desctemplate') == ''){
+              
+                    return;
+                    }
+                    const domEditableElement = document.querySelector( '.description-profile-modal-'+id+' .edit_description_ar_'+id+' .ck-editor__editable' );
+                    const editorInstance = domEditableElement.ckeditorInstance;
+                    const htmlDP = editorInstance.data.processor;
+                    const viewFragment = htmlDP.toView($('.load-templates-ar-'+id).find(':selected').data('desctemplate'));
+                    const modelFragment = editorInstance.data.toModel( viewFragment );
+                    const insertPosition = editorInstance.model.document.selection.getFirstPosition();
+                    editorInstance.model.insertContent(modelFragment, insertPosition);
+                }else{
+                    // typeof car.color === 'undefined'
+                       if($('.load-templates-en-'+id).find(':selected').data('desctemplate') == ''){
+                          
+                            return;
+                    }
+                    const domEditableElement = document.querySelector( '.description-profile-modal-'+id+'  .edit_description_en_'+id+' .ck-editor__editable' );
+                    const editorInstance = domEditableElement.ckeditorInstance;
+                    const htmlDP = editorInstance.data.processor;
+                    const viewFragment = htmlDP.toView($('.load-templates-en-'+id).find(':selected').data('desctemplate'));
+                    const modelFragment = editorInstance.data.toModel( viewFragment );
+                    const insertPosition = editorInstance.model.document.selection.getFirstPosition();
+                    editorInstance.model.insertContent(modelFragment, insertPosition); 
+                }
+
+
+        }
+
+    </script>
 @endpush
