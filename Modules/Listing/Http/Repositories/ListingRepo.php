@@ -59,6 +59,7 @@ class ListingRepo
             $business = auth()->user()->business_id;
             $per_page = 15;
 
+            $types = ListingType::where('agency_id', $agency)->get();
             $agency = Agency::with([
                 'lead_sources',
                 'landlords',
@@ -72,7 +73,6 @@ class ListingRepo
 
 
             ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
-
             $listing_types = DB::table('listing_types')->get();
             $lead_sources = $agency->lead_sources;
             $task_status = $agency->task_status;
@@ -94,7 +94,8 @@ class ListingRepo
                 'notes', 'notes.addBy'
 
             ])->where('agency_id', $agency->id)->where('business_id', $business);
-
+            $locations = $listings->pluck('location')->unique();
+            $ref_ids = $listings->pluck('listing_ref')->unique();
 
             $staffs = staff($agency->id);
 
@@ -102,6 +103,45 @@ class ListingRepo
             if (request()->has('status_main')) {
                 $listings->where('status', request()->status_main);
             }
+
+
+            //filter
+            if (request('purpose')) {
+                $listings->where('purpose', request('purpose'));
+            }
+
+            if (request('location')) {
+                $listings->where('location', request('location'));
+            }
+            if (request('filter_user')) {
+                $listings->where('assigned_to', request('filter_user'));
+            }
+            if (request('ref_id')) {
+                $listings->where('listing_ref', request('ref_id'));
+            }
+
+            if (request('type')) {
+                $type = request('type');
+
+                $listings->whereHas('type', function ($q) use ($type) {
+                    $q->where('id', $type);
+                });
+            }
+
+
+            if (request('min_bed')) {
+                if (request('min_bed') == 'studio') {
+                    $listings->where('beds', request('min_bed'));
+                }
+                $listings->where('beds', '>=', request('min_bed'));
+            }
+            if (request('max_bed')) {
+                if (request('max_bed') == 'studio') {
+                    $listings->where('beds', request('min_bed'));
+                }
+                $listings->where('beds', '<=', request('max_bed'));
+            }
+
 
             $listings = $listings->paginate($per_page);
             $all_count = Listing::where('agency_id', $agency->id)->count();
@@ -111,6 +151,19 @@ class ListingRepo
             $archive_count = Listing::where('status', 'archive')->where('agency_id', $agency->id)->count();
             $agency_data = $agency;
             $agency = $agency->id;
+
+
+
+
+
+
+
+
+
+
+
+
+
             return view(
                 'listing::listing.index',
                 compact(
@@ -119,7 +172,10 @@ class ListingRepo
                     'listing_types',
                     'listing_views',
                     'listings',
+                    'types',
+                    'ref_ids',
                     'pagination',
+                    'locations',
                     'agency',
                     'business',
                     'lead_sources',

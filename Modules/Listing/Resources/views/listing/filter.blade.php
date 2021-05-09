@@ -5,22 +5,22 @@
     <div class="row">
             <div class="col-md-6 col-lg-4">
                 <div class="form-group d-flex align-items-center" style="height: 64px;">
-                    <label class="font-weight-medium text-muted mr-3">Purpose*</label>
+                    <label class="font-weight-medium text-muted mr-3">@lang('listing.purpose')</label>
                     <div style="display:flex;">
                         <div class="radio mr-3">
-                            <input type="radio" name="Purpose1" id="searchAnyRadio1" value="option3" checked>
+                            <input type="radio" name="purpose" id="searchAnyRadio1" value="" checked >
                             <label for="searchAnyRadio1">
                                 Any
                             </label>
                         </div>
                         <div class="radio mr-3">
-                            <input type="radio" name="Purpose1" id="searchRentRadio1" value="option3">
+                            <input type="radio" name="purpose" id="searchRentRadio1" value="rent" @if(request()->has('purpose') && request('purpose') == 'rent') checked @endif>
                             <label for="searchRentRadio1">
                                 Rent
                             </label>
                         </div>
                         <div class="radio">
-                            <input type="radio" name="Purpose1" id="searchSaleRadio2" value="option3">
+                            <input type="radio" name="purpose" id="searchSaleRadio2" value="sale" @if(request()->has('purpose') && request('purpose') == 'sale') checked @endif>
                             <label for="searchSaleRadio2">
                                 Sale
                             </label>
@@ -52,8 +52,12 @@
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
                     <label for="" class="font-weight-medium text-muted">Propery Type</label>
-                    <select class="form-control select2" name="propertyType" data-toggle="select2">
-                        <option>1</option>
+                    <select class="form-control select2" name="type" data-toggle="select2">
+                        <option></option>
+                        @forelse($types as $type)
+                            <option value="{{$type->id ?? ''}}" @if(request()->has('type') && request('type') == $type->id ) selected  @endif> {{$type->{'name_'.app()->getLocale()} ?? ''}} </option>
+                        @empty
+                        @endforelse
                     </select>
                 </div>
             </div>
@@ -71,11 +75,13 @@
             <div class="col-md-6 col-lg-4">
                 <label class="mb-1 font-weight-medium text-muted">Location</label>
 
-                <input type="text" name="filter_email" id="autocomplete-ajax"
-                        placeholder="Type Location to Search"
-                        class="form-control"
-                        value="{{ request()->has('filter_email') ? request()->get('filter_email') : '' }}"/>
-
+                <select class="form-control select2" name="location" data-toggle="select2">
+                    <option></option>
+                    @forelse($locations as $location)
+                        <option value="{{$location}}" @if(request()->has('location') && request('location') == $location) selected  @endif> {{$location}} </option>
+                    @empty
+                    @endforelse
+                </select>
 
             </div> 
 
@@ -84,16 +90,29 @@
                     <label class="mb-1 font-weight-medium text-muted">Beds</label>
                     <div class="d-flex">
                         <div class="mr-1" style="flex:1">
-                            <select class="form-control select2" name="minBeds" data-toggle="select2" data-placeholder="Min">
-                                <option value="">1</option>
-                                <option value="1">2</option>
-                
+                            <select class="form-control select2" name="min_bed" data-toggle="select2"
+                                    data-placeholder="{{trans('listing.min')}}">
+                                <option value=""></option>
+                                <option @if(request()->has('min_bed') && request('min_bed') == 'studio') selected @endif value="studio"
+                                >@lang('listing.studio')</option>
+
+                                @for($i = 1;$i <= 20 ;$i++)
+                                    <option @if(request()->has('min_bed') && request('min_bed') == $i) selected @endif value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+
                             </select>
                         </div>
                         <div class="" style="flex:1">
-                            <select class="form-control select2" name="maxBeds" data-toggle="select2" data-placeholder="Max">
-                                <option value="">1</option>
-                                <option value="1">2</option>
+                            <select class="form-control select2" name="max_bed" data-toggle="select2"
+                                    data-placeholder="{{trans('listing.max')}}">
+                                <option value=""></option>
+                                <option @if(request()->has('max_bed') && request('max_bed') == 'studio') selected @endif value="studio"
+                                >@lang('listing.studio')</option>
+
+                                @for($i = 1;$i <= 20 ;$i++)
+                                    <option @if(request()->has('max_bed') && request('max_bed') == $i) selected @endif value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+
                             </select>
                         </div>
                     </div>
@@ -102,18 +121,26 @@
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
                     <label for="" class="font-weight-medium text-muted">Assigned</label>
-                    <select class="form-control select2" name="assigned" data-toggle="select2" data-placeholder="select">
-                                <option value="">1</option>
-                                <option value="1">2</option>
+                    <select class="form-control select2" name="filter_user" data-toggle="select2">
+                        <option value=""></option>
+                        @forelse($staffs as $employee)
+                            <option @if( request()->has('filter_user') && request('filter_user')  == $employee->id) selected @endif value="{{ $employee->id}}"> {{ $employee->{'name_'.app()->getLocale()} }}</option>
+                        @empty
+
+                        @endforelse
+
                     </select>
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
                     <label for="" class="font-weight-medium text-muted">REF ID</label>
-                    <select class="form-control select2" name="refId" data-toggle="select2" data-placeholder="select">
-                                <option value="">1</option>
-                                <option value="1">2</option>
+                    <select class="form-control select2" name="ref_id" data-toggle="select2">
+                        <option></option>
+                        @forelse($ref_ids as $id)
+                            <option value="{{$id}}" @if(request()->has('ref_id') && request('ref_id') == $id) selected  @endif> {{$id}} </option>
+                        @empty
+                        @endforelse
                     </select>
                 </div>
             </div>
