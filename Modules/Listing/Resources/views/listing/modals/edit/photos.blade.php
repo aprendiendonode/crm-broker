@@ -31,13 +31,18 @@
                                     justify-content: space-between;
                                     flex-direction: column;
                                     height: 100%;">
+
+
+<i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" id="remove-uploaderFile{{  $uniq_id }}" onclick="return confirm('are you sure ?') ? removePhoto(this,'main') : false"></i> 
+
+<input type="hidden" class="photo-id" value={{ $photo->id }}>
                                     <div class="with-watermark">
-                                        <img class=" preview-img w-50 m-auto" 
+                                        <img class=" preview-img w-50 m-auto @if($photo->active != 'watermark') d-none @endif" 
                                         src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark)  }}"
                                          alt="Generic placeholder image">
                                 
                                     </div>
-                                    <div class="no-watermark d-none">
+                                    <div class="no-watermark @if($photo->active != 'main') d-none @endif">
                                         <img class=" preview-img w-50 m-auto"
                                         src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main)  }}"
 
@@ -49,20 +54,24 @@
                                 
                                         <div class="media-body mb-1">
                                             <div class="d-flex justify-content-between my-2">
-                                            <div class="with-enlarg-watermark">
+                                            <div class="@if($photo->active != 'watermark') d-none @endif with-enlarg-watermark">
                                                 
                                                 <a target="_blank" href="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark)  }}">@lang('listing.enlarg')</a>
                                 
                                             </div>
-                                            <div class="d-none no-enlarg-watermark">
+                                            <div class="@if($photo->active != 'main') d-none @endif no-enlarg-watermark">
                                                 <a target="_blank" href="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main)  }}">@lang('listing.enlarg')</a>
                                             </div>
                                             <div>
                                                 <div class="form-group mb-0">
                                                 <label for="waterMark" class="mb-0">@lang('listing.watermark')</label>
-                                                <input type="checkbox" checked name="waterMark"
+                                                <input 
+                                                type="checkbox" 
+                                                 
+                                                @if($photo->active == 'watermark') checked @endif
+                                                name="waterMark"
                                                  id="watermark-uploaderFile{{ $uniq_id }}"
-                                                 class="watermark" onchange="toggleWatermark(this)">
+                                                 class="watermark" onchange="toggleWatermark(this,'main')">
                                                 </div>
                                             </div>
                                             </div>
@@ -175,6 +184,9 @@
     justify-content: space-between;
     flex-direction: column;
     height: 100%;">
+    <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" onclick="return confirm('are you sure ?') ? removePhoto(this,'temporary') : false"></i> 
+
+    <input type="hidden" class="photo-id" >
     <div class="with-watermark">
         <img class=" preview-img w-50 m-auto" src="" alt="Generic placeholder image">
 
@@ -199,7 +211,7 @@
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">@lang('listing.watermark')</label>
-                <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this)">
+                <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this,'temporary')">
               </div>
             </div>
           </div>
@@ -272,6 +284,10 @@
                 $('#uploaderFile' + id + ' .listing_photos').val(data.photo.folder);
 
 
+                $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)
+                $('#uploaderFile' + id).find('.photo-id').val( data.photo.id)
+
+
             },
             onUploadError: function(id, xhr, status, message){
                 edit_ui_multi_update_file_status(id, 'danger', message,listing_id);
@@ -282,17 +298,7 @@
     });
 
 
-    function toggleWatermark(input){
-    var id         = input.id
-    var sliced_id  = id.slice(10);
-    console.log(sliced_id)
-    //TODO request ajax to change which one of the should be on to use later
-
-    $('#'+sliced_id+' .with-watermark').toggleClass('d-none')
-    $('#'+sliced_id+' .no-watermark').toggleClass('d-none')
-    $('#'+sliced_id+' .with-enlarg-watermark').toggleClass('d-none')
-    $('#'+sliced_id+' .no-enlarg-watermark').toggleClass('d-none')
-    }
+ 
 </script>
 
 

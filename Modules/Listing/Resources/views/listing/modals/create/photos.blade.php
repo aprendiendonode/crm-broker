@@ -117,7 +117,7 @@
     flex-direction: column;
     height: 100%;">
 
-<i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" onclick="return confirm('are you sure ?') ? removePhoto(this) : false"></i> 
+<i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" onclick="return confirm('are you sure ?') ? removePhoto(this,'temporary') : false"></i> 
    <div class="with-watermark">
         <img class=" preview-img w-50 m-auto" src="" alt="Generic placeholder image">
         <input type="hidden" class="photo-id" >
@@ -141,7 +141,7 @@
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">WaterMark</label>
-                <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this)">
+                <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this,'temporary')">
               </div>
             </div>
           </div>
@@ -216,8 +216,11 @@ $(function(){
       img.attr('src',path);
       link.attr('href',path);
       $('#uploaderFile' + id).find('.watermark').attr('id','watermark-uploaderFile' + id)
+
+
       $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)
       $('#uploaderFile' + id).find('.photo-id').val( data.photo.id)
+
       var img = $('#uploaderFile' + id +' .no-watermark').find('img');
       var link = $('#uploaderFile' + id+' .no-enlarg-watermark').find('a');
       var path = '{{asset("temporary/listings")}}/'+ data.photo.folder+'/'+ data.photo.main
@@ -237,41 +240,7 @@ $(function(){
 });
 
 
-function toggleWatermark(input){
- var id         = input.id
- var sliced_id  = id.slice(10);
- 
- //TODO request ajax to change which one of the should be on to use later
- $('#'+sliced_id+' .with-watermark').toggleClass('d-none')
- $('#'+sliced_id+' .no-watermark').toggleClass('d-none')
- $('#'+sliced_id+' .with-enlarg-watermark').toggleClass('d-none')
- $('#'+sliced_id+' .no-enlarg-watermark').toggleClass('d-none')
-}
 
-
-function removePhoto(input){
-    var id         = input.id
-    var sliced_id  = id.slice(7);
-    var  photo_id = $('#'+sliced_id+' .photo-id').val();
-    $.ajax({
-        url:'{{  route("listings.remove-listing-temporary-photo") }}',
-        type:'POST',
-        data:{
-            _token: '{{ csrf_token() }}',
-            id    : photo_id,
-         
-        },
-        success: function(data){
-            
-            $('#'+sliced_id).remove();
-        
-        },
-        error: function(error){
-        
-        },
-    })
-
-}
 </script>
 
 @endpush

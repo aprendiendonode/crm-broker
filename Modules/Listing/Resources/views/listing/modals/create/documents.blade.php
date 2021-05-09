@@ -1,9 +1,13 @@
 <div id="documents-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="documents-modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-full-width">
         <div class="modal-content">
+
+
+
             <div class="modal-header py-2">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
+
             <div class="modal-body">
                 <div class="text-center mb-3">
                     <i class="far fa-file-pdf fa-2x"></i>
@@ -27,12 +31,16 @@
                         <ul class="list-unstyled p-2 d-flex row mx-0" id="document-files">
                           <!-- <div class="row" id="files"> -->
                             {{-- <li class="text-muted text-center empty">No files uploaded.</li> --}}
-                          <!-- </div> -->
                         </ul>
+                    </div> 
                       </div>
                     </div>
-                  </div><!-- /file list -->
+                
             
+
+
+
+
 
 
 
@@ -60,6 +68,7 @@
 
                 </p>
             </div>
+        </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary">@lang('listing.done')</button>
             </div>
@@ -74,7 +83,8 @@
     justify-content: space-between;
     flex-direction: column;
     height: 100%;">
-
+ <input type="hidden" class="document-id" >
+ <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this,'temporary') : false"></i> 
     <div class="document">
             <i class="fa fa-file-contract fa-4x "></i>
     </div>
@@ -104,7 +114,7 @@
             <i 
             class="fa fa-check text-success mt-2 ml-2 cursor-pointer document_rename" 
             
-            onclick="event.preventDefault();documentModifyName(this,'temporary_document')"></i>
+            onclick="event.preventDefault();modifyName(this,'temporary_documents','document')"></i>
         </div>
         <div class="text-success save-title-success" > </div>
         
@@ -168,6 +178,8 @@
     $('#documentUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.document.id)
     $('#documentUploaderFile' + id).find('.title').attr('id','title_'+data.document.id)
 
+    $('#documentUploaderFile' + id).find('.remove-document').attr('id','remove-documentUploaderFile' + id)
+      $('#documentUploaderFile' + id).find('.document-id').val( data.document.id)
 
     },
     onUploadError: function(id, xhr, status, message){
@@ -178,37 +190,9 @@
     });
     });
 
-    function documentModifyName(id,table){
 
-    var title = $('#rename_' + id.id).val();
 
-    if(title === ''){
-        return;
-    }
-    $.ajax({
-        url:'{{  route("listings.modify-listing-document-title") }}',
-        type:'POST',
-        data:{
-            _token: '{{ csrf_token() }}',
-            id    : id.id,
-            title : title,
-            table : table,
-        },
-        success: function(data){
-        $('#rename_' + id.id).val('');
-        $('#title_' + id.id).text(title);
-        $('#save_success_' + id.id).text(data.message);
-        $('#save_success_' + id.id).removeClass('d-none');
-        setTimeout(function () {
-            $('#save_success_' + id.id).addClass('d-none');
-        },2000)
 
-        },
-        error: function(error){
-        
-        },
-    })
-    }
 
  </script>
 

@@ -132,6 +132,34 @@ class Agency extends Model
         return $this->hasMany(Client::class)
             ->whereHas('type', function ($q) {
                 return $q->where('role', 'seller');
-            });;
+            });
+    }
+
+    public function send_requests()
+    {
+        return $this->hasMany(Request::class, 'sender_id');
+    }
+
+    public function receive_requests()
+    {
+        return $this->hasMany(Request::class, 'receiver_id');
+    }
+
+    public function black_listed_to()
+    {
+        return $this->hasMany(BlackList::class, 'black_listed_agency_id');
+    }
+
+    public function black_listed_from()
+    {
+        return $this->hasMany(BlackList::class, 'agency_id');
+    }
+    public function descriptionTemplates()
+    {
+        return $this->hasMany(Template::class, 'agency_id')->where('type', 'description');
+    }
+    public function emailTemplates()
+    {
+        return $this->hasMany(Template::class, 'agency_id')->where('type', 'email');
     }
 }

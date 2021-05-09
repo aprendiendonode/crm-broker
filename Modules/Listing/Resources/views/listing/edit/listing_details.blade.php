@@ -163,7 +163,18 @@
                      data-target="#featuresModal_{{ $listing->id }}" class="btn btn-outline-dark btn-sm px-1">
                          <i class="fas fa-plus"></i>
                          <span>
-                             @lang('listing.features')
+                             @php
+                                    $features_to_count = (array)$listing->features;
+                                    $features_after_filter = [];
+                                    foreach($features_to_count as $key =>  $feature_to_count ){
+                                        if($feature_to_count != null && $feature_to_count != 'no'){
+
+                                            $features_after_filter[$key] = $feature_to_count;
+                                        }
+                                    }
+                                   
+                             @endphp
+                             @lang('listing.listing_features',['attribute' => count( $features_after_filter)])
                          </span>
                      </button>
                      <button onclick="event.preventDefault()" data-toggle="modal"
@@ -196,7 +207,7 @@
                      <div class="" >
                          <div class="description_en-1" onclick="editHandleDescModal({{ $listing->id }})">
                              <textarea class="form-control"
-                              id="description_en-1_{{ $listing->id }}" >{{old('edit_description_en_'.$listing->id,$listing->description_en)}}</textarea>
+                              id="description_en-1_{{ $listing->id }}" >@lang('listing.click_to_view_description')</textarea>
                          </div>    
                  
                          
@@ -206,14 +217,15 @@
                          data-target="#portals-modal_{{ $listing->id }}" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.portals_(1)')
+                                 
+                                 @lang('listing.portals',['attribute' => $listing->portals ? count($listing->portals) : 0])
                              </span>
                          </button>
                          <button onclick="event.preventDefault()" data-toggle="modal"
                           data-target="#photos-modal_{{ $listing->id }}" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.photos_(1)')
+                                 @lang('listing.photos',['attribute' => $listing->photos ? $listing->photos->count() : 0])
 
                              </span>
                          </button>
@@ -221,7 +233,7 @@
                          data-target="#videos-modal_{{ $listing->id }}" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.videos_(1)')
+                                 @lang('listing.videos',['attribute' => $listing->videos ? $listing->videos->count() : 0])
 
                              </span>
                          </button>
@@ -229,14 +241,14 @@
                           data-target="#floorPlans-modal_{{ $listing->id }}" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.floor_plans_(1)')
+                                 @lang('listing.floor_plans',['attribute' => $listing->plans ? $listing->plans->count() : 0])
                              </span>
                          </button>
                          <button onclick="event.preventDefault()" data-toggle="modal"
                           data-target="#documents-modal_{{ $listing->id }}" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.documents_(1)')
+                                 @lang('listing.documents',['attribute' => $listing->documents ? $listing->documents->count() : 0])
                              </span>
                          </button>
                          </div>
@@ -273,7 +285,7 @@
 
                  <script>
                      function editHandleDescModal(id) {
-                         $('#description-modal_'+id).modal('show');
+                         $('#description-modal-'+id).modal('show');
                      }
                  </script>
                          

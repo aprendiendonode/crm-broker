@@ -155,13 +155,15 @@
                      <button onclick="event.preventDefault()" data-toggle="modal" data-target="#featuresModal" class="btn btn-outline-dark btn-sm px-1">
                          <i class="fas fa-plus"></i>
                          <span>
-                             Features(0)
+                             @lang('listing.listing_feature_single')
                          </span>
                      </button>
                      <button onclick="event.preventDefault()" data-toggle="modal" data-target="#extraInfo-modal" data-toggle="modal" data-target="#extraInfo" class="btn btn-outline-dark btn-sm px-1">
                          <i class="fas fa-plus"></i>
                          <span>
-                             Extra Info
+                            @lang('listing.extra_info')
+
+                            
                          </span>
                      </button>
                  </div>
@@ -196,33 +198,33 @@
                          <button onclick="event.preventDefault()" data-toggle="modal" data-target="#portals-modal" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.portals_(1)')
+                                 @lang('listing.portals_single')
                              </span>
                          </button>
                          <button onclick="event.preventDefault()" data-toggle="modal" data-target="#photos-modal" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.photos_(1)')
+                                 @lang('listing.photos_single')
 
                              </span>
                          </button>
                          <button onclick="event.preventDefault()" data-toggle="modal" data-target="#videos-modal" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.videos_(1)')
+                                 @lang('listing.videos_single')
 
                              </span>
                          </button>
                          <button onclick="event.preventDefault()" data-toggle="modal" data-target="#floorPlans-modal" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.floor_plans_(1)')
+                                 @lang('listing.floor_plans_single')
                              </span>
                          </button>
                          <button onclick="event.preventDefault()" data-toggle="modal" data-target="#documents-modal" class="btn btn-outline-dark btn-sm px-1 mr-1 mb-1">
                              <i class="fas fa-plus"></i>
                              <span>
-                                 @lang('listing.documents_(1)')
+                                 @lang('listing.documents_single')
                              </span>
                          </button>
                          </div>

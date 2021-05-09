@@ -9,6 +9,7 @@ use Modules\Sales\Entities\Developer;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 use Illuminate\Validation\Rule;
+use Modules\Activity\Entities\ListingNote;
 
 class Listing extends Model implements Feedable
 {
@@ -56,14 +57,22 @@ class Listing extends Model implements Feedable
         });
     }
 
+    public function addedBy()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
     public function tasks()
     {
-        return $this->hasMany(Task::class, 'module_id')->where('module', 'opportunity');
+        return $this->hasMany(Task::class, 'module_id')->where('module', 'listing');
+    }
+    public function notes()
+    {
+        return $this->hasMany(ListingNote::class);
     }
 
     public function calls()
     {
-        return $this->hasMany(Call::class, 'module_id')->where('module', 'opportunity');
+        return $this->hasMany(Call::class, 'module_id')->where('module', 'listing');
     }
     public function type()
     {

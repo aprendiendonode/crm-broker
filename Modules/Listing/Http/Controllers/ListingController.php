@@ -12,17 +12,21 @@ use Modules\Listing\Http\Repositories\ListingRepo;
 class ListingController extends Controller
 {
 
-
-    public function index($agency, ListingRepo $repo)
+    protected $repository;
+    function __construct(ListingRepo $repository)
+    {
+        $this->repository = $repository;
+    }
+    public function index($agency)
     {
         abort_if(Gate::denies('view_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return $repo->index($agency);
+        return $this->repository->index($agency);
     }
 
-    public function store(Request $request, ListingRepo $repo)
+    public function store(Request $request)
     {
         abort_if(Gate::denies('add_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return $repo->store($request);
+        return $this->repository->store($request);
     }
 
 
@@ -76,37 +80,104 @@ class ListingController extends Controller
     }
 
 
-    public function temporary_photos(Request $request, ListingRepo $repository)
+    public function temporary_photos(Request $request)
     {
-        return $repository->temporary_photos($request);
+        return $this->repository->temporary_photos($request);
     }
-    public function temporary_plans(Request $request, ListingRepo $repository)
+    public function temporary_plans(Request $request)
     {
-        return $repository->temporary_plans($request);
+        return $this->repository->temporary_plans($request);
     }
-    public function temporary_documents(Request $request, ListingRepo $repository)
+    public function temporary_documents(Request $request)
     {
-        return $repository->temporary_documents($request);
+        return $this->repository->temporary_documents($request);
     }
-    public function modify_document_title(Request $request, ListingRepo $repository)
+    public function modify_title(Request $request)
     {
-        return $repository->modify_document_title($request);
+        return $this->repository->modify_title($request);
     }
 
-    public function update(Request $request, $id, ListingRepo $repository)
+    public function update(Request $request, $id)
     {
-        return $repository->update($request, $id);
+        return $this->repository->update($request, $id);
     }
-    public function brochure(Request $request, $type, $agency, ListingRepo $repository)
+    public function brochure(Request $request, $type, $agency)
     {
-        return $repository->brochure($request, $type, $agency);
+        return $this->repository->brochure($request, $type, $agency);
     }
-    public function remove_listing_temporary_photo(Request $request, ListingRepo $repository)
+    public function remove_listing_temporary(Request $request)
     {
-        return $repository->remove_listing_temporary_photo($request);
+        return $this->repository->remove_listing_temporary($request);
+    }
+    public function update_listing_temporary_active(Request $request)
+    {
+        return $this->repository->update_listing_temporary_active($request);
     }
     public function share_listing($agency, ListingRepo $repository)
     {
         return $repository->share_listing($agency);
+    }
+    public function requests($agency, ListingRepo $repository)
+    {
+        return $repository->requests($agency);
+    }
+    public function send_request(Request $request, ListingRepo $repository)
+    {
+        return $repository->send_request($request);
+    }
+    public function request_response($response, $id, ListingRepo $repository)
+    {
+        return $repository->request_response($response, $id);
+    }
+    public function block(Request $request, ListingRepo $repository)
+    {
+        return $repository->block($request);
+    }
+    public function unblock(Request $request, ListingRepo $repository)
+    {
+        return $repository->unblock($request);
+    }
+    public function old_requests($agency, ListingRepo $repository)
+    {
+        return $repository->old_requests($agency);
+    }
+    public function black_listed($agency, ListingRepo $repository)
+    {
+        return $repository->black_listed($agency);
+    }
+
+
+
+    public function update_listing_portals(Request $request, $id)
+    {
+        return $this->repository->update_listing_portals($request, $id);
+    }
+    public function destroy(Request $request)
+    {
+        return $this->repository->destroy($request);
+    }
+    public function assign_task(Request $request, $id)
+    {
+        return $this->repository->assign_task($request, $id);
+    }
+    public function edit_assign_task(Request $request, $id)
+    {
+        return $this->repository->edit_assign_task($request, $id);
+    }
+    public function delete_task(Request $request)
+    {
+        return $this->repository->delete_task($request);
+    }
+    public function save_note(Request $request)
+    {
+        return $this->repository->save_note($request);
+    }
+    public function listing_update_status(Request $request)
+    {
+        return $this->repository->listing_update_status($request);
+    }
+    public function export_all(Request $request, $agency)
+    {
+        return $this->repository->export_all($request, $agency);
     }
 }

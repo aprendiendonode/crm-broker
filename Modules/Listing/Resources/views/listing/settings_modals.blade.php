@@ -158,6 +158,7 @@
 
 
 
+
 <!-- Center landlord modal content -->
 <div class="modal fade" id="add_landlord" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -319,6 +320,58 @@
 
 @push('js')
 <script>
+    function show_status_modal(id){
+        console.log(id)
+        new_status = $('#modify_listing_status_'+id).val();
+                if(new_status == '' || id == '' ){
+            return false
+        }
+
+        $.ajax({
+    url : "{{ url('listing/listing-update-status') }}",
+    type : "POST",
+    data : {
+        _token    : '{{ csrf_token() }}',
+        id        : id,
+        status : new_status,
+    },
+    success : function (data) {
+
+        $('#status-alert-modal_'+id).modal('hide');
+        
+        $('#modify_listing_status_'+id +' option')
+                .removeAttr('selected')
+                .filter('[value='+data.listing.status+']')
+                .attr('selected', true)
+
+                $('#modify_listing_type_'+id).val(data.listing.status).change();
+
+        toast(data.message,'success');
+    },
+    error:function (error) {
+
+        toast(error.responseJSON.message,'error');
+
+    }
+});
+
+
+       /*  $('#status-alert-modal_'+id).modal('show'); */
+        }
+function change_listing_qualification(id){
+
+new_status = $('#modify_listing_status_'+id).val();
+
+if(new_status == '' || id == '' ){
+    return false
+}
+
+
+
+
+
+}
+
       function add_lead_source(){
         var name_en  =  $('.source_name_en').val();
         var name_ar  =  $('.source_name_ar').val();

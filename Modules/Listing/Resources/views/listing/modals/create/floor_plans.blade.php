@@ -122,6 +122,8 @@
     justify-content: space-between;
     flex-direction: column;
     height: 100%;">
+     <input type="hidden" class="plan-id" >
+     <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-plan" onclick="return confirm('are you sure ?') ? removePlan(this,'temporary') : false"></i> 
     <div class="plan-with-watermark">
         <img class=" preview-img w-50 m-auto" src="" alt="Generic placeholder image">
 
@@ -134,6 +136,17 @@
     <input type="hidden" name="floor_plans[]" class="listing_plans">
 
         <div class="media-body mb-1">
+
+            <div class="d-flex justify-content-between my-2">
+    
+                <div>
+                <div class="form-group mb-0 title">
+                @lang('listing.no_title')
+                </div>
+                </div>
+            </div>
+
+
         <div class="d-flex justify-content-between my-2">
             <div class="plan-with-enlarg-watermark">
                 
@@ -143,10 +156,23 @@
             <div class="d-none plan-no-enlarg-watermark">
                 <a target="_blank" href="">enlarg</a>
             </div>
+
+
+
+            <div class="mb-2 d-flex justify-content-start">
+                <input type="text" class="form-control rename_value"  placeholder="@lang('listing.enter_title')">
+                <i 
+                class="fa fa-check text-success mt-2 ml-2 cursor-pointer rename" 
+                
+                onclick="event.preventDefault();modifyName(this,'temporary_plans','plan')"></i>
+            </div>
+            <div class="text-success save-title-success" > </div>
+
+
             <div>
             <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">WaterMark</label>
-                <input type="checkbox" checked name="waterMark" class="plan-watermark" onchange="togglePlanWatermark(this)">
+                <input type="checkbox" checked name="waterMark" class="plan-watermark" onchange="togglePlanWatermark(this,'temporary')">
             </div>
             </div>
         </div>
@@ -215,15 +241,26 @@
     plan_ui_multi_update_file_status(id, 'success', 'Upload Complete');
     plan_ui_multi_update_file_progress(id, 100, 'success', false);
 
+
+    
+    $('#planUploaderFile' + id).find('.rename').attr('id',data.plan.id)
+    $('#planUploaderFile' + id).find('.rename_value').attr('id','rename_'+data.plan.id)
+    $('#planUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.plan.id)
+    $('#planUploaderFile' + id).find('.title').attr('id','title_'+data.plan.id)
+
     var img = $('#planUploaderFile' + id+' .plan-with-watermark').find('img');
     var link = $('#planUploaderFile' + id+' .plan-with-enlarg-watermark').find('a');
-    var path = '{{asset("temporary/plans")}}/'+ data.plan.watermark
+    var path = '{{asset("temporary/plans")}}/'+ data.plan.folder+'/'+ data.plan.watermark
     img.attr('src',path);
     link.attr('href',path);
     $('#planUploaderFile' + id).find('.plan-watermark').attr('id','watermark-planUploaderFile' + id)
+
+    $('#planUploaderFile' + id).find('.remove-plan').attr('id','remove-planUploaderFile' + id)
+      $('#planUploaderFile' + id).find('.plan-id').val( data.plan.id)
+
     var img = $('#planUploaderFile' + id +' .plan-no-watermark').find('img');
     var link = $('#planUploaderFile' + id+' .plan-no-enlarg-watermark').find('a');
-    var path = '{{asset("temporary/plans")}}/'+ data.plan.main
+    var path = '{{asset("temporary/plans")}}/'+ data.plan.folder+'/'+ data.plan.main
 
     link.attr('href',path);
     img.attr('src',path);
@@ -243,15 +280,8 @@
     });
 
 
-    function togglePlanWatermark(input){
-    var id         = input.id
-    var sliced_id  = id.slice(10);
-    //TODO request ajax to change which one of the should be on to use later
-    $('#'+sliced_id+' .plan-with-watermark').toggleClass('d-none')
-    $('#'+sliced_id+' .plan-no-watermark').toggleClass('d-none')
-    $('#'+sliced_id+' .plan-with-enlarg-watermark').toggleClass('d-none')
-    $('#'+sliced_id+' .plan-no-enlarg-watermark').toggleClass('d-none')
-    }
+
+
 </script>
 
 

@@ -4,11 +4,7 @@ namespace Modules\Sales\Http\Repositories;
 
 use App\Models\SystemTemplate;
 use Gate;
-use App\Models\City;
 
-use App\Models\Team;
-
-use App\Models\User;
 use App\Models\Agency;
 use App\Jobs\SendEmail;
 use App\Models\Country;
@@ -20,33 +16,24 @@ use App\Exports\UsersExport;
 use Illuminate\Http\Request;
 use App\Events\OpportunityEvent;
 use Modules\Sales\Entities\Call;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\Client;
 use Modules\Activity\Entities\Task;
 use App\Events\OpportunityTaskEvent;
-use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Facades\Excel;
-use Modules\Sales\Entities\LeadType;
 use App\Events\OpportunityAnswerEvent;
 use App\Events\OpportunityResultEvent;
 use Modules\Sales\Entities\CallStatus;
-use Modules\Sales\Entities\LeadSource;
 use Modules\Setting\Entities\Template;
 use Modules\Activity\Entities\TaskNote;
 use Modules\Activity\Entities\TaskType;
 use Modules\Sales\Entities\Opportunity;
 use App\Events\OpportunityQuestionEvent;
-use Modules\Sales\Entities\LeadPriority;
-use Modules\Sales\Entities\LeadProperty;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\TaskStatus;
 use Modules\Sales\Entities\ClientContract;
 use Illuminate\Support\Facades\Notification;
 use Modules\Sales\Entities\ContractDocument;
-use Modules\Sales\Entities\OpportunityStage;
 use Modules\Sales\Entities\ContractRecurring;
-use Modules\Sales\Entities\LeadCommunication;
 use Modules\Sales\Entities\OpportunityResult;
 use App\Notifications\OpportunityNotification;
 use Modules\Sales\Entities\LeadQualifications;
@@ -56,8 +43,6 @@ use App\Notifications\OpportunityTaskNotification;
 use App\Notifications\OpportunityAnswerNotification;
 use App\Notifications\OpportunityResultNotification;
 use App\Notifications\OpportunityQuestionNotification;
-use PhpParser\Node\Stmt\TryCatch;
-
 
 class OpportunityRepo
 {
@@ -122,7 +107,7 @@ class OpportunityRepo
         }
         if (request('id')) {
 
-            $opportunities->where('id',request('id'));
+            $opportunities->where('id', request('id'));
         }
         if (request('filter_name') != null) {
             $opportunities->where(function ($query) {
@@ -216,7 +201,7 @@ class OpportunityRepo
                 'task_status',
                 'task_types',
                 'call_status',
-                )
+            )
         );
     }
 
@@ -480,7 +465,6 @@ class OpportunityRepo
                     event(new OpportunityEvent($opportunity, $send_to->id));
                 }
                 Notification::send($users, new OpportunityNotification($opportunity));
-
             }
 
 
@@ -756,7 +740,6 @@ class OpportunityRepo
                     event(new OpportunityTaskEvent($task, $send_to->id));
                 }
                 Notification::send($users, new OpportunityTaskNotification($task));
-
             }
 
             return back()->with(flash(trans('sales.task_updated'), 'success'))->with('open-task-tab', $id);
@@ -1239,9 +1222,9 @@ class OpportunityRepo
 
                 SendEmail::dispatch(get_owner()->email, $template_with_site_name, "Opportunity Result Report Has Been Confirmed");
                 // Mail::to(get_owner()->email)->send(new EmailGeneral($template_with_site_name, "Opportunity Result Report Has Been Confirmed"));
-                event(new OpportunityResultEvent($result, get_owner()->id,$opportunity));
+                event(new OpportunityResultEvent($result, get_owner()->id, $opportunity));
                 // }
-                Notification::send(get_owner(), new OpportunityResultNotification($result,$opportunity));
+                Notification::send(get_owner(), new OpportunityResultNotification($result, $opportunity));
             } else {
                 $system_template = SystemTemplate::where('slug', 'opportunity_result')->first();
                 $template = Template::create([
@@ -1268,9 +1251,9 @@ class OpportunityRepo
 
                 SendEmail::dispatch(get_owner()->email, $template_with_site_name, "Opportunity Result Report Has Been Confirmed");
                 // Mail::to(get_owner()->email)->send(new EmailGeneral($template_with_site_name, "Opportunity Result Report Has Been Confirmed"));
-                event(new OpportunityResultEvent($result, get_owner()->id,$opportunity));
+                event(new OpportunityResultEvent($result, get_owner()->id, $opportunity));
                 // }
-                Notification::send(get_owner(), new OpportunityResultNotification($result,$opportunity));
+                Notification::send(get_owner(), new OpportunityResultNotification($result, $opportunity));
             }
 
             return back()->with(flash(trans('sales.result_report_updated'), 'success'))->with('open-result-tab', $id);
@@ -1377,10 +1360,10 @@ class OpportunityRepo
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "New Opportunity Question");
 
-                    event(new OpportunityQuestionEvent($question, $send_to->id,$opportunity));
+                    event(new OpportunityQuestionEvent($question, $send_to->id, $opportunity));
                 }
 
-                Notification::send($users, new OpportunityQuestionNotification($question,$opportunity));
+                Notification::send($users, new OpportunityQuestionNotification($question, $opportunity));
             } else {
                 $system_template = SystemTemplate::where('slug', 'opportunity_question')->first();
                 $template = Template::create([
@@ -1411,10 +1394,10 @@ class OpportunityRepo
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "New Opportunity Question");
 
-                    event(new OpportunityQuestionEvent($question, $send_to->id,$opportunity));
+                    event(new OpportunityQuestionEvent($question, $send_to->id, $opportunity));
                 }
 
-                Notification::send($users, new OpportunityQuestionNotification($question,$opportunity));
+                Notification::send($users, new OpportunityQuestionNotification($question, $opportunity));
             }
 
             return back()->with(flash(trans('sales.question_made'), 'success'))->with('open-question-tab', $id);
@@ -1486,17 +1469,17 @@ class OpportunityRepo
 
                 SendEmail::dispatch(get_owner()->email, $template_with_site_name, "New Answer");
 
-                event(new OpportunityAnswerEvent($question, get_owner()->id,$opportunity));
+                event(new OpportunityAnswerEvent($question, get_owner()->id, $opportunity));
 
                 foreach ($users as $send_to) {
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "New Opportunity Question");
 
-                    event(new OpportunityQuestionEvent($question, $send_to->id,$opportunity));
+                    event(new OpportunityQuestionEvent($question, $send_to->id, $opportunity));
                 }
 
 
-                Notification::send(get_owner(), new OpportunityAnswerNotification($question,$opportunity));
+                Notification::send(get_owner(), new OpportunityAnswerNotification($question, $opportunity));
             } else {
                 $system_template = SystemTemplate::where('slug', 'opportunity_answer')->first();
                 $template = Template::create([
@@ -1529,22 +1512,21 @@ class OpportunityRepo
 
                 SendEmail::dispatch(get_owner()->email, $template_with_site_name, "New Answer");
 
-                event(new OpportunityAnswerEvent($question, get_owner()->id,$opportunity));
+                event(new OpportunityAnswerEvent($question, get_owner()->id, $opportunity));
 
                 foreach ($users as $send_to) {
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "New Opportunity Question");
 
-                    event(new OpportunityQuestionEvent($question, $send_to->id,$opportunity));
+                    event(new OpportunityQuestionEvent($question, $send_to->id, $opportunity));
                 }
 
 
-                Notification::send(get_owner(), new OpportunityAnswerNotification($question,$opportunity));
-
+                Notification::send(get_owner(), new OpportunityAnswerNotification($question, $opportunity));
             }
 
 
-                return back()->with(flash(trans('sales.answer_made'), 'success'))->with('open-question-tab', $request->opportunity_id);
+            return back()->with(flash(trans('sales.answer_made'), 'success'))->with('open-question-tab', $request->opportunity_id);
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-question-tab', $request->opportunity_id);
@@ -1727,7 +1709,7 @@ class OpportunityRepo
                 'notes' => $request->{'hold_note_' . $request->opportunity_id},
                 'has_recurring' => $request->{'hold_recurring_type_' . $request->opportunity_id},
                 'recurring_number' => $request->{'recurrings_amount_' . $request->opportunity_id} &&
-                count($request->{'recurrings_amount_' . $request->opportunity_id}) > 0 ?
+                    count($request->{'recurrings_amount_' . $request->opportunity_id}) > 0 ?
                     count($request->{'recurrings_amount_' . $request->opportunity_id}) : null,
                 'amount' => $request->{'hold_amount_' . $request->opportunity_id},
 

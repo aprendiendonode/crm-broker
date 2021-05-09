@@ -1681,7 +1681,7 @@ class LeadsController extends Controller
                 $users = \App\Models\User::whereIn('id', $users_to_notify)->get();
                 foreach ($users as $send_to) {
 
-                    // Mail::to($send_to->email)->send(new EmailGeneral($template_with_site_name, "Lead Task Has Been Assigned To You"));
+//                     Mail::to($send_to->email)->send(new EmailGeneral($template_with_site_name, "Lead Task Has Been Assigned To You"));
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "Lead Task Has Been Assigned To You");
 

@@ -10,4 +10,8 @@ class ListingPlan extends Model
     protected $table = 'listing_plans';
 
     protected $guarded = [];
+    public function listing()
+    {
+        return $this->belongsTo(Listing::class);
+    }
 }
