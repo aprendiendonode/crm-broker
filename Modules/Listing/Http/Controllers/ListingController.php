@@ -125,9 +125,9 @@ class ListingController extends Controller
     {
         return $repository->send_request($request);
     }
-    public function request_response($response,$id, ListingRepo $repository)
+    public function request_response($response, $id, ListingRepo $repository)
     {
-        return $repository->request_response($response,$id);
+        return $repository->request_response($response, $id);
     }
     public function block(Request $request, ListingRepo $repository)
     {
@@ -144,5 +144,28 @@ class ListingController extends Controller
     public function black_listed($agency, ListingRepo $repository)
     {
         return $repository->black_listed($agency);
+    }
+
+
+
+    public function update_listing_portals(Request $request, $id)
+    {
+        return $this->repository->update_listing_portals($request, $id);
+    }
+    public function destroy(Request $request)
+    {
+        return $this->repository->destroy($request);
+    }
+    public function assign_task(Request $request, $id)
+    {
+        return $this->repository->assign_task($request, $id);
+    }
+    public function edit_assign_task(Request $request, $id)
+    {
+        return $this->repository->edit_assign_task($request, $id);
+    }
+    public function delete_task(Request $request)
+    {
+        return $this->repository->delete_task($request);
     }
 }

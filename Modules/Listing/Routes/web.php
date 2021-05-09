@@ -65,6 +65,13 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.remove-listing-temporary');
         Route::post('update-listing-temporary-active', 'ListingController@update_listing_temporary_active')
             ->name('listings.update-listing-temporary-active');
+        Route::patch('update-listing-portals/{listing}', 'ListingController@update_listing_portals')
+            ->name('listings.portals');
+        Route::post('listing/delete', 'ListingController@destroy')->name('listings.delete');
+        Route::patch('manage_listings/assign_task/{listing_id}', 'ListingController@assign_task');
+        Route::patch('manage_listings/edit_assign_task/{listing_id}', 'ListingController@edit_assign_task');
+
+        Route::post('delete-listing-tasks', 'ListingController@delete_task');
 
 
         Route::get('share/{agency}', 'ListingController@share_listing')

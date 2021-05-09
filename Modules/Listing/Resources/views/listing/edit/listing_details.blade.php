@@ -207,7 +207,7 @@
                      <div class="" >
                          <div class="description_en-1" onclick="editHandleDescModal({{ $listing->id }})">
                              <textarea class="form-control"
-                              id="description_en-1_{{ $listing->id }}" >{{old('edit_description_en_'.$listing->id,$listing->description_en)}}</textarea>
+                              id="description_en-1_{{ $listing->id }}" >@lang('listing.click_to_view_description')</textarea>
                          </div>    
                  
                          

@@ -2,40 +2,46 @@
 
 namespace Modules\Listing\Http\Repositories;
 
-use App\Mail\ShareRequest;
-use App\Models\BlackList;
-use App\Models\SystemTemplate;
-use App\Models\Template;
+use PDF;
 use File;
 use Gate;
 use App\Models\Agency;
-
 use App\Jobs\SendEmail;
-
 use App\Models\Business;
+use App\Models\Template;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use App\Models\BlackList;
+
+use App\Mail\ShareRequest;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\SystemTemplate;
+use Illuminate\Validation\Rule;
+use App\Events\ListingTaskEvent;
+
 use Illuminate\Support\Facades\DB;
+
 use Modules\Sales\Entities\Client;
 use Modules\Activity\Entities\Task;
-
+use Illuminate\Support\Facades\Mail;
 use Modules\Sales\Entities\LeadType;
-
 use Intervention\Image\Facades\Image;
 use Modules\Listing\Entities\Listing;
 use Modules\Sales\Entities\Developer;
+use Modules\Activity\Entities\TaskNote;
+use Modules\Activity\Entities\TaskType;
 use Illuminate\Support\Facades\Validator;
-use Modules\Listing\Entities\ListingChequeCalculator;
+use Modules\Activity\Entities\TaskStatus;
 use Modules\Listing\Entities\ListingPlan;
 use Modules\Listing\Entities\ListingPhoto;
 use Modules\Listing\Entities\ListingVideo;
 use Modules\Listing\Entities\TemporaryPlan;
+use Illuminate\Support\Facades\Notification;
 use Modules\Listing\Entities\ListingDocument;
+use App\Notifications\ListingTaskNotification;
 use Modules\Listing\Entities\TemporaryListing;
 use Modules\Listing\Entities\TemporaryDocument;
-use PDF;
+use Modules\Listing\Entities\ListingChequeCalculator;
 
 class ListingRepo
 {
@@ -1055,7 +1061,6 @@ class ListingRepo
                 return response()->json(['message' => trans('listing.title_modified'), 'data' => $document], 200);
             } catch (\Exception $e) {
                 DB::rollback();
-                dd($e->getMessage());
                 return response()->json(['message' => trans('agency.something_went_wrong')], 400);
             }
         }
@@ -1230,6 +1235,350 @@ class ListingRepo
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
+        }
+    }
+
+
+    public function update_listing_portals($request, $id)
+    {
+
+
+        DB::beginTransaction();
+        try {
+
+            $listing =  Listing::where('business_id', auth()->user()->business_id)->where('id', $id)->firstOrFail();
+            $validator = Validator::make($request->all(), [
+
+                'portals_' . $id          => ['sometimes', 'nullable', 'array'],
+                'portals_' . $id . '.*'         => [Rule::exists('portals', 'id')],
+
+            ]);
+
+            if ($validator->fails()) {
+
+                return back()->withInput()->with(flash($validator->errors()->all()[0], 'error'))->with('open-portals-tab', $id);
+            }
+
+            $listing->update([
+                'portals' => $request->{'portals_' . $id} ? $request->{'portals_' . $id} : []
+            ]);
+
+
+            DB::commit();
+            return back()->with(flash(trans('listing.portals_modified'), 'success'))->with('open-portals-tab', $id);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-portals-tab', $id);
+        }
+    }
+
+
+
+    public function destroy($request)
+    {
+
+        DB::beginTransaction();
+        try {
+
+            $listing =  Listing::where('business_id', auth()->user()->business_id)->where('id', $request->listing_id)->firstOrFail();
+
+            $listing->delete();
+            DB::commit();
+            return back()->with(flash(trans('listing.listing_deleted'), 'success'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
+        }
+    }
+
+    public function assign_task($request, $id)
+    {
+
+        $listing = Listing::where('id', $request->task_listing_id)->where('business_id', auth()->user()->business_id)->firstOrFail();
+
+        $task_type = TaskType::where('id', $request->{'task_type_' . $id})->where('business_id', auth()->user()->business_id)->firstOrFail();
+
+        $task_status = TaskStatus::where('id', $request->{'task_status_' . $id})->where('business_id', auth()->user()->business_id)->firstOrFail();
+
+        try {
+
+            $validator = Validator::make($request->all(), [
+
+                "task_agency_id_{$id}" => "required|integer|exists:agencies,id",
+                "task_business_id_{$id}" => "required|integer|exists:businesses,id",
+                "task_note_en_{$id}" => "sometimes|nullable|string",
+                "task_note_ar_{$id}" => "sometimes|nullable|string",
+                "task_deadline_{$id}" => "required|date|date_format:Y-m-d",
+                "task_time_{$id}" => "required|string",
+                "task_custom_reminder_{$id}" => "sometimes|nullable|in:on,off",
+                "task_period_reminder_{$id}" => "required_if:task_custom_reminder_{$id},on|in:before,after",
+                "task_type_reminder_{$id}" => "required_if:task_custom_reminder_{$id},on|in:hours,days",
+                "task_type_reminder_number_{$id}" => "required_if:task_custom_reminder_{$id},on|integer",
+            ]);
+
+
+            if ($validator->fails()) {
+                return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-task-tab', $id);
+            }
+            DB::beginTransaction();
+
+            $task = Task::create([
+                "agency_id" => $request->{'task_agency_id_' . $id},
+                "business_id" => $request->{'task_business_id_' . $id},
+
+                "task_type_id" => $request->{'task_type_' . $id},
+                "task_status_id" => $request->{'task_status_' . $id},
+                "module" => 'listing',
+                "module_id" => $listing->id,
+                "deadline" => $request->{'task_deadline_' . $id},
+
+
+                "time" => $request->{'task_time_' . $id},
+                "custom_reminder" => $request->{'task_custom_reminder_' . $id},
+
+                "period_reminder" => $request->{'task_period_reminder_' . $id},
+
+                "type_reminder" => $request->{'task_type_reminder_' . $id},
+                "type_reminder_number" => $request->{'task_type_reminder_number_' . $id},
+
+
+                "add_by" => auth()->user()->id,
+            ]);
+
+
+            $staff_for_notify = [];
+
+            $staff = [];
+            if ($request->{'task_staff_' . $id}) {
+
+                $staff = $request->{'task_staff_' . $id};
+            }
+
+            $task->staff()->sync($staff);
+
+            $staff_for_notify = $staff;
+
+
+            if ($request->{'task_note_en_' . $id} || $request->{'task_note_ar_' . $id}) {
+
+                // save note by task id
+                $task_note = TaskNote::create([
+                    'task_id' => $task->id,
+                    'add_by' => auth()->user()->id,
+                    'notes_en' => $request->{'task_note_en_' . $id},
+                    'notes_ar' => $request->{'task_note_ar_' . $id},
+                ]);
+            }
+            DB::commit();
+
+
+            $template = Template::where('agency_id', $listing->agency_id)->where('type', 'email')->where('system', 'yes')
+                ->where('slug', 'listing_task')->first();
+
+
+            if ($template) {
+
+                $template_with_name = str_replace('{TASK_NAME}', $listing->listing_ref, $template->description_en);
+                $template_with_assigned_by = str_replace('{ASSIGNED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_url = str_replace('{TASK_URL}', url('sales/tasks/' . $listing->agency_id), $template_with_assigned_by);
+                $template_with_site_name = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+
+                $users = \App\Models\User::whereIn('id', $staff_for_notify)->get();
+
+                foreach ($users as $send_to) {
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, "Listing Task Has Been Assigned To You");
+
+                    event(new ListingTaskEvent($task, $send_to->id));
+                }
+                Notification::send($users, new ListingTaskNotification($task));
+            } else {
+                $system_template = SystemTemplate::where('slug', 'listing_task')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $listing->agency_id,
+                    'business_id' => $listing->business_id,
+                ]);
+
+
+                $template_with_name = str_replace('{TASK_NAME}', $listing->listing_ref, $template->description_en);
+                $template_with_assigned_by = str_replace('{ASSIGNED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_url = str_replace('{TASK_URL}', url('sales/tasks/' . $listing->agency_id), $template_with_assigned_by);
+                $template_with_site_name = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+
+                $users = \App\Models\User::whereIn('id', $staff_for_notify)->get();
+
+                foreach ($users as $send_to) {
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, "Listing Task Has Been Assigned To You");
+
+                    event(new ListingTaskEvent($task, $send_to->id));
+                }
+                Notification::send($users, new ListingTaskNotification($task));
+            }
+
+            return back()->with(flash(trans('sales.task_assigned'), 'success'))->with('open-task-tab', $id);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-task-tab', $id);
+        }
+    }
+
+
+
+
+
+
+    public function edit_assign_task($request, $id)
+    {
+
+        $listing = Listing::where('id', $request->edit_task_listing_id)->where('business_id', auth()->user()->business_id)->firstOrFail();
+        $task_type = TaskType::where('id', $request->{'edit_task_type_' . $id})->where('business_id', auth()->user()->business_id)->firstOrFail();
+        $task_status = TaskStatus::where('id', $request->{'edit_task_status_' . $id})->where('business_id', auth()->user()->business_id)->firstOrFail();
+
+        $task = Task::where('id', $request->{'edit_task_id_' . $id})->where('business_id', auth()->user()->business_id)->firstOrFail();
+
+        try {
+
+            $validator = Validator::make($request->all(), [
+
+                "edit_task_agency_id_{$id}" => "required|integer|exists:agencies,id",
+                "edit_task_business_id_{$id}" => "required|integer|exists:businesses,id",
+                "edit_task_note_en_{$id}" => "sometimes|nullable|string",
+                "edit_task_note_ar_{$id}" => "sometimes|nullable|string",
+                "edit_task_deadline_{$id}" => "required|date|date_format:Y-m-d",
+                "edit_task_time_{$id}" => "required|string",
+                "edit_task_custom_reminder_{$id}" => "sometimes|nullable|in:on,off",
+                "edit_task_period_reminder_{$id}" => "required_if:task_custom_reminder_{$id},on|in:before,after",
+                "edit_task_type_reminder_{$id}" => "required_if:task_custom_reminder_{$id},on|in:hours,days",
+                "edit_task_type_reminder_number_{$id}" => "required_if:task_custom_reminder_{$id},on|integer",
+            ]);
+
+
+            if ($validator->fails()) {
+                return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-task-tab', $id);
+            }
+
+            DB::beginTransaction();
+
+            $task->update([
+                "agency_id" => $request->{'edit_task_agency_id_' . $id},
+                "business_id" => $request->{'edit_task_business_id_' . $id},
+
+                "task_type_id" => $request->{'edit_task_type_' . $id},
+                "task_status_id" => $request->{'edit_task_status_' . $id},
+                "module" => 'listing',
+                "module_id" => $listing->id,
+                "deadline" => $request->{'edit_task_deadline_' . $id},
+                "time" => $request->{'edit_task_time_' . $id},
+                "custom_reminder" => $request->{'edit_task_custom_reminder_' . $id},
+
+                "period_reminder" => $request->{'edit_task_period_reminder_' . $id},
+
+                "type_reminder" => $request->{'edit_task_type_reminder_' . $id},
+                "type_reminder_number" => $request->{'edit_task_type_reminder_number_' . $id},
+            ]);
+
+
+            $staff_for_notify = [];
+
+            $staff = [];
+            if ($request->{'edit_task_staff_' . $id}) {
+
+                $staff = $request->{'edit_task_staff_' . $id};
+            }
+            // dd($request->all(), $staff);
+            $task->staff()->sync($staff);
+
+            $staff_for_notify = $staff;
+
+
+            if ($request->{'edit_task_note_en_' . $id}) {
+
+                // save note by task id
+                $task_note = TaskNote::create([
+                    'task_id' => $task->id,
+                    'add_by' => auth()->user()->id,
+                    'notes_en' => $request->{'edit_task_note_en_' . $id},
+                ]);
+            }
+            DB::commit();
+            $template = Template::where('agency_id', $listing->agency_id)->where('type', 'email')->where('system', 'yes')
+                ->where('slug', 'listing_task')->first();
+
+
+            if ($template) {
+
+                $template_with_name = str_replace('{TASK_NAME}', $listing->listing_ref, $template->description_en);
+                $template_with_assigned_by = str_replace('{ASSIGNED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_url = str_replace('{TASK_URL}', url('sales/tasks/' . $listing->agency_id), $template_with_assigned_by);
+                $template_with_site_name = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+
+                $users = \App\Models\User::whereIn('id', $staff_for_notify)->get();
+
+                foreach ($users as $send_to) {
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, "Listing Task Has Been UPDATED");
+
+                    event(new ListingTaskEvent($task, $send_to->id));
+                }
+                Notification::send($users, new ListingTaskNotification($task));
+            } else {
+                $system_template = SystemTemplate::where('slug', 'listing_task')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $listing->agency_id,
+                    'business_id' => $listing->business_id,
+                ]);
+
+                $template_with_name = str_replace('{TASK_NAME}', $listing->listing_ref, $template->description_en);
+                $template_with_assigned_by = str_replace('{ASSIGNED_BY}', auth()->user()->name_en, $template_with_name);
+                $template_with_url = str_replace('{TASK_URL}', url('sales/tasks/' . $listing->agency_id), $template_with_assigned_by);
+                $template_with_site_name = str_replace('{SITE_NAME}', env('APP_NAME'), $template_with_url);
+
+                $users = \App\Models\User::whereIn('id', $staff_for_notify)->get();
+
+                foreach ($users as $send_to) {
+                    SendEmail::dispatch($send_to->email, $template_with_site_name, "Listing Task Has Been UPDATED");
+
+                    event(new ListingTaskEvent($task, $send_to->id));
+                }
+                Notification::send($users, new ListingTaskNotification($task));
+            }
+
+            return back()->with(flash(trans('sales.task_updated'), 'success'))->with('open-task-tab', $id);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-task-tab', $id);
+        }
+    }
+
+
+    public function delete_task(Request $request)
+    {
+
+
+        // abort_if(Gate::denies('assign_task_on_opportunity'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        DB::beginTransaction();
+
+        try {
+            $task = Task::where('business_id', auth()->user()->id)->where('id', $request->task_id)->firstOrFail();
+            $task->delete();
+
+            DB::commit();
+            return back()->with(flash(trans('sales.task_deleted'), 'success'))->with('open-task-tab', $request->task_listing_id);
+        } catch (\Exception $e) {
+
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-task-tab', $request->task_listing_id);
         }
     }
 }

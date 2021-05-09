@@ -20,7 +20,9 @@
                         <input  data-plugin="tippy" data-tippy-placement="top-start" onchange="toggle_edit_desc({{ $listing->id }})" class="edit-toggle-description-{{ $listing->id }}" type="checkbox"
                         checked data-toggle="toggle" data-on="Ar" data-off="EN"
                         data-onstyle="primary"
-                        data-offstyle="success">
+                        data-offstyle="success"
+                        name="toggling"
+                        >
         
                     </div>
                     <div class="">

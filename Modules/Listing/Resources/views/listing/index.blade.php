@@ -6,10 +6,13 @@
     <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
+    <link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" />
+    
     <link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
@@ -41,7 +44,7 @@
 
 
    <!-- icons -->
-   <div id="notesFor-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="notesFor-modalLabel"
+<div id="notesFor-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="notesFor-modalLabel"
    aria-hidden="true">
   <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -395,7 +398,6 @@
                         <th> @lang('listing.updated') </th>
                         <th> @lang('listing.status') </th>
                         <th> @lang('listing.controlls') </th>
-                        <th> @lang('listing.advertise') </th>
                       
     
                     </tr>
@@ -419,36 +421,10 @@
                             <td>
                                 @include('listing::listing.controlls')
                             </td>
-                        <td>
-                            @can('edit_listing')
-                                <i
-                                        onclick="event.preventDefault();show_edit_div({{ $listing->id }})"
-                                        data-plugin="tippy"
-                                        data-tippy-placement="top-start"
-                                        title="Edit"
-                                        class="fa fa-edit cursor-pointer feather-16">
-                                </i>
-                            @endcan
-
-                   
-                            @can('delete_listing')
-                                <i
-                                        data-plugin="tippy"
-                                        data-tippy-placement="top-start"
-                                        title="@lang('agency.delete_listing')"
-                                        data-toggle="modal" data-target="#delete-alert-modal_{{ $listing->id }}"
-
-                                        class="fe-trash cursor-pointer feather-16">
-                                </i>
-                           @endcan
+                
 
 
-            
-
-                        </td>
-
-
-                        @include('listing::listing.modals')
+                     
 
                     </tr>
                     @can('edit_listing')
@@ -462,7 +438,53 @@
                             </td>
                         </tr>
 
+
+
+                        <tr  class="table-row_{{ $listing->id }} portals_{{ $listing->id }}    
+                            @if( (session()->has('open-portals-tab') && session('open-portals-tab') ==  $listing->id ))
+                              @else d-none @endif
+                            "   >
+                            <td colspan="13">
+                                
+                                @include('listing::listing.portals')
+                                
+                            </td>
+                        </tr>
+                        <tr  class="table-row_{{ $listing->id }} borchures_{{ $listing->id }}    
+                            @if( (session()->has('open-borchures-tab') && session('open-borchures-tab') ==  $listing->id ))
+                              @else d-none @endif
+                            "   >
+                            <td colspan="13">
+                                
+                                @include('listing::listing.borchures')
+                                
+                            </td>
+                        </tr>
+
+
+
+                        <tr  class="table-row_{{ $listing->id }} task_{{ $listing->id }}
+        
+                            @if( (session()->has('open-task-tab') && session('open-task-tab') ==  $listing->id ))
+                            @else d-none @endif
+                            
+                            "  >
+                            <td colspan="13">
+                                
+                                @include('listing::listing.tasks.tasks')
+                                
+                            </td>
+                        </tr>
+
                     @endcan
+
+                  
+        
+               
+                    
+              
+                
+                
                 @empty
                 @endforelse
                 </tbody>
@@ -512,14 +534,14 @@
     <script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script>
     <script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script>
 
-    <!-- Init js-->
+
     <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script>
 
-
+    <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
 
     {{-- <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -549,8 +571,13 @@
     
     <script>
         $(document).ready(function () {
+         
             $('.select2').select2();
             $('.select2-multiple').select2();
+            $(".basic-datepicker").flatpickr();
+            $(".clockpicker").clockpicker({
+                twelvehour :false
+            });
 
             var listings = @json($listings);
             for (var i = 0; i < listings.data.length; i++) {
@@ -571,6 +598,22 @@
 
                     });
             }
+
+
+            if(sessionStorage.getItem('open-call-tab')){
+            $('.call_'+sessionStorage.getItem('open-call-tab')).removeClass('d-none');
+            sessionStorage.removeItem('open-call-tab')
+        }
+
+        if(sessionStorage.getItem('open-result-tab')){
+            $('.result_'+sessionStorage.getItem('open-result-tab')).removeClass('d-none');
+            sessionStorage.removeItem('open-result-tab')
+        }
+
+        if(sessionStorage.getItem('open-question-tab')){
+            $('.question_'+sessionStorage.getItem('open-question-tab')).removeClass('d-none');
+            sessionStorage.removeItem('open-question-tab')
+        }
 
         })
     </script>

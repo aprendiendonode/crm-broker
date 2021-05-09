@@ -58,12 +58,12 @@ class Listing extends Model implements Feedable
 
     public function tasks()
     {
-        return $this->hasMany(Task::class, 'module_id')->where('module', 'opportunity');
+        return $this->hasMany(Task::class, 'module_id')->where('module', 'listing');
     }
 
     public function calls()
     {
-        return $this->hasMany(Call::class, 'module_id')->where('module', 'opportunity');
+        return $this->hasMany(Call::class, 'module_id')->where('module', 'listing');
     }
     public function type()
     {

@@ -135,6 +135,14 @@ return [
     'documents'         => 'Documents (:attribute)',
     'photos'         => 'Photos (:attribute)',
     'floor_plans'         => 'Floor Plans (:attribute)',
+    'click_to_view_description' => 'Click To View Description',
+    'listings'                           => 'Listings',
+    'live'                                => 'Live',
+    'draft'         => 'Draft',
+    'review'         => 'Review',
+    'archive'       => 'Archive',
+    'all'           => 'All',
+    'agents'        => 'Agents',
 
 
 

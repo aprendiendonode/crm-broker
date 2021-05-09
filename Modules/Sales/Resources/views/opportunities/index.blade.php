@@ -372,19 +372,19 @@
         
         @can('assign_task_on_opportunity')
         
-        <tr  class="table-row_{{ $opportunity->id }} task_{{ $opportunity->id }}
+            <tr  class="table-row_{{ $opportunity->id }} task_{{ $opportunity->id }}
 
-            @if( (session()->has('open-task-tab') && session('open-task-tab') ==  $opportunity->id ))
-              @else d-none @endif
+                @if( (session()->has('open-task-tab') && session('open-task-tab') ==  $opportunity->id ))
+                @else d-none @endif
+                
+                "  >
+                <td colspan="8">
+                    
+                    @include('sales::opportunities.tasks.tasks')
+                    
+                </td>
+            </tr>
             
-            "  >
-            <td colspan="8">
-                
-                @include('sales::opportunities.tasks.tasks')
-                
-            </td>
-        </tr>
-        
         @endcan
         
         
