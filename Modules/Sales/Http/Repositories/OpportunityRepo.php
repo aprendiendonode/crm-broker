@@ -970,7 +970,7 @@ class OpportunityRepo
             DB::beginTransaction();
 
             $client = Client::create([
-
+                'table_name' => 'clients',
                 'agency_id' => $opportunity->agency_id,
 
                 "business_id" => $opportunity->business_id,
