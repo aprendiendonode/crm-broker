@@ -112,6 +112,13 @@ class CreateSystemTemplatesTable extends Migration
             'description_ar' => '<p>Hi there,</p><p>A new Task <strong>{TASK_NAME}</strong> &nbsp;has been assigned to you by <strong>{ASSIGNED_BY}</strong>.</p><p>You can view this listing by logging in to the portal using the link below.</p><p><br><a href="{TASK_URL}"><strong>View Task</strong></a><br><br>Regards<br>The {SITE_NAME} Team</p>',
             'slug' => 'listing_task'
         ]);
+        SystemTemplate::create([
+            'title' => 'Contact Client',
+            'type' => 'email',
+            'description_en' => '<p>Hi there,</p>',
+            'description_ar' => '<p>Hi there,</p>',
+            'slug' => 'contact_client'
+        ]);
     }
 
     /**

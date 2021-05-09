@@ -80,7 +80,7 @@
                 @forelse($agencies as $agency)
                    @if($sender->id != $agency->id && !in_array($agency->id,$blocked_from) && !in_array($agency->id,$blocked_to) )
                        <tr>
-                           <td>{{$agency->company_name_en ?? '' }}</td>
+                           <td>{{$agency->{'company_name_'.app()->getLocale()} ?? '' }}</td>
                            <td>
 
 

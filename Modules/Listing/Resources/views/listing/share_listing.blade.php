@@ -33,7 +33,7 @@
             <table class="table table-bordered toggle-circle mb-0">
                 <thead>
                 <tr>
-                    <th>@lang('listing.id') </th>
+                    <th> @lang('listing.id') </th>
                     <th> @lang('listing.purpose') </th>
                     <th> @lang('listing.type') </th>
                     <th> @lang('listing.title') </th>
@@ -47,25 +47,27 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{--@forelse()--}}
+                @forelse($listings as $listing)
                     <tr>
-                        <td><a href="#">0666</a></td>
-                        <td>Sale</td>
-                        <td>Apartment</td>
-                        <td>610 K / 2 Beds / Lake View / Dubai Gate 2</td>
-                        <td>New Dubai Gate 2</td>
-                        <td>755</td>
-                        <td>610,000</td>
-                        <td>06/05/21</td>
-                        <td>AKT Real Estate Broker</td>
+                        <td><a href="#">{{$listing->id ?? ''}}</a></td>
+                        <td>{{$listing->purpose ?? ''}}</td>
+                        <td>{{$listing->type->{'name_'.app()->getLocale()} ?? ''}}</td>
+                        <td>{{$listing->title ?? ''}}</td>
+                        <td>{{explode(' ',$listing->location)[0] ?? ''}}
+                            <i title="{{$listing->location ?? ''}}" class="fas fa-info-circle mr-2 " data-toggle="tooltip" data-placement="top" ></i>
+                        </td>
+                        <td>{{$listing->area ?? ''}}</td>
+                        <td>{{$listing->price ?? ''}}</td>
+                        <td>{{$listing->updated_at->toFormattedDateString() ?? ''}}</td>
+                        <td>{{$listing->agency->{'company_name_'.app()->getLocale()} ?? ''}}</td>
                         <td>
                             <a href="#" target="_blank">
-                                <i title="{{trans('listing.view')}}" class="fas fa-external-link-alt mr-2"></i>
+                                <i title="{{trans('listing.view')}}" class="fas fa-external-link-alt mr-2 " data-toggle="tooltip" data-placement="top" ></i>
                             </a>
 
                             <i
                                     title="{{trans('listing.contact_client')}}"
-                                    data-toggle="modal" data-target="#send_mail-alert-modal_"
+                                    data-toggle="modal" data-target="#send_mail-alert-modal_{{$listing->id ?? ''}}"
 
                                     class="fas fa-envelope cursor-pointer">
                             </i>
@@ -73,7 +75,7 @@
                     </tr>
 
                 <!-- Info Alert Modal -->
-                <div id="send_mail-alert-modal_" class="modal fade" tabindex="-1" role="dialog"
+                <div id="send_mail-alert-modal_{{$listing->id ?? ''}}" class="modal fade" tabindex="-1" role="dialog"
                      aria-hidden="true">
                     <div class="modal-dialog modal-sm">
                         <div class="modal-content">
@@ -82,8 +84,10 @@
                                     <i class="dripicons-information h1 text-success"></i>
                                     <h4 class="mt-2">@lang('listing.contact_client')</h4>
                                     <p class="mt-3">@lang('listing.send_mail_confirmation')</p>
-                                    <form action="#" method="post">
+                                    <form action="{{route('listings.contact_client')}}" method="post">
                                         @csrf
+                                        <input type="hidden" name="listing_id" value="{{$listing->id ?? ''}}">
+                                        <input type="hidden" name="sender_id" value="{{request('agency') ?? ''}}">
                                         <button type="submit"
                                                 class="btn btn-success my-2">@lang('listing.confirm_send_mail')</button>
                                         <button type="button" class="btn btn-light my-2 border-success"
@@ -94,15 +98,15 @@
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
-                {{--@empty--}}
-                {{--@endforelse--}}
+                @empty
+                @endforelse
 
                 </tbody>
             </table>
 
         </div>
         <div class="mt-2">
-            {{--{{ $mail_lists->links() }}--}}
+            {{ $listings->links() }}
         </div>
     </div>
 @endsection
@@ -146,7 +150,10 @@
         $(document).ready(function () {
             $('.select2').select2();
             $(".basic-datepicker").flatpickr();
-        })
+        });
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
     </script>
 
 @endpush

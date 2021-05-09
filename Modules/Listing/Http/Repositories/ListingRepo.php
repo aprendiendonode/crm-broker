@@ -2,6 +2,8 @@
 
 namespace Modules\Listing\Http\Repositories;
 
+use App\Mail\ContactClient;
+use Modules\Listing\Entities\ListingType;
 use PDF;
 use File;
 use Gate;
@@ -667,8 +669,6 @@ class ListingRepo
     }
 
 
-
-
     public function update($request, $id)
     {
         // dd($request->all());
@@ -1025,10 +1025,10 @@ class ListingRepo
             try {
                 $validator = Validator::make($request->all(), [
 
-                    'title'          => ['required', 'string', 'max:225'],
-                    'id'             => ['required', 'integer'],
-                    'table'          => ['required', 'string', 'max:225', 'in:temporary_documents,temporary_plans,listing_documents,listing_plans'],
-                    'type'          => ['required', 'string', 'max:225', 'in:document,plan'],
+                    'title' => ['required', 'string', 'max:225'],
+                    'id' => ['required', 'integer'],
+                    'table' => ['required', 'string', 'max:225', 'in:temporary_documents,temporary_plans,listing_documents,listing_plans'],
+                    'type' => ['required', 'string', 'max:225', 'in:document,plan'],
 
                 ]);
 
@@ -1041,12 +1041,12 @@ class ListingRepo
                     if ($request->table == 'temporary_documents') {
 
                         $document = TemporaryDocument::findOrFail($request->id)->update([
-                            'title'  => $request->title,
+                            'title' => $request->title,
                         ]);
                     }
                     if ($request->table == 'listing_documents') {
                         $document = ListingDocument::findOrFail($request->id)->update([
-                            'title'  => $request->title,
+                            'title' => $request->title,
                         ]);
                     }
                 }
@@ -1054,12 +1054,12 @@ class ListingRepo
                     if ($request->table == 'temporary_plans') {
 
                         $plan = TemporaryPlan::findOrFail($request->id)->update([
-                            'title'  => $request->title,
+                            'title' => $request->title,
                         ]);
                     }
                     if ($request->table == 'listing_plans') {
                         $plan = ListingPlan::findOrFail($request->id)->update([
-                            'title'  => $request->title,
+                            'title' => $request->title,
                         ]);
                     }
                 }
@@ -1074,12 +1074,95 @@ class ListingRepo
 
     public function share_listing($agency)
     {
+        $per_page = 10;
+        $shared_agencies = \App\Models\Request::where('sender_id', $agency)->where('response', 'accepted');
+        $agencies = $shared_agencies->get();
+        $shared_agencies = $shared_agencies->pluck('receiver_id')->toArray();
+        $listings = Listing::whereIn('agency_id', $shared_agencies)->where('lsm', 'shared');
+        $locations = $listings->pluck('location')->unique();
+        array_push($shared_agencies, $agency);
+        $types = ListingType::whereIn('agency_id', $shared_agencies)->get();
 
-        return view('listing::listing.share_listing');
+
+        if (request('purpose')) {
+            $listings->where('purpose', request('purpose'));
+        }
+        if (request('filter_agency')) {
+            $listings->where('agency_id', request('filter_agency'));
+        }
+
+        if (request('location')) {
+            $listings->where('location', request('location'));
+        }
+
+        if (request('keywords')) {
+            $listings->where('title', 'like', '%' . request('keywords') . '%');
+            $listings->where('description_en', 'like', '%' . request('keywords') . '%');
+            $listings->where('description_ar', 'like', '%' . request('keywords') . '%');
+        }
+
+        if (request('type')) {
+            $type = request('type');
+
+            $listings->whereHas('type', function ($q) use ($type) {
+                $q->where('id', $type);
+            });
+        }
+
+
+        if (request('price_min')) {
+            $listings->where('price', '>=', request('price_min'));
+        }
+        if (request('price_max')) {
+            $listings->where('price', '<=', request('price_max'));
+        }
+
+
+        if (request('min_bed')) {
+            if (request('min_bed') == 'studio') {
+                $listings->where('beds', request('min_bed'));
+            }
+            $listings->where('beds', '>=', request('min_bed'));
+        }
+        if (request('max_bed')) {
+            if (request('max_bed') == 'studio') {
+                $listings->where('beds', request('min_bed'));
+            }
+            $listings->where('beds', '<=', request('max_bed'));
+        }
+
+
+        if (request('area_min')) {
+            $listings->where('area', '>=', request('area_min'));
+        }
+        if (request('area_max')) {
+            $listings->where('area', '<=', request('area_max'));
+        }
+
+        if (request('added_from')) {
+            $listings->where('created_at', '>=', request('added_from'));
+        }
+        if (request('added_to')) {
+            $listings->where('created_at', '<=', request('added_to'));
+        }
+
+
+        if (request('updated_from')) {
+            $listings->where('updated_at', '>=', request('updated_from'));
+        }
+        if (request('updated_to')) {
+            $listings->where('updated_at', '<=', request('updated_to'));
+        }
+
+
+        $listings = $listings->paginate($per_page);
+
+        return view('listing::listing.share_listing', compact('listings', 'locations', 'types','agencies'));
     }
 
 
-    public function requests($agency)
+    public
+    function requests($agency)
     {
         $per_page = 10;
         $agencies = Agency::where(function ($q) {
@@ -1098,7 +1181,8 @@ class ListingRepo
         return view('listing::listing.requests', compact('agencies', 'sender', 'blocked_from', 'blocked_to'));
     }
 
-    public function request_response($response, $id)
+    public
+    function request_response($response, $id)
     {
         DB::beginTransaction();
         try {
@@ -1130,7 +1214,8 @@ class ListingRepo
         }
     }
 
-    public function send_request($request)
+    public
+    function send_request($request)
     {
 
         DB::beginTransaction();
@@ -1183,7 +1268,48 @@ class ListingRepo
         }
     }
 
-    public function block($request)
+    public
+    function contact_client($request)
+    {
+
+        DB::beginTransaction();
+        try {
+
+
+            $template = Template::where('agency_id', $request->sender_id)->where('type', 'email')->where('system', 'yes')
+                ->where('slug', 'contact_client')->first();
+
+            $listing = Listing::findOrFail($request->listing_id);
+
+
+            if ($template) {
+
+                Mail::to($listing->agency->company_email)->send(new ContactClient($template, "Contact Client About Listing"));
+            } else {
+                $system_template = SystemTemplate::where('slug', 'contact_client')->first();
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $request->sender_id,
+                    'business_id' => auth()->user()->business_id,
+                ]);
+
+                Mail::to($listing->agency->company_email)->send(new ContactClient($template, "Contact Client About Listing"));
+            }
+            DB::commit();
+            return back()->with(flash(trans('listing.mail_sent'), 'success'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));
+        }
+    }
+
+    public
+    function block($request)
     {
 
         DB::beginTransaction();
@@ -1206,8 +1332,8 @@ class ListingRepo
     }
 
 
-
-    public function old_requests($agency)
+    public
+    function old_requests($agency)
     {
         $per_page = 10;
 
@@ -1217,7 +1343,8 @@ class ListingRepo
     }
 
 
-    public function black_listed($agency)
+    public
+    function black_listed($agency)
     {
         $per_page = 10;
 
@@ -1227,7 +1354,8 @@ class ListingRepo
     }
 
 
-    public function unblock($request)
+    public
+    function unblock($request)
     {
 
         DB::beginTransaction();
@@ -1245,18 +1373,19 @@ class ListingRepo
     }
 
 
-    public function update_listing_portals($request, $id)
+    public
+    function update_listing_portals($request, $id)
     {
 
 
         DB::beginTransaction();
         try {
 
-            $listing =  Listing::where('business_id', auth()->user()->business_id)->where('id', $id)->firstOrFail();
+            $listing = Listing::where('business_id', auth()->user()->business_id)->where('id', $id)->firstOrFail();
             $validator = Validator::make($request->all(), [
 
-                'portals_' . $id          => ['sometimes', 'nullable', 'array'],
-                'portals_' . $id . '.*'         => [Rule::exists('portals', 'id')],
+                'portals_' . $id => ['sometimes', 'nullable', 'array'],
+                'portals_' . $id . '.*' => [Rule::exists('portals', 'id')],
 
             ]);
 
@@ -1279,14 +1408,14 @@ class ListingRepo
     }
 
 
-
-    public function destroy($request)
+    public
+    function destroy($request)
     {
 
         DB::beginTransaction();
         try {
 
-            $listing =  Listing::where('business_id', auth()->user()->business_id)->where('id', $request->listing_id)->firstOrFail();
+            $listing = Listing::where('business_id', auth()->user()->business_id)->where('id', $request->listing_id)->firstOrFail();
 
             $listing->delete();
             DB::commit();
@@ -1297,7 +1426,8 @@ class ListingRepo
         }
     }
 
-    public function assign_task($request, $id)
+    public
+    function assign_task($request, $id)
     {
 
         $listing = Listing::where('id', $request->task_listing_id)->where('business_id', auth()->user()->business_id)->firstOrFail();
@@ -1434,11 +1564,8 @@ class ListingRepo
     }
 
 
-
-
-
-
-    public function edit_assign_task($request, $id)
+    public
+    function edit_assign_task($request, $id)
     {
 
         $listing = Listing::where('id', $request->edit_task_listing_id)->where('business_id', auth()->user()->business_id)->firstOrFail();
@@ -1567,7 +1694,8 @@ class ListingRepo
     }
 
 
-    public function delete_task(Request $request)
+    public
+    function delete_task(Request $request)
     {
 
 
@@ -1589,7 +1717,8 @@ class ListingRepo
     }
 
 
-    public function save_note($request)
+    public
+    function save_note($request)
     {
 
         if ($request->ajax()) {
@@ -1599,7 +1728,7 @@ class ListingRepo
             try {
                 $validator = Validator::make($request->all(), [
 
-                    'note'          => ['required', 'string'],
+                    'note' => ['required', 'string'],
 
                 ]);
 
@@ -1616,7 +1745,7 @@ class ListingRepo
                 DB::commit();
                 return response()->json([
                     'message' => trans('listing.note_created'),
-                    'note' =>  $listingNote->notes_en,
+                    'note' => $listingNote->notes_en,
                     'created_at' => $listingNote->created_at->toFormattedDateString(),
                     'added_by' => auth()->user()->{'name_' . app()->getLocale()}
                 ], 200);
@@ -1628,7 +1757,8 @@ class ListingRepo
     }
 
 
-    public function listing_update_status($request)
+    public
+    function listing_update_status($request)
     {
 
         if ($request->ajax()) {
@@ -1638,7 +1768,7 @@ class ListingRepo
             try {
                 $validator = Validator::make($request->all(), [
 
-                    'status'          => ['required', 'string', 'in:live,review,archive,draft'],
+                    'status' => ['required', 'string', 'in:live,review,archive,draft'],
 
                 ]);
 
@@ -1652,7 +1782,7 @@ class ListingRepo
                 DB::commit();
                 return response()->json([
                     'message' => trans('listing.status_updated'),
-                    'listing' =>  $listing,
+                    'listing' => $listing,
 
                 ], 200);
             } catch (\Exception $e) {
@@ -1663,8 +1793,8 @@ class ListingRepo
     }
 
 
-
-    public function export_all($request, $agency)
+    public
+    function export_all($request, $agency)
     {
 
         abort_if(Gate::denies('can_generate_reports'), Response::HTTP_FORBIDDEN, '403 Forbidden');

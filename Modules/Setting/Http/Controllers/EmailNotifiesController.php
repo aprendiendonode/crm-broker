@@ -63,6 +63,7 @@ class EmailNotifiesController extends Controller
 
         $reminders = EmailNotifyReminder::where('email_notify_id'  , $email_notify->id)->get();
         $tenancies = EmailNotifyTenancy::where('email_notify_id'  , $email_notify->id)->get();
+
         return view('setting::emailnotify.edit', compact('email_notify','reminders','tenancies'));
     }
 

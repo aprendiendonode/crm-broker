@@ -52,17 +52,17 @@
                         <td>
                             <i
                                     @if( $notify->data['type'] == 'opportunity')
-                                    onclick="changeNotifyStatus('opportunity',{{$notify->data['opportunity_id'] ?? '' }},'{{ $notify->id}}')"
+                                    onclick="changeNotifyStatus('opportunity','{{$notify->data['opportunity_id'] ?? '' }}','{{ $notify->id}}')"
                                     @elseif( $notify->data['type'] == 'task')
-                                    onclick="changeNotifyStatus('task',{{$notify->data['lead_task_id'] ?? '' }},'{{ $notify->id}}')"
+                                    onclick="changeNotifyStatus('task','{{$notify->data['lead_task_id'] ?? '' }}','{{ $notify->id}}')"
                                     @elseif( $notify->data['type'] == 'assign')
-                                    onclick="changeNotifyStatus('assign',{{$notify->data['opportunity_id'] ?? '' }},'{{ $notify->id}}')"
+                                    onclick="changeNotifyStatus('assign','{{$notify->data['opportunity_id'] ?? '' }}','{{ $notify->id}}')"
                                     @elseif( $notify->data['type'] == 'answer')
-                                    onclick="changeNotifyStatus('answer',{{$notify->data['opportunity_id'] ?? '' }},'{{ $notify->id}}')"
+                                    onclick="changeNotifyStatus('answer','{{$notify->data['opportunity_id'] ?? '' }}','{{ $notify->id}}')"
                                     @elseif( $notify->data['type'] == 'result')
-                                    onclick="changeNotifyStatus('result',{{$notify->data['opportunity_id'] ?? '' }},'{{ $notify->id}}')"
+                                    onclick="changeNotifyStatus('result','{{$notify->data['opportunity_id'] ?? '' }}','{{ $notify->id}}')"
                                     @elseif( $notify->data['type'] == 'question')
-                                    onclick="changeNotifyStatus('question',{{$notify->data['opportunity_id'] ?? '' }},'{{$notify->id}}')"
+                                    onclick="changeNotifyStatus('question','{{$notify->data['opportunity_id'] ?? '' }}','{{$notify->id}}')"
                                     @endif
 
 
