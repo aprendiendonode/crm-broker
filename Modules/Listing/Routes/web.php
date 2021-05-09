@@ -26,6 +26,7 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
         Route::get('locations/{agency}', 'ListingController@locations');
         Route::get('uploader/{agency}', 'ListingController@uploader');
         Route::get('download-brochure-pdf/{type}/{agency}', 'ListingController@brochure');
+        Route::get('export_all/{agency}', 'ListingController@export_all');
     });
 });
 
@@ -72,6 +73,8 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
         Route::patch('manage_listings/edit_assign_task/{listing_id}', 'ListingController@edit_assign_task');
 
         Route::post('delete-listing-tasks', 'ListingController@delete_task');
+        Route::post('save-note', 'ListingController@save_note')->name('listings.save_note');
+        Route::post('listing-update-status', 'ListingController@listing_update_status')->name('listings.listing-update-status');
 
 
         Route::get('share/{agency}', 'ListingController@share_listing')

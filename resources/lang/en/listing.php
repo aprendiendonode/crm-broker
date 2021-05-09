@@ -143,6 +143,11 @@ return [
     'archive'       => 'Archive',
     'all'           => 'All',
     'agents'        => 'Agents',
+    'borchure_options' => 'Brochure Options ( :attribute )',
+    'notes_for'         => 'Notes For ( :attribute )',
+    'fill_the_note'     => 'Fill The Note',
+    'submit'            => 'Submit',
+
 
 
 

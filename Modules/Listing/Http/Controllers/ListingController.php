@@ -168,4 +168,16 @@ class ListingController extends Controller
     {
         return $this->repository->delete_task($request);
     }
+    public function save_note(Request $request)
+    {
+        return $this->repository->save_note($request);
+    }
+    public function listing_update_status(Request $request)
+    {
+        return $this->repository->listing_update_status($request);
+    }
+    public function export_all(Request $request, $agency)
+    {
+        return $this->repository->export_all($request, $agency);
+    }
 }

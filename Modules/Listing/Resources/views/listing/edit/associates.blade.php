@@ -261,7 +261,8 @@
     </div>
     <div class="form-group">
         <label for="status" class="font-weight-medium text-muted">  @lang('listing.status')</label>
-        <select class="form-control select2" name="edit_status_{{ $listing->id }}" data-toggle="select2" data-placeholder="@lang('listing.select')" required>
+        <select class="form-control select2" name="edit_status_{{ $listing->id }}"
+             data-toggle="select2" data-placeholder="@lang('listing.select')" required>
             <option value=""></option>
             <option @if(old('edit_status_'.$listing->id,$listing->status) == 'draft') selected @endif value="draft" >@lang('listing.draft')</option>
             <option @if(old('edit_status_'.$listing->id,$listing->status) == 'live') selected @endif value="live" >@lang('listing.live')</option>

@@ -55,14 +55,19 @@
            
                 <div class="text-center mb-3">
                     <i class="fas cursor-pointer fa-cloud-download-alt fa-2x"></i>
-                    <h4>Brochure Options (122-VI-R-1160)</h4>
+                    <h4> @lang('listing.borchure_options',['attribute' => $listing->listing_ref])</h4>
                </div>
                 <div class="form-group">
                     <label class="mb-1 font-weight-medium text-muted" style="flex:1;">Staff</label>
                     <div style="flex:2;">
                         <select class="form-control select2" name="listing" data-toggle="select2" data-placeholder="select">
-                            <option value="">1</option>
-                            <option value="1">2</option>
+                            @forelse($staffs as $agent)
+                              <option value="{{ $agent->id }}">{{ $agent->{'name_'.app()->getLocale()} }}</option>
+
+                            @empty
+                                
+                            @endforelse
+                            
                         </select>
                     </div>
                 </div>

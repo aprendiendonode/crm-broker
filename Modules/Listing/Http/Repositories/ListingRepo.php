@@ -11,19 +11,22 @@ use App\Models\Business;
 use App\Models\Template;
 
 use App\Models\BlackList;
+use Symfony\Component\HttpFoundation\Response;
 
 use App\Mail\ShareRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\SystemTemplate;
+use App\Exports\ListingsExport;
 use Illuminate\Validation\Rule;
+
 use App\Events\ListingTaskEvent;
 
 use Illuminate\Support\Facades\DB;
-
 use Modules\Sales\Entities\Client;
 use Modules\Activity\Entities\Task;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Sales\Entities\LeadType;
 use Intervention\Image\Facades\Image;
 use Modules\Listing\Entities\Listing;
@@ -33,6 +36,7 @@ use Modules\Activity\Entities\TaskType;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\TaskStatus;
 use Modules\Listing\Entities\ListingPlan;
+use Modules\Activity\Entities\ListingNote;
 use Modules\Listing\Entities\ListingPhoto;
 use Modules\Listing\Entities\ListingVideo;
 use Modules\Listing\Entities\TemporaryPlan;
@@ -84,7 +88,8 @@ class ListingRepo
                 'tasks.addBy',
                 'tasks.staff',
                 'type',
-                'videos', 'documents', 'plans', 'photos', 'cheques'
+                'videos', 'documents', 'plans', 'photos', 'cheques',
+                'notes', 'notes.addBy'
 
             ])->where('agency_id', $agency->id)->where('business_id', $business);
 
@@ -191,6 +196,7 @@ class ListingRepo
             if (!array_key_exists('portals', $inputs)) {
                 $inputs['portals'] = [];
             }
+            $inputs['added_by'] = auth()->user()->id;
             $listing = Listing::create($inputs);
 
             //* move photos from temporary to listing_photos
@@ -1580,5 +1586,89 @@ class ListingRepo
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-task-tab', $request->task_listing_id);
         }
+    }
+
+
+    public function save_note($request)
+    {
+
+        if ($request->ajax()) {
+            $listing = Listing::where('business_id', auth()->user()->business_id)->where('id', $request->id)->firstOrFail();
+            DB::beginTransaction();
+
+            try {
+                $validator = Validator::make($request->all(), [
+
+                    'note'          => ['required', 'string'],
+
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                }
+
+                $listingNote = ListingNote::create([
+                    'listing_id' => $listing->id,
+                    'add_by' => auth()->user()->id,
+                    'notes_en' => $request->note,
+                    'notes_ar' => $request->note,
+                ]);
+                DB::commit();
+                return response()->json([
+                    'message' => trans('listing.note_created'),
+                    'note' =>  $listingNote->notes_en,
+                    'created_at' => $listingNote->created_at->toFormattedDateString(),
+                    'added_by' => auth()->user()->{'name_' . app()->getLocale()}
+                ], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+
+
+    public function listing_update_status($request)
+    {
+
+        if ($request->ajax()) {
+            $listing = Listing::where('business_id', auth()->user()->business_id)->where('id', $request->id)->firstOrFail();
+            DB::beginTransaction();
+
+            try {
+                $validator = Validator::make($request->all(), [
+
+                    'status'          => ['required', 'string', 'in:live,review,archive,draft'],
+
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                }
+
+                $listing->update([
+                    'status' => $request->status
+                ]);
+                DB::commit();
+                return response()->json([
+                    'message' => trans('listing.status_updated'),
+                    'listing' =>  $listing,
+
+                ], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+
+
+
+    public function export_all($request, $agency)
+    {
+
+        abort_if(Gate::denies('can_generate_reports'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        return Excel::download(new ListingsExport($agency), 'listings-list.xlsx');
     }
 }

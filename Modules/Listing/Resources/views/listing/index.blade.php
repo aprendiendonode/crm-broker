@@ -42,60 +42,7 @@
 
 @section('content')
 
-
-   <!-- icons -->
-<div id="notesFor-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="notesFor-modalLabel"
-   aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-          <div class="modal-header py-2">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-          <div class="modal-body">
-              <div class="text-center mb-4">
-                  <i class="far fa-file-pdf fa-2x"></i>
-                  <h4>Notes For (122-VI-R-1160)</h4>
-              </div>
-              <h5 class="border-bottom pb-1">ADD NEW NOTE</h5>
-              <div class="form-group mb-2">
-                  <label class="font-weight-medium text-muted">Note*</label>
-                  <textarea class="form-control" name="note2" id="" cols="3" rows="3"></textarea>
-              </div>
-              <div class="mt-3 d-flex justify-content-end">
-                  <button type="button" class="btn btn-secondary mx-1" data-dismiss="modal">Cancel</button>
-                  <button type="button" class="btn btn-primary">Submit</button>
-              </div>
-              <h5 class="mb-2">NOTES LIST</h5>
-              <table class="table table-striped" style="table-layout: fixed">
-                  <thead>
-                  <tr>
-                      <th scope="col">ADDED BY</th>
-                      <th scope="col">DATE ADDED</th>
-                      <th scope="col">NOTE</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                      <td>Ahmed Amin Ayad</td>
-                      <td>2021-03-01 3:45:12</td>
-                      <td>
-                       
-                          <div>
-                              Note
-                          </div>
-                      </td>
-                  </tr>
-                  </tbody>
-              </table>
-
-          </div>
-          <!-- <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Done</button>
-          </div> -->
-      </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<div id="tasksFor-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="tasksFor-modalLabel"
+{{-- <div id="tasksFor-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="tasksFor-modalLabel"
    aria-hidden="true">
   <div class="modal-dialog modal-full-width">
       <div class="modal-content">
@@ -222,7 +169,7 @@
           </div> -->
       </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+</div><!-- /.modal --> --}}
 
     <div class="content p-3">
 
@@ -381,15 +328,15 @@
 
         @include('listing::listing.filter')
 
-        <div>
+        <div class="table-responsive">
             <table class="table table-bordered toggle-circle mb-0">
                 <thead>
                     <tr>
                         <th># </th>
+                        <th>  </th>
                         <th> @lang('listing.id') </th>
                         <th> @lang('listing.purpose') </th>
                         <th> @lang('listing.type') </th>
-                        <th> @lang('listing.beds') </th>
                         <th> @lang('listing.location') </th>
                         <th> @lang('listing.area') </th>
     
@@ -397,27 +344,64 @@
                         <th> @lang('listing.assigned') </th>
                         <th> @lang('listing.updated') </th>
                         <th> @lang('listing.status') </th>
+                        <th> @lang('listing.advertise') </th>
                         <th> @lang('listing.controlls') </th>
                       
     
                     </tr>
                     </thead>
                     <tbody>
-    
+                    @if($listings)    
                     @forelse($listings as $listing)
       
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            <td>
+                                <i class="fas fa-plus-circle cursor-pointer show-hidden-data-{{ $listing->id }}" onclick="show_data({{ $listing->id }})"></i>
+                                <i class="fas fa-minus-circle cursor-pointer d-none hide-data-{{ $listing->id }}" onclick="hide_data({{ $listing->id }})"></i>
+                            </td>
                             <td>{{ $listing->listing_ref }}</td>
                             <td>{{ Str::ucfirst($listing->purpose) }}</td>
                             <td>{{ $listing->type ? $listing->type->{'name_'.app()->getLocale()} : '' }}</td>
-                            <td>{{ $listing->beds }}</td>
-                            <td>{{ $listing->location }}</td>
-                            <td>{{ $listing->area }}</td>
-                            <td>{{ $listing->price }}</td>
+                            <td>
+                                  <span
+                                  class="cursor-pointer"
+                                  data-plugin="tippy" 
+                                data-tippy-placement="top-start" 
+                                title="{{ $listing->location }}"
+                                >
+                                 {{ Str::words($listing->location,2,'...') }}
+                                </span>
+                         </td>
+                            <td>{{ number_format($listing->area)  }}</td>
+                            <td>{{ number_format($listing->price) }}</td>
                             <td>{{ $listing->agent->{'name_'.app()->getLocale()} }}</td>
                             <td>{{ $listing->updated_at->toFormattedDateString() }}</td>
-                            <td>{{ Str::ucfirst($listing->status) }}</td>
+                            <td>
+                                @can('edit_listing')
+                               
+                                    <select onchange="show_status_modal({{ $listing->id }},this)" id="modify_listing_status_{{ $listing->id }}"
+                                         class=" selectpicker mb-0 show-tick"   data-style="btn-outline-secondary">
+                                        <option value=""></option>
+                                        <option  value="draft" @if($listing->status == 'draft') selected @endif >@lang('listing.draft')</option>
+                                        <option  value="live"  @if($listing->status == 'live') selected @endif>@lang('listing.live')</option>
+                                        <option  value="archive" @if($listing->status == 'archive') selected @endif>@lang('listing.archive')</option>
+                                        <option  value="review" @if($listing->status == 'review') selected @endif>@lang('listing.review')</option>
+                                    
+                                    </select>
+        
+                                @else
+                                
+                                    {{ Str::ucfirst($listing->status) }}
+                                @endcan
+                                
+                                
+                                
+                            </td>
+                            <td>
+                                @include('listing::listing.advertise')
+                            </td>
+                
                             <td>
                                 @include('listing::listing.controlls')
                             </td>
@@ -431,7 +415,7 @@
                     
                         <tr class="edit_listing_{{ $listing->id }}"
                             @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
-                            <td colspan="13">
+                            <td colspan="14">
 
                                 @include('listing::listing.edit.index')
 
@@ -444,9 +428,20 @@
                             @if( (session()->has('open-portals-tab') && session('open-portals-tab') ==  $listing->id ))
                               @else d-none @endif
                             "   >
-                            <td colspan="13">
+                            <td colspan="14">
                                 
                                 @include('listing::listing.portals')
+                                
+                            </td>
+                        </tr>
+
+                        <tr  class="table-row_{{ $listing->id }} notes_{{ $listing->id }}    
+                            @if( (session()->has('open-notes-tab') && session('open-notes-tab') ==  $listing->id ))
+                              @else d-none @endif
+                            "   >
+                            <td colspan="14">
+                                
+                                @include('listing::listing.notes')
                                 
                             </td>
                         </tr>
@@ -454,7 +449,7 @@
                             @if( (session()->has('open-borchures-tab') && session('open-borchures-tab') ==  $listing->id ))
                               @else d-none @endif
                             "   >
-                            <td colspan="13">
+                            <td colspan="14">
                                 
                                 @include('listing::listing.borchures')
                                 
@@ -469,7 +464,7 @@
                             @else d-none @endif
                             
                             "  >
-                            <td colspan="13">
+                            <td colspan="14">
                                 
                                 @include('listing::listing.tasks.tasks')
                                 
@@ -479,7 +474,63 @@
                     @endcan
 
                   
-        
+                    <tr  class=" more_info_{{ $listing->id }} d-none"  >
+                        <td colspan="2"></td>
+                       
+                        <td colspan="12">
+                            
+                           <div class="d-flex justify-content-start">
+                            <i
+
+                           
+                             data-plugin="tippy" 
+                             data-tippy-placement="top-start" 
+                             title="@lang('listing.matching_lead')"
+                            
+                             class="fas fa-flag cursor-pointer feather-16 px-1">
+                             0
+                          </i>
+                            <i
+
+                             data-plugin="tippy" 
+                             data-tippy-placement="top-start" 
+                             title="@lang('listing.beds')"
+                             
+                             class="fas fa-bed cursor-pointer feather-16 px-1">
+                             {{ $listing->beds ?? 0 }}
+                          </i>
+                            <i
+
+                             data-plugin="tippy" 
+                             data-tippy-placement="top-start" 
+                             title="@lang('listing.parkings')"
+                             
+                             class="fas fa-car cursor-pointer feather-16 px-1">
+                             {{ $listing->parkings ?? 0 }}
+                          </i>
+                            <i
+
+                             data-plugin="tippy" 
+                             data-tippy-placement="top-start" 
+                             title="@lang('listing.video')"
+                        
+                             class="fas fa-video cursor-pointer feather-16 px-1">
+                            {{ $listing->videos ? $listing->videos->count() : 0 }}
+                          </i>
+                            <i
+
+                             data-plugin="tippy" 
+                             data-tippy-placement="top-start" 
+                             title="@lang('listing.added_by')"
+                         
+                             class="far fa-user cursor-pointer feather-16 px-1">
+                             {{ $listing->addedBy ? $listing->addedBy->{'name_'.app()->getLocale()} : '' }}
+                          </i>
+                          
+                           </div>
+                            
+                        </td>
+                    </tr>
                
                     
               
@@ -487,6 +538,7 @@
                 
                 @empty
                 @endforelse
+                @endif
                 </tbody>
             </table>
             <div class="d-flex justify-content-between">
@@ -502,8 +554,8 @@
                     <a
                             data-plugin="tippy"
                             data-tippy-placement="bottom-start"
-                            title="@lang('agency.export_help')" href="{{ url('agency/export/'.request('agency')) }}"
-                            class="mt-2">@lang('agency.generate_report')
+                            title="@lang('listing.export_help')" href="{{ url('listing/export_all/'.request('agency')) }}"
+                            class="mt-2">@lang('listing.generate_report')
                     </a>
                 @endcan
             </div>
@@ -543,22 +595,6 @@
 
     <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
 
-    {{-- <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script> --}}
-
-
 
     <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
  
@@ -566,7 +602,7 @@
     <script src="{{ asset('assets/libs/uploader-master/dist/js/jquery.dm-uploader.min.js') }}"></script>
     <script src="{{ asset('assets/libs/uploader-master/src/js/demo-ui.js') }}"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap" async>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap" async defer>
     </script>
     
     <script>
@@ -1203,5 +1239,64 @@ function toggleWatermark(input,table){
 
         }
 
+        function save_note(id){
+            var note = $('.note-to-save-'+id).val();
+                console.log(note)
+                if(note == ''){
+                    var message = @json(trans('listing.fill_the_note'));
+                    $('.note-to-save-message-'+id).text(message)
+                    return ;
+                }
+            $.ajax({
+                    url:'{{  route("listings.save_note") }}',
+                    type:'POST',
+                    data:{
+                        _token: '{{ csrf_token() }}',
+                        id    : id,
+                        note  : note,
+                    
+                    },
+                    success: function(data){
+                        var locale = @json(app()->getLocale());
+                        $('.note-to-save-message-'+id).text();
+                        $('.note-to-save-message-'+id).text();
+
+                        var htmlTr = '';
+                         htmlTr += '<tr>';
+                          htmlTr += '<td>'  ; 
+                        
+                           htmlTr += data.added_by ;  
+ 
+                          htmlTr += '</td>'  ; 
+                          htmlTr += '<td>'  ; 
+                            htmlTr += data.created_at ;  
+                          htmlTr += '</td>' ;  
+                          htmlTr += '<td>'  ; 
+                          htmlTr += data.note ;  
+                          htmlTr += '</td>' ;  
+                         htmlTr += '</tr>';
+
+                        $('.note-list-'+id+' > tbody:last-child').append(htmlTr);
+            
+                            toast(data.message,'success');
+
+                    },
+                    error: function(error){
+                    toast(error.responseJSON.message,'error');
+                    },
+                })
+        }
+
+        function show_data(id){
+            $('.show-hidden-data-'+id).addClass('d-none');
+            $('.hide-data-'+id).removeClass('d-none');
+            $('.more_info_'+id).removeClass('d-none');
+        }
+        function hide_data(id){
+            $('.show-hidden-data-'+id).removeClass('d-none');
+            $('.hide-data-'+id).addClass('d-none');
+            $('.more_info_'+id).addClass('d-none');
+
+        }
     </script>
 @endpush
