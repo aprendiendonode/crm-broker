@@ -2,6 +2,7 @@
 
 namespace Modules\Listing\Entities;
 
+use App\Models\Agency;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Activity\Entities\Task;
@@ -60,6 +61,10 @@ class Listing extends Model implements Feedable
     public function addedBy()
     {
         return $this->belongsTo(User::class, 'added_by');
+    }
+    public function agency()
+    {
+        return $this->belongsTo(Agency::class, 'agency_id');
     }
     public function tasks()
     {

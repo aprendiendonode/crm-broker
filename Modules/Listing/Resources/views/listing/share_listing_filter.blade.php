@@ -4,7 +4,7 @@
 
             onclick="advanced_search()">@lang('settings.advanced_search')</button>
 
-    <form method="GET" autocomplete="off" style="opacity: 0;display: none;" id="advanced_filter_form">
+    <form method="GET" autocomplete="off"   @if( !request()->has('purpose')) style="display: none;opacity:0;transition:0.7s" @endif id="advanced_filter_form">
 
         <div class="row">
             <div class="col-md-6 col-lg-4">
@@ -14,19 +14,19 @@
                         <label class="font-weight-medium text-muted mr-3">@lang('listing.purpose')</label>
                         <div style="display:flex;">
                             <div class="radio mr-3">
-                                <input type="radio" name="Purpose1" id="searchAnyRadio1" value="option3" checked>
+                                <input type="radio" name="purpose" id="searchAnyRadio1" value="" checked >
                                 <label for="searchAnyRadio1">
                                     Any
                                 </label>
                             </div>
                             <div class="radio mr-3">
-                                <input type="radio" name="Purpose1" id="searchRentRadio1" value="option3">
+                                <input type="radio" name="purpose" id="searchRentRadio1" value="rent" @if(request()->has('purpose') && request('purpose') == 'rent') checked @endif>
                                 <label for="searchRentRadio1">
                                     Rent
                                 </label>
                             </div>
                             <div class="radio">
-                                <input type="radio" name="Purpose1" id="searchSaleRadio2" value="option3">
+                                <input type="radio" name="purpose" id="searchSaleRadio2" value="sale" @if(request()->has('purpose') && request('purpose') == 'sale') checked @endif>
                                 <label for="searchSaleRadio2">
                                     Sale
                                 </label>
@@ -36,19 +36,16 @@
                 </div>
 
 
-                <div class="col-sm-12">
-                    <div class="form-group">
-                        <label for="" class="font-weight-medium text-muted">@lang('listing.emirate')</label>
-                        <select class="form-control select2" name="propertyType" data-toggle="select2">
-                            <option>1</option>
-                        </select>
-                    </div>
-                </div>
+
                 <div class="col-sm-12">
                     <div class="form-group">
                         <label for="" class="font-weight-medium text-muted">@lang('listing.location')</label>
-                        <select class="form-control select2" name="validationStatus" data-toggle="select2">
-                            <option>1</option>
+                        <select class="form-control select2" name="location" data-toggle="select2">
+                            <option></option>
+                            @forelse($locations as $location)
+                                <option value="{{$location}}" @if(request()->has('location') && request('location') == $location) selected  @endif> {{$location}} </option>
+                            @empty
+                            @endforelse
                         </select>
                     </div>
                 </div>
@@ -72,7 +69,11 @@
                     <div class="form-group">
                         <label for="" class="font-weight-medium text-muted">@lang('listing.type')</label>
                         <select class="form-control select2" name="type" data-toggle="select2">
-                            <option>1</option>
+                            <option></option>
+                            @forelse($types as $type)
+                                <option value="{{$type->id ?? ''}}" @if(request()->has('type') && request('type') == $type->id ) selected  @endif> {{$type->{'name_'.app()->getLocale()} ?? ''}} </option>
+                            @empty
+                            @endforelse
                         </select>
                     </div>
                 </div>
@@ -103,16 +104,27 @@
                             <div class="mr-1" style="flex:1">
                                 <select class="form-control select2" name="min_bed" data-toggle="select2"
                                         data-placeholder="{{trans('listing.min')}}">
-                                    <option value="">1</option>
-                                    <option value="1">2</option>
+                                    <option value=""></option>
+                                    <option @if(request()->has('min_bed') && request('min_bed') == 'studio') selected @endif value="studio"
+                                    >@lang('listing.studio')</option>
+
+                                    @for($i = 1;$i <= 20 ;$i++)
+                                        <option @if(request()->has('min_bed') && request('min_bed') == $i) selected @endif value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
 
                                 </select>
                             </div>
                             <div class="" style="flex:1">
                                 <select class="form-control select2" name="max_bed" data-toggle="select2"
-                                        data-placeholder="{{trans('listing.min')}}">
-                                    <option value="">1</option>
-                                    <option value="1">2</option>
+                                        data-placeholder="{{trans('listing.max')}}">
+                                    <option value=""></option>
+                                    <option @if(request()->has('max_bed') && request('max_bed') == 'studio') selected @endif value="studio"
+                                    >@lang('listing.studio')</option>
+
+                                    @for($i = 1;$i <= 20 ;$i++)
+                                        <option @if(request()->has('max_bed') && request('max_bed') == $i) selected @endif value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+
                                 </select>
                             </div>
                         </div>
@@ -186,8 +198,12 @@
                 <div class="col-sm-12">
                     <div class="form-group">
                         <label for="" class="font-weight-medium text-muted">@lang('listing.agency')</label>
-                        <select class="form-control select2" name="agency" data-toggle="select2">
-                            <option>1</option>
+                        <select class="form-control select2" name="filter_agency" data-toggle="select2">
+                            <option></option>
+                            @forelse($agencies as $agency)
+                                <option value="{{$agency->receiver->id ?? ''}}" @if(request()->has('filter_agency') && request('filter_agency') == $agency->receiver->id ) selected  @endif> {{$agency->receiver->{'company_name_'.app()->getLocale()} ?? ''}} </option>
+                            @empty
+                            @endforelse
                         </select>
                     </div>
                 </div>
@@ -197,7 +213,7 @@
         <div>
             <button class="btn btn-primary m-2" type="submit">@lang('agency.filter_submit')</button>
             <a class="btn btn-outline-primary"
-               href="{{ url('listing/controll/'.request('agency')) }}">@lang('agency.reset')</a>
+               href="{{ url('listing/share/'.request('agency')) }}">@lang('agency.reset')</a>
         </div>
 
 

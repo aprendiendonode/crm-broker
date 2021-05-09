@@ -272,7 +272,8 @@
 
 
 
-            
+
+
             <li>
                 <a href="#sidebarListing" data-toggle="collapse">
                     <i data-feather="cpu"></i>
@@ -296,35 +297,7 @@
                             </li>
                             @endif
 
-                            @if(owner())
-                                <li>
-                                    <a href="{{ url('listing/share/'.request('agency')) }}">@lang('listing.share_listing')</a>
-                                </li>
 
-                            @elseif(moderator())
-                                <li>
-                                    <a href="{{ url('listing/share/'.request('agency')) }}">@lang('listing.share_listing')</a>
-                                </li>
-                            @else
-                                <li>
-                                    <a href="{{ url('listing/share/'.auth()->user()->agency_id) }}">@lang('listing.share_listing')</a>
-                                </li>
-                            @endif
-
-                            @if(owner())
-                                <li>
-                                    <a href="{{ url('listing/requests/'.request('agency')) }}">@lang('listing.requests')</a>
-                                </li>
-
-                            @elseif(moderator())
-                                <li>
-                                    <a href="{{ url('listing/requests/'.request('agency')) }}">@lang('listing.requests')</a>
-                                </li>
-                            @else
-                                <li>
-                                    <a href="{{ url('listing/requests/'.auth()->user()->agency_id) }}">@lang('listing.requests')</a>
-                                </li>
-                            @endif
 
                             <li>
 
@@ -405,6 +378,46 @@
                 </div>
             </li>
 
+            <li>
+                <a href="#sidebarListing" data-toggle="collapse">
+                    <i data-feather="cpu"></i>
+                    <span> @lang('listing.sharing_center') </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="sidebarListing">
+                    <ul class="nav-second-level">
+                        @if(owner())
+                            <li>
+                                <a href="{{ url('listing/share/'.request('agency')) }}">@lang('listing.share_listing')</a>
+                            </li>
+
+                        @elseif(moderator())
+                            <li>
+                                <a href="{{ url('listing/share/'.request('agency')) }}">@lang('listing.share_listing')</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ url('listing/share/'.auth()->user()->agency_id) }}">@lang('listing.share_listing')</a>
+                            </li>
+                        @endif
+
+                        @if(owner())
+                            <li>
+                                <a href="{{ url('listing/requests/'.request('agency')) }}">@lang('listing.requests')</a>
+                            </li>
+
+                        @elseif(moderator())
+                            <li>
+                                <a href="{{ url('listing/requests/'.request('agency')) }}">@lang('listing.requests')</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ url('listing/requests/'.auth()->user()->agency_id) }}">@lang('listing.requests')</a>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
+            </li>
 
             <li>
                 <a href="#sidebarActivity" data-toggle="collapse">

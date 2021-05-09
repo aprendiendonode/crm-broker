@@ -83,7 +83,7 @@
                 @forelse($black_listed_agencies as $blacklist)
 
                        <tr>
-                           <td>{{$blacklist->agency->company_name_en ?? '' }}</td>
+                           <td>{{$blacklist->blacklist->company_name_en ?? '' }}</td>
                            <td>
                                <i
                                    title="{{trans('listing.unblock')}}"

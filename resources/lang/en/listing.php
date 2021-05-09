@@ -167,15 +167,13 @@ return [
     'view'                      =>  'View',
     'contact_client'            =>  'Contact Client',
     'send_mail_confirmation'    =>  'Are you sure to Send Inquiry against this property.',
-<<<<<<< HEAD
-    'confirm_send_mail'    =>  'Confirm',
-    'keyword_info'    =>  'Search in title and description',
-=======
+    'confirm_send_mail'         =>  'Confirm',
+    'keyword_info'              =>  'Search in title and description',
     'block_confirmation'        =>  'Are you sure to Block this agency?',
     'unblock_confirmation'      =>  'Are you sure to Unblock this agency?',
-    'confirm_send_mail'         =>  'Confirm',
     'confirm_block'             =>  'Confirm Block',
     'confirm_unblock'           =>  'Confirm Unblock',
+    'sharing_center'            =>  'Sharing Center',
     'requests'                  =>  'Requests',
     'block'                     =>  'Block',
     'unblock'                   =>  'Unblock',
@@ -184,11 +182,11 @@ return [
     'response'                  =>  'Response',
     'old_requests'              =>  'Old Requests',
     'request_sent'              =>  'Request Sent Successfully',
+    'mail_sent'                 =>  'Mail Sent Successfully',
     'request_replied'           =>  'Request Replied Successfully',
     'block_applied'             =>  'Block Applied Successfully',
     'unblock_applied'           =>  'Unblock Applied Successfully',
     'send_request_confirmation' =>  'Are you sure to Send Request to this agency?',
->>>>>>> 9c6876f143a88e584e0104018a117bb82271e8e7
     /////////////////////////End Share Listing////////////////////////
 
 

@@ -146,6 +146,11 @@ class ListingController extends Controller
         return $repository->black_listed($agency);
     }
 
+    public function contact_client(Request $request, ListingRepo $repository)
+    {
+        return $repository->contact_client($request);
+    }
+
 
 
     public function update_listing_portals(Request $request, $id)
