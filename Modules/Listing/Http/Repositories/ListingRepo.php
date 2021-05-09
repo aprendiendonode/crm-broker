@@ -405,7 +405,7 @@ class ListingRepo
 
 
                 $tenant = Client::create([
-
+                    'table_name' => 'clients',
                     'name' => $request->name,
                     'email1' => $request->email,
                     'phone1' => $request->phone,
@@ -461,7 +461,7 @@ class ListingRepo
 
 
                 $landlord = Client::create([
-
+                    'table_name' => 'clients',
                     'name' => $request->name,
                     'email1' => $request->email,
                     'phone1' => $request->phone,
