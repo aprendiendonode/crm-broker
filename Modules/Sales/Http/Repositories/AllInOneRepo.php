@@ -18,7 +18,7 @@ class AllInOneRepo
 
         $pagination = true;
         $business = auth()->user()->business_id;
-        $search = request('search') ?? false;
+        $search = request('search') ? true : false;
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
@@ -83,7 +83,7 @@ class AllInOneRepo
             ])->where('agency_id', $agency->id)->where('business_id', $business);
 
 
-            if (request('filter_phone') != null) {
+            if (request('filter_phone')) {
 
                 $opportunities->where(function ($query) {
                     $query->where('phone1', request('filter_phone'))
@@ -113,7 +113,7 @@ class AllInOneRepo
 
                 $opportunities->where('id', request('id'));
             }
-            if (request('filter_name') != null) {
+            if (request('filter_name')) {
                 $opportunities->where(function ($query) {
                     $query->where('first_name', 'like', '%' . request('filter_name') . '%')
                         ->orWhere('sec_name', 'like', '%' . request('filter_name') . '%')
@@ -129,7 +129,7 @@ class AllInOneRepo
                     $query->where('name', 'like', '%' . request('filter_name') . '%');
                 });
             }
-            if (request('filter_email') != null) {
+            if (request('filter_email')) {
                 $opportunities->where(function ($query) {
                     $query->where('email1', 'like', '%' . request('filter_email') . '%')
                         ->orWhere('email2', 'like', '%' . request('filter_email') . '%')
@@ -148,7 +148,7 @@ class AllInOneRepo
                         ->orWhere('email2', 'like', '%' . request('filter_email') . '%');
                 });
             }
-            if (request('filter_source') != null) {
+            if (request('filter_source')) {
                 $opportunities->where(function ($query) {
                     $query->where('source_id', request('filter_source'));
                 });
@@ -161,7 +161,7 @@ class AllInOneRepo
             }
 
 
-            if (request('filter_type') != null) {
+            if (request('filter_type')) {
                 $opportunities->where(function ($query) {
                     $query->where('type_id', request('filter_type'));
                 });
@@ -173,7 +173,7 @@ class AllInOneRepo
                     $query->where('type_id', request('filter_type'));
                 });
             }
-            if (request('filter_qualifications') != null) {
+            if (request('filter_qualifications')) {
                 $opportunities->where(function ($query) {
                     $query->where('qualification_id', request('filter_qualifications'));
                 });
@@ -185,7 +185,7 @@ class AllInOneRepo
                     $query->where('qualification_id', request('filter_qualifications'));
                 });
             }
-            if (request('filter_way_of_communications') != null) {
+            if (request('filter_way_of_communications')) {
                 $opportunities->where(function ($query) {
                     $query->where('communication_id', request('filter_way_of_communications'));
                 });
@@ -196,7 +196,7 @@ class AllInOneRepo
                     $query->where('communication_id', request('filter_way_of_communications'));
                 });
             }
-            if (request('filter_priority') != null) {
+            if (request('filter_priority')) {
                 $opportunities->where(function ($query) {
                     $query->where('priority_id', request('filter_priority'));
                 });
@@ -208,7 +208,7 @@ class AllInOneRepo
                     $query->where('priority_id', request('filter_priority'));
                 });
             }
-            if (request('filter_property_purpose') != null) {
+            if (request('filter_property_purpose')) {
                 $opportunities->where(function ($query) {
                     $query->where('property_purpose', request('filter_property_purpose'));
                 });
@@ -220,7 +220,7 @@ class AllInOneRepo
                     $query->where('property_purpose', request('filter_property_purpose'));
                 });
             }
-            if (request('filter_user') != null) {
+            if (request('filter_user')) {
 
                 $opportunities = $opportunities->get()->filter(function ($q) {
 
@@ -228,11 +228,18 @@ class AllInOneRepo
 
                     return in_array(request('filter_user'), $assigned);
                 });
-            }
 
-            $opportunities = $opportunities->get();
-            $leads = $leads->get();
-            $clients = $clients->get();
+                $clients->where(function ($query) {
+                    $query->where('assigned_to', request('filter_user'));
+                });
+                $leads->where(function ($query) {
+                    $query->where('assigned_to', request('filter_user'));
+                });
+            } else {
+                $opportunities = $opportunities->get();
+                $leads = $leads->get();
+                $clients = $clients->get();
+            }
         } else {
         }
 
