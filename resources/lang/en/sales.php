@@ -483,5 +483,6 @@ return [
     'smart_bulk_import'         => 'Smart Bulk Import',
     'sheet'                     => 'Sheet',
     'leads_imported'            => 'Leads Imported Successfully',
+    'search_center' => 'Search Center',
 
 ];

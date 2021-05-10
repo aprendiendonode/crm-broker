@@ -73,6 +73,22 @@
                         </li>
                         @endif
 
+
+                        @if(owner())
+                        <li>
+                            <a href="{{ url('sales/all_in_one/'.request('agency')) }}">@lang('sales.search_center')</a>
+                        </li>
+                     
+                        @elseif(moderator())
+                        <li>
+                            <a href="{{ url('sales/all_in_one/'.request('agency')) }}">@lang('sales.search_center')</a>
+                        </li>
+                        @else
+                        <li>
+                            <a href="{{ url('sales/all_in_one/'.auth()->user()->agency_id) }}">@lang('sales.search_center')</a>
+                        </li>
+                        @endif
+
                         <li>
 
 
