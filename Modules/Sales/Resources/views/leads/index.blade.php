@@ -106,7 +106,7 @@
             <div class="table-responsive">
                 <table  class="table table-bordered toggle-circle mb-0">
                     <thead>
-                    <tr>
+                    <tr >
                         <th>@lang('sales.name') </th>
                         <th > @lang('sales.email') </th>
                       
@@ -165,7 +165,7 @@
 
                             
                             @endphp
-                        <tr>
+                        <tr >
                             <td>{{ ucfirst( $lead->full_name )}}</td>
                             <td>{{ $email}}</td>
 
@@ -267,7 +267,7 @@
                         </tr>
                         @can('edit_lead')
 
-                            <tr  class="edit_lead_{{ $lead->id }}"  @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $lead->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
+                            <tr  class="table-row_{{ $lead->id }} edit_lead_{{ $lead->id }} @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $lead->id ))  @else d-none @endif"   >
                                 <td colspan="8">
 
                                     @include('sales::leads.edit',['edited_lead' => $lead])
@@ -281,7 +281,7 @@
 
                         @can('edit_lead')
 
-                            <tr  class="call_{{ $lead->id }}"  @if( (session()->has('open-call-tab') && session('open-call-tab') ==  $lead->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
+                            <tr  class="table-row_{{ $lead->id }}  lead_call_{{ $lead->id }}  @if( (session()->has('open-call-tab') && session('open-call-tab') ==  $lead->id ))  @else d-none @endif"  >
                                 <td colspan="8">
 
                                     @include('sales::leads.calls')
@@ -296,7 +296,7 @@
 
                           @can('assign_task_on_lead')
 
-                                <tr  class="task_{{ $lead->id }}"  @if( (session()->has('open-task-tab') && session('open-task-tab') ==  $lead->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
+                                <tr  class="table-row_{{ $lead->id }}  lead_task_{{ $lead->id }}  @if( (session()->has('open-task-tab') && session('open-task-tab') ==  $lead->id ))  @else d-none @endif"   >
                                     <td colspan="8">
         
                                         @include('sales::leads.tasks')
@@ -309,7 +309,7 @@
 
                            @can('edit_lead')
 
-                           <tr  class="opportunity_{{ $lead->id }}"  @if( (session()->has('open-opportunity-tab') && session('open-opportunity-tab') ==  $lead->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
+                           <tr  class="table-row_{{ $lead->id }}  lead_opportunity_{{ $lead->id }} @if( (session()->has('open-opportunity-tab') && session('open-opportunity-tab') ==  $lead->id ))  @else d-none @endif"   >
                                <td colspan="8">
    
                                    @include('sales::leads.convert_to_opportunity')
@@ -613,263 +613,6 @@ function  show_check_div(){
     }
 
 
-
-    
-  function  show_edit_div(id){
-
-   
-    // hide_call_div(id)
-   
-
-
-    // hide_assign_div(id)
-    // hide_task_div(id)
-
- var  div = document.querySelector('.edit_lead_'+id);
-    if(div.style.display === 'none'){
-
-
-
-
-        div.style.display = '';
-
-        setTimeout(function(){
-
-            div.style.opacity = 1;
-     
-        },10);
-    } else {
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    }
-
-    }
-
-
-
-
-
-    
-  function  hide_edit_div(id){
-    var  div = document.querySelector('.edit_lead_'+id);
-    
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    
-
-    }
- 
-    
-  function  show_call_div(id){
-    // hide_edit_div(id)
-    // hide_assign_div(id)
-    // hide_task_div(id)
-
-
-    var  div = document.querySelector('.call_'+id);
-        if(div.style.display === 'none'){
-
-
-
-
-        div.style.display = '';
-
-        setTimeout(function(){
-
-            div.style.opacity = 1;
-     
-        },10);
-    } else {
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    }
-
-    }
-
-    function  hide_call_div(id){
-    var  div = document.querySelector('.call_'+id);
-    
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    
-
-    }
-
-
-
-
-
-
-      
-  function  show_assign_div(id){
-    // hide_edit_div(id)
-    // hide_call_div(id)
-    // hide_task_div(id)
-    var  div = document.querySelector('.assign_'+id);
-        if(div.style.display === 'none'){
-
-
-
-
-        div.style.display = '';
-
-        setTimeout(function(){
-
-            div.style.opacity = 1;
-     
-        },10);
-    } else {
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    }
-
-    }
-
-    function  hide_assign_div(id){
-    var  div = document.querySelector('.assign_'+id);
-    
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    
-
-    }
-
-
-
-
-
-    
-      
-  function  show_task_div(id){
-    // hide_edit_div(id)
-    // hide_call_div(id)
-    // hide_assign_div(id)
-    var  div = document.querySelector('.task_'+id);
-        if(div.style.display === 'none'){
-
-
-
-
-        div.style.display = '';
-
-        setTimeout(function(){
-
-            div.style.opacity = 1;
-     
-        },10);
-    } else {
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    }
-
-    }
-
-    function  hide_task_div(id){
-    var  div = document.querySelector('.task_'+id);
-    
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    
-
-    }
-
-
-
-
-       
-      
-  function  show_opportunity_div(id){
-    // hide_edit_div(id)
-    // hide_call_div(id)
-    // hide_assign_div(id)
-    var  div = document.querySelector('.opportunity_'+id);
-        if(div.style.display === 'none'){
-
-
-
-
-        div.style.display = '';
-
-        setTimeout(function(){
-
-            div.style.opacity = 1;
-     
-        },10);
-    } else {
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    }
-
-    }
-
-    function  hide_opportunity_div(id){
-    var  div = document.querySelector('.opportunity_'+id);
-    
-        div.style.display = 'none';
-        setTimeout(function(){
-
-        div.style.opacity = 0;
-   
-
-        },10);
-
-    
-
-    }
 </script>
 
 

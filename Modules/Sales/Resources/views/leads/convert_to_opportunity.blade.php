@@ -181,7 +181,7 @@
     
     <div class="d-flex justify-content-end">
     
-        <button onclick="event.preventDefault();hide_opportunity_div({{ $lead->id }})" type="button" class="btn  btn-outline-success waves-effect waves-light">
+        <button onclick="event.preventDefault();table_row_hide('lead_opportunity_{{ $lead->id }}')" type="button" class="btn  btn-outline-success waves-effect waves-light">
            @lang('sales.cancel')
         </button>
         <button type="submit" class="btn  btn-success waves-effect waves-light ml-2">

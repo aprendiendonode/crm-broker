@@ -734,7 +734,7 @@
 
     <div class="d-flex justify-content-end">
 
-        <button onclick="event.preventDefault();hide_edit_div({{ $lead->id }})" type="button"
+        <button onclick="event.preventDefault();table_row_hide('edit_lead_{{ $lead->id }}')" type="button"
                 class="btn  btn-outline-success waves-effect waves-light">
             @lang('sales.cancel')
         </button>

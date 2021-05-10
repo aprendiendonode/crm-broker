@@ -292,19 +292,19 @@
         
         
         
-    </tbody>
-</table>
-<div class="d-flex justify-content-between">
-    
-    <div class="mt-2">
-        @if($pagination)
-        {{ $clients->links() }}
-        @endif
-        
-    </div>
+        </tbody>
+        </table>
+        <div class="d-flex justify-content-between">
+            
+            <div class="mt-2">
+                @if($pagination)
+                {{ $clients->links() }}
+                @endif
+                
+            </div>
 
-</div>
-</div>
+        </div>
+    </div>
 
 </div>
 @can('manage_client_setting') 

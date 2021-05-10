@@ -2,7 +2,7 @@
 
     <form method="GET" autocomplete="off">
         <div class="row">
-
+<input type="hidden" name="search" value="true">
 
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
@@ -105,26 +105,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4">
-            <div class="form-group ">
-     
-                <label class="text-muted font-weight-medium">@lang('sales.status')</label>
-
-                <select  class="form-control select2 " name="filter_status" data-toggle="select2"  >
-                         <option value=""></option>   
-
-                 <option   value="in_progress"    @if( request()->has('filter_status') && request('filter_status')  == 'in_progress') selected @endif> @lang('sales.in_progress') </option>
-                 <option    value="meeting"    @if( request()->has('filter_status') && request('filter_status')  == 'meeting') selected @endif> @lang('sales.meeting') </option>
-                 <option    value="successful"    @if( request()->has('filter_status') && request('filter_status')  == 'successful') selected @endif> @lang('sales.successful') </option>
-                 <option    value="unsuccessful"    @if( request()->has('filter_status') && request('filter_status')  == 'unsuccessful') selected @endif> @lang('sales.unsuccessful') </option>
-
-
-                  
-                </select>
-    
-               
-            </div>
-            </div>
+      
 
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
@@ -159,26 +140,7 @@
       
 
 
-            <div class="col-md-6 col-lg-4">
-                <div class="form-group ">
          
-                    <label class="text-muted font-weight-medium">@lang('sales.stage')</label>
-    
-                    <select  class="form-control select2 " name="filter_stage" data-toggle="select2"  >
-                                
-                    <option value=""></option>
-                     <option    value="pending" @if( request()->has('filter_stage') && request('filter_stage')  == 'pending') selected @endif > @lang('sales.pending') </option>
-                     <option    value="lost" @if( request()->has('filter_stage') && request('filter_stage')  == 'lost') selected @endif > @lang('sales.lost') </option>
-                     <option    value="won" @if( request()->has('filter_stage') && request('filter_stage')  == 'won') selected @endif > @lang('sales.won') </option>
-    
-    
-                      
-                    </select>
-        
-                   
-                </div>
-            </div>
-
 
 
 
@@ -187,7 +149,7 @@
         <div>
             <button class="btn btn-primary" type="submit">@lang('agency.filter_submit')</button>
             <a class="btn btn-outline-primary "
-               href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.reset_filters')</a>
+               href="{{ url('sales/all_in_one/'.request('agency')) }}">@lang('sales.reset_filters')</a>
         </div>
 
 
