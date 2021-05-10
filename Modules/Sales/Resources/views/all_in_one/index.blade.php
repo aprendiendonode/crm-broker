@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title',trans('sales.opportunities'))
+@section('title',trans('sales.search_center'))
 @section('css')
 <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 
@@ -38,7 +38,7 @@
     
     <div class="d-flex justify-content-between mb-3">
         <h4>
-            @lang('sales.manage_opportunities')
+            @lang('sales.search_center')
         </h4>
         
         
@@ -441,16 +441,7 @@
         
     </tbody>
 </table>
-<div class="d-flex justify-content-between">
-    
-    <div class="mt-2">
-        @if($pagination)
-        {{ $opportunities->links() }}
-        @endif
-        
-    </div>
 
-</div>
 </div>
 
 </div>

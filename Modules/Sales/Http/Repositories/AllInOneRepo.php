@@ -61,39 +61,7 @@ class AllInOneRepo
             'results.addedBy',
             'client'
         ])->where('agency_id', $agency->id)->where('business_id', $business);
-        $leads = Lead::with([
-            'calls',
-            'tasks',
-            'tasks.addBy',
-            'tasks.staff',
-            'calls.madeBy',
-        ])->where('agency_id', $agency->id)->where('business_id', $business);
 
-        $opportunities = Opportunity::with([
-            'tasks', 'calls', 'convertedBy', 'assigns', 'assigns.assignedBy', 'current_assign',
-            'rejectedBy',
-            'holdBy',
-            'submitForApproveBy',
-
-            'current_assign.assignedBy', 'tasks.addBy',
-            'tasks.staff',
-            'calls.madeBy',
-            'questions',
-            'questions.addedBy',
-            'results',
-            'results.addedBy',
-            'client'
-        ])->where('agency_id', $agency->id)->where('business_id', $business);
-
-
-
-
-
-
-
-        $merged_1 =  $leads->merge($opportunities);
-        $all = $merged_1->merge($clients);
-        dd($all);
 
 
 
@@ -191,7 +159,6 @@ class AllInOneRepo
         return view(
             'sales::all_in_one.index',
             compact(
-                'all',
                 'staffs',
                 'opportunities',
                 'pagination',
