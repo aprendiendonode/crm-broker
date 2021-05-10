@@ -64,6 +64,7 @@ return [
     'delete_staff'           => 'Delete Staff',
     'something_went_wrong'   => 'Something Went Wrong',
     'modify'                 => 'Modify',
+    'delete_listing' => 'Delete Listing',
 
 
 
