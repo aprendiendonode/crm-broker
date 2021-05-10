@@ -395,12 +395,12 @@
             </li>
 
             <li>
-                <a href="#sidebarListing" data-toggle="collapse">
+                <a href="#sidebarListingSharing" data-toggle="collapse">
                     <i data-feather="cpu"></i>
                     <span> @lang('listing.sharing_center') </span>
                     <span class="menu-arrow"></span>
                 </a>
-                <div class="collapse" id="sidebarListing">
+                <div class="collapse" id="sidebarListingSharing">
                     <ul class="nav-second-level">
                         @if(owner())
                             <li>
