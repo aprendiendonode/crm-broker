@@ -2,8 +2,6 @@
 
 namespace Modules\Listing\Http\Repositories;
 
-use App\Mail\ContactClient;
-use Modules\Listing\Entities\ListingType;
 use PDF;
 use File;
 use Gate;
@@ -11,20 +9,21 @@ use App\Models\Agency;
 use App\Jobs\SendEmail;
 use App\Models\Business;
 use App\Models\Template;
-
 use App\Models\BlackList;
-use Symfony\Component\HttpFoundation\Response;
-
 use App\Mail\ShareRequest;
+
+use App\Mail\ContactClient;
 use Illuminate\Support\Str;
+
 use Illuminate\Http\Request;
 use App\Models\SystemTemplate;
 use App\Exports\ListingsExport;
 use Illuminate\Validation\Rule;
-
 use App\Events\ListingTaskEvent;
+use Modules\Sales\Entities\Lead;
 
 use Illuminate\Support\Facades\DB;
+
 use Modules\Sales\Entities\Client;
 use Modules\Activity\Entities\Task;
 use Illuminate\Support\Facades\Mail;
@@ -35,9 +34,11 @@ use Modules\Listing\Entities\Listing;
 use Modules\Sales\Entities\Developer;
 use Modules\Activity\Entities\TaskNote;
 use Modules\Activity\Entities\TaskType;
+use Modules\Sales\Entities\Opportunity;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\TaskStatus;
 use Modules\Listing\Entities\ListingPlan;
+use Modules\Listing\Entities\ListingType;
 use Modules\Activity\Entities\ListingNote;
 use Modules\Listing\Entities\ListingPhoto;
 use Modules\Listing\Entities\ListingVideo;
@@ -46,6 +47,7 @@ use Illuminate\Support\Facades\Notification;
 use Modules\Listing\Entities\ListingDocument;
 use App\Notifications\ListingTaskNotification;
 use Modules\Listing\Entities\TemporaryListing;
+use Symfony\Component\HttpFoundation\Response;
 use Modules\Listing\Entities\TemporaryDocument;
 use Modules\Listing\Entities\ListingChequeCalculator;
 
@@ -442,8 +444,15 @@ class ListingRepo
                 $validator = Validator::make($request->all(), [
 
                     'name' => ['required', 'string', 'max:225'],
-                    'email' => ['sometimes', 'nullable', 'email', 'string', 'max:225'],
-                    'phone' => ['sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
+                    'email' => [
+                        'sometimes', 'nullable', 'email', 'string', 'max:225',
+                        Rule::unique('clients', 'email1'),  Rule::unique('clients', 'email2'),
+
+                    ],
+                    'phone' => [
+                        'sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/',
+                        Rule::unique('clients', 'phone1'), Rule::unique('clients', 'phone2')
+                    ],
                     'salutation' => ['required', 'string', 'in:Mr,Mrs,Ms,Miss'],
                     'source_id' => ['sometimes', 'nullable', 'string', 'exists:lead_sources,id'],
                     'agency' => ['required', 'integer', 'exists:agencies,id'],
@@ -451,9 +460,124 @@ class ListingRepo
                 ]);
 
 
+
+
+
+
+
                 if ($validator->fails()) {
                     return response()->json(['message' => $validator->errors()->all()[0]], 400);
                 }
+
+
+                $check_unique_emails = Lead::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+
+                    $query->where([
+                        ['email1', '!=', null],
+                        ['email1', $request->email],
+                    ])
+                        ->orWhere([
+                            ['email2', '!=', null],
+                            ['email2', $request->email],
+                        ])->orWhere([
+                            ['email3', '!=', null],
+                            ['email3', $request->email],
+                        ])->orWhere([
+                            ['skype', '!=', null],
+                            ['skype', $request->email],
+                        ]);
+                })->get();
+
+                $check_unique_phones = Lead::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+                    $query->Where([
+                        ['phone1', '!=', null],
+                        ['phone1', $request->phone],
+                    ])
+                        ->orWhere([
+                            ['phone2', '!=', null],
+                            ['phone2', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone3', '!=', null],
+                            ['phone3', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone4', '!=', null],
+                            ['phone4', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['landline', '!=', null],
+                            ['landline', $request->phone],
+                        ]);
+                })->get();
+
+
+                if (count($check_unique_emails) > 0) {
+                    return response()->json(['message' => trans('sales.existing_email_in_leads') . ' ' . $check_unique_emails->first()->full_name ?? ''], 400);
+                }
+                if (count($check_unique_phones) > 0) {
+                    return response()->json(['message' => trans('sales.existing_phone_in_leads') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
+                }
+
+
+
+                $check_unique_emails = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+
+                    $query->where([
+                        ['email1', '!=', null],
+                        ['email1', $request->email],
+                    ])
+                        ->orWhere([
+                            ['email2', '!=', null],
+                            ['email2', $request->email],
+                        ])->orWhere([
+                            ['email3', '!=', null],
+                            ['email3', $request->email],
+                        ])->orWhere([
+                            ['skype', '!=', null],
+                            ['skype', $request->email],
+                        ]);
+                })->get();
+                $check_unique_phones = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+                    $query
+                        ->Where([
+                            ['phone1', '!=', null],
+                            ['phone1', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone2', '!=', null],
+                            ['phone2', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone3', '!=', null],
+                            ['phone3', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone4', '!=', null],
+                            ['phone4', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['landline', '!=', null],
+                            ['landline', $request->phone],
+                        ]);
+                })->get();
+
+                // dd($check_unique_phones->first()->full_name);
+                if (count($check_unique_emails) > 0) {
+                    return response()->json(['message' => trans('sales.existing_email_in_opportunities') . ' ' . $check_unique_emails->first()->full_name ?? ''], 400);
+                }
+
+
+                if (count($check_unique_phones) > 0) {
+
+                    return response()->json(['message' => trans('sales.existing_phone_in_opportunities') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
+                }
+
+
+
+
+
+
 
                 $tenant_type = LeadType::firstOrCreate(
                     ['role' => 'tenant'],
@@ -498,8 +622,15 @@ class ListingRepo
                 $validator = Validator::make($request->all(), [
 
                     'name' => ['required', 'string', 'max:225'],
-                    'email' => ['sometimes', 'nullable', 'email', 'string', 'max:225'],
-                    'phone' => ['sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
+                    'email' => [
+                        'sometimes', 'nullable', 'email', 'string', 'max:225',
+                        Rule::unique('clients', 'email1'),  Rule::unique('clients', 'email2'),
+
+                    ],
+                    'phone' => [
+                        'sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/',
+                        Rule::unique('clients', 'phone1'), Rule::unique('clients', 'phone2')
+                    ],
                     'salutation' => ['required', 'string', 'in:Mr,Mrs,Ms,Miss'],
                     'source_id' => ['sometimes', 'nullable', 'string', 'exists:lead_sources,id'],
                     'agency' => ['required', 'integer', 'exists:agencies,id'],
@@ -510,6 +641,113 @@ class ListingRepo
                 if ($validator->fails()) {
                     return response()->json(['message' => $validator->errors()->all()[0]], 400);
                 }
+
+                $check_unique_emails = Lead::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+
+                    $query->where([
+                        ['email1', '!=', null],
+                        ['email1', $request->email],
+                    ])
+                        ->orWhere([
+                            ['email2', '!=', null],
+                            ['email2', $request->email],
+                        ])->orWhere([
+                            ['email3', '!=', null],
+                            ['email3', $request->email],
+                        ])->orWhere([
+                            ['skype', '!=', null],
+                            ['skype', $request->email],
+                        ]);
+                })->get();
+
+                $check_unique_phones = Lead::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+                    $query->Where([
+                        ['phone1', '!=', null],
+                        ['phone1', $request->phone],
+                    ])
+                        ->orWhere([
+                            ['phone2', '!=', null],
+                            ['phone2', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone3', '!=', null],
+                            ['phone3', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone4', '!=', null],
+                            ['phone4', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['landline', '!=', null],
+                            ['landline', $request->phone],
+                        ]);
+                })->get();
+
+
+                if (count($check_unique_emails) > 0) {
+                    return response()->json(['message' => trans('sales.existing_email_in_leads') . ' ' . $check_unique_emails->first()->full_name ?? ''], 400);
+                }
+                if (count($check_unique_phones) > 0) {
+                    return response()->json(['message' => trans('sales.existing_phone_in_leads') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
+                }
+
+
+
+                $check_unique_emails = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+
+                    $query->where([
+                        ['email1', '!=', null],
+                        ['email1', $request->email],
+                    ])
+                        ->orWhere([
+                            ['email2', '!=', null],
+                            ['email2', $request->email],
+                        ])->orWhere([
+                            ['email3', '!=', null],
+                            ['email3', $request->email],
+                        ])->orWhere([
+                            ['skype', '!=', null],
+                            ['skype', $request->email],
+                        ]);
+                })->get();
+                $check_unique_phones = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+                    $query
+                        ->Where([
+                            ['phone1', '!=', null],
+                            ['phone1', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone2', '!=', null],
+                            ['phone2', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone3', '!=', null],
+                            ['phone3', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone4', '!=', null],
+                            ['phone4', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['landline', '!=', null],
+                            ['landline', $request->phone],
+                        ]);
+                })->get();
+
+                // dd($check_unique_phones->first()->full_name);
+                if (count($check_unique_emails) > 0) {
+                    return response()->json(['message' => trans('sales.existing_email_in_opportunities') . ' ' . $check_unique_emails->first()->full_name ?? ''], 400);
+                }
+
+
+                if (count($check_unique_phones) > 0) {
+
+                    return response()->json(['message' => trans('sales.existing_phone_in_opportunities') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
+                }
+
+
+
+
 
                 $landlord_type = LeadType::firstOrCreate(
                     ['role' => 'landlord'],
@@ -538,7 +776,7 @@ class ListingRepo
                 return response()->json(['message' => trans('listing.landlord_created'), 'data' => $landlord], 200);
             } catch (\Exception $e) {
                 DB::rollback();
-
+                dd($e->getMessage());
                 return response()->json(['message' => trans('agency.something_went_wrong')], 400);
             }
         }
@@ -1213,7 +1451,7 @@ class ListingRepo
 
         $listings = $listings->paginate($per_page);
 
-        return view('listing::listing.share_listing', compact('listings', 'locations', 'types','agencies'));
+        return view('listing::listing.share_listing', compact('listings', 'locations', 'types', 'agencies'));
     }
 
 

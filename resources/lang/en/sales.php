@@ -484,5 +484,7 @@ return [
     'sheet'                     => 'Sheet',
     'leads_imported'            => 'Leads Imported Successfully',
     'search_center' => 'Search Center',
+    'email_exists_in_leads'  => 'Email Exists In Leads',
+    'phone_exists_in_leads'  => 'Phone Exists In Leads',
 
 ];

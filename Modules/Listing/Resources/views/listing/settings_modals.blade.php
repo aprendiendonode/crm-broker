@@ -462,7 +462,8 @@ if(new_status == '' || id == '' ){
 
             },
             error: function (error) {
-                $('.error-message').text(error.responseJSON.message);
+          
+                toast(error.responseJSON.message,'error')
             }
         })
     }
@@ -510,7 +511,9 @@ if(new_status == '' || id == '' ){
 
             },
             error: function (error) {
-                $('.error-message').text(error.responseJSON.message);
+    
+                toast(error.responseJSON.message,'error')
+               
             }
         })
     }
