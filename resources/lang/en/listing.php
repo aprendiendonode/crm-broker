@@ -237,6 +237,8 @@ return [
     'add_new_note' => 'Add New Note',
     'added_by' => 'Added By',
     'date_added' => 'Date Added',
+    'choose_any_filter_to_start'    => 'Choose any Filter To Start',
+
 
 
 
@@ -256,11 +258,13 @@ return [
     'view'                      =>  'View',
     'contact_client'            =>  'Contact Client',
     'send_mail_confirmation'    =>  'Are you sure to Send Inquiry against this property.',
+    'confirm_send_mail'         =>  'Confirm',
+    'keyword_info'              =>  'Search in title and description',
     'block_confirmation'        =>  'Are you sure to Block this agency?',
     'unblock_confirmation'      =>  'Are you sure to Unblock this agency?',
-    'confirm_send_mail'         =>  'Confirm',
     'confirm_block'             =>  'Confirm Block',
     'confirm_unblock'           =>  'Confirm Unblock',
+    'sharing_center'            =>  'Sharing Center',
     'requests'                  =>  'Requests',
     'block'                     =>  'Block',
     'unblock'                   =>  'Unblock',
@@ -269,6 +273,7 @@ return [
     'response'                  =>  'Response',
     'old_requests'              =>  'Old Requests',
     'request_sent'              =>  'Request Sent Successfully',
+    'mail_sent'                 =>  'Mail Sent Successfully',
     'request_replied'           =>  'Request Replied Successfully',
     'block_applied'             =>  'Block Applied Successfully',
     'unblock_applied'           =>  'Unblock Applied Successfully',

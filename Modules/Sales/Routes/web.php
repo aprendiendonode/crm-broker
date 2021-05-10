@@ -108,6 +108,7 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
         Route::get('opportunities/{agency}', 'OpportunitiesController@index');
         Route::get('clients/{agency}', 'ClientsController@index');
+        Route::get('all_in_one/{agency}', 'AllInOneController@index');
     });
 });
 

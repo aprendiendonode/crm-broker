@@ -27,7 +27,7 @@
 
 
                           @if( $notify->data['type'] == 'opportunity')
-                              <a href="#" onclick="changeNotifyStatus('opportunity',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('opportunity','{{$notify->data['opportunity_id'] ?? ''}} ','{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                         <i class="fab fa-opera"></i>
                                       </div>
@@ -40,7 +40,7 @@
                           
 
                           @if( $notify->data['type'] == 'task')
-                              <a href="#" onclick="changeNotifyStatus('task',{{$notify->data['lead_task_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('task','{{$notify->data['lead_task_id'] ?? ''}} ','{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                         <i class="fab fa-tumblr"></i>
                                       </div>
@@ -50,7 +50,7 @@
                                     </a>
                           @endif 
                           @if( $notify->data['type'] == 'assign')
-                              <a href="#" onclick="changeNotifyStatus('assign',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('assign','{{$notify->data['opportunity_id'] ?? ''}} ','{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                         <i class="fab fa-atlassian"></i>
                                       </div>
@@ -61,7 +61,7 @@
                           @endif 
 
                           @if( $notify->data['type'] == 'answer')
-                          <a href="#" onclick="changeNotifyStatus('answer',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
+                          <a href="#" onclick="changeNotifyStatus('answer','{{$notify->data['opportunity_id'] ?? ''}} ','{{$notify->id}}')" class="dropdown-item notify-item">
                               <div class="notify-icon bg-secondary">
                                     <i class="fab fa-atlassian"></i>
                                   </div>
@@ -71,7 +71,7 @@
                                 </a>
                       @endif
                           @if( $notify->data['type'] == 'result')
-                              <a href="#" onclick="changeNotifyStatus('result',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('result','{{$notify->data['opportunity_id'] ?? ''}} ','{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                         <i class="fab fa-r-project"></i>
                                       </div>
@@ -81,7 +81,7 @@
                                     </a>
                           @endif 
                           @if( $notify->data['type'] == 'question')
-                              <a href="#" onclick="changeNotifyStatus('question',{{$notify->data['opportunity_id'] ?? ''}} ,'{{$notify->id}}')" class="dropdown-item notify-item">
+                              <a href="#" onclick="changeNotifyStatus('question','{{$notify->data['opportunity_id'] ?? ''}} ','{{$notify->id}}')" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-secondary">
                                     <i class="fab fa-quora"></i> 
                                    </div>

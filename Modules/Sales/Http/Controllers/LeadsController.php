@@ -549,7 +549,7 @@ class LeadsController extends Controller
             // }
 
             Lead::create([
-
+                'table_name' => 'leads',
                 "source_id" => $request->source_id,
 
                 "type_id" => $request->type_id,
@@ -1681,7 +1681,7 @@ class LeadsController extends Controller
                 $users = \App\Models\User::whereIn('id', $users_to_notify)->get();
                 foreach ($users as $send_to) {
 
-//                     Mail::to($send_to->email)->send(new EmailGeneral($template_with_site_name, "Lead Task Has Been Assigned To You"));
+                    //                     Mail::to($send_to->email)->send(new EmailGeneral($template_with_site_name, "Lead Task Has Been Assigned To You"));
 
                     SendEmail::dispatch($send_to->email, $template_with_site_name, "Lead Task Has Been Assigned To You");
 
@@ -1716,7 +1716,6 @@ class LeadsController extends Controller
                     event(new LeadTaskEvent($task, $send_to->id));
                 }
                 Notification::send($users, new LeadTaskNotification($task));
-
             }
 
             return back()->with(flash(trans('sales.task_assigned'), 'success'))->with('open-task-tab', $id);
@@ -2063,7 +2062,7 @@ class LeadsController extends Controller
                 $staff = $request->{'opportunity_assigned_staff_' . $request->lead_id};
             }
             $opportunity = Opportunity::create([
-
+                'table_name' => 'opportunities',
 
                 'probability_of_winning' => $request->{"opportunity_probability_of_winning_" . $request->lead_id},
                 'qualification_id' => $qualification->id,
@@ -2202,7 +2201,6 @@ class LeadsController extends Controller
                     event(new OpportunityEvent($opportunity, $send_to->id));
                 }
                 Notification::send($users, new OpportunityNotification($opportunity));
-
             }
 
 
@@ -2238,8 +2236,8 @@ class LeadsController extends Controller
             "qualification_id" => "required|integer|exists:lead_qualifications,id",
             "communication_id" => "required|integer|exists:lead_communications,id",
             "priority_id" => "required|integer|exists:lead_priorities,id",
-//            'staff' => 'required|array',
-//            'staff*' => 'required|integer|exists:users,id',
+            //            'staff' => 'required|array',
+            //            'staff*' => 'required|integer|exists:users,id',
         ]);
 
         if ($validator->fails()) {
@@ -2262,15 +2260,15 @@ class LeadsController extends Controller
 
 
 
-//        Excel::Import(new LeadsImport(
-//            $request->source_id,
-//            $request->qualification_id,
-//            $request->type_id,
-//            $request->communication_id,
-//            $request->priority_id,
-//            $business,
-//            $agency
-//        ), $request->file);
+        //        Excel::Import(new LeadsImport(
+        //            $request->source_id,
+        //            $request->qualification_id,
+        //            $request->type_id,
+        //            $request->communication_id,
+        //            $request->priority_id,
+        //            $business,
+        //            $agency
+        //        ), $request->file);
 
         return back()->with(flash(trans('sales.leads_imported'), 'success'));
     }

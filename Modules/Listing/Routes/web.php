@@ -93,5 +93,7 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.black_listed');
         Route::post('unblock', 'ListingController@unblock')
             ->name('listings.unblock');
+        Route::post('contact_client', 'ListingController@contact_client')
+            ->name('listings.contact_client');
     });
 });

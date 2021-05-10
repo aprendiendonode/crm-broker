@@ -486,5 +486,6 @@ return [
     'sheet'                     => 'Sheet',
     'leads_imported'            => 'Leads Imported Successfully',
     'new_landlord' => 'New Landlord', 
+    'search_center' => 'Search Center',
 
 ];

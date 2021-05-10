@@ -1,6 +1,7 @@
 @can('edit_lead')
+
 <i
-  onclick="event.preventDefault();show_edit_div({{ $lead->id }})"
+onclick="event.preventDefault();  table_row_show({{ $lead->id }},'edit_lead_{{ $lead->id }}')"
    data-plugin="tippy" 
    data-tippy-placement="top-start" 
    title="@lang('agency.edit')"
@@ -10,12 +11,10 @@
 @endcan  
 
 @can('assign_task_on_lead')
-{{-- @can('assign_task_on_lead') --}}
-
 
 <i
+onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_task_{{ $lead->id }}')"
 
-  onclick="event.preventDefault();show_task_div({{ $lead->id }})"
    data-plugin="tippy" 
    data-tippy-placement="top-start" 
    title="@lang('sales.task')"
@@ -25,27 +24,10 @@
 
 @endcan  
 
-
-{{-- 
-@can('assign_lead_to_staff')
-
-
-<i
-
-  onclick="event.preventDefault();show_assign_div({{ $lead->id }})"
-   data-plugin="tippy" 
-   data-tippy-placement="top-start" 
-   title="@lang('sales.assign')"
-
-   class="fe-plus cursor-pointer feather-16 px-1">
-</i>
-
-@endcan --}}
-
 @can('edit_lead')
   <i
+  onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_call_{{ $lead->id }}')"
 
-    onclick="event.preventDefault();show_call_div({{ $lead->id }})"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.call')"
@@ -59,8 +41,8 @@
 
 @can('edit_lead')
   <i
+  onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_opportunity_{{ $lead->id }}')"
 
-    onclick="event.preventDefault();show_opportunity_div({{ $lead->id }})"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.convert_to_opportunity')"
@@ -81,5 +63,28 @@
       class="fe-trash cursor-pointer feather-16">
   </i>
 @endcan
+
+
+@push('js')
+    <script>
+        function table_row_show(row_id,id){
+ 
+            $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
+            if($('.'+id).hasClass('d-none')){
+                $('.'+id).removeClass('d-none');
+            }else{
+                $('.'+id).addClass('d-none');
+
+            }
+
+            }
+            function table_row_hide(id){
+            
+            $('.'+id).addClass('d-none');
+
+            }
+
+    </script>
+@endpush
 
 

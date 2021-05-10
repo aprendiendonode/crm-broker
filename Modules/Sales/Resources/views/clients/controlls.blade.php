@@ -1,6 +1,6 @@
 @can('edit_client')
 <i
-  onclick="event.preventDefault();  table_row_show('edit_client_{{ $client->id }}')"
+  onclick="event.preventDefault();  table_row_show({{ $client->id }},'edit_client_{{ $client->id }}')"
    data-plugin="tippy" 
    data-tippy-placement="top-start" 
    title="@lang('agency.edit')"
@@ -13,7 +13,7 @@
 
 <i
 
-  onclick="event.preventDefault();  table_row_show('task_{{ $client->id }}')"
+  onclick="event.preventDefault();  table_row_show({{ $client->id }},'client_task_{{ $client->id }}')"
    data-plugin="tippy" 
    data-tippy-placement="top-start" 
    title="@lang('sales.task')"
@@ -26,7 +26,7 @@
 @can('edit_client')
   <i
 
-    onclick="event.preventDefault();table_row_show('call_{{ $client->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $client->id }},'client_call_{{ $client->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.call')"
@@ -50,7 +50,7 @@
 {{--@can('edit_client')--}}
   {{--<i--}}
 
-    {{--onclick="event.preventDefault();table_row_show('question_{{ $client->id }}')"--}}
+    {{--onclick="event.preventDefault();table_row_show({{ $client->id }},'question_{{ $client->id }}')"--}}
     {{--data-plugin="tippy" --}}
     {{--data-tippy-placement="top-start" --}}
     {{--title="@lang('sales.question')"--}}
@@ -62,7 +62,7 @@
 {{--@can('edit_client')--}}
 {{--<i--}}
 
-  {{--onclick="event.preventDefault();table_row_show('contract_{{ $client->id }}')"--}}
+  {{--onclick="event.preventDefault();table_row_show({{ $client->id }},'contract_{{ $client->id }}')"--}}
   {{--data-plugin="tippy" --}}
   {{--data-tippy-placement="top-start" --}}
   {{--title="@lang('sales.contract')"--}}
@@ -75,8 +75,9 @@
 @push('js')
 <script>
 
-function table_row_show(id){
-    $('.table-row:not(.'+id+')').addClass('d-none');
+function table_row_show(row_id,id){
+ 
+ $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
     if($('.'+id).hasClass('d-none')){
         $('.'+id).removeClass('d-none');
     }else{
