@@ -74,7 +74,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">@lang('listings.done')</button>
+                <button type="button" class="btn btn-primary">@lang('listing.done')</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
