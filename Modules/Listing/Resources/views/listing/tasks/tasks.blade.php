@@ -25,7 +25,7 @@
                     
                             <div class="form-group">
                                 <label class="font-weight-medium text-muted" for="">@lang('activity.tasks.task_type')</label>
-                                <select class="selectpicker mb-0 show-tick"  data-toggle="select2" name="task_type_{{ $listing->id }}" id="task_type_{{ $listing->id }}" data-style="btn-outline-secondary" onchange="show_reference_div()"  required>
+                                <select class="form-control select2  mb-0 show-tick"  data-toggle="select2" name="task_type_{{ $listing->id }}" id="task_type_{{ $listing->id }}" data-style="btn-outline-secondary" onchange="show_reference_div()"  required>
 
                                     <option value="" > @lang('global.pleaseSelect')</option>
                                 
@@ -45,7 +45,7 @@
 
                             <div class="form-group">
                                 <label class="font-weight-medium text-muted" for="  ">@lang('activity.tasks.status')</label>
-                                <select class="selectpicker mb-0 show-tick"  data-toggle="select2" name="task_status_{{ $listing->id }}" data-style="btn-outline-secondary" required>
+                                <select class="form-control select2  mb-0 show-tick"  data-toggle="select2" name="task_status_{{ $listing->id }}" data-style="btn-outline-secondary" required>
 
                                     <option value=""  > @lang('global.pleaseSelect')</option>
                                     {{-- <optgroup label="Open">

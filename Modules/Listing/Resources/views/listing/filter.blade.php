@@ -54,7 +54,7 @@
                     <label for="" class="font-weight-medium text-muted">Propery Type</label>
                     <select class="form-control select2" name="type" data-toggle="select2">
                         <option></option>
-                        @forelse($types as $type)
+                        @forelse($listing_types as $type)
                             <option value="{{$type->id ?? ''}}" @if(request()->has('type') && request('type') == $type->id ) selected  @endif> {{$type->{'name_'.app()->getLocale()} ?? ''}} </option>
                         @empty
                         @endforelse

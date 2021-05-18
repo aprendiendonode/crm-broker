@@ -120,6 +120,10 @@ class Agency extends Model
     {
         return $this->hasMany(ListingCheque::class);
     }
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
+    }
     public function tenants()
     {
         return $this->hasMany(Client::class)

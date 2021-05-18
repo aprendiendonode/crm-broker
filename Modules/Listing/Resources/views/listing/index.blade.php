@@ -6,11 +6,11 @@
     <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
-    <link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" />
+    {{-- <link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" /> --}}
     
-    <link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css">
+    {{-- <link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css"> --}}
+    {{-- <link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css"> --}}
+    {{-- <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css"> --}}
     <link href="{{asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
 
@@ -381,7 +381,7 @@
                                 @can('edit_listing')
                                
                                     <select onchange="show_status_modal({{ $listing->id }},this)" id="modify_listing_status_{{ $listing->id }}"
-                                         class=" selectpicker mb-0 show-tick"   data-style="btn-outline-secondary">
+                                         class="form-control mb-0 show-tick"   data-style="btn-outline-secondary">
                                         <option value=""></option>
                                         <option  value="draft" @if($listing->status == 'draft') selected @endif >@lang('listing.draft')</option>
                                         <option  value="live"  @if($listing->status == 'live') selected @endif>@lang('listing.live')</option>
@@ -570,12 +570,12 @@
 
 
     <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script> --}}
 
 
-    <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
     <!-- Footable js -->
-    <script src="{{ asset('assets/libs/footable/footable.all.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/libs/footable/footable.all.min.js') }}"></script> --}}
 
     {{-- tooltip --}}
     <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
@@ -583,11 +583,11 @@
     <!-- Init js -->
     {{-- <script src="{{ asset('assets/js/pages/foo-tables.init.js') }}"></script> --}}
     <!-- Plugins js -->
-    <script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script>
-    <script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script>
+    {{-- <script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script> --}}
+    {{-- <script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script> --}}
 
 
-    <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script> --}}
     <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>

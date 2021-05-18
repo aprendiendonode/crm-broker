@@ -17,8 +17,7 @@ class CreateCitiesTable extends Migration
             $table->id();
             $table->string('name_en')->nullable();
             $table->string('name_ar')->nullable();
-
-
+            $table->string('code')->nullable();
             $table->unsignedBigInteger('country_id')->nullable();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
 
@@ -37,8 +36,3 @@ class CreateCitiesTable extends Migration
         Schema::dropIfExists('cities');
     }
 }
-
-
-
-
-

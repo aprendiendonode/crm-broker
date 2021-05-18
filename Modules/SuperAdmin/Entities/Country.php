@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace Modules\SuperAdmin\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Country extends Model
 {
@@ -15,7 +16,8 @@ class Country extends Model
     protected $fillable = [
         'iso2',
         'value',
-        'long_name',
+        'name_en',
+        'name_ar',
         'iso3',
         'numcode',
         'un_member',
@@ -28,5 +30,4 @@ class Country extends Model
         'created_at',
         'updated_at',
     ];
-
 }

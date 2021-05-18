@@ -60,8 +60,6 @@ class ListingRepo
             $pagination = true;
             $business = auth()->user()->business_id;
             $per_page = 15;
-
-            $types = ListingType::where('agency_id', $agency)->get();
             $agency = Agency::with([
                 'lead_sources',
                 'landlords',
@@ -71,23 +69,12 @@ class ListingRepo
                 'listing_views',
                 'developers',
                 'cheques',
-                'descriptionTemplates'
+                'descriptionTemplates',
 
 
             ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
-            $listing_types = DB::table('listing_types')->get();
-            $lead_sources = $agency->lead_sources;
-            $task_status = $agency->task_status;
-            $task_types = $agency->task_types;
-            $listing_views = $agency->listing_views;
-            $developers = $agency->developers;
-            $cheques = $agency->cheques;
-            $landlords = $agency->landlords;
-            $tenants = $agency->tenants;
-            $descriptionTemplates = $agency->descriptionTemplates;
-            $portals = DB::table('portals')->get();
 
-            $listings = Listing::with([
+            $listings_query = Listing::with([
                 'tasks', 'agent',
                 'tasks.addBy',
                 'tasks.staff',
@@ -96,36 +83,32 @@ class ListingRepo
                 'notes', 'notes.addBy'
 
             ])->where('agency_id', $agency->id)->where('business_id', $business);
-            $locations = $listings->pluck('location')->unique();
-            $ref_ids = $listings->pluck('listing_ref')->unique();
-
-            $staffs = staff($agency->id);
 
 
             if (request()->has('status_main')) {
-                $listings->where('status', request()->status_main);
+                $listings_query->where('status', request()->status_main);
             }
 
 
             //filter
             if (request('purpose')) {
-                $listings->where('purpose', request('purpose'));
+                $listings_query->where('purpose', request('purpose'));
             }
 
             if (request('location')) {
-                $listings->where('location', request('location'));
+                $listings_query->where('location', request('location'));
             }
             if (request('filter_user')) {
-                $listings->where('assigned_to', request('filter_user'));
+                $listings_query->where('assigned_to', request('filter_user'));
             }
             if (request('ref_id')) {
-                $listings->where('listing_ref', request('ref_id'));
+                $listings_query->where('listing_ref', request('ref_id'));
             }
 
             if (request('type')) {
                 $type = request('type');
 
-                $listings->whereHas('type', function ($q) use ($type) {
+                $listings_query->whereHas('type', function ($q) use ($type) {
                     $q->where('id', $type);
                 });
             }
@@ -133,68 +116,54 @@ class ListingRepo
 
             if (request('min_bed')) {
                 if (request('min_bed') == 'studio') {
-                    $listings->where('beds', request('min_bed'));
+                    $listings_query->where('beds', request('min_bed'));
                 }
-                $listings->where('beds', '>=', request('min_bed'));
+                $listings_query->where('beds', '>=', request('min_bed'));
             }
             if (request('max_bed')) {
                 if (request('max_bed') == 'studio') {
-                    $listings->where('beds', request('min_bed'));
+                    $listings_query->where('beds', request('min_bed'));
                 }
-                $listings->where('beds', '<=', request('max_bed'));
+                $listings_query->where('beds', '<=', request('max_bed'));
             }
 
 
-            $listings = $listings->paginate($per_page);
-            $all_count = Listing::where('agency_id', $agency->id)->count();
-            $draft_count = Listing::where('status', 'draft')->where('agency_id', $agency->id)->count();
-            $live_count = Listing::where('status', 'live')->where('agency_id', $agency->id)->count();
-            $review_count = Listing::where('status', 'review')->where('agency_id', $agency->id)->count();
-            $archive_count = Listing::where('status', 'archive')->where('agency_id', $agency->id)->count();
-            $agency_data = $agency;
-            $agency = $agency->id;
-
-
-
-
-
-
-
-
-
-
-
+            $all_count     =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->count();
+            $archive_count =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->where('status', 'archive')->count();
+            $review_count  =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->where('status', 'review')->count();
+            $draft_count   =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->where('status', 'draft')->count();
+            $live_count    =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->where('status', 'live')->count();
 
 
             return view(
                 'listing::listing.index',
-                compact(
-                    'agency_data',
-                    'staffs',
-                    'listing_types',
-                    'listing_views',
-                    'listings',
-                    'types',
-                    'ref_ids',
-                    'pagination',
-                    'locations',
-                    'agency',
-                    'business',
-                    'lead_sources',
-                    'task_status',
-                    'task_types',
-                    'developers',
-                    'cheques',
-                    'landlords',
-                    'tenants',
-                    'portals',
-                    'all_count',
-                    'archive_count',
-                    'review_count',
-                    'draft_count',
-                    'live_count',
-                    'descriptionTemplates'
-                )
+
+                [
+                    'agency_data'   => $agency,
+                    'agency'        => $agency->id,
+                    'staffs'        => staff($agency->id),
+                    'listing_types' => DB::table('listing_types')->get(),
+                    'listing_views' => $agency->listing_views,
+                    'listings'      => $listings_query->paginate($per_page),
+                    'ref_ids'       => $listings_query->pluck('listing_ref')->unique(),
+                    'pagination'    => $pagination,
+                    'locations'     => $listings_query->pluck('location')->unique(),
+                    'business'      => $business,
+                    'lead_sources'  => $agency->lead_sources,
+                    'task_status'   => $agency->task_status,
+                    'task_types'    => $agency->task_types,
+                    'developers'    => $agency->developers,
+                    'cheques'       => $agency->cheques,
+                    'landlords'     => $agency->landlords,
+                    'tenants'       => $agency->tenants,
+                    'portals'       => DB::table('portals')->get(),
+                    'all_count'     => $all_count,
+                    'archive_count' => $archive_count,
+                    'review_count'  => $review_count,
+                    'draft_count'   => $draft_count,
+                    'live_count'    => $live_count,
+                    'descriptionTemplates' => $agency->descriptionTemplates
+                ]
             );
         } catch (\Exception $e) {
 

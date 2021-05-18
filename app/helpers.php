@@ -91,7 +91,23 @@ if (!function_exists('upload_image')) {
 
 
 
+if (!function_exists('upload_flag')) {
+    function upload_flag($file, $path, $name, $country)
+    {
+        if ($file != null) {
+            if ($country->flag != null) {
 
+                if (file_exists(public_path($path . '/' . $country->flag)))
+                    unlink(public_path($path . '/' . $country->flag));
+            }
+            $fileName =  $name;
+            $file->move($path, $fileName);
+
+            return $fileName;
+        }
+        return null;
+    }
+}
 
 
 
