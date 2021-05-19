@@ -36,8 +36,8 @@
   
         <div class="col-md-6">
             <div class="form-group">
-                <label for="city" class="font-weight-medium text-muted">@lang('superadmin.communities.city')</label>
-                <select class="form-control select2" data-placeholder="@lang('superadmin.communities.select')" name="edit_city_id_{{ $community->id }}" id="edit_city_id_{{ $community->id }}"
+                <label for="city" class="font-weight-medium text-muted">@lang('superadmin.cities.city')</label>
+                <select class="form-control select2" data-placeholder="@lang('superadmin.cities.select')" name="edit_city_id_{{ $community->id }}" id="edit_city_id_{{ $community->id }}"
                         data-toggle="select2">
                     <option value=""></option>
                     @foreach($cities as $city)

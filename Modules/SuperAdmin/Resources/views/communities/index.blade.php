@@ -54,6 +54,8 @@
 
 
             <div>
+                @include('superadmin::communities.filter')
+
                 <table  class="table table-bordered toggle-circle mb-0">
                     <thead>
                     <tr>
@@ -96,10 +98,11 @@
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-between">
-
-                    <div class="mt-2">
-                        {{ $communities->links() }}
-                    </div>
+                    @if($paginate)
+                        <div class="mt-2">
+                            {{ $communities->links() }}
+                        </div>
+                    @endif
  
                 </div>
             </div>

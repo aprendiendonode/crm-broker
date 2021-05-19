@@ -54,6 +54,10 @@
 
 
             <div>
+                  
+                @include('superadmin::countries.filter')
+       
+        
                 <table  class="table table-bordered toggle-circle mb-0">
                     <thead>
                     <tr>
@@ -65,7 +69,7 @@
                     </thead>
                     <tbody>
 
-                        @forelse($countries as $country)
+                        @forelse($countries->paginate(30) as $country)
                         <tr>
                             <td>{{ $country->{'name_'.app()->getLocale()} }}</td>
                               
@@ -96,7 +100,7 @@
                 <div class="d-flex justify-content-between">
 
                     <div class="mt-2">
-                        {{ $countries->links() }}
+                        {{ $countries->paginate(30)->links() }}
                     </div>
  
                 </div>

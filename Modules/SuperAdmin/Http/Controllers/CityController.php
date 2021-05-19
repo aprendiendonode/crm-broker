@@ -19,10 +19,41 @@ class CityController extends Controller
      */
     public function index()
     {
+        $paginate = false;
+
+        $cities = null;
+
+        if (request('country_id') && !request('city')) {
+            $cities = City::Where('country_id', request('country_id'))
+
+                ->get();
+        }
+
+
+        if (request('city') && !request('country_id')) {
+            // dd('here');
+            $cities = City::where('name_en', 'like', '%' . request('city') . '%')
+                ->orWhere('name_ar', 'like', '%' . request('city') . '%')
+                ->get();
+        }
+
+        if (request('country_id') && request('city')) {
+            $cities = City::Where('country_id', request('country_id'))
+                ->where('name_en', 'like', '%' . request('city') . '%')
+                ->orWhere('name_ar', 'like', '%' . request('city') . '%')
+                ->get();
+        }
+
+
+        if (!request('country_id') && !request('city')) {
+            $paginate = true;
+            $cities =  City::latest()->paginate(50);
+        }
 
         return view('superadmin::cities.index', [
-            'cities' => City::latest()->paginate(30),
-            'countries' => Country::all()
+            'paginate'   => $paginate,
+            'cities'     => $cities,
+            'countries'  => Country::all()
         ]);
     }
 

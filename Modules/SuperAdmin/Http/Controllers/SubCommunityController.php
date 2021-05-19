@@ -6,10 +6,11 @@ namespace Modules\SuperAdmin\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Modules\SuperAdmin\Entities\City;
+
 use Illuminate\Support\Facades\Validator;
 use Modules\SuperAdmin\Entities\SubCommunity;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SuperAdmin\Entities\Community;
 
 class SubCommunityController extends Controller
 {
@@ -22,7 +23,7 @@ class SubCommunityController extends Controller
 
         return view('superadmin::sub_communities.index', [
             'sub_communities' => SubCommunity::latest()->paginate(30),
-            'communities' => City::all()
+            'communities' => Community::all()
         ]);
     }
 
@@ -52,14 +53,14 @@ class SubCommunityController extends Controller
 
 
             $SubCommunity =  SubCommunity::create([
-                'name_en'         => $request->name_en,
-                'name_ar'         => $request->name_ar,
+                'name_en'              => $request->name_en,
+                'name_ar'              => $request->name_ar,
                 'community_id'         => $request->community_id,
 
             ]);
 
             DB::commit();
-            return back()->with(flash(trans('superadmin.sub_communities.community_added'), 'success'));
+            return back()->with(flash(trans('superadmin.sub_communities.sub_added'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', 'yes');
@@ -95,12 +96,12 @@ class SubCommunityController extends Controller
 
 
             $SubCommunity->update([
-                'name_en'         => $request->{'edit_name_en_' . $id},
-                'name_ar'         => $request->{'edit_name_ar_' . $id},
-                'community_id'         => $request->{'edit_community_id_' . $id},
+                'name_en'               => $request->{'edit_name_en_' . $id},
+                'name_ar'               => $request->{'edit_name_ar_' . $id},
+                'community_id'          => $request->{'edit_community_id_' . $id},
 
             ]);
-            return back()->with(flash(trans('superadmin.sub_communities.community_updated'), 'success'))->with('open-edit-tab', $id);
+            return back()->with(flash(trans('superadmin.sub_communities.sub_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
@@ -118,7 +119,7 @@ class SubCommunityController extends Controller
             $community = SubCommunity::where('id', $id)->firstOrFail();
             $community->delete();
 
-            return back()->with(flash(trans('superadmin.sub_communities.community_deleted'), 'success'));
+            return back()->with(flash(trans('superadmin.sub_communities.sub_deleted'), 'success'));
         } catch (\Exception $e) {
 
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'));

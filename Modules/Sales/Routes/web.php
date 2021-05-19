@@ -285,6 +285,7 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
                 return response()->json(['error' => 'Not Authorized']);
             }
 
+
             if (true) {
                 $app_id = env('PUSHER_APP_ID');
                 $app_key = env('PUSHER_APP_KEY');

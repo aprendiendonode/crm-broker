@@ -41,7 +41,7 @@
 
               
                 <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
-                    <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('superadmin.sub_communities.add_community')
+                    <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('superadmin.sub_communities.add_sub_community')
                 </button>
                 
             </div>
@@ -58,7 +58,7 @@
                     <thead>
                     <tr>
                         <th>@lang('superadmin.sub_communities.name') </th>
-                        <th>@lang('superadmin.sub_communities.city') </th>
+                        <th>@lang('superadmin.sub_communities.community') </th>
                         <th > @lang('superadmin.sub_communities.controlls') </th>
 
                       

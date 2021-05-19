@@ -21,8 +21,8 @@
 
     <div class="col-md-6">
         <div class="form-group">
-            <label for="city" class="font-weight-medium text-muted">@lang('superadmin.sub_communities.city')</label>
-            <select class="form-control select2" data-placeholder="@lang('superadmin.sub_communities.select')" name="city_id" id="city_id"
+            <label for="city" class="font-weight-medium text-muted">@lang('superadmin.sub_communities.communities')</label>
+            <select class="form-control select2" data-placeholder="@lang('superadmin.sub_communities.select')" name="community_id" id="community_id"
                     data-toggle="select2">
                 <option value=""></option>
                 @foreach($communities as $c)

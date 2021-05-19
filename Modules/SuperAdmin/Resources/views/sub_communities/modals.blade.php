@@ -13,7 +13,7 @@
                             <i class="dripicons-information h1 text-danger"></i>
                             <h4 class="mt-2">@lang('listing.head_up')</h4>
                             <p class="mt-3">@lang('agency.delete_warning')</p>
-                            <form action="{{ route('sub_communities.destroy',$community->id) }}" method="post">
+                            <form action="{{ route('sub-communities.destroy',$community->id) }}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger my-2">@lang('listing.confirm_delete')</button>

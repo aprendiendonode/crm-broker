@@ -1,5 +1,8 @@
 <?php
 return [
+
+    'superadmin'    => 'SuperAdmin',
+    'geolocations'  => 'Geolocations',
     'countries' => [
         'countries'                   => 'Countries',
         'manage_countries'            => 'Manage Countries',
@@ -41,6 +44,7 @@ return [
 
     ],
     'communities' => [
+        'community'                     => 'Community',
         'communities'                    => 'Communities',
         'manage_communities'             => 'Manage Communities',
         'add_community'                 => 'Add Community',
@@ -62,7 +66,7 @@ return [
     'sub_communities' => [
         'sub_communities'             => 'Sub Communities',
         'manage_sub_communities'      => 'Manage Sub Communities',
-        'add_sub'                     => 'Add Sub Community',
+        'add_sub_community'           => 'Add Sub Community',
         'name'                        => 'Name',
         'name_en'                     => 'English Name',
         'name_ar'                     => 'Arabic Name',
@@ -75,8 +79,9 @@ return [
         'sub_added'                   => 'Sub Community Added',
         'edit_sub'                    => 'Edit Sub Community',
         'delete_sub'                  => 'Delete Sub Community',
-        'select'                      =>    'Select',
-        'city'                        => 'City',
+        'select'                      => 'Select',
+        'communities'                 => 'Communities',
+        'community'                   => 'Community',
     ]
 
 ];

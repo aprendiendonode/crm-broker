@@ -18,9 +18,14 @@ class CountryController extends Controller
      */
     public function index()
     {
-
+        $countries = null;
+        if (request('country_id')) {
+            $countries = Country::where('id', '=', request('country_id'))->latest();
+        } else {
+            $countries = Country::latest();
+        }
         return view('superadmin::countries.index', [
-            'countries' => Country::latest()->paginate(30)
+            'countries' => $countries
         ]);
     }
 

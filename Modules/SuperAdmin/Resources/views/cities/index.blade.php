@@ -54,9 +54,12 @@
 
 
             <div>
+                @include('superadmin::cities.filter')
+
                 <table  class="table table-bordered toggle-circle mb-0">
                     <thead>
                     <tr>
+                        <th># </th>
                         <th>@lang('superadmin.cities.name') </th>
                         <th>@lang('superadmin.cities.country') </th>
                         <th > @lang('superadmin.cities.controlls') </th>
@@ -68,6 +71,7 @@
 
                         @forelse($cities as $city)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $city->{'name_'.app()->getLocale()} }}</td>
                             <td>{{ $city->country ? $city->country->{'name_'.app()->getLocale()} : '' }}</td>
                               
@@ -97,9 +101,11 @@
                 </table>
                 <div class="d-flex justify-content-between">
 
+                    @if($paginate == true)
                     <div class="mt-2">
                         {{ $cities->links() }}
                     </div>
+                    @endif
  
                 </div>
             </div>
