@@ -79,23 +79,23 @@
 
 
 
-                        edit_autocomplete = new google.maps.places.Autocomplete((document.getElementById('city_'+value.id)), {
+                /*         edit_autocomplete = new google.maps.places.Autocomplete((document.getElementById('city_'+value.id)), {
                             types: ['(cities)']
                             });
                             edit_autocomplete.setComponentRestrictions({
                             country: ['EG'],
                         });
 
+                   */
 
 
 
-
-                            edit_autocompletecommunity = new google.maps.places.Autocomplete((document.getElementById('community_'+value.id)), {
-                            types: ['(regions)']
-                            });
-                            edit_autocompletecommunity.setComponentRestrictions({
-                            country: ['EG'],
-                        });
+                        //     edit_autocompletecommunity = new google.maps.places.Autocomplete((document.getElementById('community_'+value.id)), {
+                        //     types: ['(regions)']
+                        //     });
+                        //     edit_autocompletecommunity.setComponentRestrictions({
+                        //     country: ['EG'],
+                        // });
                     
 
 
@@ -150,24 +150,24 @@
 
 
 
-       autocomplete = new google.maps.places.Autocomplete((document.getElementById('city')), {
+  /*      autocomplete = new google.maps.places.Autocomplete((document.getElementById('city')), {
         types: ['(cities)']
         });
         autocomplete.setComponentRestrictions({
            country: ['EG'],
        });
 
+ */
 
 
 
-
-        autocompletecommunity = new google.maps.places.Autocomplete((document.getElementById('community')), {
+  /*       autocompletecommunity = new google.maps.places.Autocomplete((document.getElementById('community')), {
         types: ['(regions)']
         });
         autocompletecommunity.setComponentRestrictions({
            country: ['EG'],
        });
-  
+   */
 
 
 

@@ -413,8 +413,10 @@
                     </tr>
                     @can('edit_listing')
                     
-                        <tr class="edit_listing_{{ $listing->id }}"
-                            @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
+                        <tr class="table-row_{{ $listing->id }} edit_listing_{{ $listing->id }}
+                            @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else d-none @endif
+                            "
+                             >
                             <td colspan="14">
 
                                 @include('listing::listing.edit.index')
@@ -570,29 +572,10 @@
 
 
     <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
-    {{-- <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script> --}}
 
-
-    {{-- <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
-    <!-- Footable js -->
-    {{-- <script src="{{ asset('assets/libs/footable/footable.all.min.js') }}"></script> --}}
-
-    {{-- tooltip --}}
     <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
 
-    <!-- Init js -->
-    {{-- <script src="{{ asset('assets/js/pages/foo-tables.init.js') }}"></script> --}}
-    <!-- Plugins js -->
-    {{-- <script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script> --}}
-    {{-- <script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script> --}}
-
-
-    {{-- <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script> --}}
-    <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
-    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-    <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script>
-
+    
     <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
 
 
@@ -602,8 +585,9 @@
     <script src="{{ asset('assets/libs/uploader-master/dist/js/jquery.dm-uploader.min.js') }}"></script>
     <script src="{{ asset('assets/libs/uploader-master/src/js/demo-ui.js') }}"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap" async defer>
-    </script>
+  {{--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap"
+     async >
+    </script> --}}
     
     <script>
         $(document).ready(function () {
@@ -615,7 +599,7 @@
                 twelvehour :false
             });
 
-            var listings = @json($listings);
+      /*       var listings = @json($listings);
             for (var i = 0; i < listings.data.length; i++) {
 
                 ClassicEditor
@@ -634,7 +618,7 @@
 
                     });
             }
-
+ */
 
             if(sessionStorage.getItem('open-call-tab')){
             $('.call_'+sessionStorage.getItem('open-call-tab')).removeClass('d-none');
@@ -651,15 +635,102 @@
             sessionStorage.removeItem('open-question-tab')
         }
 
+
+
+       
+
+     
         })
     </script>
 
     <script>
+      var  googleMapsScriptIsInjected = false;
+      var  CkEditorScriptIsInjected   = false;
+        function injectGoogleMapsApiScript(options){
+
+            if(googleMapsScriptIsInjected){
+                return;
+            }
+
+    
+                const optionsQuery = Object.keys(options)
+                    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(options[k])}`)
+                    .join('&');
+
+                const url = `https://maps.googleapis.com/maps/api/js?${optionsQuery}`;
+
+                const script = document.createElement('script');
+
+                script.setAttribute('src', url);
+                script.setAttribute('async', '');
+                script.setAttribute('defer', '');
+
+                document.head.appendChild(script);
+
+                googleMapsScriptIsInjected = true;
+            };
+
+            function injectCkeditor(){
+                if(CkEditorScriptIsInjected){
+                return;
+            }
+
+                const url  =  "https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js";
+                const url2 = "https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js";
+                const url3 = "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js";
+
+                const script = document.createElement('script');
+                const script2 = document.createElement('script');
+                const script3 = document.createElement('script');
+
+                script.setAttribute('src', url);
+                script2.setAttribute('src', url2);
+                script3.setAttribute('src', url3);
+       
+                document.head.appendChild(script);
+                document.head.appendChild(script2);
+                document.head.appendChild(script3);
+
+              
+
+              
+                    ClassicEditor
+                    .create(document.querySelector('#description_en'))
+                    .then()
+                    .catch(error => {
+
+                    });
+
+                ClassicEditor
+                    .create(document.querySelector('#description_ar'), {
+                        language: 'ar'
+                    })
+                    .then()
+                    .catch(error => {
+
+                    });
+
+                    CkEditorScriptIsInjected = true;
+            
+             
+                }
+
 
 
         function show_add_div() {
             var div = document.querySelector('.add_listing');
             if (div.style.display === 'none') {
+
+                injectGoogleMapsApiScript({
+                    key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
+                    libraries: 'places',
+                    language: 'ar',
+                    region: 'EG',
+                    callback: 'initMap',
+                });
+                injectCkeditor();
+
+
                 div.style.display = 'block';
 
                 setTimeout(function () {
@@ -773,21 +844,6 @@
             }
         }
 
-        ClassicEditor
-            .create(document.querySelector('#description_en'))
-            .then()
-            .catch(error => {
-
-            });
-
-        ClassicEditor
-            .create(document.querySelector('#description_ar'), {
-                language: 'ar'
-            })
-            .then()
-            .catch(error => {
-
-            });
 
 
         function toggle_edit_desc(id) {

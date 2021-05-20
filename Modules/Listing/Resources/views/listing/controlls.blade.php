@@ -56,7 +56,9 @@
 
 
 <i
-        onclick="event.preventDefault();show_edit_div({{ $listing->id }})"
+        onclick="event.preventDefault();
+         table_row_show({{ $listing->id }},'edit_listing_{{ $listing->id }}')
+        "
         data-plugin="tippy"
         data-tippy-placement="top-start"
         title="Edit"
@@ -81,6 +83,16 @@
     <script>
 
         function table_row_show(row_id,id){
+
+            if(id == 'edit_listing_'+row_id){
+                injectGoogleMapsApiScript({
+                    key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
+                    libraries: 'places',
+                    language: 'ar',
+                    region: 'EG',
+                    callback: 'initMap',
+                });
+            }
         
         $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
         if($('.'+id).hasClass('d-none')){
