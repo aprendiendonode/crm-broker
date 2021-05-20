@@ -32,6 +32,7 @@ use Modules\Sales\Entities\LeadType;
 use Intervention\Image\Facades\Image;
 use Modules\Listing\Entities\Listing;
 use Modules\Sales\Entities\Developer;
+use Modules\SuperAdmin\Entities\City;
 use Modules\Activity\Entities\TaskNote;
 use Modules\Activity\Entities\TaskType;
 use Modules\Sales\Entities\Opportunity;
@@ -42,6 +43,7 @@ use Modules\Listing\Entities\ListingType;
 use Modules\Activity\Entities\ListingNote;
 use Modules\Listing\Entities\ListingPhoto;
 use Modules\Listing\Entities\ListingVideo;
+use Modules\SuperAdmin\Entities\Community;
 use Modules\Listing\Entities\TemporaryPlan;
 use Illuminate\Support\Facades\Notification;
 use Modules\Listing\Entities\ListingDocument;
@@ -59,6 +61,8 @@ class ListingRepo
         try {
             $pagination = true;
             $business = auth()->user()->business_id;
+
+
             $per_page = 15;
             $agency = Agency::with([
                 'lead_sources',
@@ -137,7 +141,6 @@ class ListingRepo
 
             return view(
                 'listing::listing.index',
-
                 [
                     'agency_data'   => $agency,
                     'agency'        => $agency->id,
@@ -157,6 +160,7 @@ class ListingRepo
                     'landlords'     => $agency->landlords,
                     'tenants'       => $agency->tenants,
                     'portals'       => DB::table('portals')->get(),
+                    'cities'        => DB::table('cities')->where('country_id', $agency->country_id)->get(),
                     'all_count'     => $all_count,
                     'archive_count' => $archive_count,
                     'review_count'  => $review_count,
@@ -2056,12 +2060,44 @@ class ListingRepo
     }
 
 
-    public
-    function export_all($request, $agency)
+    public function export_all($request, $agency)
     {
 
         abort_if(Gate::denies('can_generate_reports'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return Excel::download(new ListingsExport($agency), 'listings-list.xlsx');
+    }
+    public function get_communities($request)
+    {
+
+
+        if ($request->ajax()) {
+
+
+            try {
+                $communities = City::with('communities')->where('id', $request->city_id)->firstOrFail()->communities;
+
+
+                return response()->json(['message' => trans('listing.success'), 'communities' => $communities], 200);
+            } catch (\Exception $e) {
+
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+    public function get_sub_communities($request)
+    {
+
+
+        if ($request->ajax()) {
+
+            try {
+                $sub_communities = Community::with('sub_communities')->where('id', $request->community_id)->firstOrFail()->sub_communities;
+                return response()->json(['message' => trans('listing.success'), 'sub_communities' => $sub_communities], 200);
+            } catch (\Exception $e) {
+
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
     }
 }

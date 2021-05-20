@@ -82,6 +82,7 @@ return [
         'select'                      => 'Select',
         'communities'                 => 'Communities',
         'community'                   => 'Community',
+        'sub_community'               => 'Sub Community'
     ]
 
 ];

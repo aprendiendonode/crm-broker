@@ -21,4 +21,8 @@ class City extends Model
     {
         return $this->belongsTo(Country::class);
     }
+    public function communities()
+    {
+        return $this->hasMany(Community::class, 'city_id');
+    }
 }

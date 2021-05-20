@@ -93,6 +93,22 @@
                     callback: 'initMap',
                 });
             }
+
+            ClassicEditor
+                    .create(document.querySelector('#edit_description_en_' + row_id))
+                    .then()
+                    .catch(error => {
+
+                    });
+
+                ClassicEditor
+                    .create(document.querySelector('#edit_description_ar_' + row_id), {
+                        language: 'ar'
+                    })
+                    .then()
+                    .catch(error => {
+
+                    });
         
         $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
         if($('.'+id).hasClass('d-none')){

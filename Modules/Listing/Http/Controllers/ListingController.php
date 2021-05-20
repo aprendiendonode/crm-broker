@@ -185,4 +185,12 @@ class ListingController extends Controller
     {
         return $this->repository->export_all($request, $agency);
     }
+    public function get_communities(Request $request)
+    {
+        return $this->repository->get_communities($request);
+    }
+    public function get_sub_communities(Request $request)
+    {
+        return $this->repository->get_sub_communities($request);
+    }
 }

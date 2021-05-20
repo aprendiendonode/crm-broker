@@ -585,12 +585,33 @@
     <script src="{{ asset('assets/libs/uploader-master/dist/js/jquery.dm-uploader.min.js') }}"></script>
     <script src="{{ asset('assets/libs/uploader-master/src/js/demo-ui.js') }}"></script>
 
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
   {{--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap"
      async >
     </script> --}}
     
     <script>
         $(document).ready(function () {
+
+            ClassicEditor
+                    .create(document.querySelector('#description_en'))
+                    .then()
+                    .catch(error => {
+
+                    });
+
+                ClassicEditor
+                    .create(document.querySelector('#description_ar'), {
+                        language: 'ar'
+                    })
+                    .then()
+                    .catch(error => {
+
+                    });
          
             $('.select2').select2();
             $('.select2-multiple').select2();
@@ -598,27 +619,6 @@
             $(".clockpicker").clockpicker({
                 twelvehour :false
             });
-
-      /*       var listings = @json($listings);
-            for (var i = 0; i < listings.data.length; i++) {
-
-                ClassicEditor
-                    .create(document.querySelector('#edit_description_en_' + listings.data[i].id))
-                    .then()
-                    .catch(error => {
-
-                    });
-
-                ClassicEditor
-                    .create(document.querySelector('#edit_description_ar_' + listings.data[i].id), {
-                        language: 'ar'
-                    })
-                    .then()
-                    .catch(error => {
-
-                    });
-            }
- */
 
             if(sessionStorage.getItem('open-call-tab')){
             $('.call_'+sessionStorage.getItem('open-call-tab')).removeClass('d-none');
@@ -645,7 +645,6 @@
 
     <script>
       var  googleMapsScriptIsInjected = false;
-      var  CkEditorScriptIsInjected   = false;
         function injectGoogleMapsApiScript(options){
 
             if(googleMapsScriptIsInjected){
@@ -670,50 +669,7 @@
                 googleMapsScriptIsInjected = true;
             };
 
-            function injectCkeditor(){
-                if(CkEditorScriptIsInjected){
-                return;
-            }
-
-                const url  =  "https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js";
-                const url2 = "https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js";
-                const url3 = "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js";
-
-                const script = document.createElement('script');
-                const script2 = document.createElement('script');
-                const script3 = document.createElement('script');
-
-                script.setAttribute('src', url);
-                script2.setAttribute('src', url2);
-                script3.setAttribute('src', url3);
-       
-                document.head.appendChild(script);
-                document.head.appendChild(script2);
-                document.head.appendChild(script3);
-
-              
-
-              
-                    ClassicEditor
-                    .create(document.querySelector('#description_en'))
-                    .then()
-                    .catch(error => {
-
-                    });
-
-                ClassicEditor
-                    .create(document.querySelector('#description_ar'), {
-                        language: 'ar'
-                    })
-                    .then()
-                    .catch(error => {
-
-                    });
-
-                    CkEditorScriptIsInjected = true;
-            
-             
-                }
+     
 
 
 
@@ -728,7 +684,6 @@
                     region: 'EG',
                     callback: 'initMap',
                 });
-                injectCkeditor();
 
 
                 div.style.display = 'block';
@@ -767,45 +722,6 @@
         }
 
 
-        function show_edit_div(id) {
-            var div = document.querySelector('.edit_listing_' + id);
-            if (div.style.display === 'none') {
-
-
-                div.style.display = '';
-
-                setTimeout(function () {
-
-                    div.style.opacity = 1;
-
-                }, 10);
-            } else {
-                div.style.display = 'none';
-                setTimeout(function () {
-
-                    div.style.opacity = 0;
-
-
-                }, 10);
-
-            }
-
-        }
-
-
-        function hide_edit_div(id) {
-            var div = document.querySelector('.edit_listing_' + id);
-
-            div.style.display = 'none';
-            setTimeout(function () {
-
-                div.style.opacity = 0;
-
-
-            }, 10);
-
-
-        }
     </script>
 
 
@@ -881,6 +797,139 @@
             }
         }
 
+
+
+
+
+        function getCommunitites(type,id){
+
+            var city_id ='';
+            if(type == "create"){
+                city_id = $('.city-in-create').val();
+
+            }else{
+                city_id = $('.city-in-edit-'+id).val();
+
+            }
+
+
+
+                $.ajax({
+                url:'{{  route("listings.get-communities") }}',
+                type:'POST',
+                data:{
+                    _token: '{{ csrf_token() }}',
+                    city_id    : city_id,
+                },
+                success: function(data){
+                    
+                    var option = '';
+                    var locale = @json(app()->getLocale());
+                    data.communities.forEach(function(value,key){
+                        if(type == 'create'){
+                            option += '<option value="'+value.id+'" class="create-appended-communities">';
+                        } else{
+                            option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
+                        }
+                       
+                 
+                            if(locale == 'en'){
+
+                                option += value.name_en;
+                            } else{
+                                option += value.name_ar;
+                            }
+                        option += '</option>';
+
+                    })
+
+
+                    if(type == "create"){
+                        $('.create-appended-communities').remove();
+                        $('.create-appended-sub-communities').remove();
+                        $('.community-in-create').append(option)
+
+
+                    }else{
+                        $('.edit-appended-communities-'+id).remove();
+                        $('.edit-appended-sub-communities-'+id).remove();
+                        $('.community-in-edit-'+id).append(option)
+
+                    }
+
+              
+
+                
+                },
+                error: function(error){
+                
+                },
+                })
+
+
+        }
+    
+        function getSubCommunities(type,id){
+            var community_id ='';
+            if(type == "create"){
+             community_id = $('.community-in-create').val();
+
+            }else{
+                community_id = $('.community-in-edit-'+id).val();
+            }
+
+          
+            $.ajax({
+            url:'{{  route("listings.get-sub-communities") }}',
+            type:'POST',
+            data:{
+                _token: '{{ csrf_token() }}',
+                community_id    : community_id,
+            },
+            success: function(data){
+           
+                var option = '';
+                var locale = @json(app()->getLocale());
+                data.sub_communities.forEach(function(value,key){
+                    if(type == 'create'){
+                           option += '<option value="'+value.id+'" class="create-appended-sub-communities">';
+                        } else{
+                            option += '<option value="'+value.id+'" class="edit-appended-sub-communities-'+id+'">';
+                        }
+                   
+                        if(locale == 'en'){
+
+                            option += value.name_en;
+                        } else{
+                            option += value.name_ar;
+                        }
+                    option += '</option>';
+
+                })
+
+
+                if(type == "create"){
+                    $('.create-appended-sub-communities').remove();
+                    $('.sub-community-in-create').append(option)
+
+                }else{
+                    $('.edit-appended-sub-communities-'+id).remove();
+                    $('.sub-community-in-edit-'+id).append(option)
+                }
+
+           
+
+
+
+            },
+            error: function(error){
+
+            },
+            })
+
+
+
+        }
     </script>
 
 

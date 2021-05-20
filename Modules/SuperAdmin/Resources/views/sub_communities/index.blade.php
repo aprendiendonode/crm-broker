@@ -31,6 +31,7 @@
 @endsection
 @section('content')
 <div class="content p-3">
+    
 
 
 
@@ -54,6 +55,7 @@
 
 
             <div>
+                @include('superadmin::sub_communities.filter')
                 <table  class="table table-bordered toggle-circle mb-0">
                     <thead>
                     <tr>
@@ -96,11 +98,11 @@
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-between">
-
+@if($paginate)
                     <div class="mt-2">
                         {{ $sub_communities->links() }}
                     </div>
- 
+@endif   
                 </div>
             </div>
             

@@ -25,6 +25,7 @@ class CreateListingsTable extends Migration
             $table->text('location')->nullable();
             $table->string('city')->nullable();
             $table->text('community')->nullable();
+            $table->text('sub_community')->nullable();
             $table->string('state')->nullable();
 
             $table->string('unit_no')->nullable();

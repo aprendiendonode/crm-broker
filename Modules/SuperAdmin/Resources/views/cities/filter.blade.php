@@ -7,7 +7,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="country" class="font-weight-medium text-muted">@lang('settings.country')</label>
-                    <select class="form-control select2" data-placeholder="@lang('superadmin.cities.select')" name="country_id" id="country_id"
+                    <select class="form-control select2" data-placeholder="@lang('superadmin.cities.select')" name="country_id" id="country"
                             data-toggle="select2">
                         <option value=""></option>
                         @foreach($countries as $country)

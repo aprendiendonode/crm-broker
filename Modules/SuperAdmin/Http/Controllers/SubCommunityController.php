@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
+use Modules\SuperAdmin\Entities\City;
+use Modules\SuperAdmin\Entities\Country;
 use Illuminate\Support\Facades\Validator;
-use Modules\SuperAdmin\Entities\SubCommunity;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SuperAdmin\Entities\Community;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\SuperAdmin\Entities\SubCommunity;
 
 class SubCommunityController extends Controller
 {
@@ -20,10 +22,49 @@ class SubCommunityController extends Controller
      */
     public function index()
     {
+        $paginate = false;
+        $sub_communities = SubCommunity::with(['community.city.country', 'community.city', 'community']);
+
+        if (request('city_id')) {
+            $sub_communities = $sub_communities->whereHas('community.city', function ($q) {
+                $q->where('id', request('city_id'));
+            });
+        }
+        if (request('community')) {
+            $sub_communities = $sub_communities->where('community_id', request('community'));
+        }
+
+        if (request('country_id')) {
+            $sub_communities = $sub_communities->whereHas('community.city.country', function ($q) {
+                return $q->where('id', request('country_id'));
+            });
+        }
+        if (request('sub_community')) {
+
+            $sub_communities = $sub_communities->where(function ($query) {
+                $query
+                    ->where('name_en', 'like', '%' . request('sub_community') . '%')
+                    ->orWhere('name_ar', 'like', '%' . request('sub_community') . '%');
+            });
+        }
+
+
+        if (!request('country_id') && !request('city_id') && !request('community') && !request('sub_community')) {
+            $paginate = true;
+            $sub_communities =  SubCommunity::latest()->paginate(50);
+        } else {
+            $sub_communities = $sub_communities->get();
+        }
+
+
+
 
         return view('superadmin::sub_communities.index', [
-            'sub_communities' => SubCommunity::latest()->paginate(30),
-            'communities' => Community::all()
+            'sub_communities' => $sub_communities,
+            'paginate'        => $paginate,
+            'communities'     => Community::all(),
+            'cities'          => City::all(),
+            'countries'       => Country::all()
         ]);
     }
 

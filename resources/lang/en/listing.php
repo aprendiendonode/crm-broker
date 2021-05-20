@@ -238,6 +238,10 @@ return [
     'added_by' => 'Added By',
     'date_added' => 'Date Added',
     'choose_any_filter_to_start'    => 'Choose any Filter To Start',
+    'choose_city_first'             => 'Choose City First',
+    'choose_community_first'        => 'Choose Community First',
+    'sub_community'                 => 'Sub Community',
+    'success'                        => 'Success',
 
 
 

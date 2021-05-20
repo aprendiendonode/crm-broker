@@ -21,62 +21,37 @@ class CommunityController extends Controller
     public function index()
     {
         $paginate = false;
+        $communities = Community::with('city.country');
 
-        $communitites = null;
-
-        if (request('country_id') && !request('city_id') && !request('community')) {
-            $communitites = Community::Where('country_id', request('country_id'))
-
-                ->get();
+        if (request('city_id')) {
+            $communities = $communities->where('city_id', request('city_id'));
+        }
+        if (request('community')) {
+            $communities = $communities->where(function ($query) {
+                $query
+                    ->where('name_en', 'like', '%' . request('community') . '%')
+                    ->orWhere('name_ar', 'like', '%' . request('community') . '%');
+            });
         }
 
-
-        if (request('community') && !request('country_id') && !request('city_id')) {
-            $communitites = Community::where('name_en', 'like', '%' . request('community') . '%')->orWhere('name_ar', 'like', '%' . request('community') . '%')->get();
+        if (request('country_id')) {
+            $communities = $communities->whereHas('city.country', function ($q) {
+                return $q->where('id', request('country_id'));
+            });
         }
 
-
-        if (request('city_id') && !request('country_id') && !request('community')) {
-
-            $communitites = Community::where('city_id', request('city_id'))->get();
-        }
-
-        if (request('country_id') && request('city_id') && request('community')) {
-            $communitites = Community::where('city_id', request('city_id'))
-                ->where('name_en', 'like', '%' . request('community') . '%')
-                ->orWhere('name_ar', 'like', '%' . request('community') . '%')
-                ->get();
-        }
-
-        if (request('country_id') && request('city_id')) {
-            $communitites = Community::where('city_id', request('city_id'))
-                //country
-                ->get();
-        }
-
-        if (request('country_id')  && request('community')) {
-            $communitites = Community::where('name_en', 'like', '%' . request('community') . '%')
-                ->orWhere('name_ar', 'like', '%' . request('community') . '%')
-                ->get();
-        }
-
-
-        if (request('city_id') && request('community')) {
-            $communitites = Community::where('city_id', request('city_id'))
-                ->where('name_en', 'like', '%' . request('community') . '%')
-                ->orWhere('name_ar', 'like', '%' . request('community') . '%')
-                ->get();
-        }
 
         if (!request('country_id') && !request('city_id') && !request('community')) {
             $paginate = true;
-            $communitites =  Community::latest()->paginate(50);
+            $communities =  Community::latest()->paginate(50);
+        } else {
+            $communities = $communities->get();
         }
 
 
         return view('superadmin::communities.index', [
             'paginate'    => $paginate,
-            'communities' => $communitites,
+            'communities' => $communities,
             'cities'      => City::all(),
             'countries'   => Country::all()
         ]);

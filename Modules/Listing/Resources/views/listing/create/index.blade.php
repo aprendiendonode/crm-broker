@@ -78,41 +78,15 @@
                             });
 
 
-
-                /*         edit_autocomplete = new google.maps.places.Autocomplete((document.getElementById('city_'+value.id)), {
-                            types: ['(cities)']
-                            });
-                            edit_autocomplete.setComponentRestrictions({
-                            country: ['EG'],
-                        });
-
-                   */
-
-
-
-                        //     edit_autocompletecommunity = new google.maps.places.Autocomplete((document.getElementById('community_'+value.id)), {
-                        //     types: ['(regions)']
-                        //     });
-                        //     edit_autocompletecommunity.setComponentRestrictions({
-                        //     country: ['EG'],
-                        // });
-                    
-
-
-
-                            var map = new google.maps.Map(document.getElementById('map_'+value.id), {
-                                    center: {lat:30.0444, lng: 31.2357 },
+                            var editMap = new google.maps.Map(document.getElementById('map_'+value.id), {
+                                    center: {lat: value.loc_lat ? parseInt(value.loc_lat) : 30.0444 , lng:  value.loc_lng ? parseInt(value.loc_lng ) : 31.2357  },
                                     zoom: 13,
                                     
                                     mapTypeId: 'roadmap'
                                 }); 
 
-
-                                // infoWindow = new google.maps.InfoWindow;
-                                geocoder = new google.maps.Geocoder();
-
                                 var geocoder = new google.maps.Geocoder();
-                                google.maps.event.addListener(map, 'click', function(event) {
+                                google.maps.event.addListener(editMap, 'click', function(event) {
                                     SelectedLatLng = event.latLng;
                                     geocoder.geocode({
                                         'latLng': event.latLng
@@ -129,6 +103,19 @@
                                         }
                                     });
                                 });
+
+
+                                function addMarkerRunTime(location) {
+                                    var marker = new google.maps.Marker({
+                                        position: location,
+                                        map: editMap
+                                    });
+                                    markers.push(marker);
+                                }
+
+
+
+
            })
 
            
@@ -144,31 +131,8 @@
                     $('#latitude').val(place.geometry.location.lat());
                     $('#longitude').val(place.geometry.location.lng());
      
-     
-
+    
         });
-
-
-
-  /*      autocomplete = new google.maps.places.Autocomplete((document.getElementById('city')), {
-        types: ['(cities)']
-        });
-        autocomplete.setComponentRestrictions({
-           country: ['EG'],
-       });
-
- */
-
-
-
-  /*       autocompletecommunity = new google.maps.places.Autocomplete((document.getElementById('community')), {
-        types: ['(regions)']
-        });
-        autocompletecommunity.setComponentRestrictions({
-           country: ['EG'],
-       });
-   */
-
 
 
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -179,8 +143,7 @@
             }); 
 
 
-            // infoWindow = new google.maps.InfoWindow;
-            geocoder = new google.maps.Geocoder();
+    
 
             var geocoder = new google.maps.Geocoder();
             google.maps.event.addListener(map, 'click', function(event) {

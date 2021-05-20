@@ -14,4 +14,8 @@ class Community extends Model
     {
         return $this->belongsTo(City::class);
     }
+    public function sub_communities()
+    {
+        return $this->hasMany(SubCommunity::class);
+    }
 }

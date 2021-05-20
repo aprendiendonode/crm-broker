@@ -29,7 +29,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="city" class="font-weight-medium text-muted">@lang('superadmin.communities.city')</label>
-                    <select class="form-control select2" data-placeholder="@lang('superadmin.communities.select')" name="city_id" id="city"
+                    <select class="form-control select2" data-placeholder="@lang('superadmin.communities.select')" name="city_id" id="city_id"
                             data-toggle="select2">
                         <option value=""></option>
                         @foreach($cities as $city)
@@ -43,14 +43,29 @@
 
 
          
-            
+   
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="community" class="font-weight-medium text-muted">@lang('superadmin.communities.community')</label>
-                   <input class="form-control" type="text" name="community" value="{{ request()->has('community') ?   request('community') : '' }}">
+                    <select class="form-control select2" data-placeholder="@lang('superadmin.communities.select')" name="community" id="community"
+                            data-toggle="select2">
+                        <option value=""></option>
+                        @foreach($communities as $community)
+                            <option value="{{$community->id}}" {{request('community') && request('community')  == $community->id ? 'selected' : ''}}>{{$community->{'name_'.app()->getLocale()} }}</option>
+                        @endforeach
+
+                    </select>
                 </div>
             </div>
+
+
         
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="sub_community" class="font-weight-medium text-muted">@lang('superadmin.sub_communities.sub_community')</label>
+                   <input class="form-control" type="text" name="sub_community" value="{{ request()->has('sub_community') ?   request('sub_community') : '' }}">
+                </div>
+            </div>
         
         
         
@@ -59,7 +74,7 @@
         <div>
             <button class="btn btn-primary" type="submit">@lang('agency.filter_submit')</button>
             <a class="btn btn-outline-primary "
-               href="{{ route('communities.index') }}">@lang('sales.reset_filters')</a>
+               href="{{ route('sub-communities.index') }}">@lang('sales.reset_filters')</a>
         </div>
 
 
