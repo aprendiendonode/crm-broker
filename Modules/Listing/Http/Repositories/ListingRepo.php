@@ -69,14 +69,11 @@ class ListingRepo
                 'landlords',
                 'tenants',
                 'task_status',
-                'task_types',
-                'listing_views',
-                'developers',
-                'cheques',
-                'descriptionTemplates',
+                'descriptionTemplates'
+
+            ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
 
-            ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
             $listings_query = Listing::with([
                 'tasks', 'agent',
@@ -84,9 +81,13 @@ class ListingRepo
                 'tasks.staff',
                 'type',
                 'videos', 'documents', 'plans', 'photos', 'cheques',
-                'notes', 'notes.addBy'
+                'notes', 'notes.addBy',
+                'city', 'community', 'subCommunity',
+
+
 
             ])->where('agency_id', $agency->id)->where('business_id', $business);
+
 
 
             if (request()->has('status_main')) {
@@ -132,20 +133,15 @@ class ListingRepo
             }
 
 
-            $all_count     =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->count();
-            $archive_count =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->where('status', 'archive')->count();
-            $review_count  =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->where('status', 'review')->count();
-            $draft_count   =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->where('status', 'draft')->count();
-            $live_count    =    Listing::where('agency_id', $agency->id)->where('business_id', $business)->where('status', 'live')->count();
-
-
             return view(
                 'listing::listing.index',
                 [
                     'agency_data'   => $agency,
                     'agency'        => $agency->id,
                     'staffs'        => staff($agency->id),
-                    'listing_types' => DB::table('listing_types')->get(),
+                    'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
+                        return DB::table('listing_types')->get();
+                    }),
                     'listing_views' => $agency->listing_views,
                     'listings'      => $listings_query->paginate($per_page),
                     'ref_ids'       => $listings_query->pluck('listing_ref')->unique(),
@@ -159,13 +155,29 @@ class ListingRepo
                     'cheques'       => $agency->cheques,
                     'landlords'     => $agency->landlords,
                     'tenants'       => $agency->tenants,
-                    'portals'       => DB::table('portals')->get(),
-                    'cities'        => DB::table('cities')->where('country_id', $agency->country_id)->get(),
-                    'all_count'     => $all_count,
-                    'archive_count' => $archive_count,
-                    'review_count'  => $review_count,
-                    'draft_count'   => $draft_count,
-                    'live_count'    => $live_count,
+                    'portals'       =>
+                    cache()->remember('portals', 60 * 60 * 24, function () {
+                        return DB::table('portals')->get();
+                    }),
+                    'cities'        =>
+                    cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('cities')->where('country_id', $agency->country_id)->get();
+                    }),
+                    'communities'        =>
+                    cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('communities')->where('country_id', $agency->country_id)->get();
+                    }),
+                    'sub_communities'        =>
+                    cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
+                    }),
+
+
+                    'all_count'     => $agency->listings_all_count,
+                    'archive_count' => $agency->listings_archive_count,
+                    'review_count'  => $agency->listings_review_count,
+                    'draft_count'   => $agency->listings_draft_count,
+                    'live_count'    => $agency->listings_live_count,
                     'descriptionTemplates' => $agency->descriptionTemplates
                 ]
             );
@@ -554,7 +566,7 @@ class ListingRepo
 
                 $tenant_type = LeadType::firstOrCreate(
                     ['role' => 'tenant'],
-                    ['name_en' => 'tenant', 'name_ar' => 'المستأجر']
+                    ['name_en' => 'tenant', 'name_ar' => 'المستأجر', 'agency_id' => $request->agency, 'business_id' => $request->business]
 
                 );
 
@@ -724,7 +736,7 @@ class ListingRepo
 
                 $landlord_type = LeadType::firstOrCreate(
                     ['role' => 'landlord'],
-                    ['name_en' => 'landlord', 'name_ar' => 'المالك']
+                    ['name_en' => 'landlord', 'name_ar' => 'المالك', 'agency_id' => $request->agency, 'business_id' => $request->business]
 
                 );
 

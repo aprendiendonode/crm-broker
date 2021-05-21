@@ -88,6 +88,8 @@ class SubCommunityController extends Controller
 
             ]);
 
+            $community = Community::findOrFail($request->community_id);
+            $city = City::findOrFail($community->city_id);
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-tab', 'yes');
             }
@@ -97,10 +99,12 @@ class SubCommunityController extends Controller
                 'name_en'              => $request->name_en,
                 'name_ar'              => $request->name_ar,
                 'community_id'         => $request->community_id,
+                'country_id'           => $city->country_id
 
             ]);
 
             DB::commit();
+            cache()->forget('sub_communities');
             return back()->with(flash(trans('superadmin.sub_communities.sub_added'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();
@@ -122,6 +126,7 @@ class SubCommunityController extends Controller
     {
 
         $SubCommunity = SubCommunity::findorfail($id);
+
         try {
             $validator = Validator::make($request->all(), [
 
@@ -130,6 +135,8 @@ class SubCommunityController extends Controller
                 'edit_community_id_' . $id       => ['required', 'exists:communities,id']
 
             ]);
+            $community = Community::findOrFail($request->{'edit_community_id_' . $id});
+            $city = City::findOrFail($community->city_id);
 
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-edit-tab', $id);
@@ -140,8 +147,11 @@ class SubCommunityController extends Controller
                 'name_en'               => $request->{'edit_name_en_' . $id},
                 'name_ar'               => $request->{'edit_name_ar_' . $id},
                 'community_id'          => $request->{'edit_community_id_' . $id},
+                'country_id'            => $city->country_id
 
             ]);
+            cache()->forget('sub_communities');
+
             return back()->with(flash(trans('superadmin.sub_communities.sub_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);

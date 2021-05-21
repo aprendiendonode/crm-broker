@@ -5,15 +5,8 @@
 
     <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-
-    {{-- <link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" /> --}}
-    
-    {{-- <link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css"> --}}
-    {{-- <link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css"> --}}
-    {{-- <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css"> --}}
     <link href="{{asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
-
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
     <style>
@@ -32,145 +25,10 @@
         }
     </style>
 
-    {{-- <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    --}}
     @endsection
  
 
 @section('content')
-
-{{-- <div id="tasksFor-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="tasksFor-modalLabel"
-   aria-hidden="true">
-  <div class="modal-dialog modal-full-width">
-      <div class="modal-content">
-          <div class="modal-header py-2">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-          <div class="modal-body">
-              <div class="text-center mb-4">
-                  <i class="far fas fa-tasks fa-2x"></i>
-                  <h4>Tasks For (122-VI-R-1160)</h4>
-              </div>
-              <h5 class="border-bottom pb-1">ADD NEW TASK (VIEWING)</h5>
-              <div class="row mb-3">
-                  <div class="col-md-6">
-                      <div class="form-group">
-                          <label class="mb-1 font-weight-medium text-muted" style="flex:1;">Type*</label>
-                          <div style="flex:2;">
-                              <select class="form-control select2" name="Type2" data-toggle="select2"
-                                      data-placeholder="select">
-                                  <option value="">1</option>
-                                  <option value="1">2</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div class="form-group mb-3">
-                          <label>Contact</label>
-                          <div class="input-group">
-                              <div class="input-group-prepend">
-                                  <button class="input-group-text" onclick="event.preventDefault()"
-                                          id="basic-addon1">
-                                      <i class="fas fa-plus-circle"></i>
-                                  </button>
-                              </div>
-                              <input type="text" class="form-control" placeholder="Search Contacts"
-                                     aria-label="Username"
-                                     aria-describedby="basic-addon1">
-                          </div>
-                      </div>
-                      <div class="form-group mb-2">
-                          <label class="font-weight-medium text-muted">Status*</label>
-                          <input type="text" class="form-control" name="status1" id="status1">
-                      </div>
-                      <div class="form-group mb-2">
-                          <label class="font-weight-medium text-muted">Note</label>
-                          <textarea class="form-control" name="note3" id="" cols="3" rows="3"></textarea>
-                      </div>
-                  </div>
-                  <div class="col-md-6">
-                      <div class="form-group">
-                          <label class="mb-1 font-weight-medium text-muted" style="flex:1;">Staff*</label>
-                          <div style="flex:2;">
-                              <select class="form-control select2" name="Staff2" data-toggle="select2"
-                                      data-placeholder="select">
-                                  <option value="">1</option>
-                                  <option value="1">2</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div class="form-group mb-3">
-                          <label for="example-date">Date</label>
-                          <input class="form-control" id="taskDueDate" type="date" name="date">
-                      </div>
-                      <div class="form-group">
-                          <label class="font-weight-medium text-muted" style="flex:1">Time*</label>
-                          <div class="form-group">
-                              <div class="input-group mb-2 mr-sm-2">
-                                  <input type="text" class="form-control" id="permit1"
-                                         data-tippy-placement="top-start" title="">
-                                  <div class="input-group-prepend">
-                                      <div class="input-group-text" data-plugin="tippy"
-                                           data-tippy-placement="top-start" data-tippy=""
-                                           data-original-title="Validate">
-                                          <i class="far fa-clock"></i>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="checkbox checkbox-primary mb-2">
-                          <input id="customizedReminder" type="checkbox">
-                          <label for="customizedReminder">
-                              Customized Reminder
-                          </label>
-                      </div>
-                      <div class="mt-3 d-flex justify-content-end">
-                          <button type="button" class="btn btn-secondary mx-1" data-dismiss="modal">Cancel
-                          </button>
-                          <button type="button" class="btn btn-primary">Submit</button>
-                      </div>
-                  </div>
-              </div>
-              <table class="table table-striped" style="table-layout: fixed">
-                  <thead>
-                  <tr>
-                      <th scope="col">
-                          <div class="checkbox checkbox-single checkbox-primary">
-                              <input id="tasksForTableCheck" type="checkbox">
-                              <label for="tasksForTableCheck"></label>
-                          </div>
-                          <!-- <div class="checkbox checkbox-single">
-                              <input type="checkbox" id="singleCheckbox1" value="option1" aria-label="Single checkbox One">
-                              <label></label>
-                          </div> -->
-                      </th>
-                      <th scope="col">#</th>
-                      <th scope="col">Type</th>
-                      <th scope="col">TASK AGAINST</th>
-                      <th scope="col">STAFF</th>
-                      <th scope="col">ADDED BY</th>
-                      <th scope="col">DATE ADDED</th>
-                      <th scope="col">DEADLINE</th>
-                      <th scope="col">LATEST NOTE</th>
-                      <th scope="col">STATUS</th>
-                      <th scope="col">CONSTROLS</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr></tr>
-                  </tbody>
-              </table>
-          </div>
-          <!--  <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Done</button>
-          </div> -->
-      </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal --> --}}
-
     <div class="content p-3">
 
 
@@ -314,7 +172,7 @@
 
             @can('add_listing')
                 <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
-                    <i class="fe-plus-square"></i> ADD LISTING
+                    <i class="fe-plus-square"></i> @lang('listing.add_listing')
                 </button>
             @endcan
         </div>
@@ -364,13 +222,14 @@
                             <td>{{ Str::ucfirst($listing->purpose) }}</td>
                             <td>{{ $listing->type ? $listing->type->{'name_'.app()->getLocale()} : '' }}</td>
                             <td>
+                            
                                   <span
                                   class="cursor-pointer"
                                   data-plugin="tippy" 
                                 data-tippy-placement="top-start" 
-                                title="{{ $listing->location }}"
+                                title="{{  $listing->city->{'name_'.app()->getLocale()} .' , '. $listing->community->{'name_'.app()->getLocale()} .' , '. $listing->subCommunity->{'name_'.app()->getLocale()} .' , '.$listing->location }}"
                                 >
-                                 {{ Str::words($listing->location,2,'...') }}
+                                 {{ Str::words($listing->location,3,'...') }}
                                 </span>
                          </td>
                             <td>{{ number_format($listing->area)  }}</td>

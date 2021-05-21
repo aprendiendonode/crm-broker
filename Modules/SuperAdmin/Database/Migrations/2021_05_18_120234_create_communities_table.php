@@ -20,7 +20,6 @@ class CreateCommunitiesTable extends Migration
             $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
 
-
             $table->timestamps();
         });
     }

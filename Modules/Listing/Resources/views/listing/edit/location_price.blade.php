@@ -64,12 +64,12 @@
 
             <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.city')<span class="text-danger">*</span></label>
             <div style="flex:2;">
-                <select required onchange="getCommunitites('edit',{{ $listing->id }})" class="form-control select2 city-in-edit-{{ $listing->id }}" name="city"
+                <select required onchange="getCommunitites('edit',{{ $listing->id }})" class="form-control select2 city-in-edit-{{ $listing->id }}" name="edit_city_id_{{ $listing->id }}"
                  data-toggle="select2" data-placeholder="@lang('listing.city')">
                         <option value=""></option>
                     
                     @foreach($cities as $city)
-                        <option @if(old('city') == $city->id  ) selected @endif value="{{ $city->id }}">
+                        <option @if(old('edit_city_id_'.$listing->id,$listing->city_id) == $city->id  ) selected @endif value="{{ $city->id }}">
                             {{ $city->{'name_'.app()->getLocale()} }}
                         </option>
                     @endforeach
@@ -85,9 +85,20 @@
 
         <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') <span class="text-danger">*</span></label>
         <div style="flex:2;">
-            <select required onchange="getSubCommunities('edit',{{ $listing->id }})" class="form-control select2 community-in-edit-{{ $listing->id }}" name="community"
+            <select required onchange="getSubCommunities('edit',{{ $listing->id }})" class="form-control select2 community-in-edit-{{ $listing->id }}" name="edit_community_id_{{ $listing->id }}"
              data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
-                    <option value=""></option>
+             <option value=""></option>
+             @foreach($communities->where('city_id',$listing->city_id) as $community)
+             <option class="edit-appended-communities-{{ $listing->id }}"
+                @if(old('edit_community_id_'.$listing->id,$listing->community_id) == $community->id)  
+                 selected  
+                 @endif
+                 value="{{ $community->id }}">
+
+                {{ $community->{'name_'.app()->getLocale()}  }}
+             </option>
+             @endforeach
+      
                 
              
 
@@ -101,9 +112,22 @@
 
         <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.sub_community')</label>
         <div style="flex:2;">
-            <select class="form-control select2 sub-community-in-edit-{{ $listing->id }}" name="sub_community"
+            <select class="form-control select2 sub-community-in-edit-{{ $listing->id }}" name="edit_sub_community_id_{{ $listing->id }}"
              data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
-                    <option value=""></option>
+             <option value=""></option>
+
+             @foreach($sub_communities->where('community_id',$listing->community_id) as $sub_community)
+             <option class="edit-appended-sub-communities-{{ $listing->id }}"
+             @if(old('edit_sub_community_id_'.$listing->id,$listing->sub_community_id) == $sub_community->id)  
+             selected  
+             @endif
+             value="{{ $sub_community->id }}">
+
+            {{ $sub_community->{'name_'.app()->getLocale()}  }}
+         </option>
+         @endforeach
+  
+                
             </select>
       
         </div>

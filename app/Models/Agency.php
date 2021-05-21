@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\LeadType;
+use Modules\Listing\Entities\Listing;
 use Modules\Sales\Entities\Developer;
 use Modules\Sales\Entities\CallStatus;
 use Modules\Sales\Entities\LeadSource;
@@ -111,6 +112,26 @@ class Agency extends Model
     public function listing_views()
     {
         return $this->hasMany(ListingView::class);
+    }
+    public function listingsAll()
+    {
+        return $this->hasMany(Listing::class);
+    }
+    public function listingsLive()
+    {
+        return $this->hasMany(Listing::class)->where('status', 'live');
+    }
+    public function listingsArchive()
+    {
+        return $this->hasMany(Listing::class)->where('status', 'archive');
+    }
+    public function listingsDraft()
+    {
+        return $this->hasMany(Listing::class)->where('status', 'draft');
+    }
+    public function listingsReview()
+    {
+        return $this->hasMany(Listing::class)->where('status', 'review');
     }
     public function developers()
     {

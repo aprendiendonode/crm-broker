@@ -272,8 +272,8 @@ if (!function_exists('agency_settings')) {
             if (!is_dir($dir)) {
                 return unlink($dir);
             }
-
-            foreach (scandir($dir) as $item) {
+            $loop_dir = scandir($dir);
+            foreach ($loop_dir  as $item) {
                 if ($item == '.' || $item == '..') {
                     continue;
                 }

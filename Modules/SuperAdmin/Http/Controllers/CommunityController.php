@@ -69,11 +69,11 @@ class CommunityController extends Controller
 
         DB::beginTransaction();
         try {
+            $city = City::findOrFail($request->city_id);
             $validator = Validator::make($request->all(), [
 
                 'name_en'          => ['required', 'string', 'max:225'],
                 'name_ar'          => ['required', 'string', 'max:225'],
-                'city_id'          => ['required', 'exists:cities,id']
 
             ]);
 
@@ -86,10 +86,12 @@ class CommunityController extends Controller
                 'name_en'         => $request->name_en,
                 'name_ar'         => $request->name_ar,
                 'city_id'         => $request->city_id,
+                'country_id'      => $city->country_id
 
             ]);
 
             DB::commit();
+            cache()->forget('communities');
             return back()->with(flash(trans('superadmin.communities.communities.community_added'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();
@@ -110,7 +112,9 @@ class CommunityController extends Controller
     public function update(Request $request, $id)
     {
 
-        $Community = Community::findorfail($id);
+        $Community = Community::findOrFail($id);
+        $city = City::findOrFail($request->{'edit_city_id_' . $id});
+
         try {
             $validator = Validator::make($request->all(), [
 
@@ -129,8 +133,10 @@ class CommunityController extends Controller
                 'name_en'         => $request->{'edit_name_en_' . $id},
                 'name_ar'         => $request->{'edit_name_ar_' . $id},
                 'city_id'         => $request->{'edit_city_id_' . $id},
+                'country_id'      => $city->country_id
 
             ]);
+            cache()->forget('communities');
             return back()->with(flash(trans('superadmin.communities.community_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);

@@ -62,12 +62,12 @@
 
                     <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.city')<span class="text-danger">*</span></label>
                     <div style="flex:2;">
-                        <select required onchange="getCommunitites('create',null)" class="form-control select2 city-in-create" name="city"
+                        <select required onchange="getCommunitites('create',null)" class="form-control select2 city-in-create" name="city_id"
                          data-toggle="select2" data-placeholder="@lang('listing.city')">
                                 <option value=""></option>
                             
                             @foreach($cities as $city)
-                                <option @if(old('city') == $city->id  ) selected @endif value="{{ $city->id }}">
+                                <option @if(old('city_id') == $city->id  ) selected @endif value="{{ $city->id }}">
                                     {{ $city->{'name_'.app()->getLocale()} }}
                                 </option>
                             @endforeach
@@ -83,7 +83,7 @@
 
                 <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') <span class="text-danger">*</span></label>
                 <div style="flex:2;">
-                    <select required onchange="getSubCommunities('create',null)" class="form-control select2 community-in-create" name="community"
+                    <select required onchange="getSubCommunities('create',null)" class="form-control select2 community-in-create" name="community_id"
                      data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
                             <option value=""></option>
                         
@@ -99,7 +99,7 @@
 
                 <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.sub_community')</label>
                 <div style="flex:2;">
-                    <select class="form-control select2 sub-community-in-create" name="sub_community"
+                    <select class="form-control select2 sub-community-in-create" name="sub_community_id"
                      data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
                             <option value=""></option>
                     </select>

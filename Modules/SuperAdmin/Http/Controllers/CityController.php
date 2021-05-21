@@ -24,7 +24,7 @@ class CityController extends Controller
         $cities = null;
 
         if (request('country_id') && !request('city')) {
-            $cities = City::Where('country_id', request('country_id'))
+            $cities = City::with('country')->Where('country_id', request('country_id'))
 
                 ->get();
         }
@@ -32,13 +32,13 @@ class CityController extends Controller
 
         if (request('city') && !request('country_id')) {
             // dd('here');
-            $cities = City::where('name_en', 'like', '%' . request('city') . '%')
+            $cities = City::with('country')->where('name_en', 'like', '%' . request('city') . '%')
                 ->orWhere('name_ar', 'like', '%' . request('city') . '%')
                 ->get();
         }
 
         if (request('country_id') && request('city')) {
-            $cities = City::Where('country_id', request('country_id'))
+            $cities = City::with('country')->Where('country_id', request('country_id'))
                 ->where('name_en', 'like', '%' . request('city') . '%')
                 ->orWhere('name_ar', 'like', '%' . request('city') . '%')
                 ->get();
@@ -47,7 +47,7 @@ class CityController extends Controller
 
         if (!request('country_id') && !request('city')) {
             $paginate = true;
-            $cities =  City::latest()->paginate(50);
+            $cities =  City::with('country')->latest()->paginate(50);
         }
 
         return view('superadmin::cities.index', [
@@ -92,6 +92,7 @@ class CityController extends Controller
             ]);
 
             DB::commit();
+            cache()->forget('cities');
             return back()->with(flash(trans('superadmin.cities.cities.city_added'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();
@@ -135,6 +136,7 @@ class CityController extends Controller
                 'country_id'         => $request->{'edit_country_id_' . $id},
 
             ]);
+            cache()->forget('cities');
             return back()->with(flash(trans('superadmin.cities.city_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);

@@ -3,15 +3,16 @@
 namespace App\Imports;
 
 
-use App\Models\Country;
-use Maatwebsite\Excel\Concerns\ToModel;
+
 use Modules\Sales\Entities\Lead;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Modules\Sales\Entities\LeadProperty;
+use Modules\SuperAdmin\Entities\Country;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Modules\Sales\Entities\LeadProperty;
 
 //class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow
 class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
