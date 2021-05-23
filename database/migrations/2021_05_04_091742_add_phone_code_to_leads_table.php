@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSubCommunityToLeadsTable extends Migration
+class AddPhoneCodeToLeadsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,10 @@ class AddSubCommunityToLeadsTable extends Migration
     public function up()
     {
         Schema::table('leads', function (Blueprint $table) {
-
-            $table->unsignedBigInteger('sub_community')->nullable();
+            $table->string('phone1_code')->nullable();
+            $table->string('phone2_code')->nullable();
+            $table->string('phone3_code')->nullable();
+            $table->string('phone4_code')->nullable();
         });
     }
 
@@ -27,8 +29,10 @@ class AddSubCommunityToLeadsTable extends Migration
     public function down()
     {
         Schema::table('leads', function (Blueprint $table) {
-
-            $table->dropColumn('sub_community');
+            $table->dropColumn('phone1_code');
+            $table->dropColumn('phone2_code');
+            $table->dropColumn('phone3_code');
+            $table->dropColumn('phone4_code');
         });
     }
 }

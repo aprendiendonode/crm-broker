@@ -330,7 +330,59 @@
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
         
-                         
+           <!-- Center developer modal content -->
+<div class="modal fade" id="add_developer" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myCenterModalLabel">@lang('sales.new_developer')   </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+    
+            <div class="d-flex justify-content-center">
+    
+                <p class="error-message font-weight-medium text-danger"></p>
+            </div>
+            <div class="modal-body">
+                <form  action="{{ url('listing/manage_developer') }}" method="POST" >
+                    @csrf
+    
+                    @if($agency)
+                    <input type="hidden" name="agency_id" value="{{ $agency }}">
+                    @endif
+                    @if($business)
+                    <input type="hidden" name="business_id" value="{{ $business }}">
+                    @endif
+
+     
+            
+                    <div class="form-group">
+                        <label class="mb-1 font-weight-medium text-muted">@lang('sales.name_en')</label>
+                        <input type="text" class="form-control developer_name_en" name="name_en"     placeholder="@lang('sales.name_en')" >
+                    </div>
+              
+            
+                    <div class="form-group">
+                        <label class="mb-1 font-weight-medium text-muted">@lang('sales.name_ar')</label>
+                        <input type="text" class="form-control developer_name_ar" name="name_ar"     placeholder="@lang('sales.name_ar')" >
+                    </div>
+              
+              
+
+     
+            
+                    
+                    <div class="form-group text-center">
+                        <button class="btn btn-rounded btn-primary" onclick="event.preventDefault();add_developer()" >@lang('sales.confirm')</button>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
+
+              
 @push('js')
 
 
@@ -642,6 +694,57 @@
             },
             error: function (error) {
                 $('.property-error-message').text(error.responseJSON.message);
+            }
+        })
+    }
+
+
+    
+    function add_developer(){
+        var name_en  =  $('.developer_name_en').val();
+        var name_ar  =  $('.developer_name_ar').val();
+      
+        var agency   =  @json($agency);
+        var business =  @json($business);
+
+        var locale = @json(app()->getLocale());
+    
+        if(name_en == ''){
+            $('.error-message').text('invalid data');
+            return false;
+        }
+        
+        $.ajax({
+            url:"{{ route('listing.developer-store')  }}",
+            type:'POST',
+            data:{
+                name_en : name_en,
+                name_ar : name_ar,
+            
+                agency  : agency,
+                business: business,
+                _token  :'{{ csrf_token() }}'
+            },
+            success: function(data){
+                $('.error-message').text('');
+                name = '';
+                if(locale == 'en'){
+                    name = data.data.name_en
+                } else {
+                    name = data.data.name_ar
+                  
+                }
+
+                html = '<option value='+data.data.id+' >'+name+'</option>'
+                $('.select_developer_id').append(html)
+                   $('.developer_name').val('');
+                $('#add_developer').modal('hide');
+
+                toast(data.message, 'success')
+
+            },
+            error: function (error) {
+                $('.error-message').text(error.responseJSON.message);
             }
         })
     }

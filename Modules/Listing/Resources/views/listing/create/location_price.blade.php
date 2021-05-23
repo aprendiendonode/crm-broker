@@ -87,7 +87,22 @@
                      data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
                             <option value=""></option>
                         
-                     
+                            @if(old('city_id'))
+                        @if(old('community_id'))
+                            @foreach($communities->where('city_id',old('city_id')) as $community)
+                                <option class="create-appended-communities"
+                                    @if(old('community_id') == $community->id)  
+                                        selected  
+                                        @endif
+                                        value="{{ $community->id }}">
+                    
+                                    {{ $community->{'name_'.app()->getLocale()}  }}
+                                </option>
+                            @endforeach
+                        @endif
+                    @endif    
+                    
+     
 
                     </select>
               
@@ -102,6 +117,22 @@
                     <select class="form-control select2 sub-community-in-create" name="sub_community_id"
                      data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
                             <option value=""></option>
+
+                            @if(old('city_id') && old('community_id'))
+                            @if(old('sub_community_id'))
+                                @foreach($sub_communities->where('community_id',old('community_id')) as $sub_community)
+                                    <option class="create-appended-sub-communities"
+                                        @if(old('sub_community_id') == $sub_community->id)  
+                                            selected  
+                                            @endif
+                                            value="{{ $sub_community->id }}"
+                                    >
+                        
+                                        {{ $sub_community->{'name_'.app()->getLocale()}  }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        @endif  
                     </select>
               
                 </div>

@@ -5,6 +5,7 @@ namespace App\Imports;
 
 
 use Modules\Sales\Entities\Lead;
+use Modules\Sales\Entities\Developer;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Modules\Sales\Entities\LeadProperty;
 use Modules\SuperAdmin\Entities\Country;
@@ -58,6 +59,16 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
                 'business_id' => $this->business,
             ]);
         }
+        $developer = Developer::where('slug', str_replace(" ", "_", strtolower($row['developer'])))->first();
+        if (!$developer) {
+            $developer = Developer::create([
+                'name_en' => ucwords($row['developer']),
+                'name_ar' => ucwords($row['developer']),
+                'slug' =>  str_replace(" ", "_", strtolower($row['developer'])),
+                'agency_id' => $this->agency,
+                'business_id' => $this->business,
+            ]);
+        }
 
 
         $bedrooms = preg_replace('/[^0-9]/', '',  $row['bedrooms'])  != '' ? preg_replace('/[^0-9]/', '',  $row['bedrooms']) : null;
@@ -72,7 +83,7 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
 
 
         return new Lead([
-            'developer' => $row['developer'],
+            'developer' => $developer->id,
             'community' => $row['community'],
             'sub_community' => $row['sub_community'],
             'property_no' => $row['property_number'],

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Modules\Sales\Entities\Lead;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\LeadType;
 use Modules\Listing\Entities\Listing;
@@ -112,6 +113,10 @@ class Agency extends Model
     public function listing_views()
     {
         return $this->hasMany(ListingView::class);
+    }
+    public function leads()
+    {
+        return $this->hasMany(Lead::class);
     }
     public function listingsAll()
     {

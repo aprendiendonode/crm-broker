@@ -21,13 +21,13 @@
 
                     $phone_number = '';
                     if($lead->phone1){
-                        $phone_number = $lead->phone1;
+                        $phone_number = $lead->phone1_code .''.$lead->phone1;
                     } elseif($lead->phone2){
-                        $phone_number = $lead->phone2;
+                        $phone_number = $lead->phone2_code .''.$lead->phone2;
                     } elseif($lead->phone3){
-                        $phone_number = $lead->phone3;
+                        $phone_number =$lead->phone3_code .''. $lead->phone3;
                     }else{
-                        $phone_number = $lead->phone4;
+                        $phone_number = $lead->phone4_code .''.$lead->phone4;
                     }
 
 

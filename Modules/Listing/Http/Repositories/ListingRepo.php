@@ -182,7 +182,7 @@ class ListingRepo
                 ]
             );
         } catch (\Exception $e) {
-
+            ray($e->getMessage());
             abort(404);
         }
     }
