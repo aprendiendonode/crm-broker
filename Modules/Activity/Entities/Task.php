@@ -10,6 +10,8 @@ use Modules\Activity\Entities\TaskNote;
 use Modules\Activity\Entities\TaskStatus;
 use Modules\Activity\Entities\TaskType;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Listing\Entities\Listing;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Lead;
 use Modules\Sales\Entities\Opportunity;
 
@@ -93,7 +95,7 @@ class Task extends Model
         return $this->belongsTo(Lead::class, 'module_id');
     }
 
-    public function getlead()
+    public function getLead()
     {
         return $this->where('tasks.module','=','lead')->first()->lead();
     }
@@ -108,7 +110,7 @@ class Task extends Model
         return $this->belongsTo(Opportunity::class, 'module_id');
     }
 
-    public function getopportunity()
+    public function getOpportunity()
     {
         return $this->where('tasks.module','=','opportunity')->first()->opportunity();
     }
@@ -118,11 +120,29 @@ class Task extends Model
 //        return $this->belongsTo(Opportunity::class,  'module_id')->where('module','=','opportunity');
 //    }
 
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'module_id');
+    }
+
+    public function getClient()
+    {
+        return $this->where('tasks.module','=','client')->first()->client();
+    }
 //    public function client()
 //    {
 //        return $this->belongsTo(Client::class, 'module_id')->where('module','=','lead');
 //    }
-//
+
+    public function listing()
+    {
+        return $this->belongsTo(Listing::class, 'module_id');
+    }
+
+    public function getListing()
+    {
+        return $this->where('tasks.module','=','listing')->first()->listing();
+    }
 //    public function listing()
 //    {
 //        return $this->belongsTo(Listing::class, 'module_id')->where('module','=','lead');

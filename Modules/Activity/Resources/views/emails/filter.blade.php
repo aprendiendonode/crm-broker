@@ -36,7 +36,7 @@
                 <select class="selectpicker mb-0 show-tick" data-style="btn-outline-secondary" data-toggle="select2" name="sender_filter" >
                     <option selected disabled>@lang('global.pleaseSelect')</option>
                     @php
-                        $sender_filter = request()->has('sender_filter') ? request()->get('sender_filter') : ''
+                        $sender_filter = request()->has('sender_filter') ? request()->get('sender_filter') : '';
                     @endphp
                     @if($staffs)
                         @foreach($staffs as $staff)

@@ -1,6 +1,6 @@
 <?php
 
-
+use  Modules\Activity\Entities\ActivityLog;
 
 
 if (!function_exists('owner')) {
@@ -268,6 +268,24 @@ if (!function_exists('agency_settings')) {
             }
 
             return rmdir($dir);
+        }
+    }
+
+    if (!function_exists('setActivity')) {
+
+        function setActivity($group,$group_id,$agency_id,$business_id,$log_en,$log_ar)
+        {
+            $activityData = [
+                'add_by'            =>  auth()->user()->id,
+                'group'             =>  $group,
+                'group_id'          =>  $group_id,
+                'agency_id'         =>  $agency_id,
+                'business_id'       =>  $business_id,
+                'log_en'            =>  $log_en,
+                'log_ar'            =>  $log_ar,
+            ];
+
+            ActivityLog::create($activityData);
         }
     }
 }

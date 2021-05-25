@@ -477,9 +477,15 @@
                         @endif
 
 
-                        <li>
-                            <a href="#">@lang('activity.activity_log')</a>
-                        </li>
+                        @if(owner())
+                            {{--<li>--}}
+                                {{--<a href="{{ url('activity/activity_logs/'.auth()->user()->agency_id) }}">@lang('activity.activity_log')</a>--}}
+                            {{--</li>--}}
+                        {{--@else--}}
+                            <li>
+                                <a href="{{ url('activity/activity_logs/'.auth()->user()->agencies->first()->id) }}">@lang('activity.activity_log')</a>
+                            </li>
+                        @endif
 
                     </ul>
                 </div>

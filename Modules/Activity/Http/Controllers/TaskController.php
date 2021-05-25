@@ -13,8 +13,11 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\Task;
 use Illuminate\Support\Facades\DB;
+use Modules\Listing\Entities\Listing;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Lead;
 use Modules\Sales\Entities\Opportunity;
+use Symfony\Component\HttpFoundation\Response;
 
 class TaskController extends Controller
 {
@@ -25,7 +28,7 @@ class TaskController extends Controller
     public function index($agency)
     {
 //        $tasks_with_custom_reminder = $this->tasks_with_custom_reminder($agency);
-        $tasks_overdue = $this->tasks_overdue($agency,2);
+//        $tasks_overdue = $this->tasks_overdue($agency,2);
 //        dd($tasks_overdue);
         $per_page       = 10;
         $tasks          = auth()->user()->getTasksByUserId();
@@ -94,24 +97,19 @@ class TaskController extends Controller
 
         //if user is stuff show tasks related to you only
         $tasks          = $tasks->orderBy('id', 'desc')->paginate($per_page);
-        //        $tasks          = $tasks->orderBy('id','desc')->get();
         $task_status    = TaskStatus::where('agency_id', $agency)->get();
         $task_types     = TaskType::where('agency_id', $agency)->get();
         $leads          = Lead::where('agency_id', $agency)->get();
-        //        $leads          = Lead::where('agency_id', $agency)->get();
         $opportunities  = Opportunity::where('agency_id', $agency)->get();
-        //        $clients        = Lead::where('agency_id', $agency)->get();
-        //        $listings       = Lead::where('agency_id', $agency)->get();
+        $clients        = Client::where('agency_id', $agency)->get();
+        $listings       = Listing::where('agency_id', $agency)->get();
 
         //        $staffs         = User::where('agency_id',$agency)->where('active','=','1')->where('type','staff')->get();
         $staffs         = staff($agency);
 
-        //        foreach($tasks->get() as $task){
-        //            dd($task,$task->lead);
-        //        }
         return view(
             'activity::task.index',
-            compact('tasks', 'task_status', 'task_types', 'staffs', 'leads', 'opportunities')
+            compact('tasks', 'task_status', 'task_types', 'staffs', 'leads', 'opportunities', 'clients', 'listings')
         );
     }
 
@@ -131,7 +129,7 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //        dd($request->all());
+
         try {
             // Begin a transaction
             DB::beginTransaction();
@@ -190,7 +188,6 @@ class TaskController extends Controller
                 $module_id = $request->listing_id;
             }
 
-            //            dd($request->module,$module_id);
 
             //store task data
             $task = Task::create([
@@ -225,16 +222,18 @@ class TaskController extends Controller
                 ]);
             }
 
+            setActivity('task',$task->id,$task->agency_id,$task->business_id,'the task #'.$task->id.' has been created by ' .auth()->user()->name_en,
+                'تم إضافة مهمة رقم #'.$task->id.' تمت بواسطه ' .auth()->user()->name_en);
             // Commit the transaction
             DB::commit();
             return back()->with(flash(trans('activity.create_success'), 'success'));
         } catch (\Exception $e) {
 
             DB::rollback();
-            //            return redirect()->back()->with(flash(trans('activity.create_failed'), 'danger'))->withInput()->with('open-tab', 'yes');
+            return redirect()->back()->with(flash(trans('activity.create_failed'), 'danger'))->withInput()->with('open-tab', 'yes');
 
             // and throw the error again.
-            throw $e;
+//            throw $e;
         }
     }
 
@@ -247,6 +246,19 @@ class TaskController extends Controller
     {
 //        dd($agency,$id);
         $task = Task::findorfail($id);
+        if (owner()){
+
+            $tasks = auth()->user()->getTasksByUserId()->pluck('id');
+        }else{
+            $tasks = auth()->user()->getTasksByUserId()->pluck('task_id');
+
+        }
+
+        if (!in_array($task->id, $tasks->toArray())) {
+
+            return abort(Response::HTTP_FORBIDDEN, trans('global.forbidden_page_not_allow_to_you'));
+        }
+
         return view('activity::task.show',compact('task'));
     }
 
@@ -312,7 +324,6 @@ class TaskController extends Controller
                 $type_reminder_number   = null;
                 $custom_reminder_edit   = 'off';
             }
-            //            dd($request->all());
 
             $module_id = null;
             if ($request->{'module_edit_' . $id} == 'lead') {
@@ -367,6 +378,19 @@ class TaskController extends Controller
                 );
             }
 
+            setActivity('task',$task->id,$task->agency_id,$task->business_id,'the task #'.$task->id.' has been edited by ' .auth()->user()->name_en,
+                'تم تعديل مهمة رقم #'.$task->id.' تمت بواسطه ' .auth()->user()->name_en);
+
+            if ($note_id){
+
+                setActivity('task_note',$task_note->id,$task->agency_id,$task->business_id,'the note #'.$task_note->id.' has been added by ' .auth()->user()->name_en,
+                    'تم إضافة ملاحظه رقم #'.$task_note->id.' تمت بواسطه ' .auth()->user()->name_en);
+            }else{
+
+                setActivity('task_note',$task_note->id,$task->agency_id,$task->business_id,'the note #'.$task_note->id.' has been edited by ' .auth()->user()->name_en,
+                    'تم تعديل ملاحظه رقم #'.$task_note->id.' تمت بواسطه ' .auth()->user()->name_en);
+            }
+
             // Commit the transaction
             DB::commit();
             return back()->with(flash(trans('activity.update_success'), 'success'));
@@ -377,7 +401,7 @@ class TaskController extends Controller
             return redirect()->back()->with(flash(trans('activity.update_failed'), 'danger'))->withInput()->with('open-edit-tab', $id);
 
             // and throw the error again.
-            throw $e;
+            //throw $e;
         }
     }
 
@@ -391,6 +415,9 @@ class TaskController extends Controller
         $task = Task::findorfail($id);
 
         if ($task->delete()) {
+
+            setActivity('task',$task->id,$task->agency_id,$task->business_id,'the task #'.$task->id.' has been deleted by ' .auth()->user()->name_en,
+                'تم حذف مهمة رقم #'.$task->id.' تمت بواسطه ' .auth()->user()->name_en);
 
             return back()->withInput()->with(flash(trans('activity.tasks.task_deleted'), 'success'));
         } else {
@@ -444,7 +471,7 @@ class TaskController extends Controller
     // update dynamic status
     public function update_status(Request $request)
     {
-        //        dd($request->all());
+
         try {
             $task = Task::findorfail($request->id);
 
@@ -461,6 +488,9 @@ class TaskController extends Controller
                 'task_status_id' => $request->status,
             ]);
 
+            setActivity('task',$task->id,$task->agency_id,$task->business_id,'the task #'.$task->id.' has been edited by ' .auth()->user()->name_en.' (Status ('.$task->task_status->status_en. ') )',
+                'تم تعديل مهمة رقم #'.$task->id.' تمت بواسطه ' .auth()->user()->name_en .'(الحاله('. $task->task_status->status_ar.'))');
+
             return response()->json([
                 'message' => trans('activity.update_success')
             ], 200);
@@ -472,20 +502,25 @@ class TaskController extends Controller
             ], 200);
 
             // and throw the error again.
-            throw $e;
+            //throw $e;
         }
     }
 
     public function add_note(Request $request)
     {
-        //        dd($request->all());
-        try {
 
+        try {
 
             // validation data
             $task = Task::findorfail($request->task_id);
 
-            $tasks = auth()->user()->getTasksByUserId()->pluck('id');
+            if (owner()){
+
+                $tasks = auth()->user()->getTasksByUserId()->pluck('id');
+            }else{
+                $tasks = auth()->user()->getTasksByUserId()->pluck('task_id');
+
+            }
 
             if (!in_array($task->id, $tasks->toArray())) {
 
@@ -509,23 +544,25 @@ class TaskController extends Controller
                 'notes_ar'      => $request->{'add_new_note_ar_' . $request->task_id},
             ]);
 
+            setActivity('task_note',$task_note->id,$task->agency_id,$task->business_id,'the note #'.$task_note->id.' has been added by ' .auth()->user()->name_en,
+                'تم إضافة ملاحظه رقم #'.$task_note->id.' تمت بواسطه ' .auth()->user()->name_en);
+
             return back()->with(flash(trans('activity.create_success'), 'success'));
         } catch (\Exception $e) {
 
             return redirect()->back()->with(flash(trans('activity.create_failed'), 'danger'))->withInput();
             // and throw the error again.
-            throw $e;
+            //throw $e;
         }
 
-        // return
     }
 
     public function tasks_with_custom_reminder($agency_id)
     {
 
         $tasks = Task::where('agency_id', $agency_id)->get();
-        $tasks_overdue_byDate = [];
-
+        $tasks_reminder_byDate = [];
+//        dd($tasks);
         foreach($tasks as $task)
         {
             if ($task->custom_reminder == 'on')
@@ -537,13 +574,13 @@ class TaskController extends Controller
 
                         $date = strtotime('-'.$task->type_reminder_number.' day',strtotime($task->deadline));
                         $date_remind = date('Y-m-d', $date);
-                        $tasks_overdue_byDate[$date_remind][$task->time] = $task;
+                        $tasks_reminder_byDate[$date_remind][$task->time] = $task;
 
                     }else{
                         //hours
                         $time = strtotime('-'.$task->type_reminder_number.' hour',strtotime($task->time));
                         $time_remind = date('h:i:s', $time);
-                        $tasks_overdue_byDate[$task->deadline][$time_remind] = $task;
+                        $tasks_reminder_byDate[$task->deadline][$time_remind] = $task;
                     }
 
                 }else{
@@ -553,23 +590,23 @@ class TaskController extends Controller
 
                         $date = strtotime('+'.$task->type_reminder_number.' day',strtotime($task->deadline));
                         $date_remind = date('Y-m-d', $date);
-                        $tasks_overdue_byDate[$date_remind][$task->time] = $task;
+                        $tasks_reminder_byDate[$date_remind][$task->time] = $task;
 
                     }else{
                         //hours
                         $time = strtotime('+'.$task->type_reminder_number.' hour',strtotime($task->time));
                         $time_remind = date('h:i:s', $time);
-                        $tasks_overdue_byDate[$task->deadline][$time_remind] = $task;
+                        $tasks_reminder_byDate[$task->deadline][$time_remind] = $task;
                     }
 
                 }
             }
         }
 
-        return $tasks_overdue_byDate;
+        return $tasks_reminder_byDate;
     }
 
-    public function tasks_overdue($agency_id,$type_id)
+    public function tasks_overdue($agency_id,$type_id=null)
     {
         $task_reminder_status = true;
         $type   = 'after';
@@ -579,11 +616,13 @@ class TaskController extends Controller
         if ($task_reminder_status){
 
             $tasks = Task::where('agency_id', $agency_id)->whereHas('task_type',function ($query) use ($type_id) {
-                $query->where('id',$type_id);
+                if ($type_id){
+                    $query->where('id',$type_id);
+                }
             })
                 ->where('custom_reminder','off')
                 ->get();
-
+//            dd($tasks);
             foreach($tasks as $task)
             {
                 if ($type == 'before')

@@ -83,7 +83,7 @@
                                     data-plugin="tippy"
                                     data-tippy-placement="top-start"
                                     title="@lang('activity.emails_list.preview')"
-                                    data-toggle="modal" data-target="#preview-modal_{{ $email->id }}"
+                                    data-toggle="modal" data-target="#show_email-modal_{{ $email->id }}"
 
                                     class="fe-eye cursor-pointer feather-16">
                             </i>
@@ -91,27 +91,8 @@
                         </td>
 
 
-                    {{--@include('activity::emails.email_content_add')--}}
-                    {{--<!-- Info Alert Modal -->--}}
-                        {{--<div id="preview-modal_{{ $email->id }}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">--}}
-                            {{--<div class="modal-dialog modal-sm">--}}
-                                {{--<div class="modal-content">--}}
-                                    {{--<div class="modal-body p-4">--}}
-                                        {{--<div class="text-center">--}}
-                                            {{--<i class="dripicons-information h1 text-danger"></i>--}}
-                                            {{--<h4 class="mt-2">@lang('agency.head_up')</h4>--}}
-                                            {{--<p class="mt-3">@lang('agency.delete_warning')</p>--}}
-                                            {{--<form action="{{ route('activity.tasks.delete',$email->id) }}" method="post">--}}
-                                                {{--@csrf--}}
-                                                {{--<input type="hidden" name="_method" value="DELETE">--}}
-                                                {{--<button type="submit" class="btn btn-danger my-2">@lang('agency.confirm_delete')</button>--}}
-                                                {{--<button type="button" class="btn btn-success my-2" data-dismiss="modal">@lang('agency.cancel')</button>--}}
-                                            {{--</form>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div><!-- /.modal-content -->--}}
-                            {{--</div><!-- /.modal-dialog -->--}}
-                        {{--</div><!-- /.modal -->--}}
+                    @include('activity::emails.show_email_content')
+
                     </tr>
 
                 @empty
@@ -183,6 +164,21 @@
             }
 
         }
+
+        var  emails = @json($emails);
+        var emails_data = emails.data;
+        emails_data.filter(function(value,key){
+            //preview email
+            ClassicEditor
+                .create( document.querySelector( '#show_email_content_modal_textarea_'+value.id ))
+                .then( newEditor => {
+                    // newEditor.ui.view.editable.element.style.height = '500px';
+                    editor = newEditor;
+                } )
+                .catch( error => {
+                    console.error( error );
+                } );
+        });
 
     </script>
 

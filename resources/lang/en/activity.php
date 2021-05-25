@@ -64,8 +64,25 @@ return [
         'sent_time'                     => 'Sent Time',
         'recipient'                     => 'Recipient',
         'preview'                       => 'Preview',
+        'contact_first_name'            => 'Contact First Name',
+        'company_profile'               => 'Company Profile',
+        'my_profile'                    => 'My Profile',
 
     ],
+
+
+    'activity_log_list'                  => [
+        'list'                  => 'Activity Log List',
+        'published'             => 'Published',
+        'log'                   => 'Log',
+        'group'                 => 'Group',
+        'id'                    => 'Id',
+        'staff'                 => 'Staff',
+        'activity_date'         => 'Activity Date',
+        'log_search'            => 'Log Search',
+    ],
+
+
     'create_success'         => 'Create Successfully',
     'create_failed'          => 'Create Failed',
     'update_success'         => 'Update Successfully',
@@ -79,5 +96,7 @@ return [
     'quick_search'           => 'Quick Search',
     'advanced_search'        => 'Advanced Search',
     'filter_search'          => 'Search',
+    'show_email'             => 'Show Email',
+    'view'                   => 'View',
 
 ];

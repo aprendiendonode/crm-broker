@@ -6,6 +6,10 @@ use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Activity\Entities\ClientNote;
+use Modules\Activity\Entities\LeadNote;
+use Modules\Activity\Entities\ListingNote;
+use Modules\Activity\Entities\OpportunityNote;
 use Modules\Activity\Entities\TaskNote;
 
 class NoteController extends Controller
@@ -16,18 +20,52 @@ class NoteController extends Controller
      */
     public function index($agency)
     {
-//        dd('ff');
         $per_page       = 10;
         $notes = [];
         if (request()->segment(count(request()->segments())) == 'tasks'){
 
-            $task_notes = TaskNote::whereHas('task', function($query) use($agency) {
+            $notes = TaskNote::whereHas('task', function($query) use($agency) {
                             $query->where('agency_id',$agency);
                         });
 
-            $notes = $task_notes;
             if (request('id') != null) {
                 $notes->where('task_id', request('id'));
+            }
+        }else if (request()->segment(count(request()->segments())) == 'listings'){
+
+            $notes = ListingNote::whereHas('listing', function($query) use($agency) {
+                $query->where('agency_id',$agency);
+            });
+
+            if (request('id') != null) {
+                $notes->where('listing_id', request('id'));
+            }
+        }else if (request()->segment(count(request()->segments())) == 'leads'){
+
+            $notes = LeadNote::whereHas('lead', function($query) use($agency) {
+                $query->where('agency_id',$agency);
+            });
+
+            if (request('id') != null) {
+                $notes->where('lead_id', request('id'));
+            }
+        }else if (request()->segment(count(request()->segments())) == 'clients'){
+
+            $notes = ClientNote::whereHas('client', function($query) use($agency) {
+                $query->where('agency_id',$agency);
+            });
+
+            if (request('id') != null) {
+                $notes->where('client_id', request('id'));
+            }
+        }else if (request()->segment(count(request()->segments())) == 'opportunities'){
+
+            $notes = OpportunityNote::whereHas('opportunity', function($query) use($agency) {
+                $query->where('agency_id',$agency);
+            });
+
+            if (request('id') != null) {
+                $notes->where('opportunity_id', request('id'));
             }
         }
 
@@ -42,7 +80,6 @@ class NoteController extends Controller
             $notes->where('add_by', request('staff_filter'));
         }
 
-//        dd($notes->get());
 
         if (request('filter_from_date') != null) {
             $notes->where('created_at','>=', request('filter_from_date').' 00:00:00');
@@ -59,7 +96,6 @@ class NoteController extends Controller
 
             $notes          = $notes->orderBy('id','desc')->paginate($per_page);
         }
-//        dd($staffs);
         return view('activity::notes.index',compact('notes','staffs'));
     }
 

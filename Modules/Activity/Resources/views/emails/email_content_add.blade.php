@@ -2,7 +2,6 @@
 <!-- Info Alert Modal -->
 <div id="email_content_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-    {{--<div class="modal-dialog modal-full-width ">--}}
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
@@ -27,15 +26,15 @@
                             <div class="d-flex align-items-center">
 
                                 <div class=""  style="flex:1">
-                                    <a href="#" onclick="get_contact_first_name()"><i class="fe-plus-circle"></i> Contact First Name</a>
+                                    <a href="#" onclick="get_contact_first_name()"><i class="fe-plus-circle"></i>@lang('activity.emails_list.contact_first_name') </a>
                                 </div>
 
                                 <div class=""  style="flex:1">
-                                    <a href="#" onclick="get_company_profile()"><i class="fe-plus-circle"></i> Company Profile</a>
+                                    <a href="#" onclick="get_company_profile()"><i class="fe-plus-circle"></i>@lang('activity.emails_list.company_profile') </a>
                                 </div>
 
                                 <div class="" style="flex:1">
-                                    <a href="#" onclick="get_my_profile()" ><i class="fe-plus-circle"></i> My Profile</a>
+                                    <a href="#" onclick="get_my_profile()" ><i class="fe-plus-circle"></i>@lang('activity.emails_list.my_profile') </a>
                                 </div>
 
                                 <div class="" style="flex:1">
@@ -94,41 +93,49 @@
                     editorGetData += description;
                     let email_content_modal_textarea_value = editor.setData(editorGetData);
                     var editorGetData2 = editor.getData();
-                    // let email_content_modal_textarea_value = $('#email_content_modal_textarea').val(); // will get the value of the text area
-                    // let email_content_modal_textarea_value =  ClassicEditor.instances['email_content_modal_textarea'].setData(description); // will get the value of the text area
-
-                    // let description=$(‘#insert’).val(); // will get the value of the input box
-                    // $('#email_content_modal_textarea').val(description) ;
-                    // $('#email_content_modal_textarea').val(email_content_modal_textarea_value.slice(0, curPos)+description+email_content_modal_textarea_value.slice(curPos));// setting the updated value in the text area
-                    console.log(description,editorGetData,editorGetData2);
-                    // innerHtmlcontacts += `<option value='${name}' selected >   ${name}  </option>`;
                 }
             });
         }
 
         function get_contact_first_name()
         {
-            var x = '@get_contact_first_name';
+            var default_value = '@get_contact_first_name';
             var editorGetData = editor.getData();
-            editorGetData += x;
+            editorGetData += default_value;
             let email_content_modal_textarea_value = editor.setData(editorGetData);
 
         }
 
         function get_company_profile()
         {
-            var x = '@get_company_profile';
+            var  agency = @json($agency);
+
+            var description = agency.description_en ?? '';
+
+            if(getLocale == 'ar'){
+
+                var description = agency.description_ar ?? '';
+            }
+            var default_value = '@get_company_profile';
             var editorGetData = editor.getData();
-            editorGetData += x;
+            editorGetData += description ?? default_value;
             let email_content_modal_textarea_value = editor.setData(editorGetData);
 
         }
 
         function get_my_profile()
         {
-            var x = '@get_my_profile';
+            var  user = @json(auth()->user());
+
+            var description = user.description_en ?? '';
+
+            if(getLocale == 'ar'){
+
+                var description = user.description_ar ?? '';
+            }
+            var default_value = '@get_my_profile';
             var editorGetData = editor.getData();
-            editorGetData += x;
+            editorGetData += description ?? default_value;
             let email_content_modal_textarea_value = editor.setData(editorGetData);
 
         }

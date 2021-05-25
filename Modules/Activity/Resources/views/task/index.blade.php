@@ -112,19 +112,14 @@
                                         @if($task->module == 'lead')
                                             {{$task->lead && $task->lead->full_name ? $task->lead->full_name : ''}}
                                         @elseif($task->module == 'opportunity')
-                                            {{$task->opportunity && $task->opportunity->lead && $task->opportunity->lead->full_name ? $task->opportunity->lead->full_name : ''}}
+                                            {{$task->opportunity && $task->opportunity->lead && $task->opportunity->lead->full_name ? $task->opportunity->lead->full_name : ($opportunity->full_name ?? '')}}
+                                        @elseif($task->module == 'client')
+                                            {{$task->client && $task->client->name ? $task->client->name : ''}}
+                                        @elseif($task->module == 'listing')
+                                            {{$task->listing && $task->listing->title ? $task->listing->title : ''}}
 
-                                        {{--@if($task->module == 'lead')--}}
-                                            {{--{{$task->getlead && $task->getlead->full_name ? $task->getlead->full_name : ''}} ,{{$task->module}} ,{{$task->module_id}}--}}
-                                        {{--@elseif($task->module == 'opportunity')--}}
-                                            {{--{{$task->getopportunity && $task->getopportunity->lead && $task->getopportunity->lead->full_name ? $task->getopportunity->lead->full_name : ''}} ,,{{$task->module_id}}--}}
-
-                                        {{--@elseif($task->module == 'client')--}}
-                                            {{--{{$task->getclient && $task->getclient->name ? $task->getclient->name : ''}}--}}
-                                        {{--@elseif($task->module == 'listing')--}}
-                                            {{--{{$task->getclient && $task->getclient->name ? $task->getclient->name : ''}}--}}
                                         @else
-
+                                            ''
                                         @endif
                                     </td>
                                     <td>
@@ -316,20 +311,6 @@
         var  tasks = @json($tasks);
 
         for(var i = 0; i < tasks.data.length; i++){
-        // tasks.filter(function(value,key){
-
-            {{--@if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $task->id ))--}}
-                    {{--console.log(tasks.data[i].module, tasks.data[i].id);--}}
-                {{--show_module_div_edit(tasks.data[i].module, tasks.data[i].id);--}}
-            {{--@endif--}}
-            {{--@if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $task->id ))--}}
-
-            {{--@else--}}
-                {{--// var  edit_task_tr = document.querySelector('.edit_task_'+tasks.data[i].id);--}}
-                {{--var  edit_task_tr = document.querySelector('.edit_task_'+value.id);--}}
-                {{--edit_task_tr.style.display = 'none';--}}
-
-            {{--@endif--}}
 
             //edit note en
             ClassicEditor
@@ -395,7 +376,6 @@
                 div.style.opacity = 1;
 
             },10);
-            // div.classList.remove('d-none')
         } else {
             div.style.display = 'none';
             setTimeout(function(){

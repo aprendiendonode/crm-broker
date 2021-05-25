@@ -72,23 +72,23 @@
                     {{--<div>LIVE(8)</div>--}}
                 {{--</a>--}}
                 <a href="{{url('activity/notes/'.$agency_id.'/listings')}}" class="list-link  {{ request()->segment(4) == 'listings' ? 'active' : '' }}  waves-effect waves-light" >
-                    listings
+                    @lang('listing.listing')
                 </a>
 
                 <a href="{{url('activity/notes/'.$agency_id.'/leads')}}" class="list-link {{ request()->segment(4) == 'leads' ? 'active' : '' }}  waves-effect waves-light" >
-                    leads
+                    @lang('sales.leads')
                 </a>
 
-                <a href="{{url('activity/notes/'.$agency_id.'/deals')}}" class="list-link {{ request()->segment(4) == 'deals' ? 'active' : '' }}  waves-effect waves-light" >
-                    deals
+                <a href="{{url('activity/notes/'.$agency_id.'/clients')}}" class="list-link {{ request()->segment(4) == 'clients' ? 'active' : '' }}  waves-effect waves-light" >
+                    @lang('sales.clients')
                 </a>
 
                 <a href="{{url('activity/notes/'.$agency_id.'/tasks')}}" class="list-link {{ request()->segment(4) == 'tasks' ? 'active' : '' }}  waves-effect waves-light" >
                     @lang('activity.tasks.title')
                 </a>
 
-                <a href="{{url('activity/notes/'.$agency_id.'/contacts')}}" class="list-link  {{ request()->segment(4) == 'contacts' ? 'active' : '' }}  waves-effect waves-light" >
-                    contacts
+                <a href="{{url('activity/notes/'.$agency_id.'/opportunities')}}" class="list-link  {{ request()->segment(4) == 'opportunities' ? 'active' : '' }}  waves-effect waves-light" >
+                    @lang('sales.opportunities')
                 </a>
 
             </div>
@@ -106,7 +106,27 @@
                 <thead>
                 <tr >
                     <th > # </th>
-                    <th > @lang('activity.notes_list.id') </th>
+                    <th >
+                        @if(request()->segment(4) == 'listings')
+                            @lang('listing.listing')
+                        @elseif(request()->segment(4) == 'leads')
+
+                            @lang('sales.leads')
+                        @elseif(request()->segment(4) == 'clients')
+
+                            @lang('sales.clients')
+
+                        @elseif(request()->segment(4) == 'tasks')
+
+                            @lang('activity.tasks.title')
+
+                        @elseif(request()->segment(4) == 'opportunities')
+
+                            @lang('sales.opportunities')
+                        @endif
+
+                            @lang('activity.notes_list.id')
+                    </th>
                     <th > @lang('activity.tasks.add_by') </th>
                     <th > @lang('activity.tasks.date_add') </th>
                     <th > @lang('activity.tasks.note') </th>
@@ -125,17 +145,17 @@
                                 @elseif(request()->segment(4) == 'leads')
 
                                     {{ $note->lead && $note->lead->id ? $note->lead->id : '' }}
-                                @elseif(request()->segment(4) == 'deals')
+                                @elseif(request()->segment(4) == 'clients')
 
-                                    {{ $note->deal && $note->deal->id ? $note->deal->id : '' }}
+                                    {{ $note->client && $note->client->id ? $note->client->id : '' }}
 
                                 @elseif(request()->segment(4) == 'tasks')
 
                                     {{ $note->task && $note->task->id ? $note->task->id : '' }}
 
-                                @elseif(request()->segment(4) == 'contacts')
+                                @elseif(request()->segment(4) == 'opportunities')
 
-                                    {{ $note->contact && $note->contact->id ? $note->contact->id : '' }}
+                                    {{ $note->opportunity && $note->opportunity->id ? $note->opportunity->id : '' }}
                                 @endif
 
                             </td>

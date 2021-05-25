@@ -117,7 +117,7 @@
                     <option value="" {{old('opportunity_id', '' ) == '' ? 'selected' : ''}} disabled > @lang('global.pleaseSelect')</option>
                     @if($opportunities)
                         @foreach($opportunities as $opportunity)
-                            <option value="{{$opportunity->id }}"  {{ old('opportunity_id','') == $opportunity->id ? 'selected' : '' }}>{{ $opportunity->lead && $opportunity->lead->full_name ? $opportunity->lead->full_name : ''	 }}</option>
+                            <option value="{{$opportunity->id }}"  {{ old('opportunity_id','') == $opportunity->id ? 'selected' : '' }}>{{ $opportunity->lead && $opportunity->lead->full_name ? $opportunity->lead->full_name : ($opportunity->full_name ?? '')	 }}</option>
                         @endforeach
                     @endif
                 </select>
@@ -125,34 +125,34 @@
             </div>
 
             {{--select client--}}
-            {{--<div class="form-group" id="clients_div">--}}
-                {{--<label for="">@lang('sales.client')</label>--}}
-                {{--<select class="selectpicker mb-0 show-tick"  data-toggle="select2" name="client_id" >--}}
+            <div class="form-group" id="clients_div" style="display:none">
+                <label for="">@lang('sales.client')</label>
+                <select class="form-control select2"  data-toggle="select2" name="client_id" >
 
-                    {{--<option value="" {{old('client_id', '' ) == '' ? 'selected' : ''}} disabled > @lang('global.pleaseSelect')</option>--}}
-                    {{--@if($clients)--}}
-                        {{--@foreach($clients as $client)--}}
-                            {{--<option value="{{$client->id }}"  {{ old('client_id','') == $client->id ? 'selected' : '' }}>{{$client->name	 }}</option>--}}
-                        {{--@endforeach--}}
-                    {{--@endif--}}
-                {{--</select>--}}
+                    <option value="" {{old('client_id', '' ) == '' ? 'selected' : ''}} disabled > @lang('global.pleaseSelect')</option>
+                    @if($clients)
+                        @foreach($clients as $client)
+                            <option value="{{$client->id }}"  {{ old('client_id','') == $client->id ? 'selected' : '' }}>{{$client->name ?? '' }}</option>
+                        @endforeach
+                    @endif
+                </select>
 
-            {{--</div>--}}
+            </div>
 
             {{--select listing--}}
-            {{--<div class="form-group" id="listings_div">--}}
-                {{--<label for="">@lang('sales.listing')</label>--}}
-                {{--<select class="selectpicker mb-0 show-tick"  data-toggle="select2" name="listing_id" >--}}
+            <div class="form-group" id="listings_div" style="display:none">
+                <label for="">@lang('sales.listing')</label>
+                <select class="form-control select2"  data-toggle="select2" name="listing_id" >
 
-                    {{--<option value="" {{old('listing_id', '' ) == '' ? 'selected' : ''}} disabled > @lang('global.pleaseSelect')</option>--}}
-                    {{--@if($listings)--}}
-                        {{--@foreach($listings as $listing)--}}
-                            {{--<option value="{{$listing->id }}"  {{ old('listing_id','') == $listing->id ? 'selected' : '' }}>{{$listing->name	 }}</option>--}}
-                        {{--@endforeach--}}
-                    {{--@endif--}}
-                {{--</select>--}}
+                    <option value="" {{old('listing_id', '' ) == '' ? 'selected' : ''}} disabled > @lang('global.pleaseSelect')</option>
+                    @if($listings)
+                        @foreach($listings as $listing)
+                            <option value="{{$listing->id }}"  {{ old('listing_id','') == $listing->id ? 'selected' : '' }}>{{$listing->title ?? ''	 }}</option>
+                        @endforeach
+                    @endif
+                </select>
 
-            {{--</div>--}}
+            </div>
 
             <div class="form">
 
@@ -321,29 +321,29 @@
         {
             leads_div.style.display         = 'block';
             opportunities_div.style.display = 'none';
-            // clients_div.style.display       = 'none';
-            // listings_div.style.display      = 'none';
+            clients_div.style.display       = 'none';
+            listings_div.style.display      = 'none';
 
         }else if(module == 'opportunity'){
 
             leads_div.style.display         = 'none';
             opportunities_div.style.display = 'block';
-            // clients_div.style.display       = 'none';
-            // listings_div.style.display      = 'none';
+            clients_div.style.display       = 'none';
+            listings_div.style.display      = 'none';
 
         }else if(module == 'client'){
 
             leads_div.style.display         = 'none';
             opportunities_div.style.display = 'none';
-            // clients_div.style.display       = 'block';
-            // listings_div.style.display      = 'none';
+            clients_div.style.display       = 'block';
+            listings_div.style.display      = 'none';
 
         }else if(module == 'listing'){
 
             leads_div.style.display         = 'none';
             opportunities_div.style.display = 'none';
-            // clients_div.style.display       = 'none';
-            // listings_div.style.display      = 'block';
+            clients_div.style.display       = 'none';
+            listings_div.style.display      = 'block';
 
         }
     }

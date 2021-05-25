@@ -21,13 +21,15 @@ class EmailGeneral extends Mailable
 //    protected $name;
     protected $message;
     public $subject;
+    public $attach;
 
-    public function __construct($message,$subject)
+    public function __construct($message,$subject,$attach=null)
     {
 //        $this->email    = $email;
 //        $this->name     = $name;
         $this->message  = $message;
         $this->subject  = $subject;
+        $this->attach   = $attach;
     }
 
     /**
@@ -38,6 +40,11 @@ class EmailGeneral extends Mailable
     public function build()
     {
 //        return $this->from($this->email, $this->name)->subject($this->subject)->html($this->message);
+        if ($this->attach != null){
+
+            return $this->subject($this->subject)->html($this->message)->attach($this->attach);
+        }
+
         return $this->subject($this->subject)->html($this->message);
 //        return $this->view('view.name');
     }

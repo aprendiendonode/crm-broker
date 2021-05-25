@@ -35,12 +35,12 @@
 
                                 <div class="add_new_note_en_{{$task->id}}">
 
-                                    <textarea id="add_new_note_en_{{$task->id}}" name="add_new_note_en_{{$task->id}}" required >{{old('add_new_note_en_'.$task->id)}}</textarea>
+                                    <textarea id="add_new_note_en_{{$task->id}}" name="add_new_note_en_{{$task->id}}" >{{old('add_new_note_en_'.$task->id)}}</textarea>
                                 </div>
                                 <div class="add_new_note_ar_{{$task->id}} d-none">
 
 
-                                    <textarea id="add_new_note_ar_{{$task->id}}"  name="add_new_note_ar_{{$task->id}}" required>{{old('add_new_note_ar_'.$task->id)}}</textarea>
+                                    <textarea id="add_new_note_ar_{{$task->id}}"  name="add_new_note_ar_{{$task->id}}" >{{old('add_new_note_ar_'.$task->id)}}</textarea>
                                 </div>
 
                             </div>

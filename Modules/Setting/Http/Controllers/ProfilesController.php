@@ -61,6 +61,7 @@ class ProfilesController extends Controller
     {
         $user = User::findorfail($id);
         $countries = Country::all();
+//        dd($user);
         return view('setting::profile.edit', compact('user', 'countries'));
     }
 

@@ -11,16 +11,12 @@
 
             <a href="#" class="p-1" onclick="show_bcc_div()"><u>@lang('activity.emails_list.bcc')</u></a>
             <a href="#" class="p-1" onclick="show_email_address_div()"><u>@lang('activity.emails_list.email_addresses')</u></a>
-            {{--<input class="p-1" name="attach_file" id="attach_file" type="file" />@lang('activity.emails_list.attach_file')--}}
-
 
             <label for="attach_file">
                 <input class="p-1" onchange="get_attach_file()" name="attach_file" id="attach_file" type="file" style="display: none;" />
                 <i data-feather="paperclip" class="icon-dual"></i>@lang('activity.emails_list.attach_file')
                 <span id="attach_file_name"></span>
             </label>
-
-            {{--<a href="#" class="p-1"><i data-feather="paperclip" class="icon-dual"></i>@lang('activity.emails_list.attach_file')</a>--}}
 
         </div>
 
@@ -33,7 +29,9 @@
                             <option  disabled> @lang('global.pleaseSelect')</option>
                             @if($contacts)
                                 @foreach($contacts as $contact)
-                                    <option value="{{$contact->{'name_'.app()->getLocale()} }}" {{ in_array($contact->{'name_'.app()->getLocale()}, old('contact', [])) ? 'selected' : '' }} >{{$contact->{'name_'.app()->getLocale()} }}</option>
+                                    @if($contact->email1 || $contact->email2)
+                                        <option value="{{ $contact->email1 ?? $contact->email2 ?? '' }}" {{ in_array($contact->email1 ?? $contact->email2 ?? '', old('contacts', [])) ? 'selected' : '' }} >{{ $contact->email1 ?? $contact->email2 ?? '' }}</option>
+                                    @endif
                                 @endforeach
                             @endif
                         </select>
@@ -119,17 +117,12 @@
             .create( document.querySelector( '#email_content_modal_textarea' ))
 
             .then( newEditor => {
-                // newEditor.ui.view.editable.element.style.height = '500px';
                 editor = newEditor;
             } )
             .catch( error => {
                 console.error( error );
             } );
 
-        // ClassicEditor.replace(document.querySelector( '#email_content_modal_textarea' ) , {
-        //     width:200,
-        //     height:800,
-        // });
         // Assuming there is a <button id="submit">Submit</button> in your application.
         document.querySelector( '#btn_email_content_modal_textarea' ).addEventListener( 'click', () => {
             const editorData = editor.getData();
@@ -137,8 +130,6 @@
             var email_content = document.getElementById('email_content');
             email_content.value = editorData;
 
-            // email_content.innerHTML = editorData;
-            console.log(editorData);
             $('#email_content_modal').modal('toggle')
             // ...
         } );
@@ -147,7 +138,6 @@
 
     function get_contact_form_mail_list()
     {
-            // var getLocale = document.getElementById('getLocale').value;
             var mail_lists = @json($mail_lists);
             var mail_list  = document.getElementById('mail_list').value;
             var innerHtmlcontacts = '';
@@ -157,13 +147,7 @@
 
                     value.contacts.filter(function(contact_value,contact_key){
 
-                        var name = contact_value.name_en;
-
-                        if(getLocale == 'ar'){
-
-                            var name = contact_value.name_ar;
-                        }
-                        innerHtmlcontacts += `<option value='${name}' selected >   ${name}  </option>`;
+                        innerHtmlcontacts += `<option value='${contact_value.email1 ? contact_value.email1 : contact_value.email2 ? contact_value.email2 : "" }' selected >  (${contact_value.email1 ? contact_value.email1 : contact_value.email2 ? contact_value.email2 : ""})  </option>`;
 
                     });
                 }

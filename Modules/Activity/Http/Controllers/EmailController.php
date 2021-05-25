@@ -3,12 +3,16 @@
 namespace Modules\Activity\Http\Controllers;
 
 use App\Mail\EmailGeneral;
+use App\Models\Agency;
 use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Activity\Entities\Email;
+use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\Lead;
+use Modules\Sales\Entities\Opportunity;
 use Modules\Setting\Entities\MailList;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
@@ -25,17 +29,51 @@ class EmailController extends Controller
         $per_page   = 10;
         $mail_lists = MailList::with('contacts')->where('agency_id', $agency)->get();
 
-        $contacts = Contact::where('agency_id', $agency)->get();
+        // Clients and leads and opportunities
+        $clients = Client::where('agency_id', $agency)->select('email1','email2','table_name');
+        $leads = Lead::where('agency_id', $agency)->select('email1','email2','table_name');
+        $contacts = Opportunity::where('agency_id', $agency)->select('email1','email2','table_name')->union($clients)->union($leads)->get();
+
 
         $templates = Template::where('agency_id', $agency)->where('type', 'email')->get();
 
-        //        dd($mail_lists,$contacts);
         $staffs     = User::where('agency_id', $agency)->where('active', '=', '1')->where('type', 'staff')
             ->orwhere('business_id', auth()->user()->business_id)->where('type', 'owner')->where('active', '=', '1')->get();
 
-        $emails = Email::where('business_id', auth()->user()->business_id)->orderBy('id', 'desc')->paginate($per_page);
 
-        return view('activity::emails.index', compact('staffs', 'mail_lists', 'contacts', 'templates', 'emails'));
+        $emails = Email::where('business_id', auth()->user()->business_id)->with('addBy');
+
+        //filter emails
+
+        if (request('id') != null) {
+
+            $emails->where('id', request('id'));
+
+        }
+        if (request('sender_filter') != null) {
+            $emails->where('add_by', request('sender_filter'));
+        }
+
+        if (request('subject') != null) {
+
+            $emails->where('subject',    'like', '%' . request('subject') . '%');
+
+        }
+
+        if (request('filter_from_date') != null) {
+            $emails->where('created_at', '>=', request('filter_from_date') . ' 00:00:00');
+        }
+
+        if (request('filter_to_date') != null) {
+            $emails->where('created_at', '<=', request('filter_to_date') . ' 23:59:59');
+        }
+
+
+        $emails = $emails->orderBy('id', 'desc')->paginate($per_page);
+
+        $agency = Agency::findorfail($agency);
+
+        return view('activity::emails.index', compact('staffs', 'mail_lists', 'contacts', 'templates', 'emails','agency'));
     }
 
     /**
@@ -54,6 +92,12 @@ class EmailController extends Controller
      */
     public function store(Request $request)
     {
+
+        $email_address_array = [];
+        if ($request->email_address){
+
+            $email_address_array = explode(',',$request->email_address);
+        }
         try {
             //        $explode = explode(',',$request->email_address);
             //        $pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
@@ -73,7 +117,7 @@ class EmailController extends Controller
             $validator = Validator::make($request->all(), [
 
                 'contacts.*'    => ['string',],
-                //                'contacts'              => ['array','required',],
+                'contacts'      => ['array','required',],
                 "bcc"           => ['sometimes','string', 'nullable'],
                 "email_address" => ['required_without:contacts','string', 'nullable'],
                 "subject"       => ['required', 'string',],
@@ -84,8 +128,6 @@ class EmailController extends Controller
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-tab', 'yes');
             }
-
-            //        dd($request->all());
 
 
             // send emails
@@ -101,28 +143,22 @@ class EmailController extends Controller
             }
 
             if ($request->contacts) {
-                //                dd('contacts');
                 foreach ($request->contacts as $contact) {
-                    //                $subject = $request->subject;
                     // send emails
-
+                    $attach = null;
                     if ($request->attach_file) {
 
-                        Mail::to('hamed@onetecgroup.com')->send(new EmailGeneral($request->email_content, $request->subject), function ($message) use ($path) {
-                            //
-                            $message->attach($path);
-                        });
-                    } else {
-
-                        Mail::to('hamed@onetecgroup.com')->send(new EmailGeneral($request->email_content, $request->subject));
+                        $attach = $path.'/'.$fileName;
                     }
+                    Mail::to($contact)->cc($email_address_array)->bcc($request->bcc)
+                        ->send(new EmailGeneral($request->email_content, $request->subject, $attach));
 
                     //store email data
                     $email = Email::create([
 
                         'contacts'          => $contact,
                         'email_addresses'   => $request->email_address,
-                        'BCC'               => $request->BCC,
+                        'BCC'               => $request->bcc,
                         'subject'           => $request->subject,
                         'email_content'     => $request->email_content,
                         'attach_file'       => $fileName,
@@ -131,9 +167,13 @@ class EmailController extends Controller
                         'add_by'            => auth()->user()->id,
 
                     ]);
+
+                    setActivity('email',$email->id,$email->agency_id,$email->business_id,'the email #'.$email->id.' sent by ' .auth()->user()->name_en. ' to '.$email->contacts,
+                        'تم إضافة بريد إلكترونى رقم #'.$email->id.' تمت بواسطه ' .auth()->user()->name_en .' إلى '.$email->contacts);
+
                 }
+
             } elseif ($request->email_address) {
-                //                dd('no contacts');
                 $explode = explode(',', $request->email_address);
                 $pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
 
@@ -143,24 +183,20 @@ class EmailController extends Controller
                     if (preg_match($pattern, $emailaddress) === 1) {
                         // send emails
 
+                        $attach = null;
                         if ($request->attach_file) {
 
-                            Mail::to('mabrouk@onetecgroup.com')->send(new EmailGeneral($request->email_content, $request->subject), function ($message) use ($path) {
-                                //
-                                $message->attach($path);
-                            });
-                        } else {
-
-//                            Mail::to('mabrouk@onetecgroup.com')->send(new EmailGeneral($request->email_content, $request->subject));
-                            Mail::to($emailaddress)->send(new EmailGeneral($request->email_content, $request->subject));
+                            $attach = $path.'/'.$fileName;
                         }
+
+                        Mail::to($emailaddress)->bcc($request->bcc)->send(new EmailGeneral($request->email_content, $request->subject ,$attach));
 
                         //store email data
                         $email = Email::create([
 
                             'contacts'          => $emailaddress,
                             'email_addresses'   => $request->email_address,
-                            'BCC'               => $request->BCC,
+                            'BCC'               => $request->bcc,
                             'subject'           => $request->subject,
                             'email_content'     => $request->email_content,
                             'attach_file'       => $fileName,
@@ -169,15 +205,21 @@ class EmailController extends Controller
                             'add_by'            => auth()->user()->id,
 
                         ]);
+
+                        setActivity('email',$email->id,$email->agency_id,$email->business_id,'the email #'.$email->id.' sent by ' .auth()->user()->name_en. ' to '.$email->contacts,
+                            'تم إضافة بريد إلكترونى رقم #'.$email->id.' تمت بواسطه ' .auth()->user()->name_en .' إلى '.$email->contacts);
+
                     } else {
                         return back()->with(flash(trans('activity.create_failed'), 'danger'))->withInput();
                     }
                 }
+            }else{
+                return back()->withInput()->with(flash('activity.create_failed', 'danger'));
             }
-            //            dd('no emails',$request->email_address);
-            //            dd(sizeof($explode));
+
             return back()->with(flash(trans('activity.create_success'), 'success'));
         } catch (\Exception $e) {
+            return back()->withInput()->with(flash('activity.create_failed', 'danger'));
             throw $e;
         }
     }
