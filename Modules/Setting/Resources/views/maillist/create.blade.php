@@ -26,10 +26,10 @@
 
         <div class="form-group">
             <label for="" class="font-weight-medium text-muted">@lang('settings.maillist_contacts')</label>
-            <select class="form-control select2 " data-toggle="select2" multiple name="contacts[]" >
+            <select class="form-control select2 " data-toggle="select2" multiple name="mails[]" >
                 <option value="">@lang('settings.select')</option>
-            @foreach($contacts as $contact)
-                <option value="{{$contact->id}}">{{$contact->{'name_'.app()->getLocale()} ?? ''}}</option>
+            @foreach($mails as $mail)
+                <option value="{{$mail}}">{{$mail ?? ''}}</option>
                 @endforeach
 
 

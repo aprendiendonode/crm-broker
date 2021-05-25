@@ -75,7 +75,7 @@
                     <tr>
                         <td>{{ $maillist->id ?? '' }}</td>
                         <td>{{ $maillist->{'name_'.app()->getLocale()} ?? ''}}</td>
-                        <td>@foreach($maillist->contacts as $contact){{ $contact->{'name_'.app()->getLocale()} ?? ''}},@endforeach</td>
+                        <td>@foreach(explode(',',$maillist->mails) as $mail){{ $mail ?? ''}},@endforeach</td>
 
                         <td>
 

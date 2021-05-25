@@ -15,6 +15,7 @@ class MailList extends Model
     protected $fillable = [
         'name_en',
         'name_ar',
+        'mails',
         'agency_id',
         'business_id',
         'deleted_at',
@@ -33,8 +34,8 @@ class MailList extends Model
         return $this->belongsTo(Business::class);
     }
 
-    public function contacts(){
-        return $this->belongsToMany(Contact::class, 'contacts_mail_list',
-            'mail_list_id','contact_id');
-    }
+//    public function contacts(){
+//        return $this->belongsToMany(Contact::class, 'contacts_mail_list',
+//            'mail_list_id','contact_id');
+//    }
 }
