@@ -2,8 +2,6 @@
 
 namespace Modules\Listing\Http\Repositories;
 
-use App\Mail\ContactClient;
-use Modules\Listing\Entities\ListingType;
 use PDF;
 use File;
 use Gate;
@@ -11,20 +9,21 @@ use App\Models\Agency;
 use App\Jobs\SendEmail;
 use App\Models\Business;
 use App\Models\Template;
-
 use App\Models\BlackList;
-use Symfony\Component\HttpFoundation\Response;
-
 use App\Mail\ShareRequest;
+
+use App\Mail\ContactClient;
 use Illuminate\Support\Str;
+
 use Illuminate\Http\Request;
 use App\Models\SystemTemplate;
 use App\Exports\ListingsExport;
 use Illuminate\Validation\Rule;
-
 use App\Events\ListingTaskEvent;
+use Modules\Sales\Entities\Lead;
 
 use Illuminate\Support\Facades\DB;
+
 use Modules\Sales\Entities\Client;
 use Modules\Activity\Entities\Task;
 use Illuminate\Support\Facades\Mail;
@@ -33,19 +32,24 @@ use Modules\Sales\Entities\LeadType;
 use Intervention\Image\Facades\Image;
 use Modules\Listing\Entities\Listing;
 use Modules\Sales\Entities\Developer;
+use Modules\SuperAdmin\Entities\City;
 use Modules\Activity\Entities\TaskNote;
 use Modules\Activity\Entities\TaskType;
+use Modules\Sales\Entities\Opportunity;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\TaskStatus;
 use Modules\Listing\Entities\ListingPlan;
+use Modules\Listing\Entities\ListingType;
 use Modules\Activity\Entities\ListingNote;
 use Modules\Listing\Entities\ListingPhoto;
 use Modules\Listing\Entities\ListingVideo;
+use Modules\SuperAdmin\Entities\Community;
 use Modules\Listing\Entities\TemporaryPlan;
 use Illuminate\Support\Facades\Notification;
 use Modules\Listing\Entities\ListingDocument;
 use App\Notifications\ListingTaskNotification;
 use Modules\Listing\Entities\TemporaryListing;
+use Symfony\Component\HttpFoundation\Response;
 use Modules\Listing\Entities\TemporaryDocument;
 use Modules\Listing\Entities\ListingChequeCalculator;
 
@@ -57,73 +61,59 @@ class ListingRepo
         try {
             $pagination = true;
             $business = auth()->user()->business_id;
-            $per_page = 15;
 
-            $types = ListingType::where('agency_id', $agency)->get();
+
+            $per_page = 15;
             $agency = Agency::with([
                 'lead_sources',
                 'landlords',
                 'tenants',
                 'task_status',
-                'task_types',
-                'listing_views',
-                'developers',
-                'cheques',
                 'descriptionTemplates'
 
+            ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
-            ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
-            $listing_types = DB::table('listing_types')->get();
-            $lead_sources = $agency->lead_sources;
-            $task_status = $agency->task_status;
-            $task_types = $agency->task_types;
-            $listing_views = $agency->listing_views;
-            $developers = $agency->developers;
-            $cheques = $agency->cheques;
-            $landlords = $agency->landlords;
-            $tenants = $agency->tenants;
-            $descriptionTemplates = $agency->descriptionTemplates;
-            $portals = DB::table('portals')->get();
 
-            $listings = Listing::with([
+
+            $listings_query = Listing::with([
                 'tasks', 'agent',
                 'tasks.addBy',
                 'tasks.staff',
                 'type',
                 'videos', 'documents', 'plans', 'photos', 'cheques',
-                'notes', 'notes.addBy'
+                'notes', 'notes.addBy',
+                'city', 'community', 'subCommunity',
+
+
 
             ])->where('agency_id', $agency->id)->where('business_id', $business);
-            $locations = $listings->pluck('location')->unique();
-            $ref_ids = $listings->pluck('listing_ref')->unique();
 
-            $staffs = staff($agency->id);
 
 
             if (request()->has('status_main')) {
-                $listings->where('status', request()->status_main);
+                $listings_query->where('status', request()->status_main);
             }
 
 
             //filter
             if (request('purpose')) {
-                $listings->where('purpose', request('purpose'));
+                $listings_query->where('purpose', request('purpose'));
             }
 
             if (request('location')) {
-                $listings->where('location', request('location'));
+                $listings_query->where('location', request('location'));
             }
             if (request('filter_user')) {
-                $listings->where('assigned_to', request('filter_user'));
+                $listings_query->where('assigned_to', request('filter_user'));
             }
             if (request('ref_id')) {
-                $listings->where('listing_ref', request('ref_id'));
+                $listings_query->where('listing_ref', request('ref_id'));
             }
 
             if (request('type')) {
                 $type = request('type');
 
-                $listings->whereHas('type', function ($q) use ($type) {
+                $listings_query->whereHas('type', function ($q) use ($type) {
                     $q->where('id', $type);
                 });
             }
@@ -131,71 +121,68 @@ class ListingRepo
 
             if (request('min_bed')) {
                 if (request('min_bed') == 'studio') {
-                    $listings->where('beds', request('min_bed'));
+                    $listings_query->where('beds', request('min_bed'));
                 }
-                $listings->where('beds', '>=', request('min_bed'));
+                $listings_query->where('beds', '>=', request('min_bed'));
             }
             if (request('max_bed')) {
                 if (request('max_bed') == 'studio') {
-                    $listings->where('beds', request('min_bed'));
+                    $listings_query->where('beds', request('min_bed'));
                 }
-                $listings->where('beds', '<=', request('max_bed'));
+                $listings_query->where('beds', '<=', request('max_bed'));
             }
-
-
-            $listings = $listings->paginate($per_page);
-            $all_count = Listing::where('agency_id', $agency->id)->count();
-            $draft_count = Listing::where('status', 'draft')->where('agency_id', $agency->id)->count();
-            $live_count = Listing::where('status', 'live')->where('agency_id', $agency->id)->count();
-            $review_count = Listing::where('status', 'review')->where('agency_id', $agency->id)->count();
-            $archive_count = Listing::where('status', 'archive')->where('agency_id', $agency->id)->count();
-            $agency_data = $agency;
-            $agency = $agency->id;
-
-
-
-
-
-
-
-
-
-
-
 
 
             return view(
                 'listing::listing.index',
-                compact(
-                    'agency_data',
-                    'staffs',
-                    'listing_types',
-                    'listing_views',
-                    'listings',
-                    'types',
-                    'ref_ids',
-                    'pagination',
-                    'locations',
-                    'agency',
-                    'business',
-                    'lead_sources',
-                    'task_status',
-                    'task_types',
-                    'developers',
-                    'cheques',
-                    'landlords',
-                    'tenants',
-                    'portals',
-                    'all_count',
-                    'archive_count',
-                    'review_count',
-                    'draft_count',
-                    'live_count',
-                    'descriptionTemplates'
-                )
+                [
+                    'agency_data'   => $agency,
+                    'agency'        => $agency->id,
+                    'staffs'        => staff($agency->id),
+                    'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
+                        return DB::table('listing_types')->get();
+                    }),
+                    'listing_views' => $agency->listing_views,
+                    'listings'      => $listings_query->paginate($per_page),
+                    'ref_ids'       => $listings_query->pluck('listing_ref')->unique(),
+                    'pagination'    => $pagination,
+                    'locations'     => $listings_query->pluck('location')->unique(),
+                    'business'      => $business,
+                    'lead_sources'  => $agency->lead_sources,
+                    'task_status'   => $agency->task_status,
+                    'task_types'    => $agency->task_types,
+                    'developers'    => $agency->developers,
+                    'cheques'       => $agency->cheques,
+                    'landlords'     => $agency->landlords,
+                    'tenants'       => $agency->tenants,
+                    'portals'       =>
+                    cache()->remember('portals', 60 * 60 * 24, function () {
+                        return DB::table('portals')->get();
+                    }),
+                    'cities'        =>
+                    cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('cities')->where('country_id', $agency->country_id)->get();
+                    }),
+                    'communities'        =>
+                    cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('communities')->where('country_id', $agency->country_id)->get();
+                    }),
+                    'sub_communities'        =>
+                    cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
+                    }),
+
+
+                    'all_count'     => $agency->listings_all_count,
+                    'archive_count' => $agency->listings_archive_count,
+                    'review_count'  => $agency->listings_review_count,
+                    'draft_count'   => $agency->listings_draft_count,
+                    'live_count'    => $agency->listings_live_count,
+                    'descriptionTemplates' => $agency->descriptionTemplates
+                ]
             );
         } catch (\Exception $e) {
-
+            ray($e->getMessage());
             abort(404);
         }
     }
@@ -442,8 +429,15 @@ class ListingRepo
                 $validator = Validator::make($request->all(), [
 
                     'name' => ['required', 'string', 'max:225'],
-                    'email' => ['sometimes', 'nullable', 'email', 'string', 'max:225'],
-                    'phone' => ['sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
+                    'email' => [
+                        'sometimes', 'nullable', 'email', 'string', 'max:225',
+                        Rule::unique('clients', 'email1'),  Rule::unique('clients', 'email2'),
+
+                    ],
+                    'phone' => [
+                        'sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/',
+                        Rule::unique('clients', 'phone1'), Rule::unique('clients', 'phone2')
+                    ],
                     'salutation' => ['required', 'string', 'in:Mr,Mrs,Ms,Miss'],
                     'source_id' => ['sometimes', 'nullable', 'string', 'exists:lead_sources,id'],
                     'agency' => ['required', 'integer', 'exists:agencies,id'],
@@ -451,13 +445,128 @@ class ListingRepo
                 ]);
 
 
+
+
+
+
+
                 if ($validator->fails()) {
                     return response()->json(['message' => $validator->errors()->all()[0]], 400);
                 }
 
+
+                $check_unique_emails = Lead::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+
+                    $query->where([
+                        ['email1', '!=', null],
+                        ['email1', $request->email],
+                    ])
+                        ->orWhere([
+                            ['email2', '!=', null],
+                            ['email2', $request->email],
+                        ])->orWhere([
+                            ['email3', '!=', null],
+                            ['email3', $request->email],
+                        ])->orWhere([
+                            ['skype', '!=', null],
+                            ['skype', $request->email],
+                        ]);
+                })->get();
+
+                $check_unique_phones = Lead::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+                    $query->Where([
+                        ['phone1', '!=', null],
+                        ['phone1', $request->phone],
+                    ])
+                        ->orWhere([
+                            ['phone2', '!=', null],
+                            ['phone2', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone3', '!=', null],
+                            ['phone3', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone4', '!=', null],
+                            ['phone4', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['landline', '!=', null],
+                            ['landline', $request->phone],
+                        ]);
+                })->get();
+
+
+                if (count($check_unique_emails) > 0) {
+                    return response()->json(['message' => trans('sales.existing_email_in_leads') . ' ' . $check_unique_emails->first()->full_name ?? ''], 400);
+                }
+                if (count($check_unique_phones) > 0) {
+                    return response()->json(['message' => trans('sales.existing_phone_in_leads') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
+                }
+
+
+
+                $check_unique_emails = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+
+                    $query->where([
+                        ['email1', '!=', null],
+                        ['email1', $request->email],
+                    ])
+                        ->orWhere([
+                            ['email2', '!=', null],
+                            ['email2', $request->email],
+                        ])->orWhere([
+                            ['email3', '!=', null],
+                            ['email3', $request->email],
+                        ])->orWhere([
+                            ['skype', '!=', null],
+                            ['skype', $request->email],
+                        ]);
+                })->get();
+                $check_unique_phones = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+                    $query
+                        ->Where([
+                            ['phone1', '!=', null],
+                            ['phone1', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone2', '!=', null],
+                            ['phone2', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone3', '!=', null],
+                            ['phone3', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone4', '!=', null],
+                            ['phone4', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['landline', '!=', null],
+                            ['landline', $request->phone],
+                        ]);
+                })->get();
+
+                // dd($check_unique_phones->first()->full_name);
+                if (count($check_unique_emails) > 0) {
+                    return response()->json(['message' => trans('sales.existing_email_in_opportunities') . ' ' . $check_unique_emails->first()->full_name ?? ''], 400);
+                }
+
+
+                if (count($check_unique_phones) > 0) {
+
+                    return response()->json(['message' => trans('sales.existing_phone_in_opportunities') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
+                }
+
+
+
+
+
+
+
                 $tenant_type = LeadType::firstOrCreate(
                     ['role' => 'tenant'],
-                    ['name_en' => 'tenant', 'name_ar' => 'المستأجر']
+                    ['name_en' => 'tenant', 'name_ar' => 'المستأجر', 'agency_id' => $request->agency, 'business_id' => $request->business]
 
                 );
 
@@ -498,8 +607,15 @@ class ListingRepo
                 $validator = Validator::make($request->all(), [
 
                     'name' => ['required', 'string', 'max:225'],
-                    'email' => ['sometimes', 'nullable', 'email', 'string', 'max:225'],
-                    'phone' => ['sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
+                    'email' => [
+                        'sometimes', 'nullable', 'email', 'string', 'max:225',
+                        Rule::unique('clients', 'email1'),  Rule::unique('clients', 'email2'),
+
+                    ],
+                    'phone' => [
+                        'sometimes', 'nullable', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/',
+                        Rule::unique('clients', 'phone1'), Rule::unique('clients', 'phone2')
+                    ],
                     'salutation' => ['required', 'string', 'in:Mr,Mrs,Ms,Miss'],
                     'source_id' => ['sometimes', 'nullable', 'string', 'exists:lead_sources,id'],
                     'agency' => ['required', 'integer', 'exists:agencies,id'],
@@ -511,9 +627,116 @@ class ListingRepo
                     return response()->json(['message' => $validator->errors()->all()[0]], 400);
                 }
 
+                $check_unique_emails = Lead::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+
+                    $query->where([
+                        ['email1', '!=', null],
+                        ['email1', $request->email],
+                    ])
+                        ->orWhere([
+                            ['email2', '!=', null],
+                            ['email2', $request->email],
+                        ])->orWhere([
+                            ['email3', '!=', null],
+                            ['email3', $request->email],
+                        ])->orWhere([
+                            ['skype', '!=', null],
+                            ['skype', $request->email],
+                        ]);
+                })->get();
+
+                $check_unique_phones = Lead::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+                    $query->Where([
+                        ['phone1', '!=', null],
+                        ['phone1', $request->phone],
+                    ])
+                        ->orWhere([
+                            ['phone2', '!=', null],
+                            ['phone2', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone3', '!=', null],
+                            ['phone3', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone4', '!=', null],
+                            ['phone4', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['landline', '!=', null],
+                            ['landline', $request->phone],
+                        ]);
+                })->get();
+
+
+                if (count($check_unique_emails) > 0) {
+                    return response()->json(['message' => trans('sales.existing_email_in_leads') . ' ' . $check_unique_emails->first()->full_name ?? ''], 400);
+                }
+                if (count($check_unique_phones) > 0) {
+                    return response()->json(['message' => trans('sales.existing_phone_in_leads') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
+                }
+
+
+
+                $check_unique_emails = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+
+                    $query->where([
+                        ['email1', '!=', null],
+                        ['email1', $request->email],
+                    ])
+                        ->orWhere([
+                            ['email2', '!=', null],
+                            ['email2', $request->email],
+                        ])->orWhere([
+                            ['email3', '!=', null],
+                            ['email3', $request->email],
+                        ])->orWhere([
+                            ['skype', '!=', null],
+                            ['skype', $request->email],
+                        ]);
+                })->get();
+                $check_unique_phones = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
+                    $query
+                        ->Where([
+                            ['phone1', '!=', null],
+                            ['phone1', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone2', '!=', null],
+                            ['phone2', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone3', '!=', null],
+                            ['phone3', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['phone4', '!=', null],
+                            ['phone4', $request->phone],
+                        ])
+                        ->orWhere([
+                            ['landline', '!=', null],
+                            ['landline', $request->phone],
+                        ]);
+                })->get();
+
+                // dd($check_unique_phones->first()->full_name);
+                if (count($check_unique_emails) > 0) {
+                    return response()->json(['message' => trans('sales.existing_email_in_opportunities') . ' ' . $check_unique_emails->first()->full_name ?? ''], 400);
+                }
+
+
+                if (count($check_unique_phones) > 0) {
+
+                    return response()->json(['message' => trans('sales.existing_phone_in_opportunities') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
+                }
+
+
+
+
+
                 $landlord_type = LeadType::firstOrCreate(
                     ['role' => 'landlord'],
-                    ['name_en' => 'landlord', 'name_ar' => 'المالك']
+                    ['name_en' => 'landlord', 'name_ar' => 'المالك', 'agency_id' => $request->agency, 'business_id' => $request->business]
 
                 );
 
@@ -538,7 +761,7 @@ class ListingRepo
                 return response()->json(['message' => trans('listing.landlord_created'), 'data' => $landlord], 200);
             } catch (\Exception $e) {
                 DB::rollback();
-
+                dd($e->getMessage());
                 return response()->json(['message' => trans('agency.something_went_wrong')], 400);
             }
         }
@@ -1213,7 +1436,7 @@ class ListingRepo
 
         $listings = $listings->paginate($per_page);
 
-        return view('listing::listing.share_listing', compact('listings', 'locations', 'types','agencies'));
+        return view('listing::listing.share_listing', compact('listings', 'locations', 'types', 'agencies'));
     }
 
 
@@ -1849,12 +2072,44 @@ class ListingRepo
     }
 
 
-    public
-    function export_all($request, $agency)
+    public function export_all($request, $agency)
     {
 
         abort_if(Gate::denies('can_generate_reports'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return Excel::download(new ListingsExport($agency), 'listings-list.xlsx');
+    }
+    public function get_communities($request)
+    {
+
+
+        if ($request->ajax()) {
+
+
+            try {
+                $communities = City::with('communities')->where('id', $request->city_id)->firstOrFail()->communities;
+
+
+                return response()->json(['message' => trans('listing.success'), 'communities' => $communities], 200);
+            } catch (\Exception $e) {
+
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+    public function get_sub_communities($request)
+    {
+
+
+        if ($request->ajax()) {
+
+            try {
+                $sub_communities = Community::with('sub_communities')->where('id', $request->community_id)->firstOrFail()->sub_communities;
+                return response()->json(['message' => trans('listing.success'), 'sub_communities' => $sub_communities], 200);
+            } catch (\Exception $e) {
+
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
     }
 }

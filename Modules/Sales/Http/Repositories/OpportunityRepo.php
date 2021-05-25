@@ -210,9 +210,9 @@ class OpportunityRepo
     {
 
 
-        $opportunity = Opportunity::where('id', $id)->where('business_id', auth()->user()->business_id)->first();
+        $opportunity = Opportunity::where('id', $id)->where('business_id', auth()->user()->business_id)->firstOrFail();
 
-        abort_if(!$opportunity, Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // abort_if(!$opportunity, Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         DB::beginTransaction();
 
@@ -1905,15 +1905,15 @@ class OpportunityRepo
 
     public function approve_client($request)
     {
+
         try {
             $opportunity = Opportunity::where('id', $request->opportunity_id)
-                ->where('business_id', auth()->user()->business_id)->first();
-            abort_if(!$opportunity, Response::HTTP_FORBIDDEN, '403 Forbidden');
+                ->where('business_id', auth()->user()->business_id)->firstOrFail();
 
             $client = Client::where('id', $request->client_id)->where('converted_from', $opportunity->id)
-                ->where('business_id', auth()->user()->business_id)->first();
+                ->where('business_id', auth()->user()->business_id)->firstOrFail();
 
-            abort_if(!$client, Response::HTTP_FORBIDDEN, '403 Forbidden');
+
 
             DB::beginTransaction();
             $client->update(['status' => 'accepted']);

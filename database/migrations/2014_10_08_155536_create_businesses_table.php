@@ -15,6 +15,7 @@ class CreateBusinessesTable extends Migration
     {
         Schema::create('businesses', function (Blueprint $table) {
             $table->id();
+            // $table->bigInteger('country_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -5,15 +5,8 @@
 
     <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-
-    <link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" />
-    
-    <link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
-
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
     <style>
@@ -32,145 +25,10 @@
         }
     </style>
 
-    {{-- <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    --}}
     @endsection
  
 
 @section('content')
-
-{{-- <div id="tasksFor-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="tasksFor-modalLabel"
-   aria-hidden="true">
-  <div class="modal-dialog modal-full-width">
-      <div class="modal-content">
-          <div class="modal-header py-2">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          </div>
-          <div class="modal-body">
-              <div class="text-center mb-4">
-                  <i class="far fas fa-tasks fa-2x"></i>
-                  <h4>Tasks For (122-VI-R-1160)</h4>
-              </div>
-              <h5 class="border-bottom pb-1">ADD NEW TASK (VIEWING)</h5>
-              <div class="row mb-3">
-                  <div class="col-md-6">
-                      <div class="form-group">
-                          <label class="mb-1 font-weight-medium text-muted" style="flex:1;">Type*</label>
-                          <div style="flex:2;">
-                              <select class="form-control select2" name="Type2" data-toggle="select2"
-                                      data-placeholder="select">
-                                  <option value="">1</option>
-                                  <option value="1">2</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div class="form-group mb-3">
-                          <label>Contact</label>
-                          <div class="input-group">
-                              <div class="input-group-prepend">
-                                  <button class="input-group-text" onclick="event.preventDefault()"
-                                          id="basic-addon1">
-                                      <i class="fas fa-plus-circle"></i>
-                                  </button>
-                              </div>
-                              <input type="text" class="form-control" placeholder="Search Contacts"
-                                     aria-label="Username"
-                                     aria-describedby="basic-addon1">
-                          </div>
-                      </div>
-                      <div class="form-group mb-2">
-                          <label class="font-weight-medium text-muted">Status*</label>
-                          <input type="text" class="form-control" name="status1" id="status1">
-                      </div>
-                      <div class="form-group mb-2">
-                          <label class="font-weight-medium text-muted">Note</label>
-                          <textarea class="form-control" name="note3" id="" cols="3" rows="3"></textarea>
-                      </div>
-                  </div>
-                  <div class="col-md-6">
-                      <div class="form-group">
-                          <label class="mb-1 font-weight-medium text-muted" style="flex:1;">Staff*</label>
-                          <div style="flex:2;">
-                              <select class="form-control select2" name="Staff2" data-toggle="select2"
-                                      data-placeholder="select">
-                                  <option value="">1</option>
-                                  <option value="1">2</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div class="form-group mb-3">
-                          <label for="example-date">Date</label>
-                          <input class="form-control" id="taskDueDate" type="date" name="date">
-                      </div>
-                      <div class="form-group">
-                          <label class="font-weight-medium text-muted" style="flex:1">Time*</label>
-                          <div class="form-group">
-                              <div class="input-group mb-2 mr-sm-2">
-                                  <input type="text" class="form-control" id="permit1"
-                                         data-tippy-placement="top-start" title="">
-                                  <div class="input-group-prepend">
-                                      <div class="input-group-text" data-plugin="tippy"
-                                           data-tippy-placement="top-start" data-tippy=""
-                                           data-original-title="Validate">
-                                          <i class="far fa-clock"></i>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="checkbox checkbox-primary mb-2">
-                          <input id="customizedReminder" type="checkbox">
-                          <label for="customizedReminder">
-                              Customized Reminder
-                          </label>
-                      </div>
-                      <div class="mt-3 d-flex justify-content-end">
-                          <button type="button" class="btn btn-secondary mx-1" data-dismiss="modal">Cancel
-                          </button>
-                          <button type="button" class="btn btn-primary">Submit</button>
-                      </div>
-                  </div>
-              </div>
-              <table class="table table-striped" style="table-layout: fixed">
-                  <thead>
-                  <tr>
-                      <th scope="col">
-                          <div class="checkbox checkbox-single checkbox-primary">
-                              <input id="tasksForTableCheck" type="checkbox">
-                              <label for="tasksForTableCheck"></label>
-                          </div>
-                          <!-- <div class="checkbox checkbox-single">
-                              <input type="checkbox" id="singleCheckbox1" value="option1" aria-label="Single checkbox One">
-                              <label></label>
-                          </div> -->
-                      </th>
-                      <th scope="col">#</th>
-                      <th scope="col">Type</th>
-                      <th scope="col">TASK AGAINST</th>
-                      <th scope="col">STAFF</th>
-                      <th scope="col">ADDED BY</th>
-                      <th scope="col">DATE ADDED</th>
-                      <th scope="col">DEADLINE</th>
-                      <th scope="col">LATEST NOTE</th>
-                      <th scope="col">STATUS</th>
-                      <th scope="col">CONSTROLS</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr></tr>
-                  </tbody>
-              </table>
-          </div>
-          <!--  <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Done</button>
-          </div> -->
-      </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal --> --}}
-
     <div class="content p-3">
 
 
@@ -314,7 +172,7 @@
 
             @can('add_listing')
                 <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
-                    <i class="fe-plus-square"></i> ADD LISTING
+                    <i class="fe-plus-square"></i> @lang('listing.add_listing')
                 </button>
             @endcan
         </div>
@@ -364,13 +222,14 @@
                             <td>{{ Str::ucfirst($listing->purpose) }}</td>
                             <td>{{ $listing->type ? $listing->type->{'name_'.app()->getLocale()} : '' }}</td>
                             <td>
+                            
                                   <span
                                   class="cursor-pointer"
                                   data-plugin="tippy" 
                                 data-tippy-placement="top-start" 
-                                title="{{ $listing->location }}"
+                                title="{{  $listing->city->{'name_'.app()->getLocale()} .' , '. $listing->community->{'name_'.app()->getLocale()} .' , '. $listing->subCommunity->{'name_'.app()->getLocale()} .' , '.$listing->location }}"
                                 >
-                                 {{ Str::words($listing->location,2,'...') }}
+                                 {{ Str::words($listing->location,3,'...') }}
                                 </span>
                          </td>
                             <td>{{ number_format($listing->area)  }}</td>
@@ -381,7 +240,7 @@
                                 @can('edit_listing')
                                
                                     <select onchange="show_status_modal({{ $listing->id }},this)" id="modify_listing_status_{{ $listing->id }}"
-                                         class=" selectpicker mb-0 show-tick"   data-style="btn-outline-secondary">
+                                         class="form-control mb-0 show-tick"   data-style="btn-outline-secondary">
                                         <option value=""></option>
                                         <option  value="draft" @if($listing->status == 'draft') selected @endif >@lang('listing.draft')</option>
                                         <option  value="live"  @if($listing->status == 'live') selected @endif>@lang('listing.live')</option>
@@ -413,8 +272,10 @@
                     </tr>
                     @can('edit_listing')
                     
-                        <tr class="edit_listing_{{ $listing->id }}"
-                            @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
+                        <tr class="table-row_{{ $listing->id }} edit_listing_{{ $listing->id }}
+                            @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else d-none @endif
+                            "
+                             >
                             <td colspan="14">
 
                                 @include('listing::listing.edit.index')
@@ -570,29 +431,10 @@
 
 
     <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script>
 
-
-    <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
-    <!-- Footable js -->
-    <script src="{{ asset('assets/libs/footable/footable.all.min.js') }}"></script>
-
-    {{-- tooltip --}}
     <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
 
-    <!-- Init js -->
-    {{-- <script src="{{ asset('assets/js/pages/foo-tables.init.js') }}"></script> --}}
-    <!-- Plugins js -->
-    <script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script>
-    <script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script>
-
-
-    <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
-    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-    <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script>
-
+    
     <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
 
 
@@ -602,11 +444,33 @@
     <script src="{{ asset('assets/libs/uploader-master/dist/js/jquery.dm-uploader.min.js') }}"></script>
     <script src="{{ asset('assets/libs/uploader-master/src/js/demo-ui.js') }}"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap" async defer>
-    </script>
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+  {{--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap"
+     async >
+    </script> --}}
     
     <script>
         $(document).ready(function () {
+
+            ClassicEditor
+                    .create(document.querySelector('#description_en'))
+                    .then()
+                    .catch(error => {
+
+                    });
+
+                ClassicEditor
+                    .create(document.querySelector('#description_ar'), {
+                        language: 'ar'
+                    })
+                    .then()
+                    .catch(error => {
+
+                    });
          
             $('.select2').select2();
             $('.select2-multiple').select2();
@@ -614,27 +478,6 @@
             $(".clockpicker").clockpicker({
                 twelvehour :false
             });
-
-            var listings = @json($listings);
-            for (var i = 0; i < listings.data.length; i++) {
-
-                ClassicEditor
-                    .create(document.querySelector('#edit_description_en_' + listings.data[i].id))
-                    .then()
-                    .catch(error => {
-
-                    });
-
-                ClassicEditor
-                    .create(document.querySelector('#edit_description_ar_' + listings.data[i].id), {
-                        language: 'ar'
-                    })
-                    .then()
-                    .catch(error => {
-
-                    });
-            }
-
 
             if(sessionStorage.getItem('open-call-tab')){
             $('.call_'+sessionStorage.getItem('open-call-tab')).removeClass('d-none');
@@ -651,15 +494,57 @@
             sessionStorage.removeItem('open-question-tab')
         }
 
+
+
+       
+
+     
         })
     </script>
 
     <script>
+      var  googleMapsScriptIsInjected = false;
+        function injectGoogleMapsApiScript(options){
+
+            if(googleMapsScriptIsInjected){
+                return;
+            }
+
+    
+                const optionsQuery = Object.keys(options)
+                    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(options[k])}`)
+                    .join('&');
+
+                const url = `https://maps.googleapis.com/maps/api/js?${optionsQuery}`;
+
+                const script = document.createElement('script');
+
+                script.setAttribute('src', url);
+                script.setAttribute('async', '');
+                script.setAttribute('defer', '');
+
+                document.head.appendChild(script);
+
+                googleMapsScriptIsInjected = true;
+            };
+
+     
+
 
 
         function show_add_div() {
             var div = document.querySelector('.add_listing');
             if (div.style.display === 'none') {
+
+                injectGoogleMapsApiScript({
+                    key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
+                    libraries: 'places',
+                    language: 'ar',
+                    region: 'EG',
+                    callback: 'initMap',
+                });
+
+
                 div.style.display = 'block';
 
                 setTimeout(function () {
@@ -696,45 +581,6 @@
         }
 
 
-        function show_edit_div(id) {
-            var div = document.querySelector('.edit_listing_' + id);
-            if (div.style.display === 'none') {
-
-
-                div.style.display = '';
-
-                setTimeout(function () {
-
-                    div.style.opacity = 1;
-
-                }, 10);
-            } else {
-                div.style.display = 'none';
-                setTimeout(function () {
-
-                    div.style.opacity = 0;
-
-
-                }, 10);
-
-            }
-
-        }
-
-
-        function hide_edit_div(id) {
-            var div = document.querySelector('.edit_listing_' + id);
-
-            div.style.display = 'none';
-            setTimeout(function () {
-
-                div.style.opacity = 0;
-
-
-            }, 10);
-
-
-        }
     </script>
 
 
@@ -773,21 +619,6 @@
             }
         }
 
-        ClassicEditor
-            .create(document.querySelector('#description_en'))
-            .then()
-            .catch(error => {
-
-            });
-
-        ClassicEditor
-            .create(document.querySelector('#description_ar'), {
-                language: 'ar'
-            })
-            .then()
-            .catch(error => {
-
-            });
 
 
         function toggle_edit_desc(id) {
@@ -825,6 +656,139 @@
             }
         }
 
+
+
+
+
+        function getCommunitites(type,id){
+
+            var city_id ='';
+            if(type == "create"){
+                city_id = $('.city-in-create').val();
+
+            }else{
+                city_id = $('.city-in-edit-'+id).val();
+
+            }
+
+
+
+                $.ajax({
+                url:'{{  route("listings.get-communities") }}',
+                type:'POST',
+                data:{
+                    _token: '{{ csrf_token() }}',
+                    city_id    : city_id,
+                },
+                success: function(data){
+                    
+                    var option = '';
+                    var locale = @json(app()->getLocale());
+                    data.communities.forEach(function(value,key){
+                        if(type == 'create'){
+                            option += '<option value="'+value.id+'" class="create-appended-communities">';
+                        } else{
+                            option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
+                        }
+                       
+                 
+                            if(locale == 'en'){
+
+                                option += value.name_en;
+                            } else{
+                                option += value.name_ar;
+                            }
+                        option += '</option>';
+
+                    })
+
+
+                    if(type == "create"){
+                        $('.create-appended-communities').remove();
+                        $('.create-appended-sub-communities').remove();
+                        $('.community-in-create').append(option)
+
+
+                    }else{
+                        $('.edit-appended-communities-'+id).remove();
+                        $('.edit-appended-sub-communities-'+id).remove();
+                        $('.community-in-edit-'+id).append(option)
+
+                    }
+
+              
+
+                
+                },
+                error: function(error){
+                
+                },
+                })
+
+
+        }
+    
+        function getSubCommunities(type,id){
+            var community_id ='';
+            if(type == "create"){
+             community_id = $('.community-in-create').val();
+
+            }else{
+                community_id = $('.community-in-edit-'+id).val();
+            }
+
+          
+            $.ajax({
+            url:'{{  route("listings.get-sub-communities") }}',
+            type:'POST',
+            data:{
+                _token: '{{ csrf_token() }}',
+                community_id    : community_id,
+            },
+            success: function(data){
+           
+                var option = '';
+                var locale = @json(app()->getLocale());
+                data.sub_communities.forEach(function(value,key){
+                    if(type == 'create'){
+                           option += '<option value="'+value.id+'" class="create-appended-sub-communities">';
+                        } else{
+                            option += '<option value="'+value.id+'" class="edit-appended-sub-communities-'+id+'">';
+                        }
+                   
+                        if(locale == 'en'){
+
+                            option += value.name_en;
+                        } else{
+                            option += value.name_ar;
+                        }
+                    option += '</option>';
+
+                })
+
+
+                if(type == "create"){
+                    $('.create-appended-sub-communities').remove();
+                    $('.sub-community-in-create').append(option)
+
+                }else{
+                    $('.edit-appended-sub-communities-'+id).remove();
+                    $('.sub-community-in-edit-'+id).append(option)
+                }
+
+           
+
+
+
+            },
+            error: function(error){
+
+            },
+            })
+
+
+
+        }
     </script>
 
 

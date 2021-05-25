@@ -91,7 +91,23 @@ if (!function_exists('upload_image')) {
 
 
 
+if (!function_exists('upload_flag')) {
+    function upload_flag($file, $path, $name, $country)
+    {
+        if ($file != null) {
+            if ($country->flag != null) {
 
+                if (file_exists(public_path($path . '/' . $country->flag)))
+                    unlink(public_path($path . '/' . $country->flag));
+            }
+            $fileName =  $name;
+            $file->move($path, $fileName);
+
+            return $fileName;
+        }
+        return null;
+    }
+}
 
 
 
@@ -191,7 +207,7 @@ if (!function_exists('agency_settings')) {
         }
     }
 
-
+}
     if (!function_exists('words')) {
 
         function words($value, $words = 100, $end = '...')
@@ -256,8 +272,8 @@ if (!function_exists('agency_settings')) {
             if (!is_dir($dir)) {
                 return unlink($dir);
             }
-
-            foreach (scandir($dir) as $item) {
+            $loop_dir = scandir($dir);
+            foreach ($loop_dir  as $item) {
                 if ($item == '.' || $item == '..') {
                     continue;
                 }
@@ -288,4 +304,4 @@ if (!function_exists('agency_settings')) {
             ActivityLog::create($activityData);
         }
     }
-}
+

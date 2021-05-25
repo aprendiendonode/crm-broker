@@ -174,12 +174,14 @@ return [
     'new_lead_source' => 'New lead Source',
     'confirm'         => 'Confirm',
     'name_ar'         => 'Arabic Name',
+    'name_en'         => 'English Name',
     'new_lead_type'   => 'New lead Type',
     'new_lead_qualification' => 'New lead Qualification',
     'new_lead_priority'      => 'New lead Priority',
     'new_lead_communication' => 'New lead Communication',
     'new_lead_property'      => 'New lead Property',
     'delete_lead'      => 'Delete Lead',
+    'new_developer' => 'New Developer',
 
     'source_warning' => 'You Are Going To Modify Lead Source OF ',
     'type_warning' => 'You Are Going To Modify Lead Type OF ',
@@ -483,6 +485,9 @@ return [
     'smart_bulk_import'         => 'Smart Bulk Import',
     'sheet'                     => 'Sheet',
     'leads_imported'            => 'Leads Imported Successfully',
+    'new_landlord' => 'New Landlord', 
     'search_center' => 'Search Center',
+    'email_exists_in_leads'  => 'Email Exists In Leads',
+    'phone_exists_in_leads'  => 'Phone Exists In Leads',
 
 ];

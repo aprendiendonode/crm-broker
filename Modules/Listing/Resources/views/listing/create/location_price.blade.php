@@ -58,25 +58,85 @@
                 </div>
 
 
-            <div class="form-group" >
-                <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.city')</label>
-                <div class="d-flex align-items-center" style="flex:2">
-                    <input autocomplete="off" type="text" class="form-control" name="city" id="city"  value="{{ old('city') }}" 
-                    required>
-          
+                <div class="form-group">
+
+                    <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.city')<span class="text-danger">*</span></label>
+                    <div style="flex:2;">
+                        <select required onchange="getCommunitites('create',null)" class="form-control select2 city-in-create" name="city_id"
+                         data-toggle="select2" data-placeholder="@lang('listing.city')">
+                                <option value=""></option>
+                            
+                            @foreach($cities as $city)
+                                <option @if(old('city_id') == $city->id  ) selected @endif value="{{ $city->id }}">
+                                    {{ $city->{'name_'.app()->getLocale()} }}
+                                </option>
+                            @endforeach
+    
+                        </select>
+                  
+                    </div>
+                </div>
+
+
+    
+            <div class="form-group">
+
+                <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') <span class="text-danger">*</span></label>
+                <div style="flex:2;">
+                    <select required onchange="getSubCommunities('create',null)" class="form-control select2 community-in-create" name="community_id"
+                     data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
+                            <option value=""></option>
+                        
+                            @if(old('city_id'))
+                        @if(old('community_id'))
+                            @foreach($communities->where('city_id',old('city_id')) as $community)
+                                <option class="create-appended-communities"
+                                    @if(old('community_id') == $community->id)  
+                                        selected  
+                                        @endif
+                                        value="{{ $community->id }}">
+                    
+                                    {{ $community->{'name_'.app()->getLocale()}  }}
+                                </option>
+                            @endforeach
+                        @endif
+                    @endif    
+                    
+     
+
+                    </select>
+              
                 </div>
             </div>
 
 
-            <div class="form-group" >
-                <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.community')</label>
-                <div class="d-flex align-items-center" style="flex:2">
-                    <input autocomplete="off" type="text" class="form-control" name="community" id="community"  value="{{ old('community') }}" 
-                    required >
-           
+            <div class="form-group">
+
+                <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.sub_community')</label>
+                <div style="flex:2;">
+                    <select class="form-control select2 sub-community-in-create" name="sub_community_id"
+                     data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
+                            <option value=""></option>
+
+                            @if(old('city_id') && old('community_id'))
+                            @if(old('sub_community_id'))
+                                @foreach($sub_communities->where('community_id',old('community_id')) as $sub_community)
+                                    <option class="create-appended-sub-communities"
+                                        @if(old('sub_community_id') == $sub_community->id)  
+                                            selected  
+                                            @endif
+                                            value="{{ $sub_community->id }}"
+                                    >
+                        
+                                        {{ $sub_community->{'name_'.app()->getLocale()}  }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        @endif  
+                    </select>
+              
                 </div>
             </div>
-
 
 
             <div class="form-group">

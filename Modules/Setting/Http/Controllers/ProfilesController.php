@@ -2,14 +2,15 @@
 
 namespace Modules\Setting\Http\Controllers;
 
-use App\Models\Country;
+
 use App\Models\User;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Modules\SuperAdmin\Entities\Country;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Setting\Http\Requests\UpdateProfile;
 
 class ProfilesController extends Controller
@@ -76,34 +77,36 @@ class ProfilesController extends Controller
         DB::beginTransaction();
 
         try {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|string|email|unique:users,email,' . $id,
-                'brn' => 'sometimes|nullable|string',
-                'name_en' => 'required|string',
-                'name_ar' => 'sometimes|nullable|string',
-                'description_en' => 'nullable|sometimes|string',
-                'description_ar' => 'nullable|sometimes|string',
-                'image' => 'nullable|sometimes|image|mimes:jpg,png,jpeg|max:2024',
-                'nationality_id' => 'required|integer|exists:countries,id',
-                'country_code' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
-                'city_code' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
-                'phone' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'email' => 'required|string|email|unique:users,email,' . $id,
+                    'brn' => 'sometimes|nullable|string',
+                    'name_en' => 'required|string',
+                    'name_ar' => 'sometimes|nullable|string',
+                    'description_en' => 'nullable|sometimes|string',
+                    'description_ar' => 'nullable|sometimes|string',
+                    'image' => 'nullable|sometimes|image|mimes:jpg,png,jpeg|max:2024',
+                    'nationality_id' => 'required|integer|exists:countries,id',
+                    'country_code' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                    'city_code' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                    'phone' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
 
-                'cell_code' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
-                'cell' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                    'cell_code' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                    'cell' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
 
-                'fax_country_code' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
-                'fax_city_code' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
-                'staff_fax' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                    'fax_country_code' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                    'fax_city_code' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                    'staff_fax' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
 
-                'address' => 'sometimes|nullable|string',
-                'zip' => 'sometimes|nullable|numeric',
-                'skype' => 'sometimes|nullable|string|email',
-                'whatsapp' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
-                'language' => 'required|in:en,ar',
+                    'address' => 'sometimes|nullable|string',
+                    'zip' => 'sometimes|nullable|numeric',
+                    'skype' => 'sometimes|nullable|string|email',
+                    'whatsapp' => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                    'language' => 'required|in:en,ar',
 
 
-            ],
+                ],
                 [
                     'email.required' => trans('agency.email_required'),
                     'email.string' => trans('agency.email_string'),
@@ -167,7 +170,8 @@ class ProfilesController extends Controller
                     'whatsapp.string' => trans('agency.whatsapp_string'),
                     'whatsapp.regex' => trans('agency.whatsapp_regex'),
 
-                ]);
+                ]
+            );
 
 
             if ($validator->fails()) {
@@ -215,8 +219,6 @@ class ProfilesController extends Controller
             DB::commit();
 
             return back()->with(flash(trans('settings.success'), 'success'));
-
-
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('settings.failed'), 'error'));
@@ -256,8 +258,6 @@ class ProfilesController extends Controller
 
 
             return back()->with(flash(trans('settings.failed'), 'error'));
-
-
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with(flash(trans('settings.failed'), 'error'));

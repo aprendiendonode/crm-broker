@@ -281,13 +281,21 @@
                             <h6 class="text-overflow m-0">Welcome !</h6>
                         </div>
 
+                        @if(!owner())
+                            <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agency_id]) }}" class="dropdown-item notify-item">
+                                <i class="fe-user"></i>
+                                <span>My Account</span>
+                            </a>
+                        @else
+                            <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agencies->first()->id]) }}" class="dropdown-item notify-item">
+                                <i class="fe-user"></i>
+                                <span>My Account</span>
+                            </a>
+                        @endif
                         <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <i class="fe-user"></i>
-                            <span>My Account</span>
-                        </a>
+                       
 
-                        <!-- item-->
+                        {{-- <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
                             <i class="fe-settings"></i>
                             <span>Settings</span>
@@ -297,7 +305,7 @@
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
                             <i class="fe-lock"></i>
                             <span>Lock Screen</span>
-                        </a>
+                        </a> --}}
 
                         <div class="dropdown-divider"></div>
 
@@ -531,12 +539,19 @@
                     <div class="dropdown-menu user-pro-dropdown">
 
                         <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <i class="fe-user mr-1"></i>
+                        @if(!owner())
+                        <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agency_id]) }}" class="dropdown-item notify-item">
+                            <i class="fe-user"></i>
                             <span>My Account</span>
                         </a>
+                            @else
+                        <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agencies->first()->id]) }}" class="dropdown-item notify-item">
+                            <i class="fe-user"></i>
+                            <span>My Account</span>
+                        </a>
+                        @endif
 
-                        <!-- item-->
+                        {{-- <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
                             <i class="fe-settings mr-1"></i>
                             <span>Settings</span>
@@ -546,13 +561,16 @@
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
                             <i class="fe-lock mr-1"></i>
                             <span>Lock Screen</span>
-                        </a>
+                        </a> --}}
 
                         <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <i class="fe-log-out mr-1"></i>
-                            <span>Logout</span>
-                        </a>
+                        <a href="javascript:void(0);"
+                        onclick="event.preventDefault();document.getElementById('logout-form').submit();"
+                        class="dropdown-item notify-item">
+                         <i class="fe-log-out"></i>
+                         <span>Logout</span>
+                     </a>
+
 
                     </div>
                 </div>

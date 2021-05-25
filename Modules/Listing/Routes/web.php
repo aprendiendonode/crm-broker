@@ -95,5 +95,9 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.unblock');
         Route::post('contact_client', 'ListingController@contact_client')
             ->name('listings.contact_client');
+        Route::post('get-communities', 'ListingController@get_communities')
+            ->name('listings.get-communities');
+        Route::post('get-sub-communities', 'ListingController@get_sub_communities')
+            ->name('listings.get-sub-communities');
     });
 });

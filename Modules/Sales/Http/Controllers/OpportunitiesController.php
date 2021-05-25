@@ -237,9 +237,12 @@ class OpportunitiesController extends Controller
         return $repo->client_reject($request);
     }
 
-
-
     public function approve_client(Request $request, OpportunityRepo $repo)
+    {
+        return $repo->approve_client($request);
+    }
+
+    public function approve_client_old(Request $request, OpportunityRepo $repo)
     {
 
 

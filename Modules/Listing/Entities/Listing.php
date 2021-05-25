@@ -2,15 +2,18 @@
 
 namespace Modules\Listing\Entities;
 
-use App\Models\Agency;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Modules\Activity\Entities\Task;
-use Modules\Sales\Entities\Developer;
+use App\Models\Agency;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 use Illuminate\Validation\Rule;
+use Modules\Activity\Entities\Task;
+use Modules\Sales\Entities\Developer;
+use Modules\SuperAdmin\Entities\City;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Activity\Entities\ListingNote;
+use Modules\SuperAdmin\Entities\Community;
+use Modules\SuperAdmin\Entities\SubCommunity;
 
 class Listing extends Model implements Feedable
 {
@@ -88,6 +91,18 @@ class Listing extends Model implements Feedable
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
+    public function community()
+    {
+        return $this->belongsTo(Community::class, 'community_id');
+    }
+    public function subCommunity()
+    {
+        return $this->belongsTo(SubCommunity::class, 'sub_community_id');
+    }
     public function videos()
     {
         return $this->hasMany(ListingVideo::class);
@@ -138,8 +153,9 @@ class Listing extends Model implements Feedable
             "business_id"                              => ['required'],
             "purpose"                                  => ['required', 'in:sale,rent'],
             "location"                                 => ['sometimes', 'nullable', 'string'],
-            "city"                                     => ['required', 'string'],
-            "community"                                => ['required', 'string'],
+            "city_id"                                     => ['required', 'string'],
+            "community_id"                                => ['required', 'string'],
+            "sub_community_id"                            => ['sometimes', 'nullable', 'string'],
             "unit_no"                                  => ['sometimes', 'nullable', 'string'],
             "plot_no"                                  => ['sometimes', 'nullable', 'string'],
             "street_no"                                => ['sometimes', 'nullable', 'string'],
@@ -237,8 +253,9 @@ class Listing extends Model implements Feedable
             "edit_loc_lng_" . $id                                  => ['sometimes', 'nullable', 'string'],
             "edit_purpose_" . $id                                  => ['required', 'in:sale,rent'],
             "edit_location_" . $id                                 => ['sometimes', 'nullable', 'string'],
-            "edit_city_" . $id                                     => ['required', 'string'],
-            "edit_community_" . $id                                => ['required', 'string'],
+            "edit_city_id_" . $id                                     => ['required', 'string'],
+            "edit_community_id_" . $id                                => ['required', 'string'],
+            "edit_sub_community_id_" . $id                            => ['sometimes', 'nullable', 'string'],
             "edit_unit_no_" . $id                                  => ['sometimes', 'nullable', 'string'],
             "edit_plot_no_" . $id                                  => ['sometimes', 'nullable', 'string'],
             "edit_street_no_" . $id                                => ['sometimes', 'nullable', 'string'],

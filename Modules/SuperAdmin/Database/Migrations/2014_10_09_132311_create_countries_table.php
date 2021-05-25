@@ -18,7 +18,8 @@ class CreateCountriesTable extends Migration
 
             $table->string('iso2')->nullable();
             $table->string('value')->nullable();
-            $table->string('long_name')->nullable();
+            $table->string('name_en')->nullable();
+            $table->string('name_ar')->nullable();
             $table->string('iso3')->nullable();
             $table->string('numcode')->nullable();
             $table->string('un_member')->nullable();

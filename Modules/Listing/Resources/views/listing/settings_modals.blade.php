@@ -321,42 +321,40 @@
 @push('js')
 <script>
     function show_status_modal(id){
-        console.log(id)
-        new_status = $('#modify_listing_status_'+id).val();
-                if(new_status == '' || id == '' ){
-            return false
-        }
+               
+                new_status = $('#modify_listing_status_'+id).val();
+                        if(new_status == '' || id == '' ){
+                    return false
+                }
 
-        $.ajax({
-    url : "{{ url('listing/listing-update-status') }}",
-    type : "POST",
-    data : {
-        _token    : '{{ csrf_token() }}',
-        id        : id,
-        status : new_status,
-    },
-    success : function (data) {
+                $.ajax({
+            url : "{{ url('listing/listing-update-status') }}",
+            type : "POST",
+            data : {
+                _token    : '{{ csrf_token() }}',
+                id        : id,
+                status : new_status,
+            },
+            success : function (data) {
 
-        $('#status-alert-modal_'+id).modal('hide');
-        
-        $('#modify_listing_status_'+id +' option')
-                .removeAttr('selected')
-                .filter('[value='+data.listing.status+']')
-                .attr('selected', true)
+                $('#status-alert-modal_'+id).modal('hide');
+                
+                $('#modify_listing_status_'+id +' option')
+                        .removeAttr('selected')
+                        .filter('[value='+data.listing.status+']')
+                        .attr('selected', true)
 
-                $('#modify_listing_type_'+id).val(data.listing.status).change();
+                        $('#modify_listing_type_'+id).val(data.listing.status).change();
 
-        toast(data.message,'success');
-    },
-    error:function (error) {
+                toast(data.message,'success');
+            },
+            error:function (error) {
 
-        toast(error.responseJSON.message,'error');
+                toast(error.responseJSON.message,'error');
 
-    }
-});
+            }
+            });
 
-
-       /*  $('#status-alert-modal_'+id).modal('show'); */
         }
 function change_listing_qualification(id){
 
@@ -462,7 +460,8 @@ if(new_status == '' || id == '' ){
 
             },
             error: function (error) {
-                $('.error-message').text(error.responseJSON.message);
+          
+                toast(error.responseJSON.message,'error')
             }
         })
     }
@@ -510,7 +509,9 @@ if(new_status == '' || id == '' ){
 
             },
             error: function (error) {
-                $('.error-message').text(error.responseJSON.message);
+    
+                toast(error.responseJSON.message,'error')
+               
             }
         })
     }

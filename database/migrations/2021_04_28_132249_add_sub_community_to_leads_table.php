@@ -15,7 +15,7 @@ class AddSubCommunityToLeadsTable extends Migration
     {
         Schema::table('leads', function (Blueprint $table) {
 
-            $table->text('sub_community')->nullable();
+            $table->unsignedBigInteger('sub_community')->nullable();
         });
     }
 

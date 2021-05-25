@@ -23,8 +23,9 @@ class CreateListingsTable extends Migration
 
             $table->enum('purpose', ['rent', 'sale'])->default('sale');
             $table->text('location')->nullable();
-            $table->string('city')->nullable();
-            $table->text('community')->nullable();
+            $table->bigInteger('city_id')->nullable();
+            $table->bigInteger('community_id')->nullable();
+            $table->bigInteger('sub_community_id')->nullable();
             $table->string('state')->nullable();
 
             $table->string('unit_no')->nullable();

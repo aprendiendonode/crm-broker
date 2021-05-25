@@ -8,6 +8,5 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ListingType extends Model
 {
 
-
     protected $guarded = [];
 }

@@ -64,8 +64,14 @@ class CreateLeadsTable extends Migration
             $table->unsignedBigInteger('nationality_id')->nullable();
             $table->foreign('nationality_id')->references('id')->on('countries')->onDelete('cascade');
 
+
+
+
             $table->unsignedBigInteger('city_id')->nullable();
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+            $table->foreign('city_id')->references('id')->on('cities')->onDelete('SET NULL');
+
+            $table->unsignedBigInteger('community')->nullable();
+            $table->foreign('community')->references('id')->on('communities')->onDelete('SET NULL');
 
 
             $table->string('phone1')->nullable();
@@ -78,8 +84,8 @@ class CreateLeadsTable extends Migration
             $table->string('fax')->nullable();
 
 
-            $table->string('developer')->nullable();
-            $table->text('community')->nullable();
+            $table->unsignedBigInteger('priority_id')->nullable();
+
             $table->text('building_name')->nullable();
             $table->enum('property_purpose', ['rent', 'buy'])->default('rent')->nullable();
 

@@ -142,7 +142,7 @@
             </div>
 
 
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.country')</label>
                 </div>
@@ -154,7 +154,7 @@
                     @endforeach
 
                 </select>
-            </div>
+            </div> --}}
 
 
             <input type="hidden" class="country_code" name="country_code">
@@ -162,56 +162,130 @@
             <input type="hidden" class="country_flag" name="country_flag">
 
 
-            <div class="form-group">
+            <div class="form-group d-flex">
+                <div style="flex:2">
+                    <div>
+                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                    </div>
+                    <select class="form-control select2" name="phone1_code" required>
+                    
+                        <option value=""></option>
+                        @foreach($countries as $code)
+                            <option 
+                            @if(old('phone1_code') == $code->phone_code) 
+                            selected
+                            @endif
+                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="flex:4">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
                 </div>
                 <div class="">
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start"
-                           title="@lang('sales.phone1')" type="text" class="form-control" name="phone1"
+                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/"
+                            type="text" class="form-control" name="phone1"
                            value="{{ old('phone1') }}" placeholder="@lang('sales.phone1')" required>
                 </div>
             </div>
+            </div>
 
 
-            <div class="form-group">
+            <div class="form-group d-flex">
+                <div style="flex:2">
+                    <div>
+                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                    </div>
+                    <select class="form-control select2" name="phone2_code">
+                        <option value=""></option>
+                        @foreach($countries as $code)
+                            <option 
+                            @if(old('phone2_code') == $code->phone_code) 
+                             selected
+                            @endif
+                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="flex:4">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone2')</label>
                 </div>
 
                 <div class="">
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start"
-                           title="@lang('sales.phone2')" type="text" class="form-control" name="phone2"
+                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                           type="text" class="form-control" name="phone2"
                            value="{{ old('phone2') }}" placeholder="@lang('sales.phone2')">
                 </div>
             </div>
+            </div>
 
 
-            <div class="form-group">
+            <div class="form-group d-flex">
+
+                <div style="flex:2">
+                    <div>
+                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                    </div>
+                    <select class="form-control select2" name="phone3_code">
+                        <option value=""></option>
+                        @foreach($countries as $code)
+                            <option
+                            @if(old('phone3_code') == $code->phone_code) 
+                            selected
+                            @endif
+                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="flex:4">
+
+
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone3')</label>
                 </div>
 
 
                 <div class="">
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start"
-                           title="@lang('sales.phone3')" type="text" class="form-control" name="phone3"
+                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                            type="text" class="form-control" name="phone3"
                            value="{{ old('phone3') }}" placeholder="@lang('sales.phone3')">
                 </div>
             </div>
+            </div>
 
 
-            <div class="form-group">
+            <div class="form-group d-flex">
+
+                <div style="flex:2">
+                    <div>
+                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                    </div>
+                    <select class="form-control select2" name="phone4_code" >
+                        <option value=""></option>
+                        @foreach($countries as $code)
+                            <option 
+                            @if(old('phone4_code') == $code->phone_code) 
+                            selected
+                            @endif
+                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="flex:4">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone4')</label>
                 </div>
 
                 <div class="">
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start"
-                           title="@lang('sales.phone4')" type="text" class="form-control" name="phone4"
+                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                           type="text" class="form-control" name="phone4"
                            value="{{ old('phone4') }}" placeholder="@lang('sales.phone4')">
                 </div>
             </div>
+            </div>
+      
 
 
             <div class="form-group">
@@ -534,32 +608,126 @@
         <div class="col-md-4">
 
 
-            <div class="form-group">
-                <div>
-                    <label class="text-muted font-weight-medium" for="">@lang('sales.developer')</label>
-                </div>
+            <div class="form-group ">
+                <label class="font-weight-medium text-muted">
+                    @lang('sales.developer')
+                </label>
+       
+                <div class="input-group">
+                <div class="input-group-prepend w-100">
+                        @can('manage_lead_setting')
+                            <div 
+                            class="input-group-text cursor-pointer"
+                            data-toggle="modal"
+                            data-target="#add_developer" 
+                            onclick="event.preventDefault()" id="basic-addon1">
+                                <i 
+                                data-plugin="tippy" title="@lang('sales.new_developer')"
+                                data-tippy-placement="top-start" 
+       
+                                class="fas fa-plus-circle"
+                                ></i>
+                            </div>
+                        @endcan
+        
+                        <select  style="" class="form-control select_developer_id select2" name="developer" data-toggle="select2" data-placeholder="@lang('listing.developer')" >
+                                <option value="" class="font-weight-medium text-muted"></option>
+                                @foreach($developers as $developer)
+                   
+                                    <option 
+                                    @if(old("developer") == $developer->id) selected @endif 
+                                    value="{{ $developer->id}}">
+                                        {{ $developer->{'name_'.app()->getLocale()} }}
+                                    </option>
+                               @endforeach    
+       
+                        </select>
+       
+                    </div>
+                    </div>
+               </div>
+       
 
-                <input type="text" class="form-control" name="developer" value="{{ old('developer') }}"
-                       placeholder="@lang('sales.developer')">
+
+               <div class="form-group">
+
+                <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.city')<span class="text-danger">*</span></label>
+                <div style="flex:2;">
+                    <select required onchange="getCommunitites('create',null)" class="form-control select2 city-in-create" name="city_id"
+                     data-toggle="select2" data-placeholder="@lang('listing.city')">
+                            <option value=""></option>
+                        
+                        @foreach($cities as $city)
+                            <option @if(old('city_id') == $city->id  ) selected @endif value="{{ $city->id }}">
+                                {{ $city->{'name_'.app()->getLocale()} }}
+                            </option>
+                        @endforeach
+
+                    </select>
+              
+                </div>
             </div>
 
 
-            <div class="form-group">
-                <div>
-                    <label class="text-muted font-weight-medium" for="">@lang('sales.community')</label>
-                </div>
-                <input type="text" class="form-control" name="community" value="{{ old('community') }}"
-                       placeholder="@lang('sales.community')">
+
+        <div class="form-group">
+
+            <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') <span class="text-danger">*</span></label>
+            <div style="flex:2;">
+                <select required onchange="getSubCommunities('create',null)" class="form-control select2 community-in-create" name="community"
+                 data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
+                        <option value=""></option>
+                    @if(old('city_id'))
+                        @if(old('community'))
+                            @foreach($communities->where('city_id',old('city_id')) as $community)
+                                <option class="create-appended-communities"
+                                    @if(old('community') == $community->id)  
+                                        selected  
+                                        @endif
+                                        value="{{ $community->id }}">
+                    
+                                    {{ $community->{'name_'.app()->getLocale()}  }}
+                                </option>
+                            @endforeach
+                        @endif
+                    @endif    
+                    
+                 
+
+                </select>
+          
             </div>
+        </div>
 
 
-            <div class="form-group">
-                <div>
-                    <label class="text-muted font-weight-medium" for="">@lang('sales.sub_community')</label>
-                </div>
-                <input type="text" class="form-control" name="sub_community" value="{{ old('sub_community') }}"
-                       placeholder="@lang('sales.sub_community')">
+        <div class="form-group">
+
+            <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.sub_community')</label>
+            <div style="flex:2;">
+                <select class="form-control select2 sub-community-in-create" name="sub_community"
+                 data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
+                        <option value=""></option>
+
+                        @if(old('city_id') && old('community'))
+                        @if(old('sub_community'))
+                            @foreach($sub_communities->where('community_id',old('community')) as $sub_community)
+                                <option class="create-appended-sub-communities"
+                                    @if(old('sub_community') == $sub_community->id)  
+                                        selected  
+                                        @endif
+                                        value="{{ $sub_community->id }}"
+                                >
+                    
+                                    {{ $sub_community->{'name_'.app()->getLocale()}  }}
+                                </option>
+                            @endforeach
+                        @endif
+                    @endif    
+                    
+                </select>
+          
             </div>
+        </div>
 
 
             <div class="form-group">
@@ -693,7 +861,7 @@
 
                 <div class="form-group">
                     <div>
-                        <label class="text-muted font-weight-medium" for="">@lang('sales.salutation')</label>
+                        <label class="text-muted font-weight-medium" for="">@lang('sales.parkings')</label>
                     </div>
                     <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/" name="parkings"
                            id="parkings" value="{{ old('parkings') }}" placeholder="@lang('sales.parkings')">

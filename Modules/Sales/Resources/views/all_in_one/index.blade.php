@@ -68,9 +68,7 @@
     
 
     
-    <button class="btn btn-primary mb-2" onclick="show_filter()">@lang('sales.filter') <i class="fa fa-search"></i></button>   
-    <a class="btn btn-outline-primary mb-2" href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.reset_filters')</a>
-    
+
     {{-- <div class="mb-2 filter_opportunity " @if(!request()->has('filter_name')) style="display: none;opacity:0;transition:0.7s" @endif> --}}
     <div class="mb-3 mt-2 filter_opportunity ">
         

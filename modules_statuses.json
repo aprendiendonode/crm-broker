@@ -3,5 +3,6 @@
     "Agency": true,
     "Activity": true,
     "Sales": true,
-    "Listing": true
+    "Listing": true,
+    "SuperAdmin": true
 }

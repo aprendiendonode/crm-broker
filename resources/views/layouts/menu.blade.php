@@ -395,12 +395,12 @@
             </li>
 
             <li>
-                <a href="#sidebarListing" data-toggle="collapse">
+                <a href="#sidebarListingSharing" data-toggle="collapse">
                     <i data-feather="cpu"></i>
                     <span> @lang('listing.sharing_center') </span>
                     <span class="menu-arrow"></span>
                 </a>
-                <div class="collapse" id="sidebarListing">
+                <div class="collapse" id="sidebarListingSharing">
                     <ul class="nav-second-level">
                         @if(owner())
                             <li>
@@ -689,10 +689,77 @@
                 </div>
             </li>
 
+
+
+            <li>
+                <a href="#sidebarSuperadmin" data-toggle="collapse">
+                    <i class="fe-star"></i>
+                    <span> @lang('superadmin.superadmin') </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse
+                @if(
+                    in_array( request()->segment(2) , ['countries','cities','communities','sub-communities'])
+                ) show @endif
+                " id="sidebarSuperadmin">
+                    <ul class="nav-second-level">
+
+         
+                                    <a href="#sidebargeoLocations" data-toggle="collapse">
+                                        <i class="fe-map-pin"></i>
+                                        <span>@lang('superadmin.geolocations') </span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+            
+            
+                                    <div class="collapse 
+                                    @if(
+                                        in_array( request()->segment(2) , ['countries','cities','communities','sub-communities'])
+                                    ) show @endif
+                                    " id="sidebargeoLocations">
+                                        <ul class="nav-second-level">
+                                      
+                                            <li>
+                                                <a href="{{ route('countries.index') }}">@lang('superadmin.countries.countries')</a>
+                                            </li>
+                                         
+                                      
+                                            <li>
+                                                <a href="{{ route('cities.index') }}">@lang('superadmin.cities.cities')</a>
+                                            </li>
+                                         
+                                            <li>
+                                                <a href="{{ route('communities.index') }}">@lang('superadmin.communities.communities')</a>
+                                            </li>
+                                         
+                                            <li>
+                                                <a href="{{ route('sub-communities.index') }}">@lang('superadmin.sub_communities.sub_communities')</a>
+                                            </li>
+                                         
+                                      
+                                        </ul>
+                                    </div>
+
+
+
+
+                   
+
+                   
+
+
+          
+                
+
+
+                    </ul>
+                </div>
+            </li>
+
             <li>
 
 
-                <a href="{{ url('logout') }}"
+                {{-- <a href="{{ url('logout') }}"
                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                     <i class="fe-log-out"></i>
                     <span> @lang('dashboard.logout') </span>
@@ -701,7 +768,7 @@
 
                 <form id="logout-form" action="{{ url('logout') }}" method="POST" style="display: none;">
                     @csrf
-                </form>
+                </form> --}}
 
             </li>
 

@@ -63,7 +63,7 @@ class ClientRepo
             'calls.madeBy',
             'questions',
             'questions.addedBy',
-        ])->where('agency_id', $agency->id)->where('business_id', $business);
+        ])->where('status', 'accepted')->where('agency_id', $agency->id)->where('business_id', $business);
 
         $staffs = staff($agency->id);
 

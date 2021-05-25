@@ -61,74 +61,61 @@
            listings.data.forEach(function(value,key){
 
 
-       edit_autocompletelocation_input = new google.maps.places.Autocomplete((document.getElementById('location_input_'+value.id)), {
-        types: ["establishment"],
-        });
-        edit_autocompletelocation_input.setComponentRestrictions({
-           country: ['EG'],
-       });
+                        edit_autocompletelocation_input = new google.maps.places.Autocomplete((document.getElementById('location_input_'+value.id)), {
+                            types: ["establishment"],
+                            });
+                            edit_autocompletelocation_input.setComponentRestrictions({
+                            country: ['EG'],
+                        });
 
-       google.maps.event.addListener(edit_autocompletelocation_input, 'place_changed', function () {
-            var place = edit_autocompletelocation_input.getPlace();
-                    $('#latitude_'+value.id).val(place.geometry.location.lat());
-                    $('#longitude_'+value.id).val(place.geometry.location.lng());
-     
-     
+                        google.maps.event.addListener(edit_autocompletelocation_input, 'place_changed', function () {
+                                var place = edit_autocompletelocation_input.getPlace();
+                                        $('#latitude_'+value.id).val(place.geometry.location.lat());
+                                        $('#longitude_'+value.id).val(place.geometry.location.lng());
+                        
+                        
 
-        });
-
-
-
-       edit_autocomplete = new google.maps.places.Autocomplete((document.getElementById('city_'+value.id)), {
-        types: ['(cities)']
-        });
-        edit_autocomplete.setComponentRestrictions({
-           country: ['EG'],
-       });
+                            });
 
 
+                            var editMap = new google.maps.Map(document.getElementById('map_'+value.id), {
+                                    center: {lat: value.loc_lat ? parseInt(value.loc_lat) : 30.0444 , lng:  value.loc_lng ? parseInt(value.loc_lng ) : 31.2357  },
+                                    zoom: 13,
+                                    
+                                    mapTypeId: 'roadmap'
+                                }); 
+
+                                var geocoder = new google.maps.Geocoder();
+                                google.maps.event.addListener(editMap, 'click', function(event) {
+                                    SelectedLatLng = event.latLng;
+                                    geocoder.geocode({
+                                        'latLng': event.latLng
+                                    }, function(results, status) {
+                                        if (status == google.maps.GeocoderStatus.OK) {
+                                            if (results[0]) {
+                                                deleteMarkers();
+                                                addMarkerRunTime(event.latLng);
+                                                SelectedLocation = results[0].formatted_address;
+                                                console.log( results[0].formatted_address);
+                                                editSplitLatLng(String(event.latLng),value.id);
+                                                $("#location_input_"+value.id).val(results[0].formatted_address);
+                                            }
+                                        }
+                                    });
+                                });
+
+
+                                function addMarkerRunTime(location) {
+                                    var marker = new google.maps.Marker({
+                                        position: location,
+                                        map: editMap
+                                    });
+                                    markers.push(marker);
+                                }
 
 
 
-        edit_autocompletecommunity = new google.maps.places.Autocomplete((document.getElementById('community_'+value.id)), {
-        types: ['(regions)']
-        });
-        edit_autocompletecommunity.setComponentRestrictions({
-           country: ['EG'],
-       });
-  
 
-
-
-        var map = new google.maps.Map(document.getElementById('map_'+value.id), {
-                center: {lat:30.0444, lng: 31.2357 },
-                zoom: 13,
-                
-                mapTypeId: 'roadmap'
-            }); 
-
-
-            // infoWindow = new google.maps.InfoWindow;
-            geocoder = new google.maps.Geocoder();
-
-            var geocoder = new google.maps.Geocoder();
-            google.maps.event.addListener(map, 'click', function(event) {
-                SelectedLatLng = event.latLng;
-                geocoder.geocode({
-                    'latLng': event.latLng
-                }, function(results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        if (results[0]) {
-                            deleteMarkers();
-                            addMarkerRunTime(event.latLng);
-                            SelectedLocation = results[0].formatted_address;
-                            console.log( results[0].formatted_address);
-                            editSplitLatLng(String(event.latLng),value.id);
-                            $("#location_input_"+value.id).val(results[0].formatted_address);
-                        }
-                    }
-                });
-            });
            })
 
            
@@ -144,31 +131,8 @@
                     $('#latitude').val(place.geometry.location.lat());
                     $('#longitude').val(place.geometry.location.lng());
      
-     
-
+    
         });
-
-
-
-       autocomplete = new google.maps.places.Autocomplete((document.getElementById('city')), {
-        types: ['(cities)']
-        });
-        autocomplete.setComponentRestrictions({
-           country: ['EG'],
-       });
-
-
-
-
-
-        autocompletecommunity = new google.maps.places.Autocomplete((document.getElementById('community')), {
-        types: ['(regions)']
-        });
-        autocompletecommunity.setComponentRestrictions({
-           country: ['EG'],
-       });
-  
-
 
 
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -179,8 +143,7 @@
             }); 
 
 
-            // infoWindow = new google.maps.InfoWindow;
-            geocoder = new google.maps.Geocoder();
+    
 
             var geocoder = new google.maps.Geocoder();
             google.maps.event.addListener(map, 'click', function(event) {

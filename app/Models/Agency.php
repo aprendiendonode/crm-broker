@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Modules\Sales\Entities\Lead;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\LeadType;
+use Modules\Listing\Entities\Listing;
 use Modules\Sales\Entities\Developer;
 use Modules\Sales\Entities\CallStatus;
 use Modules\Sales\Entities\LeadSource;
@@ -112,6 +114,30 @@ class Agency extends Model
     {
         return $this->hasMany(ListingView::class);
     }
+    public function leads()
+    {
+        return $this->hasMany(Lead::class);
+    }
+    public function listingsAll()
+    {
+        return $this->hasMany(Listing::class);
+    }
+    public function listingsLive()
+    {
+        return $this->hasMany(Listing::class)->where('status', 'live');
+    }
+    public function listingsArchive()
+    {
+        return $this->hasMany(Listing::class)->where('status', 'archive');
+    }
+    public function listingsDraft()
+    {
+        return $this->hasMany(Listing::class)->where('status', 'draft');
+    }
+    public function listingsReview()
+    {
+        return $this->hasMany(Listing::class)->where('status', 'review');
+    }
     public function developers()
     {
         return $this->hasMany(Developer::class);
@@ -119,6 +145,10 @@ class Agency extends Model
     public function cheques()
     {
         return $this->hasMany(ListingCheque::class);
+    }
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
     }
     public function tenants()
     {
