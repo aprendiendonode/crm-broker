@@ -124,9 +124,9 @@ class EmailNotifiesController extends Controller
 
             if($request->task_reminder == 1){
                 EmailNotifyReminder::where( 'email_notify_id'  , $email_notify->id)->delete();
-                foreach($request->category as $key => $category){
+                foreach($request->type as $key => $type){
                     EmailNotifyReminder::create([
-                        'category'  => $category,
+                        'category'  => 'general_reminder',
                         'type'  => $request->type[$key],
                         'day'  => $request->days[$key] ?? 0,
                         'time'  => $request->time[$key] ?? '16:00:00',
