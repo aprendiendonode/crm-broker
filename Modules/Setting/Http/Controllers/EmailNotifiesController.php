@@ -124,12 +124,12 @@ class EmailNotifiesController extends Controller
 
             if($request->task_reminder == 1){
                 EmailNotifyReminder::where( 'email_notify_id'  , $email_notify->id)->delete();
-                foreach($request->category as $key => $category){
+                foreach($request->type as $key => $type){
                     EmailNotifyReminder::create([
-                        'category'  => $category,
+                        'category'  => 'general_reminder',
                         'type'  => $request->type[$key],
-                        'day'  => $request->days[$key],
-                        'time'  => $request->time[$key],
+                        'day'  => $request->days[$key] ?? 0,
+                        'time'  => $request->time[$key] ?? '16:00:00',
                         'email_notify_id'  => $email_notify->id,
                     ]);
 
@@ -141,8 +141,8 @@ class EmailNotifiesController extends Controller
                 foreach($request->tenancy_type as $key => $type){
                     EmailNotifyTenancy::create([
                         'type'  => $type,
-                        'day'  => $request->tenancy_days[$key],
-                        'time'  => $request->tenancy_time[$key],
+                        'day'  => $request->tenancy_days[$key] ?? 0,
+                        'time'  => $request->tenancy_time[$key] ?? '16:00:00',
                         'email_notify_id'  => $email_notify->id,
                     ]);
 

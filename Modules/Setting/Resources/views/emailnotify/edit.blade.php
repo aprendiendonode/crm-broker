@@ -175,23 +175,23 @@
                                 @if(count($reminders) > 0)
                                     @foreach($reminders  as $reminder)
                                         <div class="row">
-                                            <div class="form-group col-sm-3">
-                                                <select class="form-control select2" name="category[]"
-                                                        data-toggle="select2">
-                                                    <option value="general_reminder" {{ $reminder->category == 'general_reminder' ? 'selected' : '' }}>@lang('settings.general_reminder')</option>
-                                                    <option value="property_viewing" {{ $reminder->category == 'property_viewing' ? 'selected' : '' }}>@lang('settings.property_viewing')</option>
-                                                    <option value="call" {{ $reminder->category == 'call' ? 'selected' : '' }}>@lang('settings.call')</option>
-                                                    <option value="send_documents" {{ $reminder->category == 'send_documents' ? 'selected' : '' }}>@lang('settings.send_documents')</option>
-                                                    <option value="collect_documents" {{ $reminder->category == 'collect_documents' ? 'selected' : '' }}>@lang('settings.collect_documents')</option>
-                                                    <option value="meeting" {{ $reminder->category == 'meeting' ? 'selected' : '' }}>@lang('settings.meeting')</option>
-                                                    <option value="email" {{ $reminder->category == 'email' ? 'selected' : '' }}>@lang('settings.email')</option>
-                                                    <option value="payment_collection" {{ $reminder->category == 'payment_collection' ? 'selected' : '' }}>@lang('settings.payment_collection')</option>
-                                                    <option value="cheque_submission" {{ $reminder->category == 'cheque_submission' ? 'selected' : '' }}>@lang('settings.cheque_submission')</option>
+                                            {{--<div class="form-group col-sm-3">--}}
+                                                {{--<select class="form-control select2" name="category[]"--}}
+                                                        {{--data-toggle="select2">--}}
+                                                    {{--<option value="general_reminder" {{ $reminder->category == 'general_reminder' ? 'selected' : '' }}>@lang('settings.general_reminder')</option>--}}
+                                                    {{--<option value="property_viewing" {{ $reminder->category == 'property_viewing' ? 'selected' : '' }}>@lang('settings.property_viewing')</option>--}}
+                                                    {{--<option value="call" {{ $reminder->category == 'call' ? 'selected' : '' }}>@lang('settings.call')</option>--}}
+                                                    {{--<option value="send_documents" {{ $reminder->category == 'send_documents' ? 'selected' : '' }}>@lang('settings.send_documents')</option>--}}
+                                                    {{--<option value="collect_documents" {{ $reminder->category == 'collect_documents' ? 'selected' : '' }}>@lang('settings.collect_documents')</option>--}}
+                                                    {{--<option value="meeting" {{ $reminder->category == 'meeting' ? 'selected' : '' }}>@lang('settings.meeting')</option>--}}
+                                                    {{--<option value="email" {{ $reminder->category == 'email' ? 'selected' : '' }}>@lang('settings.email')</option>--}}
+                                                    {{--<option value="payment_collection" {{ $reminder->category == 'payment_collection' ? 'selected' : '' }}>@lang('settings.payment_collection')</option>--}}
+                                                    {{--<option value="cheque_submission" {{ $reminder->category == 'cheque_submission' ? 'selected' : '' }}>@lang('settings.cheque_submission')</option>--}}
 
 
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-sm-3">
+                                                {{--</select>--}}
+                                            {{--</div>--}}
+                                            <div class="form-group col-sm-3 offset-3">
                                                 <select class="form-control" name="type[]">
                                                     <option value="after" {{ $reminder->type == 'after' ? 'selected' : '' }}>@lang('settings.after')</option>
                                                     <option value="before" {{ $reminder->type == 'before' ? 'selected' : '' }}>@lang('settings.before')</option>
