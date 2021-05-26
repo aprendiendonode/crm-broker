@@ -11,4 +11,8 @@ class EmailNotifyReminder extends Model
     protected $guarded = [];
 
 
+    public function email_notify()
+    {
+        return $this->belongsTo(EmailNotify::class,'email_notify_id');
+    }
 }

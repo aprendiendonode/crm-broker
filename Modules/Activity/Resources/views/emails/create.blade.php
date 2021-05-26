@@ -30,7 +30,7 @@
                             @if($contacts)
                                 @foreach($contacts as $contact)
                                     @if($contact->email1 || $contact->email2)
-                                        <option value="{{ $contact->email1 ?? $contact->email2 ?? '' }}" {{ in_array($contact->email1 ?? $contact->email2 ?? '', old('contacts', [])) ? 'selected' : '' }} >{{ $contact->email1 ?? $contact->email2 ?? '' }}</option>
+                                        <option value="{{ $contact->email1 ?? $contact->email2 ?? '' }}" id="{{ $contact->email1 ?? $contact->email2 ?? '' }}" {{ in_array($contact->email1 ?? $contact->email2 ?? '', old('contacts', [])) ? 'selected' : '' }} >{{ $contact->email1 ?? $contact->email2 ?? '' }}</option>
                                     @endif
                                 @endforeach
                             @endif
@@ -145,11 +145,24 @@
             mail_lists.filter(function(value,key){
                 if (value.id == mail_list) {
 
-                    value.contacts.filter(function(contact_value,contact_key){
+                    var mails = value.mails.split(',');
+                    // console.log(document.getElementById('contacts').innerHTML);
 
-                        innerHtmlcontacts += `<option value='${contact_value.email1 ? contact_value.email1 : contact_value.email2 ? contact_value.email2 : "" }' selected >  (${contact_value.email1 ? contact_value.email1 : contact_value.email2 ? contact_value.email2 : ""})  </option>`;
+                    mails.filter(function(value,key){
 
+                        // var value_id = document.getElementById(value);
+                        // console.log(value_id,value);
+
+                        // if (value_id){
+                        //     document.getElementById(value).selected=true;
+                        //     console.log(document.getElementById(value),value);
+                        // }else{
+
+                            innerHtmlcontacts += `<option value='${ value ?? "" }' id='${ value ?? "" }' selected >  ${value ?? ""}  </option>`;
+                        // }
                     });
+
+                    // console.log(document.getElementById('contacts').innerHTML);
                 }
             });
 

@@ -27,7 +27,7 @@ class EmailController extends Controller
     public function index($agency)
     {
         $per_page   = 10;
-        $mail_lists = MailList::with('contacts')->where('agency_id', $agency)->get();
+        $mail_lists = MailList::where('agency_id', $agency)->get();
 
         // Clients and leads and opportunities
         $clients = Client::where('agency_id', $agency)->select('email1','email2','table_name');
