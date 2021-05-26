@@ -128,8 +128,8 @@ class EmailNotifiesController extends Controller
                     EmailNotifyReminder::create([
                         'category'  => $category,
                         'type'  => $request->type[$key],
-                        'day'  => $request->days[$key],
-                        'time'  => $request->time[$key],
+                        'day'  => $request->days[$key] ?? 0,
+                        'time'  => $request->time[$key] ?? '16:00:00',
                         'email_notify_id'  => $email_notify->id,
                     ]);
 
@@ -141,8 +141,8 @@ class EmailNotifiesController extends Controller
                 foreach($request->tenancy_type as $key => $type){
                     EmailNotifyTenancy::create([
                         'type'  => $type,
-                        'day'  => $request->tenancy_days[$key],
-                        'time'  => $request->tenancy_time[$key],
+                        'day'  => $request->tenancy_days[$key] ?? 0,
+                        'time'  => $request->tenancy_time[$key] ?? '16:00:00',
                         'email_notify_id'  => $email_notify->id,
                     ]);
 
