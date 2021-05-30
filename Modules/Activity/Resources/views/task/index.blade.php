@@ -135,9 +135,9 @@
                                                     data-tippy-placement="top-start"
                                                     title="{{ $current_users ? $current_users->{'name_'.app()->getLocale()} :'' }}"
 
-                                                    src="{{  $current_users->image != null ? asset('profile_images/'.$current_users->image) :
+                                                    src="{{ $current_users && $current_users->image != null ? asset('profile_images/'.$current_users->image) :
                                                     asset('images/user-placeholder.jpg')  }}"
-                                                    alt="{{  $current_users->{'name_'.app()->getLocale()}  }}" >
+                                                    alt="{{ $current_users && $current_users->{'name_'.app()->getLocale()} ? $current_users->{'name_'.app()->getLocale()} : ''  }}" >
                                         @empty
 
                                         @endforelse

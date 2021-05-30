@@ -104,7 +104,7 @@ class User extends Authenticatable
     }
 
 
-    public function getTasksByUserId()
+    public function getTasksByUserId($agency_id)
     {
 
         // if user is super admin show all tasks
@@ -113,13 +113,13 @@ class User extends Authenticatable
 
         if (owner()){
 
-            $tasks = Task::where('business_id',$this->business_id);
+            $tasks = Task::where('business_id',$this->business_id)->where('agency_id',$agency_id);
 
         }else{
 
             //if user is stuff show tasks related to you only
 //            $tasks = Task::where('agency_id',$this->agency_id)->where('business_id',$this->business_id);
-            $tasks = $this->tasks();
+            $tasks = $this->tasks()->where('agency_id',$agency_id);
 
         }
 

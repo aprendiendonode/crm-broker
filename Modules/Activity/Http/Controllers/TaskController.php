@@ -2,8 +2,11 @@
 
 namespace Modules\Activity\Http\Controllers;
 
+use App\Jobs\TaskReminder;
+use App\Mail\EmailGeneral;
 use App\Models\Agency;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Modules\Activity\Entities\TaskNote;
 use Modules\Activity\Entities\TaskStatus;
 use Modules\Activity\Entities\TaskType;
@@ -17,6 +20,8 @@ use Modules\Listing\Entities\Listing;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Lead;
 use Modules\Sales\Entities\Opportunity;
+use Modules\Setting\Entities\EmailNotify;
+use Modules\Setting\Entities\EmailNotifyReminder;
 use Symfony\Component\HttpFoundation\Response;
 
 class TaskController extends Controller
@@ -27,12 +32,9 @@ class TaskController extends Controller
      */
     public function index($agency)
     {
-//        $tasks_with_custom_reminder = $this->tasks_with_custom_reminder($agency);
-//        $tasks_overdue = $this->tasks_overdue($agency,2);
-//        dd($tasks_overdue);
-        $per_page       = 10;
-        $tasks          = auth()->user()->getTasksByUserId();
 
+        $per_page       = 10;
+        $tasks          = auth()->user()->getTasksByUserId($agency);
         // dynamic status
         if (request('action') == 'up_coming') {
 
@@ -376,20 +378,22 @@ class TaskController extends Controller
                         'notes_ar'      => $request->{'edit_notes_ar_' . $id},
                     ]
                 );
+
+                if ($note_id){
+
+                    setActivity('task_note',$task_note->id,$task->agency_id,$task->business_id,'the note #'.$task_note->id.' has been added by ' .auth()->user()->name_en,
+                        'تم إضافة ملاحظه رقم #'.$task_note->id.' تمت بواسطه ' .auth()->user()->name_en);
+                }else{
+
+                    setActivity('task_note',$task_note->id,$task->agency_id,$task->business_id,'the note #'.$task_note->id.' has been edited by ' .auth()->user()->name_en,
+                        'تم تعديل ملاحظه رقم #'.$task_note->id.' تمت بواسطه ' .auth()->user()->name_en);
+                }
+
             }
 
             setActivity('task',$task->id,$task->agency_id,$task->business_id,'the task #'.$task->id.' has been edited by ' .auth()->user()->name_en,
                 'تم تعديل مهمة رقم #'.$task->id.' تمت بواسطه ' .auth()->user()->name_en);
 
-            if ($note_id){
-
-                setActivity('task_note',$task_note->id,$task->agency_id,$task->business_id,'the note #'.$task_note->id.' has been added by ' .auth()->user()->name_en,
-                    'تم إضافة ملاحظه رقم #'.$task_note->id.' تمت بواسطه ' .auth()->user()->name_en);
-            }else{
-
-                setActivity('task_note',$task_note->id,$task->agency_id,$task->business_id,'the note #'.$task_note->id.' has been edited by ' .auth()->user()->name_en,
-                    'تم تعديل ملاحظه رقم #'.$task_note->id.' تمت بواسطه ' .auth()->user()->name_en);
-            }
 
             // Commit the transaction
             DB::commit();
@@ -556,91 +560,94 @@ class TaskController extends Controller
         }
 
     }
-
-    public function tasks_with_custom_reminder($agency_id)
-    {
-
-        $tasks = Task::where('agency_id', $agency_id)->get();
-        $tasks_reminder_byDate = [];
-//        dd($tasks);
-        foreach($tasks as $task)
-        {
-            if ($task->custom_reminder == 'on')
-            {
-                if ($task->period_reminder == 'before')
-                {
-                    if ($task->type_reminder == 'days')
-                    {
-
-                        $date = strtotime('-'.$task->type_reminder_number.' day',strtotime($task->deadline));
-                        $date_remind = date('Y-m-d', $date);
-                        $tasks_reminder_byDate[$date_remind][$task->time] = $task;
-
-                    }else{
-                        //hours
-                        $time = strtotime('-'.$task->type_reminder_number.' hour',strtotime($task->time));
-                        $time_remind = date('h:i:s', $time);
-                        $tasks_reminder_byDate[$task->deadline][$time_remind] = $task;
-                    }
-
-                }else{
-                    //after
-                    if ($task->type_reminder == 'days')
-                    {
-
-                        $date = strtotime('+'.$task->type_reminder_number.' day',strtotime($task->deadline));
-                        $date_remind = date('Y-m-d', $date);
-                        $tasks_reminder_byDate[$date_remind][$task->time] = $task;
-
-                    }else{
-                        //hours
-                        $time = strtotime('+'.$task->type_reminder_number.' hour',strtotime($task->time));
-                        $time_remind = date('h:i:s', $time);
-                        $tasks_reminder_byDate[$task->deadline][$time_remind] = $task;
-                    }
-
-                }
-            }
-        }
-
-        return $tasks_reminder_byDate;
-    }
-
-    public function tasks_overdue($agency_id,$type_id=null)
-    {
-        $task_reminder_status = true;
-        $type   = 'after';
-        $day    = 1;
-        $time   = '15:30:00';
-        $tasks_overdue_byDate = [];
-        if ($task_reminder_status){
-
-            $tasks = Task::where('agency_id', $agency_id)->whereHas('task_type',function ($query) use ($type_id) {
-                if ($type_id){
-                    $query->where('id',$type_id);
-                }
-            })
-                ->where('custom_reminder','off')
-                ->get();
-//            dd($tasks);
-            foreach($tasks as $task)
-            {
-                if ($type == 'before')
-                {
-                    $date = strtotime('-'.$day.' day',strtotime($task->deadline));
-                    $date_remind = date('Y-m-d', $date);
-                    $tasks_overdue_byDate[$date_remind][$time] = $task;
-
-                }else{
-                    //after
-                    $date = strtotime('+'.$day.' day',strtotime($task->deadline));
-                    $date_remind = date('Y-m-d', $date);
-                    $tasks_overdue_byDate[$date_remind][$time] = $task;
-
-                }
-            }
-
-        }
-        return $tasks_overdue_byDate;
-    }
+//
+//    public function tasks_with_custom_reminder($agency_id)
+//    {
+//
+//        $tasks = Task::where('agency_id', $agency_id)->get();
+//        $tasks_reminder_byDate = [];
+////        dd($tasks);
+//        foreach($tasks as $task)
+//        {
+//            if ($task->custom_reminder == 'on')
+//            {
+//                if ($task->period_reminder == 'before')
+//                {
+//                    if ($task->type_reminder == 'days')
+//                    {
+//
+//                        $date = strtotime('-'.$task->type_reminder_number.' day',strtotime($task->deadline));
+//                        $date_remind = date('Y-m-d', $date);
+//                        $tasks_reminder_byDate[$date_remind][$task->time][] = $task;
+//
+//                    }else{
+//                        //hours
+//                        $time = strtotime('-'.$task->type_reminder_number.' hour',strtotime($task->time));
+//                        $time_remind = date('h:i:s', $time);
+//                        $tasks_reminder_byDate[$task->deadline][$time_remind][] = $task;
+//                    }
+//
+//                }else{
+//                    //after
+//                    if ($task->type_reminder == 'days')
+//                    {
+//
+//                        $date = strtotime('+'.$task->type_reminder_number.' day',strtotime($task->deadline));
+//                        $date_remind = date('Y-m-d', $date);
+//                        $tasks_reminder_byDate[$date_remind][$task->time][] = $task;
+//
+//                    }else{
+//                        //hours
+//                        $time = strtotime('+'.$task->type_reminder_number.' hour',strtotime($task->time));
+//                        $time_remind = date('h:i:s', $time);
+//                        $tasks_reminder_byDate[$task->deadline][$time_remind][] = $task;
+//                    }
+//
+//                }
+//            }
+//        }
+//
+//        return $tasks_reminder_byDate;
+//    }
+//
+//    public function tasks_reminder($agency_id)
+//    {
+//        $email_notify = EmailNotify::where('agency_id', $agency_id)->first();
+//        $general_reminders = EmailNotifyReminder::where( 'email_notify_id'  , $email_notify->id)->where( 'category'  , 'general_reminder')->get();
+//
+//        $tasks_reminder_byDate = [];
+//        foreach($general_reminders as $general_reminder ){
+//
+//            $type   = $general_reminder->type;
+//            $day    = $general_reminder->day;
+//            $time   = $general_reminder->time;
+//
+//            $status_complete = TaskStatus::where('agency_id', $agency_id)->where('type_complete','on')->pluck('id');
+//
+//            $tasks = Task::where('agency_id', $agency_id)
+//                ->where('custom_reminder','off')
+//                ->whereNotIn('task_status_id',$status_complete)
+//                ->get();
+//
+//            foreach($tasks as $task)
+//            {
+//                if ($type == 'before')
+//                {
+//
+//                    $date = strtotime('-'.$day.' day',strtotime($task->deadline));
+//                    $date_remind = date('Y-m-d', $date);
+//                    $tasks_reminder_byDate[$date_remind][$time][] = $task;
+//
+//                }else{
+//                    //after
+//                    $date = strtotime('+'.$day.' day',strtotime($task->deadline));
+//                    $date_remind = date('Y-m-d', $date);
+//                    $tasks_reminder_byDate[$date_remind][$time][] = $task;
+//
+//                }
+//            }
+//
+//        }
+//        return $tasks_reminder_byDate;
+//    }
 }
