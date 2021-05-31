@@ -71,28 +71,28 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
         }
 
 
-        $bedrooms = preg_replace('/[^0-9]/', '',  $row['bedrooms'])  != '' ? preg_replace('/[^0-9]/', '',  $row['bedrooms']) : null;
-        $bathrooms = preg_replace('/[^0-9]/', '',  $row['bathrooms']) != '' ? preg_replace('/[^0-9]/', '',  $row['bathrooms']) : null;
-        $parkings = preg_replace('/[^0-9]/', '',  $row['parking'])  != '' ? preg_replace('/[^0-9]/', '',  $row['parking']) : null;
-        $fullname =  explode(' ', $row['full_name']);
+        $bedrooms   = preg_replace('/[^0-9]/', '',  $row['bedrooms'])  != '' ? preg_replace('/[^0-9]/', '',  $row['bedrooms']) : null;
+        $bathrooms  = preg_replace('/[^0-9]/', '',  $row['bathrooms']) != '' ? preg_replace('/[^0-9]/', '',  $row['bathrooms']) : null;
+        $parkings   = preg_replace('/[^0-9]/', '',  $row['parking'])  != '' ? preg_replace('/[^0-9]/', '',  $row['parking']) : null;
+        $fullname   =  explode(' ', $row['full_name']);
         $first_name = $fullname[0] ?? null;
-        $last_name = $fullname[1] ?? null;
+        $last_name  = $fullname[1] ?? null;
 
         $output = ($row['date_of_birth'] - 25569) * 86400;
         $output = $output - date('Z', $output);
 
 
         return new Lead([
-            'developer' => $developer->id,
-            'community' => $row['community'],
-            'sub_community' => $row['sub_community'],
-            'property_no' => $row['property_number'],
-            'property_purpose' => $row['property_purpose'],
+            'developer'          => $developer->id,
+            'community'          => $row['community'],
+            'sub_community'      => $row['sub_community'],
+            'property_no'        => $row['property_number'],
+            'property_purpose'   => $row['property_purpose'],
             'property_reference' => $row['property_reference'],
-            'size_sqft' => $row['property_size_sqft'],
-            'size_sqm' => $row['property_size_sqm'],
-            'bedrooms' => $bedrooms,
-            'bathrooms' => $bathrooms,
+            'size_sqft'          => $row['property_size_sqft'],
+            'size_sqm'           => $row['property_size_sqm'],
+            'bedrooms'           => $bedrooms,
+            'bathrooms'          => $bathrooms,
             'parkings' => $parkings,
             'other' => $row['others'],
             'salutation' => $row['salutation'],

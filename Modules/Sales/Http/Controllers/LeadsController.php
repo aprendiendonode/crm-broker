@@ -255,8 +255,8 @@ class LeadsController extends Controller
                 "developer"  =>  ["sometimes", "nullable", Rule::exists('developers', 'id')->where(function ($q) use ($request) {
                     $q->where('agency_id', $request->agency_id);
                 })],
-                "city_id" => "sometimes|nullable|exists:cities,id",
-                "community" => "sometimes|nullable|exists:communities,id",
+                "city_id"    => "required|exists:cities,id",
+                "community" => "required|exists:communities,id",
                 "sub_community" => "sometimes|nullable|exists:sub_communities,id",
                 "building_name" => "sometimes|nullable|string",
                 "property_purpose" => "sometimes|nullable|in:rent,buy",
@@ -672,9 +672,6 @@ class LeadsController extends Controller
                 "edit_priority_id_" . $id => ['required', Rule::exists('lead_priorities', 'id')->where(function ($q) use ($lead) {
                     $q->where('agency_id', $lead->agency_id);
                 })],
-
-
-
 
                 "edit_company_" . $id => "sometimes|nullable|string",
                 "edit_website_" . $id => "sometimes|nullable|string|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/",
