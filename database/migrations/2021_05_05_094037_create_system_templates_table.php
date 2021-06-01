@@ -119,6 +119,32 @@ class CreateSystemTemplatesTable extends Migration
             'description_ar' => '<p>Hi there,</p>',
             'slug' => 'contact_client'
         ]);
+
+        SystemTemplate::create([
+            'title' => 'Task Reminder',
+            'type' => 'email',
+            'description_en' => '<p>Hi {STAFF_NAME},</p>
+                <p>Reminder The Task <strong>#{TASK_ID}</strong> &nbsp;has a deadline to you at <strong>{TIME}</strong> in <strong>{DEADLINE}</strong>.</p>
+                <p>Please check the task and Update it.</p>
+                <p><br><a href="{TASK_URL}"><strong>View Task</strong></a><br><br>Regards<br>The {SITE_NAME} Team</p>',
+            'description_ar' => '<p>Hi {STAFF_NAME},</p>
+                <p>Reminder The Task <strong>#{TASK_ID}</strong> &nbsp;has a deadline to you at <strong>{TIME}</strong> in <strong>{DEADLINE}</strong>.</p>
+                <p>Please check the task and Update it.</p>
+                <p><br><a href="{TASK_URL}"><strong>View Task</strong></a><br><br>Regards<br>The {SITE_NAME} Team</p>',
+            'slug' => 'task_reminder'
+        ]);
+
+        SystemTemplate::create([
+            'title' => 'Happy Birthday',
+            'type' => 'email',
+            'description_en' => '<p>Hi {SALUTATION} {CLIENT_NAME},</p>
+                    <p>We\'re wishing you a Happy birthday!!, May your birthday be the start of a year filled with good luck, good health and much happiness.</p>
+                    <br><br>Regards<br>The {SITE_NAME} Team</p>',
+            'description_ar' => '<p>Hi {SALUTATION} {CLIENT_NAME},</p>
+                    <p>We\'re wishing you a Happy birthday!!, May your birthday be the start of a year filled with good luck, good health and much happiness.</p>
+                    <br><br>Regards<br>The {SITE_NAME} Team</p>',
+            'slug' => 'happy_birthday'
+        ]);
     }
 
     /**

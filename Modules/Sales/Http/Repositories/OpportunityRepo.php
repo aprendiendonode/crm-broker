@@ -200,7 +200,7 @@ class OpportunityRepo
                 'lead_properties',
                 'task_status',
                 'task_types',
-                'call_status',
+                'call_status'
             )
         );
     }
@@ -1187,6 +1187,7 @@ class OpportunityRepo
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-result-tab', $id);
             }
 
+            $stage = $opportunity->stage;
 
             $opportunity->update([
                 'status' => $request->{'result_status_' . $id},
@@ -1203,6 +1204,29 @@ class OpportunityRepo
 
             DB::commit();
 
+//            if ($stage != $opportunity->stage && ($opportunity->stage == 'lost' || $opportunity->stage == 'won'))
+//            {
+//
+//                $owner = get_owner();
+//                if ($owner){
+//                    $content    = '<p>Hi {OWNER_NAME},</p>
+//                                   <p>The Opportunity #{OPPORTUNITY_ID} has been Updated to {OPPORTUNITY_STAGE}</p>
+//                                   <br><br>Regards<br>The {SITE_NAME} Team</p>';
+//                    $subject    = 'Opportunity Stage Updated';
+//
+//                    $company_name = env('APP_NAME', 'OTG');
+//
+//                    $message = str_replace("{CLIENT_NAME}",$owner->name_en,$content);
+//                    $message = str_replace("{OPPORTUNITY_ID}",$opportunity->id,$message);
+//                    $message = str_replace("{OPPORTUNITY_STAGE}",$opportunity->stage,$message);
+//                    $message = str_replace("{SITE_NAME}",$company_name,$message);
+//
+//                    SendEmail::dispatch($owner->email, $message, $subject);
+//
+//                    event(new OpportunityEvent($opportunity, $owner->id,'stage','the opportunity #'.$opportunity->id.' has been Updated to '.$opportunity->stage));
+//                    Notification::send($owner, new OpportunityNotification($opportunity,'stage','the opportunity #'.$opportunity->id.' has been Updated to '.$opportunity->stage));
+//                }
+//            }
 
             $template = Template::where('agency_id', $opportunity->agency_id)->where('type', 'email')->where('system', 'yes')
                 ->where('slug', 'opportunity_result')->first();

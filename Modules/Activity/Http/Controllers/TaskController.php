@@ -33,6 +33,11 @@ class TaskController extends Controller
     public function index($agency)
     {
 
+        $tasks_with_custom_reminder = tasks_with_custom_reminder($agency);
+        $tasks_reminder = tasks_reminder($agency);
+        $merged = array_merge($tasks_with_custom_reminder, $tasks_reminder);
+        $clients = getClientUpcomingBirthdays();
+//        dd($merged, $clients);
         $per_page       = 10;
         $tasks          = auth()->user()->getTasksByUserId($agency);
         // dynamic status
