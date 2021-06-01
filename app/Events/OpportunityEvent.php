@@ -22,12 +22,12 @@ class OpportunityEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($opportunity, $id)
+    public function __construct($opportunity, $id, $type=null, $message=null)
     {
         $this->opportunity_id = $opportunity->id;
         $this->id = $id;
-        $this->type           = 'assign';
-        $this->message        = 'A New Opportunity Has Been Assigned To You';
+        $this->type           = $type ?? 'assign';
+        $this->message        = $message ?? 'A New Opportunity Has Been Assigned To You';
     }
 
     /**

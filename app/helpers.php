@@ -5,6 +5,10 @@ use Modules\Setting\Entities\EmailNotify;
 use Modules\Setting\Entities\EmailNotifyReminder;
 use Modules\Activity\Entities\TaskStatus;
 use Modules\Activity\Entities\Task;
+use Modules\Setting\Entities\Template;
+use App\Models\SystemTemplate;
+use App\Models\Agency;
+use Modules\Sales\Entities\Client;
 
 
 if (!function_exists('owner')) {
@@ -315,7 +319,7 @@ if (!function_exists('agency_settings')) {
         function tasks_with_custom_reminder($agency_id)
         {
 
-            $tasks = Task::with('staff')->where('agency_id', $agency_id)->get();
+            $tasks = Task::with('staff','agency')->where('agency_id', $agency_id)->get();
             $tasks_reminder_byDate = [];
 
             foreach ($tasks as $task) {
@@ -376,7 +380,7 @@ if (!function_exists('agency_settings')) {
 
             $status_complete = TaskStatus::where('agency_id', $agency_id)->where('type_complete', 'on')->pluck('id');
 
-            $tasks = Task::with('staff')->where('agency_id', $agency_id)
+            $tasks = Task::with('staff','agency')->where('agency_id', $agency_id)
                 ->where('custom_reminder', 'off')
                 ->whereNotIn('task_status_id', $status_complete)
                 ->get();
@@ -446,3 +450,51 @@ if (!function_exists('agency_settings')) {
             return $tasks_reminder_byDate;
         }
     }
+
+
+if (!function_exists('get_template')) {
+    function get_template($agency_id,$slug)
+    {
+        $template = Template::where('agency_id',$agency_id)->where('slug',$slug)->where('system','yes')->where('type','email')->first();
+
+        if ($template){
+            return $template;
+        }
+
+        $system_template = SystemTemplate::where('slug',$slug)->where('type','email')->first();
+
+        if ($system_template){
+            $agency = Agency::where('id',$agency_id)->first();
+            if ($agency){
+                $template = Template::create([
+                    'title' => $system_template->title,
+                    'type' => $system_template->type,
+                    'description_en' => $system_template->description_en,
+                    'description_ar' => $system_template->description_ar,
+                    'slug' => $system_template->slug,
+                    'system' => 'yes',
+                    'agency_id' => $agency->id,
+                    'business_id' => $agency->business_id,
+                ]);
+            }
+        }
+        return $template;
+
+    }
+}
+
+if (!function_exists('getClientUpcomingBirthdays')) {
+    function getClientUpcomingBirthdays()
+    {
+        $date = now();
+        $clients = Client::Where(function ($query) use ($date) {
+
+            $query->whereMonth('date_of_birth',  $date->month)
+
+                ->whereDay('date_of_birth', $date->day);
+
+        })->get();
+
+        return $clients;
+    }
+}

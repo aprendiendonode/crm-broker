@@ -15,15 +15,19 @@ class OpportunityNotification extends Notification
 
 
     public $opportunity;
+    public $type;
+    public $message;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($opportunity)
+    public function __construct($opportunity, $type=null, $message=null)
     {
         $this->opportunity = $opportunity;
+        $this->type           = $type ?? 'assign';
+        $this->message        = $message ?? 'A New Opportunity Has Been Assigned To You';
     }
 
     /**
@@ -43,9 +47,9 @@ class OpportunityNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message'        => 'A New Opportunity Has Been Assigned To You',
+            'message'        => $this->message,
             'opportunity_id' => $this->opportunity->id,
-            'type'           => 'assign'
+            'type'           => $this->type
         ];
     }
 }
