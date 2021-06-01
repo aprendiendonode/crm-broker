@@ -55,26 +55,9 @@ class OpportunityRepo
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
-            'task_status', 'task_types'
+            'task_status', 'task_types', 'developers'
         ])->where('id', $agency)->where('business_id', $business)->first();
         abort_if(!$agency, Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $countries = DB::table('countries')->get();
-        $lead_sources = $agency->lead_sources;
-        $lead_priorities = $agency->lead_priorities;
-        $lead_types = $agency->lead_types;
-        $lead_properties = $agency->lead_properties;
-        $lead_properties = $agency->lead_properties;
-        $lead_qualifications = $agency->lead_qualifications;
-        $lead_communications = $agency->lead_communications;
-        $task_status = $agency->task_status;
-        $task_types = $agency->task_types;
-        $call_status = $agency->call_status;
-        // $cities                     = City::all();
-        $cities = DB::table('cities')->get();
-        $languages = DB::table('languages')->get();
-        $currencies = DB::table('currencies')->get();
-
 
         $opportunities = Opportunity::with([
             'tasks', 'calls', 'convertedBy', 'assigns', 'assigns.assignedBy', 'current_assign',
@@ -92,7 +75,7 @@ class OpportunityRepo
             'client'
         ])->where('agency_id', $agency->id)->where('business_id', $business);
 
-        $staffs = staff($agency->id);
+
 
         if (request('filter_phone') != null) {
 
@@ -179,29 +162,55 @@ class OpportunityRepo
         }
 
 
-        $agency = $agency->id;
+
+
+
         return view(
             'sales::opportunities.index',
-            compact(
-                'staffs',
-                'opportunities',
-                'pagination',
-                'cities',
-                'languages',
-                'currencies',
-                'countries',
-                'agency',
-                'business',
-                'lead_sources',
-                'lead_communications',
-                'lead_priorities',
-                'lead_qualifications',
-                'lead_types',
-                'lead_properties',
-                'task_status',
-                'task_types',
-                'call_status'
-            )
+            [
+                'staffs'        =>  staff($agency->id),
+                'agency'        => $agency->id,
+                'business'      => $business,
+                'opportunities' => $opportunities,
+                'countries'              =>
+                cache()->remember('countries', 60 * 60 * 24, function () use ($agency) {
+                    return DB::table('countries')->get();
+                }),
+
+                'languages' =>
+                cache()->remember('languages', 60 * 60 * 24, function () use ($agency) {
+                    return DB::table('languages')->get();
+                }),
+                'cities'                 =>
+                cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                    return DB::table('cities')->get();
+                }),
+                'communities'            =>
+                cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
+                    return DB::table('communities')->get();
+                }),
+                'sub_communities'        =>
+                cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
+                    return DB::table('sub_communities')->get();
+                }),
+                'pagination'             => $pagination,
+
+                'developers'              =>           $agency->developers,
+                'lead_sources' =>           $agency->lead_sources,
+                'lead_priorities' =>            $agency->lead_priorities,
+                'lead_types' =>            $agency->lead_types,
+                'lead_properties' =>            $agency->lead_properties,
+
+                'lead_qualifications' =>            $agency->lead_qualifications,
+                'lead_communications' =>            $agency->lead_communications,
+                'task_status' =>            $agency->task_status,
+                'task_types' =>            $agency->task_types,
+                'call_status' =>            $agency->call_status,
+                'currencies' => DB::table('currencies')->get()
+
+
+            ]
+
         );
     }
 
@@ -209,76 +218,23 @@ class OpportunityRepo
     public function update($id, $request)
     {
 
-
+        dd($request);
         $opportunity = Opportunity::where('id', $id)->where('business_id', auth()->user()->business_id)->firstOrFail();
 
-        // abort_if(!$opportunity, Response::HTTP_FORBIDDEN, '403 Forbidden');
-
         DB::beginTransaction();
-
         try {
 
             $validator = Validator::make($request->all(), Opportunity::update_validation($id));
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-edit-tab', $id);
             }
-
-            $fullname = $request->{'edit_full_name_' . $id} != null ? $request->{'edit_full_name_' . $id} : ($request->{'edit_first_name_' . $id} . ' ' . $request->{'edit_sec_name_' . $id});
-
-            $opportunity->update([
-
-                'probability_of_winning' => $request->{"opportunity_probability_of_winning_" . $id},
-                "source_id" => $request->{'edit_source_id_' . $id},
-
-                "type_id" => $request->{'edit_type_id_' . $id},
-                "qualification_id" => $request->{'edit_qualification_id_' . $id},
-                "communication_id" => $request->{'edit_communication_id_' . $id},
-                "priority_id" => $request->{'edit_priority_id_' . $id},
-
-
-                "company" => $request->{'edit_company_' . $id},
-                "address" => $request->{'edit_address_' . $id},
-                "website" => $request->{'edit_website_' . $id},
-                "po_box" => $request->{'edit_po_box_' . $id},
-                "passport" => $request->{'edit_passport_' . $id},
-                "passport_expiration_date" => $request->{'edit_passport_expiration_date_' . $id},
-                "first_name" => $request->{'edit_first_name_' . $id},
-                "sec_name" => $request->{'edit_sec_name_' . $id},
-                "full_name" => $fullname,
-                "partner_name" => $request->{'edit_partner_name_' . $id},
-                "date_of_birth" => $request->{'edit_date_of_birth_' . $id},
-                "email1" => $request->{'edit_email1_' . $id},
-                "email2" => $request->{'edit_email2_' . $id},
-                "email3" => $request->{'edit_email3_' . $id},
-                "nationality_id" => $request->{'edit_nationality_id_' . $id},
-                "country" => $request->{'edit_country_' . $id},
-                "city_id" => $request->{'edit_city_id_' . $id},
-                "phone1" => $request->{'edit_phone1_' . $id},
-                "phone2" => $request->{'edit_phone2_' . $id},
-                "phone3" => $request->{'edit_phone3_' . $id},
-                "phone4" => $request->{'edit_phone4_' . $id},
-                "landline" => $request->{'edit_landline_' . $id},
-                "fax" => $request->{'edit_fax_' . $id},
-                "developer" => $request->{'edit_developer_' . $id},
-                "community" => $request->{'edit_community_' . $id},
-                "building_name" => $request->{'edit_building_name_' . $id},
-                "property_purpose" => $request->{'edit_property_purpose_' . $id},
-                "property_no" => $request->{'edit_property_no_' . $id},
-                "property_id" => $request->{'edit_property_id_' . $id},
-
-                "property_reference" => $request->{'edit_property_reference_' . $id},
-                "size_sqft" => $request->{'edit_size_sqft_' . $id},
-                "size_sqm" => $request->{'edit_size_sqm_' . $id},
-                "bedrooms" => $request->{'edit_bedrooms_' . $id},
-                "bathrooms" => $request->{'edit_bathrooms_' . $id},
-                "parkings" => $request->{'edit_parkings_' . $id},
-                "salutation" => $request->{'edit_salutation_' . $id},
-                "skype" => $request->{'edit_skype_' . $id},
-                "other" => $request->{'edit_other_' . $id},
-
-
-            ]);
-
+            $inputs = $validator->validated();
+            $fixed_array_keys = [];
+            foreach ($inputs as $key => $input) {
+                $fixed_array_keys[str_replace(['edit_', '_' . $id], '', $key)] = $input;
+            }
+            $fixed_array_keys['full_name'] =  $request->{'edit_full_name_' . $id} != null ? $request->{'edit_full_name_' . $id} : ($request->{'edit_first_name_' . $id} . ' ' . $request->{'edit_sec_name_' . $id});
+            $opportunity->update($fixed_array_keys);
             DB::commit();
             return back()->with(flash(trans('sales.opportunity_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
