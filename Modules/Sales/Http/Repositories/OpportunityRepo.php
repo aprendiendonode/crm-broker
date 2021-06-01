@@ -218,7 +218,7 @@ class OpportunityRepo
     public function update($id, $request)
     {
 
-        dd($request);
+
         $opportunity = Opportunity::where('id', $id)->where('business_id', auth()->user()->business_id)->firstOrFail();
 
         DB::beginTransaction();
@@ -238,7 +238,7 @@ class OpportunityRepo
             DB::commit();
             return back()->with(flash(trans('sales.opportunity_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
-
+            dd($e->getMessage());
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
@@ -1133,7 +1133,7 @@ class OpportunityRepo
             $validator = Validator::make($request->all(), [
 
 
-                "result_status_{$id}" => "required|in:in_progress,meeting,unsuccessful,successful",
+                // "result_status_{$id}" => "required|in:in_progress,meeting,unsuccessful,successful",
                 "result_stage_{$id}" => "required|in:pending,won,lost",
                 "result_note_{$id}" => "required|string",
             ]);
@@ -1145,12 +1145,12 @@ class OpportunityRepo
 
 
             $opportunity->update([
-                'status' => $request->{'result_status_' . $id},
+                // 'status' => $request->{'result_status_' . $id},
                 'stage' => $request->{'result_stage_' . $id},
             ]);
 
             $result = OpportunityResult::create([
-                'status' => $request->{'result_status_' . $id},
+                // 'status' => $request->{'result_status_' . $id},
                 'stage' => $request->{'result_stage_' . $id},
                 'note' => $request->{'result_note_' . $id},
                 'added_by' => auth()->user()->id,

@@ -365,15 +365,15 @@
 
     function getCommunitites(type,id){
 
-var city_id ='';
-if(type == "create"){
-    city_id = $('.city-in-create').val();
+    var city_id ='';
+    if(type == "create"){
+        city_id = $('.city-in-create').val();
 
-}else{
-    city_id = $('.city-in-edit-'+id).val();
+    }else{
+        city_id = $('.city-in-edit-'+id).val();
 
-}
-  
+    }
+    
     var option = '';
     var locale      = @json(app()->getLocale());
     var communities = @json($communities);
@@ -412,7 +412,6 @@ if(type == "create"){
         $('.edit-appended-communities-'+id).remove();
         $('.edit-appended-sub-communities-'+id).remove();
         $('.community-in-edit-'+id).append(option)
-
     }
 
 
@@ -467,8 +466,240 @@ function getSubCommunities(type,id){
 }
     
 
+
+
+var  googleMapsScriptIsInjected = false;
+        function injectGoogleMapsApiScript(options){
+
+            if(googleMapsScriptIsInjected){
+                return;
+            }
+
+    
+                const optionsQuery = Object.keys(options)
+                    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(options[k])}`)
+                    .join('&');
+
+                const url = `https://maps.googleapis.com/maps/api/js?${optionsQuery}`;
+
+                const script = document.createElement('script');
+
+                script.setAttribute('src', url);
+                script.setAttribute('async', '');
+                script.setAttribute('defer', '');
+
+                document.head.appendChild(script);
+
+                googleMapsScriptIsInjected = true;
+            };
+
 </script>
 
 
 
+
+<script>
+
+
+ 
+   
+
+    var opportunities = @json($opportunities);
+        function initMap() {
+
+
+
+            opportunities.data.forEach(function(value,key){
+
+
+                        edit_autocompletelocation_input = new google.maps.places.Autocomplete((document.getElementById('location_input_'+value.id)), {
+                            types: ["establishment"],
+                            });
+                            edit_autocompletelocation_input.setComponentRestrictions({
+                            country: ['EG'],
+                        });
+
+                        google.maps.event.addListener(edit_autocompletelocation_input, 'place_changed', function () {
+                                var place = edit_autocompletelocation_input.getPlace();
+                                        $('#latitude_'+value.id).val(place.geometry.location.lat());
+                                        $('#longitude_'+value.id).val(place.geometry.location.lng());
+                        
+                        
+
+                            });
+
+
+                            var editMap = new google.maps.Map(document.getElementById('map_'+value.id), {
+                                    center: {lat: value.loc_lat ? parseInt(value.loc_lat) : 30.0444 , lng:  value.loc_lng ? parseInt(value.loc_lng ) : 31.2357  },
+                                    zoom: 13,
+                                    
+                                    mapTypeId: 'roadmap'
+                                }); 
+
+                                var geocoder = new google.maps.Geocoder();
+                                google.maps.event.addListener(editMap, 'click', function(event) {
+                                    SelectedLatLng = event.latLng;
+                                    geocoder.geocode({
+                                        'latLng': event.latLng
+                                    }, function(results, status) {
+                                        if (status == google.maps.GeocoderStatus.OK) {
+                                            if (results[0]) {
+                                                deleteMarkers();
+                                                addMarkerRunTime(event.latLng);
+                                                SelectedLocation = results[0].formatted_address;
+                                                console.log( results[0].formatted_address);
+                                                editSplitLatLng(String(event.latLng),value.id);
+                                                $("#location_input_"+value.id).val(results[0].formatted_address);
+                                            }
+                                        }
+                                    });
+                                });
+
+
+                                function addMarkerRunTime(location) {
+                                    var marker = new google.maps.Marker({
+                                        position: location,
+                                        map: editMap
+                                    });
+                                    markers.push(marker);
+                                }
+
+
+
+
+           })
+
+            function setMapOnAll(map) {
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(map);
+                }
+            }
+            function clearMarkers() {
+                setMapOnAll(null);
+            }
+            function deleteMarkers() {
+                clearMarkers();
+                markers = [];
+            }
+        
+            var markers = [];
+          
+
+        }
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+
+        function editSplitLatLng(latLng,id){
+        var newString = latLng.substring(0, latLng.length-1);
+        var newString2 = newString.substring(1);
+        var trainindIdArray = newString2.split(',');
+        var lat = trainindIdArray[0];
+        var Lng  = trainindIdArray[1];
+        $("#latitude_"+id).val(lat);
+        $("#longitude_"+id).val(Lng);
+    }
+
+
+</script>
+
+
+<script>
+
+    function table_row_show(row_id,id){
+      
+        $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
+    
+        if(id == 'edit_opportunity_'+row_id){
+                    injectGoogleMapsApiScript({
+                        key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
+                        libraries: 'places',
+                        language: 'ar',
+                        region: 'EG',
+                        callback: 'initMap',
+                    });
+                }
+    
+        if($('.'+id).hasClass('d-none')){
+            $('.'+id).removeClass('d-none');
+        }else{
+            $('.'+id).addClass('d-none');
+    
+        }
+    
+    }
+    function table_row_hide(id){
+        
+        $('.'+id).addClass('d-none');
+    
+    }
+      
+    
+    function  hide_edit_div(id){
+    
+        $('.edit_opportunity_'+id).addClass('d-none');
+    
+    
+    }
+    
+    
+    
+    
+    function  hide_call_div(id){
+        $('.call_'+id).addClass('d-none');
+    
+    }
+    
+    function  hide_assign_div(id){
+    
+        $('.assign_'+id).addClass('d-none');
+    
+    }
+    
+    
+        function  hide_task_div(id){
+    
+            $('.task_'+id).addClass('d-none');
+    
+    
+    
+        }
+    
+    
+        function  hide_client_div(id){
+            $('.client_'+id).addClass('d-none');
+    
+    
+        }
+     
+    
+    function  hide_approve_div(id){
+        $('.approve_'+id).addClass('d-none');
+    
+    
+    }
+    
+    
+    function  hide_hold_div(id){
+        $('.hold_'+id).addClass('d-none');
+    
+    }
+    
+    
+    function  hide_result_div(id){
+        $('.result_'+id).addClass('d-none');
+    
+    }
+    
+    function  hide_question_div(id){
+        $('.question_'+id).addClass('d-none');
+    
+    
+    }
+    </script>
+    
 @endpush

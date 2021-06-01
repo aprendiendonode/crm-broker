@@ -25,18 +25,19 @@
             <div class="form-group ">
 
 
-                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.lead_qualifications')</lable>
+                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.qualifications')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
 
                 <div class="d-flex justify-content-between">
 
                     
                     <div style="flex:4">
                 
-                        <select  class="form-control select2 select_qualification_id" name="call_qualification_id_{{ $opportunity->id }}" data-toggle="select2" data-placeholder="@lang('sales.lead_qualifications')" required >
+                        <select   class="form-control select2 select_qualification_id" name="call_qualification_id_{{ $opportunity->id }}" data-toggle="select2" data-placeholder="@lang('sales.lead_qualifications')" required >
                     
-                            <option value=""></option>
+                             <option value=""></option>
                             @forelse($lead_qualifications as $ql)
-                            <option @if(old("call_qualification_id_{$opportunity->id}",$opportunity->qualification_id) == $ql->id) selected @endif  value="{{ $ql->id}}">{{ $ql->{'name_'.app()->getLocale()} }}</option>
+                            {{-- <option @if(old("call_qualification_id_{$opportunity->id}",$opportunity->qualification_id) == $ql->id) selected @endif  value="{{ $ql->id}}">{{ $ql->{'name_'.app()->getLocale()} }}</option> --}}
+                             <option  value="{{ $ql->id}}">{{ $ql->{'name_'.app()->getLocale()} }}</option>
                             @empty
 
                             @endforelse
@@ -44,13 +45,13 @@
                     </select>
                     </div>
                         @can('manage_opportunity_setting')
-                        <a style="margin-top:4px;"
-                        data-plugin="tippy" title="@lang('sales.new_lead_qualification')"
-                        data-tippy-placement="top-start" 
+                            <a style="margin-top:4px;"
+                            data-plugin="tippy" title="@lang('sales.new_lead_qualification')"
+                            data-tippy-placement="top-start" 
 
-                        data-toggle="modal"
-                        data-target="#add_qualification" 
-                        ><i style="padding:9px !important; margin-top:-2px !important;margin-right: 1px !important;" class=" btn btn-secondary fa fa-plus"></i></a>
+                            data-toggle="modal"
+                            data-target="#add_qualification" 
+                            ><i style="padding:9px !important; margin-top:-2px !important;margin-right: 1px !important;" class=" btn btn-secondary fa fa-plus"></i></a>
 
                         @endcan 
                 
@@ -63,7 +64,7 @@
             <div class="form-group ">
 
 
-                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.call_status')</lable>
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.call_status')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
 
                <div class="d-flex justify-content-between">
 
@@ -225,7 +226,7 @@
                         <td>{{ $call->contact_date .' '. $call->contact_time }}</td>
             
             
-                        <td>{{ $call->next_action_date .' '. $call->next_action_time }}</td>
+                        <td>{{  $call->next_action_date && $call->next_action_time ?  $call->next_action_date .' '. $call->next_action_time : trans('sales.no_action') }}</td>
             
             
             

@@ -75,7 +75,7 @@ class Opportunity extends Model
         return [
 
 
-            "opportunity_probability_of_winning_" . $id  => "required|integer",
+            "edit_probability_of_winning_" . $id        => "required|integer",
 
             "edit_source_id_" . $id                     => "required|integer|exists:lead_sources,id",
 
@@ -85,6 +85,7 @@ class Opportunity extends Model
             "edit_priority_id_" . $id                   => "required|integer|exists:lead_priorities,id",
 
 
+            "edit_address_" . $id                       => "sometimes|nullable|string",
             "edit_company_" . $id                       => "sometimes|nullable|string",
             "edit_website_" . $id                       => "sometimes|nullable|string|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/",
             "edit_po_box_" . $id                        => "sometimes|nullable|string|min:1|max:30",
@@ -99,7 +100,7 @@ class Opportunity extends Model
             "edit_email2_" . $id                        => "sometimes|nullable|string|email",
             "edit_email3_" . $id                        => "sometimes|nullable|string|email",
             "edit_nationality_id_" . $id                => "required|integer|exists:countries,id",
-            "edit_country_" . $id                       => "required|string|exists:countries,value",
+            // "edit_country_" . $id                       => "required|string|exists:countries,value",
             "edit_phone1_" . $id                        => "required|regex:/^([0-9\s\-\+\(\)]*)$/",
             "edit_phone2_" . $id                        => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
             "edit_phone3_" . $id                        => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",

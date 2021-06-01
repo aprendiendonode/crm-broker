@@ -17,12 +17,12 @@
     <div class="row  report_form_{{ $opportunity->id }}" >
   
 
-        <div class="col-md-4">
-            @csrf
-            @method('PATCH')
+        @csrf
+        @method('PATCH')
+        {{-- <div class="col-md-4"> --}}
              
     
-            <div class="form-group ">
+            {{-- <div class="form-group ">
      
                 <label class="text-muted font-weight-medium">@lang('sales.status')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></label>
 
@@ -39,8 +39,8 @@
                 </select>
     
                
-            </div>
-        </div>
+            </div> --}}
+        {{-- </div> --}}
 
 
 
@@ -55,6 +55,8 @@
                             
 
                  <option    value="pending"> @lang('sales.pending') </option>
+                 <option   value="in_progress"> @lang('sales.in_progress') </option>
+
                  <option    value="lost"> @lang('sales.lost') </option>
                  <option    value="won"> @lang('sales.won') </option>
 
@@ -113,7 +115,7 @@
 
       <thead class="thead-light">
           <th>#</th>
-          <th>@lang('sales.status')</th>
+          {{-- <th>@lang('sales.status')</th> --}}
           <th>@lang('sales.stage')</th>
           <th>@lang('sales.date')</th>
           <th>@lang('sales.made_by')</th>
@@ -123,13 +125,11 @@
       <tbody>
           @if($opportunity->results)
           @forelse($opportunity->results->sortByDesc('id') as $result)
-          <tr>
+          <tr  >
           <td>{{ ($loop->index + 1) }}  </td>
 
-          <td>{{ str_replace(['_','-'],' ',$result->status)  }}</td>
+          {{-- <td>{{ str_replace(['_','-'],' ',$result->status)  }}</td> --}}
           <td>{{ $result->stage  }}</td>
-
-
           <td>{{ $result->created_at->toFormattedDateString() }}</td>
 
 
@@ -155,8 +155,8 @@
 
           </td>
           </tr>
-
-              <tr  class="result_report_{{ $result->id }}_{{ $opportunity->id }}"    style="display: none;opacity:0;transition:0.7s" >
+         
+              <tr  class="result_report_{{ $result->id }}_{{ $opportunity->id }} d-none"    >
                   <td colspan="6">
                       <div class="form-group">
                           <label class="text-muted font-weight-medium" for="">@lang('sales.note')</label> : {{ $result->note }}
@@ -283,6 +283,9 @@ var  div = document.querySelector('.result_question_answer_'+question +'_'+id);
 
     },10);
 
+
+
+
 }
 
 }
@@ -322,32 +325,13 @@ var  div = document.querySelector('.result_question_staff_answer_'+question +'_'
 
   
 function  show_result_report_div(result,id){
-// hide_edit_div(id)
-// hide_result_div(id)
-// hide_task_div(id)
-var  div = document.querySelector('.result_report_'+result+'_'+id);
-    if(div.style.display === 'none'){
 
-
-
-
-    div.style.display = '';
-
-    setTimeout(function(){
-
-        div.style.opacity = 1;
- 
-    },10);
-} else {
-    div.style.display = 'none';
-    setTimeout(function(){
-
-    div.style.opacity = 0;
-
-
-    },10);
-
-}
+       if($('.result_report_'+result+'_'+id).hasClass('d-none')){
+            $('.result_report_'+result+'_'+id).removeClass('d-none');
+        }else{
+            $('.result_report_'+result+'_'+id).addClass('d-none');
+    
+        }
 
 }
 </script>

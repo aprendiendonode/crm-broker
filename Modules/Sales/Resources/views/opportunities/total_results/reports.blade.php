@@ -14,7 +14,7 @@
 
       <thead class="thead-light">
           <th>#</th>
-          <th>@lang('sales.status')</th>
+          {{-- <th>@lang('sales.status')</th> --}}
           <th>@lang('sales.stage')</th>
           <th>@lang('sales.date')</th>
           <th>@lang('sales.made_by')</th>
@@ -31,7 +31,7 @@
           <tr>
           <td>{{ ($loop->index + 1) }}  </td>
 
-          <td>{{ str_replace(['_','-'],' ',$result->status)  }}</td>
+          {{-- <td>{{ str_replace(['_','-'],' ',$result->status)  }}</td> --}}
           <td>{{ $result->stage  }}</td>
 
 
