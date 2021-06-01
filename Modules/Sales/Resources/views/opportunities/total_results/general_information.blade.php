@@ -1,8 +1,4 @@
 
-    <div class="card">
-    
-            
-        <div class="card-box">
                     
             <h5>@lang('sales.information')</h5>
                                     
@@ -38,7 +34,5 @@
                 </table>
     
         </div>
-    </div>
-          
-    </div>
+
        

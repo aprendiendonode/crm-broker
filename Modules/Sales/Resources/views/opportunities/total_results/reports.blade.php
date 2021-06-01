@@ -1,8 +1,4 @@
-<div class=" card">
-    
-    
-         
-    <div class="card-box">
+
         <h4 class="header-title">@lang('sales.result_report')</h4>
    
 
@@ -78,19 +74,5 @@
       </tbody>
     </table>
 </div>
-</div>
-</div>
 
-@push('js')
-    
-<script>
- 
-    function  show_result_report_div(result,id){
 
-    $('.result_report_'+result+'_'+id).toggleClass('d-none');
-
-    }
-
-</script>
-    
-@endpush

@@ -1,5 +1,4 @@
-    
-    <div class="card-box">
+
         <h4 class="header-title">@lang('sales.call_result')</h4>
 
         <div class="mt-3">
@@ -90,15 +89,5 @@
 
 
         </div> <!-- end .table-responsive-->
-    </div> <!-- end card-box -->
+  
  
-@push('js')
-<script>
-        
- function  show_total_call_div(id){
-
-    $('.total_calls_'+id).toggleClass('d-none');
-
-    }
-</script>
-@endpush

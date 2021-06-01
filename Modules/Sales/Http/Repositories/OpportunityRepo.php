@@ -2,10 +2,9 @@
 
 namespace Modules\Sales\Http\Repositories;
 
-use App\Models\SystemTemplate;
 use Gate;
-
 use App\Models\Agency;
+
 use App\Jobs\SendEmail;
 use App\Models\Country;
 use App\Models\Currency;
@@ -14,6 +13,7 @@ use App\Mail\EmailGeneral;
 use Illuminate\Support\Str;
 use App\Exports\UsersExport;
 use Illuminate\Http\Request;
+use App\Models\SystemTemplate;
 use App\Events\OpportunityEvent;
 use Modules\Sales\Entities\Call;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +40,7 @@ use Modules\Sales\Entities\LeadQualifications;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Sales\Entities\OpportunityQuestion;
 use App\Notifications\OpportunityTaskNotification;
+use Modules\Sales\Entities\OpportunityTempContract;
 use App\Notifications\OpportunityAnswerNotification;
 use App\Notifications\OpportunityResultNotification;
 use App\Notifications\OpportunityQuestionNotification;
@@ -709,10 +710,7 @@ class OpportunityRepo
     public function convert_to_client($request)
     {
 
-        $opportunity = Opportunity::where('id', $request->opportunity_id)->where('business_id', auth()->user()->business_id)->first();
-
-        abort_if(!$opportunity, Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        $opportunity = Opportunity::where('id', $request->opportunity_id)->where('business_id', auth()->user()->business_id)->firstOrFail();
 
         try {
 
@@ -925,187 +923,171 @@ class OpportunityRepo
 
             DB::beginTransaction();
 
-            $client = Client::create([
-                'table_name' => 'clients',
-                'agency_id' => $opportunity->agency_id,
+            // $client = Client::create([
+            //     'table_name' => 'clients',
+            //     'agency_id' => $opportunity->agency_id,
 
-                "business_id" => $opportunity->business_id,
-
-
-                'website' => $request->{"client_website_" . $request->opportunity_id},
-
-                'name' => $request->{"client_name_" . $request->opportunity_id},
-
-                'landline' => $request->{"client_landline_" . $request->opportunity_id},
-
-                'email1' => $request->{"client_email1_" . $request->opportunity_id},
-                'email2' => $request->{"client_email2_" . $request->opportunity_id},
-
-                'fax' => $request->{"client_fax_" . $request->opportunity_id},
-
-                'phone1' => $request->{"client_phone1_" . $request->opportunity_id},
-                'phone2' => $request->{"client_phone2_" . $request->opportunity_id},
-
-                'country' => $request->{"client_country_" . $request->opportunity_id},
-                'city' => $request->{"client_city_" . $request->opportunity_id},
+            //     "business_id" => $opportunity->business_id,
 
 
-                'skype' => $request->{"client_skype_" . $request->opportunity_id},
-                'twitter' => $request->{"client_twitter_" . $request->opportunity_id},
-                'facebook' => $request->{"client_facebook_" . $request->opportunity_id},
-                'linkedin' => $request->{"client_linkedin_" . $request->opportunity_id},
+            //     'website' => $request->{"client_website_" . $request->opportunity_id},
 
-                'longitude' => $request->{"client_longitude_" . $request->opportunity_id},
-                'latitude' => $request->{"client_latitude_" . $request->opportunity_id},
+            //     'name' => $request->{"client_name_" . $request->opportunity_id},
 
+            //     'landline' => $request->{"client_landline_" . $request->opportunity_id},
 
-                'language' => $request->{"client_language_" . $request->opportunity_id},
-                'currency' => $request->{"client_currency_" . $request->opportunity_id},
-                'company' => $request->{"client_company_" . $request->opportunity_id},
-                'passport' => $request->{"client_passport_" . $request->opportunity_id},
-                'national_id' => $request->{"client_national_id_" . $request->opportunity_id},
-                'passport_expiration_date' => $request->{"client_passport_expiration_date_" . $request->opportunity_id},
+            //     'email1' => $request->{"client_email1_" . $request->opportunity_id},
+            //     'email2' => $request->{"client_email2_" . $request->opportunity_id},
 
+            //     'fax' => $request->{"client_fax_" . $request->opportunity_id},
 
-                "date_of_birth" => $request->{"client_date_of_birth_" . $request->opportunity_id},
+            //     'phone1' => $request->{"client_phone1_" . $request->opportunity_id},
+            //     'phone2' => $request->{"client_phone2_" . $request->opportunity_id},
+
+            //     'country' => $request->{"client_country_" . $request->opportunity_id},
+            //     'city' => $request->{"client_city_" . $request->opportunity_id},
 
 
+            //     'skype' => $request->{"client_skype_" . $request->opportunity_id},
+            //     'twitter' => $request->{"client_twitter_" . $request->opportunity_id},
+            //     'facebook' => $request->{"client_facebook_" . $request->opportunity_id},
+            //     'linkedin' => $request->{"client_linkedin_" . $request->opportunity_id},
+
+            //     'longitude' => $request->{"client_longitude_" . $request->opportunity_id},
+            //     'latitude' => $request->{"client_latitude_" . $request->opportunity_id},
+
+
+            //     'language' => $request->{"client_language_" . $request->opportunity_id},
+            //     'currency' => $request->{"client_currency_" . $request->opportunity_id},
+            //     'company' => $request->{"client_company_" . $request->opportunity_id},
+            //     'passport' => $request->{"client_passport_" . $request->opportunity_id},
+            //     'national_id' => $request->{"client_national_id_" . $request->opportunity_id},
+            //     'passport_expiration_date' => $request->{"client_passport_expiration_date_" . $request->opportunity_id},
+
+
+            //     "date_of_birth" => $request->{"client_date_of_birth_" . $request->opportunity_id},
+
+
+            //     'converted_by' => auth()->user()->id,
+
+            //     "source_id" => $opportunity->source_id,
+
+            //     "type_id" => $opportunity->type_id,
+            //     "communication_id" => $opportunity->communication_id,
+
+
+            //     "po_box" => $opportunity->po_box,
+
+
+            //     "partner_name" => $opportunity->partner_name,
+
+            //     'converted_from' => $opportunity->id,
+            //     'status' => 'pending',
+
+            //     "developer" => $opportunity->developer,
+            //     "community" => $opportunity->community,
+            //     "building_name" => $opportunity->building_name,
+            //     "property_purpose" => $opportunity->property_purpose,
+            //     "property_no" => $opportunity->property_no,
+            //     "property_id" => $opportunity->property_id,
+
+            //     "property_reference" => $opportunity->property_reference,
+            //     "size_sqft" => $opportunity->size_sqft,
+            //     "size_sqm" => $opportunity->size_sqm,
+            //     "bedrooms" => $opportunity->bedrooms,
+            //     "bathrooms" => $opportunity->bathrooms,
+            //     "parkings" => $opportunity->parkings,
+
+            //     "salutation" => $opportunity->salutation,
+            //     "other" => $opportunity->other,
+            //     "nationality_id" => $opportunity->nationality_id,
+
+            // ]);
+
+            $contract = OpportunityTempContract::create([
+                'opportunity_id' => $opportunity->id,
                 'converted_by' => auth()->user()->id,
-
-                "source_id" => $opportunity->source_id,
-
-                "type_id" => $opportunity->type_id,
-                "communication_id" => $opportunity->communication_id,
-
-
-                "po_box" => $opportunity->po_box,
-
-
-                "partner_name" => $opportunity->partner_name,
-
-                'converted_from' => $opportunity->id,
                 'status' => 'pending',
+                'contract_type' => $request->{'client_contract_type_' . $request->opportunity_id},
 
-                "developer" => $opportunity->developer,
-                "community" => $opportunity->community,
-                "building_name" => $opportunity->building_name,
-                "property_purpose" => $opportunity->property_purpose,
-                "property_no" => $opportunity->property_no,
-                "property_id" => $opportunity->property_id,
+                'customer_name' => $request->{'client_customer_' . $request->opportunity_id},
+                'customer_national_id' => $request->{'client_customer_national_id_' . $request->opportunity_id},
+                'customer_address' => $request->{'client_customer_address_' . $request->opportunity_id},
 
-                "property_reference" => $opportunity->property_reference,
-                "size_sqft" => $opportunity->size_sqft,
-                "size_sqm" => $opportunity->size_sqm,
-                "bedrooms" => $opportunity->bedrooms,
-                "bathrooms" => $opportunity->bathrooms,
-                "parkings" => $opportunity->parkings,
 
-                "salutation" => $opportunity->salutation,
-                "other" => $opportunity->other,
-                "nationality_id" => $opportunity->nationality_id,
+                'landlord_name' => $request->{'client_landlord_' . $request->opportunity_id},
+                'landlord_national_id' => $request->{'client_landlord_national_id_' . $request->opportunity_id},
+                'landlord_address' => $request->{'client_landlord_address_' . $request->opportunity_id},
+                'address' => $request->{'client_address_' . $request->opportunity_id},
+
+                'start_date' => $request->{'client_date_' . $request->opportunity_id},
+                'end_date' => $request->{'client_end_date_' . $request->opportunity_id},
+                'notes' => $request->{'client_note_' . $request->opportunity_id},
+                'has_recurring' => $request->{'client_recurring_type_' . $request->opportunity_id},
+                'recurring_number' => $request->{'recurrings_amount_' . $request->opportunity_id} && count($request->{'recurrings_amount_' . $request->opportunity_id}) > 0 ? count($request->{'recurrings_amount_' . $request->opportunity_id}) : null,
+                'amount' => $request->{'client_amount_' . $request->opportunity_id},
+
+                'agency_id' => $opportunity->agency_id,
+                'business_id' => $opportunity->business_id,
+
 
             ]);
 
-            if ($client) {
 
+            if ($request->{'client_recurring_type_' . $request->opportunity_id} == 'yes') {
 
-                $contract = ClientContract::create([
-                    'client_id' => $client->id,
-                    'converted_by' => auth()->user()->id,
-                    'status' => 'pending',
-                    'contract_type' => $request->{'client_contract_type_' . $request->opportunity_id},
+                $amounts = $request->{'recurrings_amount_' . $request->opportunity_id};
+                $dates = $request->{'recurrings_dates_' . $request->opportunity_id};
 
-                    'customer_name' => $request->{'client_customer_' . $request->opportunity_id},
-                    'customer_national_id' => $request->{'client_customer_national_id_' . $request->opportunity_id},
-                    'customer_address' => $request->{'client_customer_address_' . $request->opportunity_id},
-
-
-                    'landlord_name' => $request->{'client_landlord_' . $request->opportunity_id},
-                    'landlord_national_id' => $request->{'client_landlord_national_id_' . $request->opportunity_id},
-                    'landlord_address' => $request->{'client_landlord_address_' . $request->opportunity_id},
-                    'address' => $request->{'client_address_' . $request->opportunity_id},
-
-                    'start_date' => $request->{'client_date_' . $request->opportunity_id},
-                    'end_date' => $request->{'client_end_date_' . $request->opportunity_id},
-                    'notes' => $request->{'client_note_' . $request->opportunity_id},
-                    'has_recurring' => $request->{'client_recurring_type_' . $request->opportunity_id},
-                    'recurring_number' => $request->{'recurrings_amount_' . $request->opportunity_id} && count($request->{'recurrings_amount_' . $request->opportunity_id}) > 0 ? count($request->{'recurrings_amount_' . $request->opportunity_id}) : null,
-                    'amount' => $request->{'client_amount_' . $request->opportunity_id},
-
-                    'agency_id' => $client->agency_id,
-                    'business_id' => $client->business_id,
-
-
-                ]);
-
-
-                if ($contract) {
-
-                    if ($request->{'client_recurring_type_' . $request->opportunity_id} == 'yes') {
-
-
-                        $merged = array();
-                        foreach ($request->{'recurrings_amount_' . $request->opportunity_id} as $key => $arr) {
-
-                            $merged[$key][] = $arr;
-                        }
-                        foreach ($request->{'recurrings_dates_' . $request->opportunity_id} as $key => $arr) {
-
-                            $merged[$key][] = $arr;
-                        }
-
-                        foreach ($merged as $recurring) {
-                            ContractRecurring::create([
-                                'contract_id' => $contract->id,
-                                'client_id' => $client->id,
-                                'amount' => $recurring[0],
-                                'date' => $recurring[1],
-                                'payed' => 'no',
-                                'agency_id' => $client->agency_id,
-                                'business_id' => $client->business_id,
-                            ]);
-                        }
-                    }
-
-
-                    //                    foreach (request()->{'client_contract_documents_' . $request->opportunity_id} as $file) {
-                    //                        $size =  $file->getSize();
-                    //                        $extenstion =  $file->getClientOriginalExtension();
-                    //
-                    //                        $document = upload_image($file, public_path('upload/contracts/' . $client->id), true);
-                    //                        ContractDocument::create([
-                    //                            'contract_id' => $contract->id,
-                    //                            'extension'   => $extenstion,
-                    //                            'size'        => $size,
-                    //                            'client_id'   => $client->id,
-                    //                            'document'    => $document,
-                    //                            'name'        => $file->getClientOriginalName(),
-                    //                            'agency_id'   => $client->agency_id,
-                    //                            'business_id' => $client->business_id,
-                    //
-                    //
-                    //                        ]);
-                    //                    }
-
-
-                    $opportunity->update([
-                        'converting_approval' => 'waiting_for_approve',
-                        'reject_reason' => null,
-                        'rejected_by' => null,
-                        'reject_date' => null,
-
-
-                        'hold_reason' => null,
-                        'hold_by' => null,
-                        'hold_date' => null,
-
-                        'submit_for_approve_by' => auth()->user()->id,
-                        'submit_for_approve_date' => date('Y-m-d'),
-
+                foreach ($amounts as $key => $amount) {
+                    ContractRecurring::create([
+                        'contract_id' => $contract->id,
+                        'opportunity_id' => $opportunity->id,
+                        'amount' => $amount,
+                        'date' => $dates[$key],
+                        'payed' => 'no',
+                        'agency_id' => $opportunity->agency_id,
+                        'business_id' => $opportunity->business_id,
                     ]);
                 }
             }
 
+
+            //                    foreach (request()->{'client_contract_documents_' . $request->opportunity_id} as $file) {
+            //                        $size =  $file->getSize();
+            //                        $extenstion =  $file->getClientOriginalExtension();
+            //
+            //                        $document = upload_image($file, public_path('upload/contracts/' . $client->id), true);
+            //                        ContractDocument::create([
+            //                            'contract_id' => $contract->id,
+            //                            'extension'   => $extenstion,
+            //                            'size'        => $size,
+            //                            'client_id'   => $client->id,
+            //                            'document'    => $document,
+            //                            'name'        => $file->getClientOriginalName(),
+            //                            'agency_id'   => $client->agency_id,
+            //                            'business_id' => $client->business_id,
+            //
+            //
+            //                        ]);
+            //                    }
+
+
+            $opportunity->update([
+                'converting_approval' => 'waiting_for_approve',
+                'reject_reason' => null,
+                'rejected_by' => null,
+                'reject_date' => null,
+
+
+                'hold_reason' => null,
+                'hold_by' => null,
+                'hold_date' => null,
+
+                'submit_for_approve_by' => auth()->user()->id,
+                'submit_for_approve_date' => date('Y-m-d'),
+
+            ]);
 
             DB::commit();
 
@@ -1159,30 +1141,6 @@ class OpportunityRepo
             ]);
 
             DB::commit();
-
-//            if ($stage != $opportunity->stage && ($opportunity->stage == 'lost' || $opportunity->stage == 'won'))
-//            {
-//
-//                $owner = get_owner();
-//                if ($owner){
-//                    $content    = '<p>Hi {OWNER_NAME},</p>
-//                                   <p>The Opportunity #{OPPORTUNITY_ID} has been Updated to {OPPORTUNITY_STAGE}</p>
-//                                   <br><br>Regards<br>The {SITE_NAME} Team</p>';
-//                    $subject    = 'Opportunity Stage Updated';
-//
-//                    $company_name = env('APP_NAME', 'OTG');
-//
-//                    $message = str_replace("{CLIENT_NAME}",$owner->name_en,$content);
-//                    $message = str_replace("{OPPORTUNITY_ID}",$opportunity->id,$message);
-//                    $message = str_replace("{OPPORTUNITY_STAGE}",$opportunity->stage,$message);
-//                    $message = str_replace("{SITE_NAME}",$company_name,$message);
-//
-//                    SendEmail::dispatch($owner->email, $message, $subject);
-//
-//                    event(new OpportunityEvent($opportunity, $owner->id,'stage','the opportunity #'.$opportunity->id.' has been Updated to '.$opportunity->stage));
-//                    Notification::send($owner, new OpportunityNotification($opportunity,'stage','the opportunity #'.$opportunity->id.' has been Updated to '.$opportunity->stage));
-//                }
-//            }
 
             $template = Template::where('agency_id', $opportunity->agency_id)->where('type', 'email')->where('system', 'yes')
                 ->where('slug', 'opportunity_result')->first();

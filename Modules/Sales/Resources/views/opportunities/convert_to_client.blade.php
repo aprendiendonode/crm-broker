@@ -139,6 +139,9 @@
         </div>
 
 
+                     
+ 
+
         <div class="form form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.language')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> 
 
@@ -154,7 +157,7 @@
         </div>
          
 
-        <div class="form form-group">
+        {{-- <div class="form form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.currency')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> 
 
             <select required  style="" class="form-control  select2" name="client_currency_{{ $opportunity->id }}" data-toggle="select2" data-placeholder="@lang('sales.currency')" required>
@@ -165,304 +168,185 @@
                 @endforelse
 
             </select>
-        </div>
+        </div> --}}
     </div>
     
 
     </div>
 
-    {{--<div class="row">--}}
-   {{----}}
-        {{--<div class="col-md-12">--}}
-            {{--<div class="form-group d-flex  mt-3">--}}
-    {{----}}
-                {{--<p class="text-muted pr-2 font-weight-medium" style="flex:2">@lang('sales.contract_type')</p>--}}
-                {{--<div style="flex:4">--}}
-                    {{--<div class="radio radio-info form-check-inline">--}}
-                        {{--<input type="radio" onchange="contract_type({{ $opportunity->id }},'rent')" id="inlineRadio1_{{ $opportunity->id }}" value="rent" class="contract_type" name="client_contract_type_{{ $opportunity->id }}"  checked >--}}
-                        {{--<label for="inlineRadio1_{{ $opportunity->id }}"> @lang('sales.rent') </label>--}}
-                    {{--</div>--}}
-                    {{--<div class="radio radio-info form-check-inline">--}}
-                        {{--<input type="radio" onchange="contract_type({{ $opportunity->id }},'sale')"  id="inlineRadio2_{{ $opportunity->id }}" class="contract_type" value="sale" name="client_contract_type_{{ $opportunity->id }}"   >--}}
-                        {{--<label for="inlineRadio2_{{ $opportunity->id }}"> @lang('sales.sale') </label>--}}
-                    {{--</div>--}}
-                 {{--</div>--}}
-        {{----}}
-            {{--</div>--}}
-        {{--</div>--}}
+    <div class="row">
+   
+        <div class="col-md-12">
+
+            <div class="form-group d-flex  mt-3">
+    
+                <p class="text-muted pr-2 font-weight-medium" style="flex:2">@lang('sales.contract_type')</p>
+                <div style="flex:4">
+                    <div class="radio radio-info form-check-inline">
+                        <input type="radio" onchange="contract_type({{ $opportunity->id }},'rent')" id="inlineRadio1_{{ $opportunity->id }}" value="rent" class="contract_type" name="client_contract_type_{{ $opportunity->id }}"  checked >
+                        <label for="inlineRadio1_{{ $opportunity->id }}"> @lang('sales.rent') </label>
+                    </div>
+                    <div class="radio radio-info form-check-inline">
+                        <input type="radio" onchange="contract_type({{ $opportunity->id }},'sale')"  id="inlineRadio2_{{ $opportunity->id }}" class="contract_type" value="sale" name="client_contract_type_{{ $opportunity->id }}"   >
+                        <label for="inlineRadio2_{{ $opportunity->id }}"> @lang('sales.sale') </label>
+                    </div>
+                 </div>
+        
+            </div>
+        </div>
 
 
-        {{--<div class="col-md-6">--}}
+        <div class="col-md-6">
 
-            {{----}}
-            {{--<div class="form-group">       --}}
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> --}}
-        {{----}}
-                {{--<input data-plugin="tippy" required  data-tippy-placement="top-start" title="@lang('sales.landlord')" type="text" class="form-control" name="client_landlord_{{ $opportunity->id }}"   value="{{ old("client_landlord_{$opportunity->id}",) }}" placeholder="@lang('sales.landlord')" required>--}}
-                {{----}}
-            {{--</div>--}}
-            {{--<div class="form-group">       --}}
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord_national_id')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> --}}
-    {{----}}
-                {{--<input data-plugin="tippy" required  data-tippy-placement="top-start" pattern="/^([0-9\s\-\+\(\)]*)$/" title="@lang('sales.landlord_national_id')" type="text" class="form-control" name="client_landlord_national_id_{{ $opportunity->id }}"   value="{{ old("client_landlord_national_id_{$opportunity->id}",) }}" placeholder="@lang('sales.landlord_national_id')" required>--}}
-                {{----}}
-            {{--</div>--}}
-            {{--<div class="form-group">       --}}
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" > @lang('sales.landlord_address')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> --}}
-    {{----}}
-                    {{--<textarea class="form-control" required name="client_landlord_address_{{ $opportunity->id }}" id="" cols="30" rows="4">{{ old('client_landlord_address_'.$opportunity->id) }}</textarea>                --}}
-            {{--</div>--}}
-        {{--</div>--}}
- {{----}}
-       {{--<div class="col-md-6">--}}
+            
+            <div class="form-group">      
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+        
+                <input required   type="text" class="form-control landlord_name" name="client_landlord_{{ $opportunity->id }}"   value="{{ old("client_landlord_{$opportunity->id}") }}" placeholder="@lang('sales.landlord')" >
+                
+            </div>
+            <div class="form-group">      
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord_national_id')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+    
+                <input data-plugin="tippy" required  data-tippy-placement="top-start" pattern="/^([0-9\s\-\+\(\)]*)$/" title="@lang('sales.landlord_national_id')" type="text" class="form-control" name="client_landlord_national_id_{{ $opportunity->id }}"   value="{{ old("client_landlord_national_id_{$opportunity->id}",) }}" placeholder="@lang('sales.landlord_national_id')" required>
+                
+            </div>
+            <div class="form-group">      
+                <lable class="text-muted pr-2 font-weight-medium mt-1" > @lang('sales.landlord_address')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+    
+                    <textarea class="form-control" required name="client_landlord_address_{{ $opportunity->id }}" id="" cols="30" rows="4">{{ old('client_landlord_address_'.$opportunity->id) }}</textarea>               
+            </div>
+        </div>
+ 
+       <div class="col-md-6">
 
-            {{--<div class="form-group">       --}}
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> --}}
-                {{----}}
-                {{--<input required data-plugin="tippy"  data-tippy-placement="top-start" title="@lang('sales.customer')" type="text" class="form-control" name="client_customer_{{ $opportunity->id }}"   value="{{ old("client_customer_{$opportunity->id}",) }}" placeholder="@lang('sales.customer')" required>--}}
-                {{----}}
-            {{--</div>--}}
+            <div class="form-group">      
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+                
+                <input   type="text" class="form-control customer_name" name="client_customer_{{ $opportunity->id }}"   value="{{ old("client_customer_{$opportunity->id}",) }}" placeholder="@lang('sales.customer')" required>
+                
+            </div>
 
-            {{--<div class="form-group">       --}}
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer_national_id')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> --}}
+            <div class="form-group">      
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer_national_id')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
 
-                {{--<input data-plugin="tippy" required  data-tippy-placement="top-start" pattern="/^([0-9\s\-\+\(\)]*)$/" title="@lang('sales.customer_national_id')" type="text" class="form-control" name="client_customer_national_id_{{ $opportunity->id }}"   value="{{ old("client_landlord_national_id_{$opportunity->id}",) }}" placeholder="@lang('sales.customer_national_id')" required>--}}
-                {{----}}
-            {{--</div>--}}
-
-
-            {{--<div class="form-group">       --}}
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" > @lang('sales.customer_address')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> --}}
-    {{----}}
-                    {{--<textarea class="form-control" required name="client_customer_address_{{ $opportunity->id }}"  cols="30" rows="4">{{ old('client_customer_address_'.$opportunity->id) }}</textarea>                --}}
-            {{--</div>--}}
-        {{--</div>--}}
+                <input  pattern="/^([0-9\s\-\+\(\)]*)$/" type="text" class="form-control" name="client_customer_national_id_{{ $opportunity->id }}"   value="{{ old("client_landlord_national_id_{$opportunity->id}",) }}" placeholder="@lang('sales.customer_national_id')" required>
+                
+            </div>
 
 
-        {{--<div class="col-md-6">--}}
-            {{--<div class="form-group">--}}
-
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.date')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>--}}
-        {{----}}
-                {{--<input type="text" required name="client_date_{{ $opportunity->id }}" value="{{ old("client_date_{$opportunity->id}",$opportunity->date) }}" class="form-control basic-datepicker" placeholder="@lang('sales.date')">--}}
-            {{--</div>--}}
-
-        {{--</div>--}}
-        {{--<div class="col-md-6">--}}
-        {{----}}
-            {{--<div class="form-group end_date_{{ $opportunity->id }} ">--}}
-
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.end_date')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>--}}
-
-                {{--<input type="text"  name="client_end_date_{{ $opportunity->id }}" value="{{ old("client_end_date_{$opportunity->id}",$opportunity->end_date) }}" class="form-control basic-datepicker" placeholder="@lang('sales.end_date')">--}}
-            {{--</div>--}}
-
-        {{--</div>--}}
-
-        {{--<div class="col-md-6">--}}
-        {{----}}
-
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.listing_address')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>--}}
-            {{----}}
-                {{--<textarea required class="form-control" name="client_address_{{ $opportunity->id }}"  cols="30" rows="4">{{ old("client_address_{$opportunity->id}") }}</textarea>--}}
-        {{--</div>--}}
-        {{--<div class="col-md-6">--}}
-        {{----}}
-
-                {{--<lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.note')</lable>--}}
-            {{----}}
-                {{--<textarea class="form-control" name="client_note_{{ $opportunity->id }}"  cols="30" rows="4">{{ old("client_note_{$opportunity->id}") }}</textarea>--}}
-        {{--</div>--}}
-        {{--<div class="col-md-6">--}}
-        {{----}}
-            {{--<div class="form-group">--}}
-                {{--<label class="text-muted pr-2 font-weight-medium" for="recurring">{{ trans('sales.contract_amount') }}<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></label>--}}
-                {{--<input required class="form-control "  placeholder="@lang('sales.contract_amount')" onkeypress="generate(event,{{ $opportunity->id }})" type="text" name="client_amount_{{$opportunity->id }}" id="client_amount_{{ $opportunity->id }}" value="{{ old('client_amount_'.$opportunity->id ) }}" required>--}}
-    {{----}}
-            {{--</div>--}}
-
-         {{--</div>--}}
-
-         {{--<div class="col-md-6">--}}
-            {{--<div class="form-group">--}}
-                {{--<label class="mb-1 font-weight-medium text-muted"--}}
-                       {{--for="image">@lang('sales.contract_documents')</label>--}}
-                {{--<input required multiple type="file" name="client_contract_documents_{{ $opportunity->id }}[]" data-plugins="dropify" id="image"--}}
-                       {{--data-default-file="" />--}}
-          {{--</div>--}}
-
-        {{----}}
-
-         {{--</div>--}}
+            <div class="form-group">      
+                <lable class="text-muted pr-2 font-weight-medium mt-1" > @lang('sales.customer_address')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+    
+                    <textarea class="form-control" required name="client_customer_address_{{ $opportunity->id }}"  cols="30" rows="4">{{ old('client_customer_address_'.$opportunity->id) }}</textarea>               
+            </div>
+        </div>
 
 
-                     {{----}}
-        {{--<div class="col-md-12">--}}
-            {{--<div class="form-group d-flex  mt-3">--}}
-    {{----}}
-                {{--<p class="text-muted pr-2 font-weight-medium" style="flex:2">@lang('sales.recurring')</p>--}}
-                {{--<div style="flex:4">--}}
-                    {{--<div class="radio radio-info form-check-inline">--}}
-                        {{--<input type="radio" onchange="recurring({{ $opportunity->id }},'yes')" id="recurringyes_{{ $opportunity->id }}" value="yes" class="recurring" name="client_recurring_type_{{ $opportunity->id }}" >--}}
-                        {{--<label for="recurringyes_{{ $opportunity->id }}"> @lang('sales.yes') </label>--}}
-                    {{--</div>--}}
-                    {{--<div class="radio radio-info form-check-inline">--}}
-                        {{--<input type="radio" onchange="recurring({{ $opportunity->id }},'no')"  id="recurringno_{{ $opportunity->id }}" class="recurring" value="no" name="client_recurring_type_{{ $opportunity->id }}" checked>--}}
-                        {{--<label for="recurringno_{{ $opportunity->id }}"> @lang('sales.no') </label>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-        {{----}}
-            {{--</div>--}}
-        {{--</div>--}}
-        {{--<div class="col-md-6 d-none recurrings_type_{{ $opportunity->id }}">--}}
-        {{----}}
-            {{--<div class="form-group">--}}
-                {{--<label class="text-muted pr-2 font-weight-medium recurring-label_{{ $opportunity->id }}" for="recurring">{{ trans('sales.contract_recurring') }}</label>--}}
-                {{--<input class="form-control " placeholder="@lang('sales.type_recurring_number_and_press_enter')" onkeypress="generate(event,{{ $opportunity->id }})" type="text" name="client_recurring_{{$opportunity->id }}" id="client_recurring_{{ $opportunity->id }}" value="{{ old('client_recurring_'.$opportunity->id ) }}" >--}}
-    {{----}}
-            {{--</div>--}}
+        <div class="col-md-6">
+            <div class="form-group">
 
-        {{--</div>--}}
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.date')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+        
+                <input type="text" required name="client_date_{{ $opportunity->id }}" value="{{ old("client_date_{$opportunity->id}",$opportunity->date) }}" class="form-control basic-datepicker" placeholder="@lang('sales.date')">
+            </div>
+
+        </div>
+        <div class="col-md-6">
+        
+            <div class="form-group end_date_{{ $opportunity->id }} ">
+
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.end_date')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+
+                <input type="text"  name="client_end_date_{{ $opportunity->id }}" value="{{ old("client_end_date_{$opportunity->id}",$opportunity->end_date) }}" class="form-control basic-datepicker" placeholder="@lang('sales.end_date')">
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+        
+
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.listing_address')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+            
+                <textarea required class="form-control" name="client_address_{{ $opportunity->id }}"  cols="30" rows="4">{{ old("client_address_{$opportunity->id}") }}</textarea>
+        </div>
+        <div class="col-md-6">
+       
+
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.note')</lable>
+            
+                <textarea class="form-control" name="client_note_{{ $opportunity->id }}"  cols="30" rows="4">{{ old("client_note_{$opportunity->id}") }}</textarea>
+        </div>
+        <div class="col-md-6">
+        
+            <div class="form-group">
+                <label class="text-muted pr-2 font-weight-medium" for="recurring">{{ trans('sales.contract_amount') }}<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></label>
+                <input required class="form-control "  placeholder="@lang('sales.contract_amount')" onkeypress="generate(event,{{ $opportunity->id }})" type="text" name="client_amount_{{$opportunity->id }}" id="client_amount_{{ $opportunity->id }}" value="{{ old('client_amount_'.$opportunity->id ) }}" required>
+    
+            </div>
+
+         </div>
+
+         <div class="col-md-6">
+            <div class="form-group">
+                <label class="mb-1 font-weight-medium text-muted"
+                       for="image">@lang('sales.contract_documents')</label>
+                <input required multiple type="file" name="client_contract_documents_{{ $opportunity->id }}[]" data-plugins="dropify" id="image"
+                       data-default-file="" />
+          </div>
+
+        
+
+         </div>
 
 
-   {{----}}
-          {{--<div class="col-md-12 ">--}}
+                     
+        <div class="col-md-12">
+            <div class="form-group d-flex  mt-3">
+    
+                <p class="text-muted pr-2 font-weight-medium" style="flex:2">@lang('sales.recurring')</p>
+                <div style="flex:4">
+                    <div class="radio radio-info form-check-inline">
+                        <input type="radio" onchange="recurring({{ $opportunity->id }},'yes')" id="recurringyes_{{ $opportunity->id }}" value="yes" class="recurring" name="client_recurring_type_{{ $opportunity->id }}" >
+                        <label for="recurringyes_{{ $opportunity->id }}"> @lang('sales.yes') </label>
+                    </div>
+                    <div class="radio radio-info form-check-inline">
+                        <input type="radio" onchange="recurring({{ $opportunity->id }},'no')"  id="recurringno_{{ $opportunity->id }}" class="recurring" value="no" name="client_recurring_type_{{ $opportunity->id }}" checked>
+                        <label for="recurringno_{{ $opportunity->id }}"> @lang('sales.no') </label>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+        <div class="col-md-6 d-none recurrings_type_{{ $opportunity->id }}">
+      
+            <div class="form-group">
+                <label class="text-muted pr-2 font-weight-medium recurring-label_{{ $opportunity->id }}" for="recurring">{{ trans('sales.contract_recurring') }}</label>
+                <input class="form-control " placeholder="@lang('sales.type_recurring_number_and_press_enter')" onkeypress="generate(event,{{ $opportunity->id }})" type="text" name="client_recurring_{{$opportunity->id }}" id="client_recurring_{{ $opportunity->id }}" value="{{ old('client_recurring_'.$opportunity->id ) }}" >
+ 
+            </div>
 
-            {{--<div class="row recurring_row_{{ $opportunity->id }}">--}}
+        </div>
 
-          {{--</div>--}}
-    {{----}}
+          <div class="col-md-12 ">
 
-        {{--</div>--}}
-    {{----}}
+            <div class="row recurring_row_{{ $opportunity->id }}">
+
+         </div>
+    
+
+        </div>
+    
 
 
 
-    {{--</div>--}}
+    </div>
     <div class="row">
 
         <button type="button" class=" btn btn-primary mb-3" onclick="toggle_additional_data_({{ $opportunity->id }})">@lang('sales.additional_data') <i class="fe-eye"></i></button>
     </div>
 
-    <div class="row toggled_additional_{{ $opportunity->id }} d-none">
-           <div class="col-md-4">
-                        <div class="form-group">
-                            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.email2')</lable>
-            
-                            <input type="email" class="form-control"  name="client_email2_{{ $opportunity->id }}"  value="{{ old("client_email2_{$opportunity->id}",$opportunity->email2) }}" placeholder="@lang('sales.email2')">
-                        </div>
-                    
-            
-            
-                
-                <div class="form-group">
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.website')</lable>
-            
-            
-                    <input type="text" class="form-control"  name="client_website_{{ $opportunity->id }}"   value="{{ old('client_website_'.$opportunity->id,$opportunity->website) }}" placeholder="@lang('sales.website')" >
-            
-                </div>
-            
-                <div class="form-group">
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.skype')</lable> 
-                    <input type="text" class="form-control"  name="client_skype_{{ $opportunity->id }}"   value="{{ old('client_skype_'.$opportunity->id,$opportunity->skype) }}" placeholder="@lang('sales.skype')" >
-            
-                </div>
-
-
-
-                <div class="form-group">
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.facebook')</lable> 
-            
-                     <input type="text" class="form-control"  name="client_facebook_{{ $opportunity->id }}"   value="{{ old('client_facebook_'.$opportunity->id) }}" placeholder="@lang('sales.facebook')" >
-             
-                  </div>
-            
-            
-                 <div class="form-group">
-            
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.twitter')</lable> 
-            
-                     <input type="text" class="form-control"  name="client_twitter_{{ $opportunity->id }}"   value="{{ old('client_twitter_'.$opportunity->id) }}" placeholder="@lang('sales.twitter')" >
-             
-                  </div>
-                 <div class="form-group">
-            
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.linkedin')</lable> 
-            
-                     <input type="text" class="form-control"  name="client_linkedin_{{ $opportunity->id }}"   value="{{ old('client_linkedin_'.$opportunity->id) }}" placeholder="@lang('sales.linkedin')" >
-             
-                  </div>
-            
-               
-
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.landline')</lable> 
-        
-                    <input type="text" class="form-control"  name="client_landline_{{ $opportunity->id }}"   value="{{ old('client_landline_'.$opportunity->id,$opportunity->landline) }}" placeholder="@lang('sales.landline')" >
-            
-                 </div>
-        
-        
-        
-        
-                <div class="form-group">
-                            
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.phone2')</lable> 
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.phone2')" type="text" class="form-control" name="client_phone2_{{ $opportunity->id }}"   value="{{ old("client_phone2_{$opportunity->id}",$opportunity->phone2) }}" placeholder="@lang('sales.phone2')"  >
-                </div>
-        
-        
-        
-                <div class="form-group">
-                   
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.fax')</lable> 
-        
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.fax')" type="text" class="form-control" name="client_fax_{{ $opportunity->id }}"   value="{{ old("client_fax_{$opportunity->id}",$opportunity->fax) }}" placeholder="{{trans('sales.fax')}}"  >
-                    
-               
-                </div>
-        
-        
-        
-           
-        
-     
-        
-
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-        
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.city')</lable> 
-        
-                    <input type="text" class="form-control"  name="client_city_{{ $opportunity->id }}"   value="{{ old('client_city_'.$opportunity->id,$opportunity->city) }}" placeholder="@lang('sales.city')" >
-            
-                 </div>
-        
-                 <div class="form-group">
-        
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.latitude')</lable> 
-        
-                    <input type="text" class="form-control"  name="client_latitude_{{ $opportunity->id }}"   value="{{ old('client_latitude_'.$opportunity->id) }}" placeholder="@lang('sales.latitude')" >
-            
-                 </div>
-        
-        
-                 <div class="form-group">
-        
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.longitude')</lable> 
-        
-                    <input type="text" class="form-control"  name="client_longitude_{{ $opportunity->id }}"   value="{{ old('client_longitude_'.$opportunity->id) }}" placeholder="@lang('sales.longitude')" >
-            
-                 </div>
-
-            </div>
-    </div>    
-
+ 
     <div class="d-flex justify-content-end">
     
         <button onclick="event.preventDefault();hide_client_div({{ $opportunity->id }})" type="button" class="btn  btn-outline-success waves-effect waves-light">

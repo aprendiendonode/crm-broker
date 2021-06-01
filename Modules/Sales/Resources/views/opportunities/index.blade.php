@@ -609,7 +609,7 @@ var  googleMapsScriptIsInjected = false;
 
 
 <script>
-
+    var load_listing = false;
     function table_row_show(row_id,id){
       
         $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
@@ -622,6 +622,28 @@ var  googleMapsScriptIsInjected = false;
                         region: 'EG',
                         callback: 'initMap',
                     });
+                }
+        if(id == 'client_'+row_id && load_listing == false){
+             var locale =  @json(app()->getLocale());
+                $.ajax({
+                    url  : "{{ route('sales.load-listings') }}",
+                    type : 'POST',
+                    success: function(data){
+                        data.listings.forEach(function(value,key){
+                             
+                  
+                            option += '<option value="'+value.id+'" >';
+
+                                option += value.listing_ref;
+                           
+                        option += '</option>';
+
+                        $('listing-loading-'+row_id).append(option)
+                    }
+                    
+
+
+                })
                 }
     
         if($('.'+id).hasClass('d-none')){
@@ -700,6 +722,54 @@ var  googleMapsScriptIsInjected = false;
     
     
     }
+
+
+    function  show_total_call_div(id){
+
+        $('.total_calls_'+id).toggleClass('d-none');
+
+        }
+
+        function hide_custom(id){
+                $('.custom-staff_'+id).addClass('d-none');
+        }
+
+            function show_custom(id){
+                $('.custom-staff_'+id).removeClass('d-none');
+                
+            }
+
+            function  show_note_assign_div(assign,id){
+                $('.opportunity_assign_note_'+assign+'_'+id).toggleClass('d-none');
+            }
+
+            function  show_current_note_assign_div(assign,id){
+                $('.opportunity_current_assign_note_'+assign+'_'+id).toggleClass('d-none');
+            }
+
+            function  show_history_assign_div(id){
+                $('.opportunity_history_assign_'+id).toggleClass('d-none');
+
+            }
+
+
+            function  show_question_answered_div(id){
+
+            $('.question_answered_div_'+id).toggleClass('d-none');
+
+            }
+            function  show_question_not_answered_div(id){
+
+            $('.question_not_answered_div_'+id).toggleClass('d-none');
+
+            }
+
+            function  show_result_report_div(result,id){
+
+            $('.result_report_'+result+'_'+id).toggleClass('d-none');
+
+            }
+
     </script>
     
 @endpush
