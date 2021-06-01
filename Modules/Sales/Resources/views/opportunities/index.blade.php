@@ -623,37 +623,43 @@ var  googleMapsScriptIsInjected = false;
                         callback: 'initMap',
                     });
                 }
+
+
+
         if(id == 'client_'+row_id && load_listing == false){
              var locale =  @json(app()->getLocale());
                 $.ajax({
                     url  : "{{ route('sales.load-listings') }}",
                     type : 'POST',
                     success: function(data){
+                        var option = '';
+
+
                         data.listings.forEach(function(value,key){
                              
                   
                             option += '<option value="'+value.id+'" >';
 
                                 option += value.listing_ref;
-                           
+                        
                         option += '</option>';
 
-                        $('listing-loading-'+row_id).append(option)
-                    }
                     
+                    }
 
+                    $('listing-loading-'+row_id).append(option)
+             
+                
 
-                })
-                }
+            
+              
+
     
-        if($('.'+id).hasClass('d-none')){
-            $('.'+id).removeClass('d-none');
-        }else{
-            $('.'+id).addClass('d-none');
-    
-        }
-    
+            }
+        })
     }
+    }
+   
     function table_row_hide(id){
         
         $('.'+id).addClass('d-none');

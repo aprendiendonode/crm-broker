@@ -211,8 +211,7 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
 
 
         Route::post('convert-to-opportunity', 'LeadsController@convert_to_opportunity');
-
-
+        Route::post('load-listings', 'OpportunityController@load_listings')->name('sales.load-listings');
 
         // Route::post('opportunities-update-stage', 'OpportunitiesController@update_stage_index');
         Route::post('opportunities-update-qualification', 'OpportunitiesController@update_qualification_index');

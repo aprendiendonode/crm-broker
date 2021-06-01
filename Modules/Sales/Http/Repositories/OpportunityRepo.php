@@ -1866,4 +1866,16 @@ class OpportunityRepo
             );
         }
     }
+
+
+
+
+
+
+
+
+    public function load_listing($request)
+    {
+        dd($request);
+    }
 }
