@@ -49,7 +49,7 @@ class CelebrateBirthday extends Command
                 <br><br>Regards<br>The {SITE_NAME} Team</p>';
         $subject = 'HAPPY BIRTHDAY';
 
-//        if (date('h:i').':00' == '09:00:00'){
+//        if (date('H:i') == '09:00'){
             $clients = getClientUpcomingBirthdays();
 
             foreach ($clients as $client){

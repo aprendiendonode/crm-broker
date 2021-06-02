@@ -2,6 +2,7 @@
 
 namespace Modules\Activity\Http\Controllers;
 
+use App\Jobs\SendEmail;
 use App\Jobs\TaskReminder;
 use App\Mail\EmailGeneral;
 use App\Models\Agency;
@@ -33,11 +34,6 @@ class TaskController extends Controller
     public function index($agency)
     {
 
-        $tasks_with_custom_reminder = tasks_with_custom_reminder($agency);
-        $tasks_reminder = tasks_reminder($agency);
-        $merged = array_merge($tasks_with_custom_reminder, $tasks_reminder);
-        $clients = getClientUpcomingBirthdays();
-//        dd($merged, $clients);
         $per_page       = 10;
         $tasks          = auth()->user()->getTasksByUserId($agency);
         // dynamic status
@@ -111,7 +107,6 @@ class TaskController extends Controller
         $clients        = Client::where('agency_id', $agency)->get();
         $listings       = Listing::where('agency_id', $agency)->get();
 
-        //        $staffs         = User::where('agency_id',$agency)->where('active','=','1')->where('type','staff')->get();
         $staffs         = staff($agency);
 
         return view(
@@ -565,94 +560,4 @@ class TaskController extends Controller
         }
 
     }
-//
-//    public function tasks_with_custom_reminder($agency_id)
-//    {
-//
-//        $tasks = Task::where('agency_id', $agency_id)->get();
-//        $tasks_reminder_byDate = [];
-////        dd($tasks);
-//        foreach($tasks as $task)
-//        {
-//            if ($task->custom_reminder == 'on')
-//            {
-//                if ($task->period_reminder == 'before')
-//                {
-//                    if ($task->type_reminder == 'days')
-//                    {
-//
-//                        $date = strtotime('-'.$task->type_reminder_number.' day',strtotime($task->deadline));
-//                        $date_remind = date('Y-m-d', $date);
-//                        $tasks_reminder_byDate[$date_remind][$task->time][] = $task;
-//
-//                    }else{
-//                        //hours
-//                        $time = strtotime('-'.$task->type_reminder_number.' hour',strtotime($task->time));
-//                        $time_remind = date('h:i:s', $time);
-//                        $tasks_reminder_byDate[$task->deadline][$time_remind][] = $task;
-//                    }
-//
-//                }else{
-//                    //after
-//                    if ($task->type_reminder == 'days')
-//                    {
-//
-//                        $date = strtotime('+'.$task->type_reminder_number.' day',strtotime($task->deadline));
-//                        $date_remind = date('Y-m-d', $date);
-//                        $tasks_reminder_byDate[$date_remind][$task->time][] = $task;
-//
-//                    }else{
-//                        //hours
-//                        $time = strtotime('+'.$task->type_reminder_number.' hour',strtotime($task->time));
-//                        $time_remind = date('h:i:s', $time);
-//                        $tasks_reminder_byDate[$task->deadline][$time_remind][] = $task;
-//                    }
-//
-//                }
-//            }
-//        }
-//
-//        return $tasks_reminder_byDate;
-//    }
-//
-//    public function tasks_reminder($agency_id)
-//    {
-//        $email_notify = EmailNotify::where('agency_id', $agency_id)->first();
-//        $general_reminders = EmailNotifyReminder::where( 'email_notify_id'  , $email_notify->id)->where( 'category'  , 'general_reminder')->get();
-//
-//        $tasks_reminder_byDate = [];
-//        foreach($general_reminders as $general_reminder ){
-//
-//            $type   = $general_reminder->type;
-//            $day    = $general_reminder->day;
-//            $time   = $general_reminder->time;
-//
-//            $status_complete = TaskStatus::where('agency_id', $agency_id)->where('type_complete','on')->pluck('id');
-//
-//            $tasks = Task::where('agency_id', $agency_id)
-//                ->where('custom_reminder','off')
-//                ->whereNotIn('task_status_id',$status_complete)
-//                ->get();
-//
-//            foreach($tasks as $task)
-//            {
-//                if ($type == 'before')
-//                {
-//
-//                    $date = strtotime('-'.$day.' day',strtotime($task->deadline));
-//                    $date_remind = date('Y-m-d', $date);
-//                    $tasks_reminder_byDate[$date_remind][$time][] = $task;
-//
-//                }else{
-//                    //after
-//                    $date = strtotime('+'.$day.' day',strtotime($task->deadline));
-//                    $date_remind = date('Y-m-d', $date);
-//                    $tasks_reminder_byDate[$date_remind][$time][] = $task;
-//
-//                }
-//            }
-//
-//        }
-//        return $tasks_reminder_byDate;
-//    }
 }

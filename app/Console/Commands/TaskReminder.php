@@ -65,7 +65,7 @@ class TaskReminder extends Command
 
                     foreach ($custom_reminder as $time_remind => $tasks){
 
-                        if (date('h:i').':00' == $time_remind){
+                        if (date('H:i').':00' == $time_remind){
 //                        if ($time_remind == $time_remind){
                             foreach ($tasks as $task){
 

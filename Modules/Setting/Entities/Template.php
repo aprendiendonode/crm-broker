@@ -18,6 +18,8 @@ class Template extends Model
         'description_ar',
         'agency_id',
         'business_id',
+        'slug',
+        'system',
         'deleted_at',
         'created_at',
         'updated_at'

@@ -28,7 +28,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
          $schedule->command('task:reminder')->everyMinute();
 //         $schedule->command('user:birthday')->daily();
-         $schedule->command('user:birthday')->daily();
+         $schedule->command('user:birthday')->everyMinute();
+         $schedule->command('call:next_time')->everyMinute();
          $schedule->command('queue:work')->everyMinute();
     }
 

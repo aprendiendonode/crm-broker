@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Entities;
 
+use App\Models\Agency;
 use App\Models\User;
 use Modules\Activity\Entities\Task;
 use Modules\Sales\Entities\LeadType;
@@ -37,6 +38,10 @@ class Client extends Model
     }
 
 
+    public function agency()
+    {
+        return $this->belongsTo(Agency::class, 'agency_id');
+    }
 
 
     public function questions()

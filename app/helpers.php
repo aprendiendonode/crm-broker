@@ -9,6 +9,7 @@ use Modules\Setting\Entities\Template;
 use App\Models\SystemTemplate;
 use App\Models\Agency;
 use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\Call;
 
 
 if (!function_exists('owner')) {
@@ -487,7 +488,7 @@ if (!function_exists('getClientUpcomingBirthdays')) {
     function getClientUpcomingBirthdays()
     {
         $date = now();
-        $clients = Client::Where(function ($query) use ($date) {
+        $clients = Client::with('agency')->Where(function ($query) use ($date) {
 
             $query->whereMonth('date_of_birth',  $date->month)
 
@@ -496,5 +497,15 @@ if (!function_exists('getClientUpcomingBirthdays')) {
         })->get();
 
         return $clients;
+    }
+}
+
+if (!function_exists('getCallUpcoming')) {
+    function getCallUpcoming()
+    {
+        $date = now();
+        $calls = Call::with('agency','madeBy')->Where('next_action_date',date('Y-m-d'))->get();
+
+        return $calls;
     }
 }
