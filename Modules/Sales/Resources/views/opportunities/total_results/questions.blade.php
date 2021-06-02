@@ -1,5 +1,4 @@
-      
-    <div class="card-box">
+
         <h4 class="header-title mb-2">@lang('sales.questions')</h4>
         
         <div>
@@ -210,20 +209,3 @@
         
               </table>
         </div> <!-- end .table-responsive-->
-    </div> <!-- end card-box -->
-@push('js')
-<script>
-    
-    function  show_question_answered_div(id){
-
-        $('.question_answered_div_'+id).toggleClass('d-none');
-
-    }
-    function  show_question_not_answered_div(id){
-
-        $('.question_not_answered_div_'+id).toggleClass('d-none');
-
-    }
-
-</script>
-@endpush

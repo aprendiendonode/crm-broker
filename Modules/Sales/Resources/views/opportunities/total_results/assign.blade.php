@@ -1,8 +1,4 @@
 
-    <div class="card">
-    
-            
-        <div class="card-box">
                     
             <h5>@lang('sales.assigned_to_opportunity')</h5>
                                     
@@ -106,7 +102,3 @@
                 </table>
     
         </div>
-    </div>
-          
-    </div>
-       

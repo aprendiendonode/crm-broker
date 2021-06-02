@@ -620,7 +620,7 @@
                             data-target="#add_developer" 
                             onclick="event.preventDefault()" id="basic-addon1">
                                 <i 
-                                data-plugin="tippy" title="@lang('leads.new_developer')"
+                                data-plugin="tippy" title="@lang('sales.new_developer')"
                                 data-tippy-placement="top-start" 
 
                                 class="fas fa-plus-circle"
@@ -628,7 +628,7 @@
                             </div>
                         @endcan
         
-                        <select  style="" class="form-control select_developer_id select2" name="edit_developer_{{ $lead->id }}" data-toggle="select2" data-placeholder="@lang('leads.developer')" >
+                        <select  style="" class="form-control select_developer_id select2" name="edit_developer_{{ $lead->id }}" data-toggle="select2" data-placeholder="@lang('sales.developer')" >
                                 <option value="" class="font-weight-medium text-muted"></option>
                                 @foreach($developers as $developer)
                     

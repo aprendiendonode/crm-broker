@@ -165,52 +165,52 @@ class OpportunitiesController extends Controller
 
 
 
-     public function client_hold(Request $request)
-     {
+    public function client_hold(Request $request)
+    {
 
-         abort_if(Gate::denies('edit_opportunity'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('edit_opportunity'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-         $opportunity = Opportunity::where('id', $request->hold_opportunity_id)->where('business_id', auth()->user()->business_id)->first();
-         abort_if(!$opportunity, Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-
-         try {
-
-             $validator = Validator::make($request->all(), [
-
-                 "hold_reason_" . $request->hold_opportunity_id      => "required|string",
-
-             ]);
+        $opportunity = Opportunity::where('id', $request->hold_opportunity_id)->where('business_id', auth()->user()->business_id)->first();
+        abort_if(!$opportunity, Response::HTTP_FORBIDDEN, '403 Forbidden');
 
 
-             if ($validator->fails()) {
-                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-approve-tab', $request->hold_opportunity_id);
-             }
+        try {
 
-             $opportunity->update([
-                 'converting_approval'      => 'hold',
+            $validator = Validator::make($request->all(), [
 
-                 'hold_reason'              => $request->{'hold_reason_' . $request->hold_opportunity_id},
-                 'hold_by'                  => auth()->user()->id,
-                 'hold_date'                => date('Y-m-d'),
+                "hold_reason_" . $request->hold_opportunity_id      => "required|string",
 
-                 'reject_reason'            => null,
-                 'rejected_by'              => null,
-                 'reject_date'              => null,
+            ]);
 
-                 'submit_for_approve_by'    => null,
-                 'submit_for_approve_date'  => null,
 
-             ]);
+            if ($validator->fails()) {
+                return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-approve-tab', $request->hold_opportunity_id);
+            }
 
-             DB::commit();
-             return back()->with(flash(trans('sales.client_on_hold'), 'success'))->with('open-hold-tab', $request->hold_opportunity_id);
-         } catch (\Exception $e) {
+            $opportunity->update([
+                'converting_approval'      => 'hold',
 
-             DB::rollback();
-             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-hold-tab', $request->hold_opportunity_id);
-         }
-     }
+                'hold_reason'              => $request->{'hold_reason_' . $request->hold_opportunity_id},
+                'hold_by'                  => auth()->user()->id,
+                'hold_date'                => date('Y-m-d'),
+
+                'reject_reason'            => null,
+                'rejected_by'              => null,
+                'reject_date'              => null,
+
+                'submit_for_approve_by'    => null,
+                'submit_for_approve_date'  => null,
+
+            ]);
+
+            DB::commit();
+            return back()->with(flash(trans('sales.client_on_hold'), 'success'))->with('open-hold-tab', $request->hold_opportunity_id);
+        } catch (\Exception $e) {
+
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-hold-tab', $request->hold_opportunity_id);
+        }
+    }
 
     public function suggest_new_convert(Request $request, OpportunityRepo $repo)
     {
@@ -240,6 +240,10 @@ class OpportunitiesController extends Controller
     public function approve_client(Request $request, OpportunityRepo $repo)
     {
         return $repo->approve_client($request);
+    }
+    public function load_listing(Request $request, OpportunityRepo $repo)
+    {
+        return $repo->load_listing($request);
     }
 
     public function approve_client_old(Request $request, OpportunityRepo $repo)

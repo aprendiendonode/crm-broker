@@ -176,301 +176,298 @@
 
 
     </div>
-{{--@if($opportunity->client->contracts)--}}
-    {{--<div class="row">--}}
-
-
-                        {{----}}
-                    {{--<div class="col-md-12">--}}
-                    {{----}}
-                {{----}}
-                            {{--<label class="text-muted pr-2  h5 font-weight-medium" style="flex:2">@lang('sales.contract_type')</label>--}}
-
-                            {{--<p class="h5">{{ ucfirst($opportunity->client->contracts->first()->contract_type) }}</p>--}}
-                        {{----}}
-                {{----}}
-                    {{--</div>--}}
-
-
-                    {{--<div class="col-md-6">--}}
-
-                        {{----}}
-                        {{--<div class="form-group">       --}}
-                            {{--<lable class="text-muted pr-2 h5 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord')</lable> --}}
-                            {{--<p class="h5">{{ ucfirst($opportunity->client->contracts->first()->landlord_name) }}</p>--}}
-                            {{----}}
-                        {{--</div>--}}
-                        {{--<div class="form-group">  --}}
-                            {{----}}
-                            {{--<lable class="text-muted pr-2 h5 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord_national_id')</lable> --}}
-                            {{--<p class="h5">{{ $opportunity->client->contracts->first()->landlord_national_id}}</p>--}}
-                                                {{----}}
-                        {{--</div>--}}
-                        {{--<div class="form-group">   --}}
-                            {{----}}
-                            {{--<lable class="text-muted pr-2 h5 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord_address')</lable> --}}
-                            {{--<p class="h5">{{ ucfirst($opportunity->client->contracts->first()->landlord_address)}}</p>--}}
-                                {{----}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-            {{----}}
-
-
-                {{--<div class="col-md-6">--}}
-
-                        {{--<div class="form-group">  --}}
-                            {{----}}
-                            {{--<lable class="text-muted pr-2 h5 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer')</lable> --}}
-                            {{--<p class="h5">{{ ucfirst($opportunity->client->contracts->first()->customer_name)}}</p>--}}
-                            {{----}}
-
-                        {{--</div>--}}
-
-
-
-                        {{--<div class="form-group"> --}}
-                            {{----}}
-                            {{--<lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer_national_id')</lable> --}}
-                            {{--<p class="h5">{{ $opportunity->client->contracts->first()->customer_national_id}}</p>--}}
-                            {{----}}
-                        {{--</div>--}}
-
-
-                        {{--<div class="form-group">  --}}
-                            {{----}}
-                                    {{----}}
-                            {{--<lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer_address')</lable> --}}
-                            {{--<p class="h5">{{ $opportunity->client->contracts->first()->customer_address}}</p>--}}
-                        {{----}}
-                        {{--</div>--}}
-                    {{--</div>--}}
+@if($opportunity->contracts)
+    <div class="row">
+
+
+                        
+                    <div class="col-md-12">
+                    
+                
+                            <label class="text-muted pr-2  h5 font-weight-medium" style="flex:2">@lang('sales.contract_type')</label>
+
+                            <p class="h5">{{ ucfirst($opportunity->contracts->first()->contract_type) }}</p>
+                        
+                
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        
+                        <div class="form-group">       
+                            <lable class="text-muted pr-2 h5 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord')</lable> 
+                            <p class="h5">{{ ucfirst($opportunity->contracts->first()->landlord_name) }}</p>
+                            
+                        </div>
+                        <div class="form-group">  
+                            
+                            <lable class="text-muted pr-2 h5 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord_national_id')</lable> 
+                            <p class="h5">{{ $opportunity->contracts->first()->landlord_national_id}}</p>
+                                                
+                        </div>
+                        <div class="form-group">   
+                            
+                            <lable class="text-muted pr-2 h5 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord_address')</lable> 
+                            <p class="h5">{{ ucfirst($opportunity->contracts->first()->landlord_address)}}</p>
+                                
+                        </div>
+                    </div>
+            
+
+
+                <div class="col-md-6">
+
+                        <div class="form-group">  
+                            
+                            <lable class="text-muted pr-2 h5 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer')</lable> 
+                            <p class="h5">{{ ucfirst($opportunity->contracts->first()->customer_name)}}</p>
+                            
+
+                        </div>
+
+
+
+                        <div class="form-group"> 
+                            
+                            <lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer_national_id')</lable> 
+                            <p class="h5">{{ $opportunity->contracts->first()->customer_national_id}}</p>
+                            
+                        </div>
+
+
+                        <div class="form-group">  
+                            
+                                    
+                            <lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer_address')</lable> 
+                            <p class="h5">{{ $opportunity->contracts->first()->customer_address}}</p>
+                        
+                        </div>
+                    </div>
 
-
-                    {{--<div class="col-md-6">--}}
-                        {{--<div class="form-group">--}}
-                            {{--<lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.date')</lable> --}}
-                            {{--<p class="h5">{{ $opportunity->client->contracts->first()->start_date}}</p>--}}
-                        {{----}}
-                        {{----}}
-                        {{--</div>--}}
-
-                    {{--</div>--}}
-                    {{--<div class="col-md-6">--}}
-                    {{----}}
-                        {{--<div class="form-group end_date_{{ $opportunity->id }} ">--}}
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.date')</lable> 
+                            <p class="h5">{{ $opportunity->contracts->first()->start_date}}</p>
+                        
+                        
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                    
+                        <div class="form-group end_date_{{ $opportunity->id }} ">
 
-                            {{--<lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.end_date')</lable> --}}
-                            {{--<p class="h5">{{ $opportunity->client->contracts->first()->end_date}}</p>--}}
-                        {{----}}
-                        {{--</div>--}}
+                            <lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.end_date')</lable> 
+                            <p class="h5">{{ $opportunity->contracts->first()->end_date}}</p>
+                        
+                        </div>
 
-                    {{--</div>--}}
+                    </div>
 
-                    {{--<div class="col-md-6">--}}
-                        {{--<lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.listing_address')</lable> --}}
-                        {{--<p class="h5">{{ $opportunity->client->contracts->first()->address}}</p>--}}
-                    {{----}}
-                    {{--</div>--}}
+                    <div class="col-md-6">
+                        <lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.listing_address')</lable> 
+                        <p class="h5">{{ $opportunity->contracts->first()->address}}</p>
+                    
+                    </div>
 
-                    {{--<div class="col-md-6">--}}
-                        {{--@if($opportunity->client->contracts->first()->notes != null)--}}
-                        {{--<lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.note')</lable> --}}
-                        {{--<p class="h5">{{ $opportunity->client->contracts->first()->notes}}</p>--}}
-                        {{----}}
-                        {{--@endif--}}
-                    {{--</div>--}}
-                    {{--<div class="col-md-6">--}}
-                    {{----}}
-                        {{--<div class="form-group">--}}
+                    <div class="col-md-6">
+                        @if($opportunity->contracts->first()->notes != null)
+                        <lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.note')</lable> 
+                        <p class="h5">{{ $opportunity->contracts->first()->notes}}</p>
+                        
+                        @endif
+                    </div>
+                    <div class="col-md-6">
+                    
+                        <div class="form-group">
 
 
 
-                            {{--<lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.contract_amount')</lable> --}}
-                            {{--<p class="h5">{{ $opportunity->client->contracts->first()->amount}}</p>--}}
-            {{----}}
-                        {{--</div>--}}
+                            <lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.contract_amount')</lable> 
+                            <p class="h5">{{ $opportunity->contracts->first()->amount}}</p>
+            
+                        </div>
 
-                    {{--</div>--}}
+                    </div>
 
-  {{----}}
+  
 
-         {{--</div>--}}
+         </div>
 
-{{--<div class="row">--}}
-                     {{----}}
-        {{--<div class="col-md-12">--}}
+<div class="row">
+                     
+        <div class="col-md-12">
 
-            {{----}}
-        {{----}}
-
-        {{--@if($opportunity->client->contracts->first()->has_recurring == 'yes')--}}
-                                    {{----}}
-            {{--<div class="card-box">--}}
-                {{--<h4 class="header-title">@lang('sales.recurrings')</h4>--}}
-        {{----}}
-
-            {{----}}
-                {{--<div class="table-responsive">--}}
-            {{----}}
-                        {{--<table class="table table-bordered toggle-circle mb-0">--}}
-
-
-                            {{--<thead class="thead-light">--}}
-                                {{--<th>#</th>--}}
-                                {{--<th>@lang('sales.amount')</th>--}}
-                                {{--<th>@lang('sales.date')</th>--}}
-                    {{----}}
-                            {{--</thead>--}}
-                            {{--<tbody>--}}
-
-
-                                        {{----}}
-                                {{--@if($opportunity->client->contracts->first()->recurrings)--}}
-
-
-                                {{--@foreach($opportunity->client->contracts->first()->recurrings as $recurring)--}}
-
-                                    {{--<tr>--}}
-                                        {{--<td>{{ $loop->index + 1 }}</td>--}}
-                                        {{--<td>{{ $recurring->amount }}</td>--}}
-                                        {{--<td>{{ $recurring->date }}</td>--}}
-                                {{----}}
-
-                                        {{-- <img src="{{ asset('upload/contracts/'.$opportunity->client->id.'/'.$document->document) }}" alt="{{ $document->name }}">   --}}
-
-                                    {{--</tr>--}}
-                                    {{----}}
-                {{----}}
-                                {{--@endforeach           --}}
-                                    {{----}}
-
-                    {{----}}
-                                {{--@else   --}}
-                    {{----}}
-                                {{--@lang('sales.no_records')--}}
-                    {{----}}
-                                {{--@endif--}}
-                            {{--</tbody>--}}
-                        {{--</table>--}}
-
-
-
-                {{--</div> <!-- end .table-responsive-->--}}
-            {{--</div> <!-- end card-box -->--}}
-
-            {{--@else--}}
-            {{--<lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.recurrings')</lable> --}}
-            {{--<p class="h5 mb-3">@lang('sales.contract_has_no_recurrings')</p>--}}
-
-            {{--@endif--}}
-
-            {{----}}
-     {{--</div>--}}
-
-     {{----}}
-    {{----}}
-       {{--<div class="col-md-8 ">--}}
-    {{----}}
-
-
-        {{--<div class="card">--}}
-            {{--<div class="card-body">--}}
-                {{--<div class="dropdown float-right">--}}
-                 {{----}}
-            {{----}}
-                {{--</div> <!-- end dropdown-->--}}
-
-                {{--<h5 class="card-title font-16 mb-3">@lang('sales.attachments')</h5>--}}
-
-                {{--<!-- file preview template -->--}}
-                {{--<div class="d-none" id="uploadPreviewTemplate">--}}
-                    {{--<div class="card mt-1 mb-0 shadow-none border">--}}
-                        {{--<div class="p-2">--}}
-                            {{--<div class="row align-items-center">--}}
-                                {{--<div class="col-auto">--}}
-                                    {{--<img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">--}}
-                                {{--</div>--}}
-                                {{--<div class="col pl-0">--}}
-                                    {{--<a href="javascript:void(0);" class="text-muted font-weight-medium" data-dz-name></a>--}}
-                                    {{--<p class="mb-0" data-dz-size></p>--}}
-                                {{--</div>--}}
-                                {{--<div class="col-auto">--}}
-                                    {{--<!-- Button -->--}}
-                                    {{--<a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>--}}
-                                        {{--<i class="dripicons-cross"></i>--}}
-                                    {{--</a>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<!-- end file preview template -->--}}
-                    {{----}}
-                {{--@if($opportunity->client->contracts->first()->documents)--}}
-    {{----}}
-    {{----}}
-                {{--@foreach($opportunity->client->contracts->first()->documents as $document)--}}
-
-
-
-                {{----}}
-                {{--<div class="card mb-1 shadow-none border">--}}
-                    {{--<div class="p-2">--}}
-                        {{--<div class="row align-items-center">--}}
-                            {{--<div class="col-auto">--}}
-                                {{--<div class="avatar-sm">--}}
-                                    {{--<span class="avatar-title badge-soft-primary text-primary rounded">--}}
-                                        {{--{{ ucfirst($document->extension) }} --}}
-                                    {{--</span>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                            {{--<div class="col pl-0">--}}
-                                {{--<a href="javascript:void(0);" class="text-muted font-weight-medium">{{ $document->name }}</a>--}}
-                                {{-- <p class="mb-0 font-12">2.3 MB</p> --}}
-                            {{--</div>--}}
-                            {{--<div class="col-auto">--}}
-                                {{--<!-- Button -->--}}
-
-
-
-
-                                {{--<a target="_blank" href="{{ asset('upload/contracts/'.$opportunity->client->id.'/'.$document->document) }}" class="btn btn-link font-16 text-muted">--}}
-                                    {{--<i class="fa fa-eye"></i>--}}
-                                {{--</a>--}}
-
-                                {{--<a download href="{{ asset('upload/contracts/'.$opportunity->client->id.'/'.$document->document) }}" class="btn btn-link font-16 text-muted">--}}
-                                    {{--<i class="dripicons-download"></i>--}}
-                                {{--</a>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-
-
-                {{--@endforeach           --}}
-                    {{----}}
-
-    {{----}}
-                {{--@else   --}}
-    {{----}}
-                {{--@lang('sales.no_records')--}}
-    {{----}}
-                {{--@endif--}}
-
-
-
-
-            {{--</div>--}}
-        {{--</div>--}}
-    {{----}}
-            {{--</div>--}}
-    {{--</div>--}}
-    {{----}}
-
-
-
-    {{----}}
-    {{--@endif--}}
+            
+        
+
+        @if($opportunity->contracts->first()->has_recurring == 'yes')
+                                    
+            <div class="card-box">
+                <h4 class="header-title">@lang('sales.recurrings')</h4>
+        
+
+            
+                <div class="table-responsive">
+            
+                        <table class="table table-bordered toggle-circle mb-0">
+
+
+                            <thead class="thead-light">
+                                <th>#</th>
+                                <th>@lang('sales.amount')</th>
+                                <th>@lang('sales.date')</th>
+                    
+                            </thead>
+                            <tbody>
+
+
+                                        
+                                @if($opportunity->contracts->first()->recurrings)
+
+
+                                @foreach($opportunity->contracts->first()->recurrings as $recurring)
+
+                                    <tr>
+                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td>{{ $recurring->amount }}</td>
+                                        <td>{{ $recurring->date }}</td>
+                                
+
+                                         <img src="{{ asset('upload/contracts/'.$opportunity->id.'/'.$document->document) }}" alt="{{ $document->name }}">   
+
+                                    </tr>
+                                    
+                
+                                @endforeach           
+                                    
+
+                    
+                                @else   
+                    
+                                @lang('sales.no_records')
+                    
+                                @endif
+                            </tbody>
+                        </table>
+
+
+
+                </div> <!-- end .table-responsive-->
+            </div> <!-- end card-box -->
+
+            @else
+            <lable class="text-muted h5 pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.recurrings')</lable> 
+            <p class="h5 mb-3">@lang('sales.contract_has_no_recurrings')</p>
+
+            @endif
+
+            
+     </div>
+
+     
+    
+       <div class="col-md-8 ">
+    
+
+
+        <div class="card">
+            <div class="card-body">
+                <div class="dropdown float-right">
+                 
+            
+                </div> <!-- end dropdown-->
+
+                <h5 class="card-title font-16 mb-3">@lang('sales.attachments')</h5>
+
+                <!-- file preview template -->
+                <div class="d-none" id="uploadPreviewTemplate">
+                    <div class="card mt-1 mb-0 shadow-none border">
+                        <div class="p-2">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">
+                                </div>
+                                <div class="col pl-0">
+                                    <a href="javascript:void(0);" class="text-muted font-weight-medium" data-dz-name></a>
+                                    <p class="mb-0" data-dz-size></p>
+                                </div>
+                                <div class="col-auto">
+                                    <!-- Button -->
+                                    <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                                        <i class="dripicons-cross"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end file preview template -->
+                    
+                @if($opportunity->contracts->first()->documents)
+    
+    
+                @foreach($opportunity->contracts->first()->documents as $document)
+
+
+
+                
+                <div class="card mb-1 shadow-none border">
+                    <div class="p-2">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="avatar-sm">
+                                    <span class="avatar-title badge-soft-primary text-primary rounded">
+                                        {{ ucfirst($document->extension) }} 
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col pl-0">
+                                <a href="javascript:void(0);" class="text-muted font-weight-medium">{{ $document->name }}</a>
+                                 <p class="mb-0 font-12">2.3 MB</p> 
+                            </div>
+                            <div class="col-auto">
+                                <!-- Button -->
+
+
+
+
+                                <a target="_blank" href="{{ asset('upload/contracts/'.$opportunity->id.'/'.$document->document) }}" class="btn btn-link font-16 text-muted">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+
+                                <a download href="{{ asset('upload/contracts/'.$opportunity->id.'/'.$document->document) }}" class="btn btn-link font-16 text-muted">
+                                    <i class="dripicons-download"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                @endforeach         
+               
+
+    
+                @else  
+    
+                @lang('sales.no_records')
+    
+                @endif
+
+
+
+
+            </div>
+        </div>
+    
+            </div>
+    </div>
+    
+
+    @endif
 
     
     </div>

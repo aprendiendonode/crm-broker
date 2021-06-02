@@ -485,9 +485,12 @@ return [
     'smart_bulk_import'         => 'Smart Bulk Import',
     'sheet'                     => 'Sheet',
     'leads_imported'            => 'Leads Imported Successfully',
-    'new_landlord' => 'New Landlord', 
+    'new_landlord' => 'New Landlord',
     'search_center' => 'Search Center',
     'email_exists_in_leads'  => 'Email Exists In Leads',
     'phone_exists_in_leads'  => 'Phone Exists In Leads',
+    'new_opportunity_property' => 'New Opportunity Property',
+    'qualifications'            => 'Qualifications',
+    'no_action'                 => 'No Action',
 
 ];

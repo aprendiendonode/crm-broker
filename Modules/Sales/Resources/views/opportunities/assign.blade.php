@@ -334,28 +334,7 @@
 
         <script>
 
-        function hide_custom(id){
-                $('.custom-staff_'+id).addClass('d-none');
-        }
-
-            function show_custom(id){
-                $('.custom-staff_'+id).removeClass('d-none');
-                
-            }
-
-            function  show_note_assign_div(assign,id){
-                $('.opportunity_assign_note_'+assign+'_'+id).toggleClass('d-none');
-            }
-
-            function  show_current_note_assign_div(assign,id){
-                $('.opportunity_current_assign_note_'+assign+'_'+id).toggleClass('d-none');
-            }
-
-            function  show_history_assign_div(id){
-                $('.opportunity_history_assign_'+id).toggleClass('d-none');
-
-            }
-
+       
 
         </script>
 

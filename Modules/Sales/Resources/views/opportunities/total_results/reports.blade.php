@@ -1,8 +1,4 @@
-<div class=" card">
-    
-    
-         
-    <div class="card-box">
+
         <h4 class="header-title">@lang('sales.result_report')</h4>
    
 
@@ -14,7 +10,7 @@
 
       <thead class="thead-light">
           <th>#</th>
-          <th>@lang('sales.status')</th>
+          {{-- <th>@lang('sales.status')</th> --}}
           <th>@lang('sales.stage')</th>
           <th>@lang('sales.date')</th>
           <th>@lang('sales.made_by')</th>
@@ -31,7 +27,7 @@
           <tr>
           <td>{{ ($loop->index + 1) }}  </td>
 
-          <td>{{ str_replace(['_','-'],' ',$result->status)  }}</td>
+          {{-- <td>{{ str_replace(['_','-'],' ',$result->status)  }}</td> --}}
           <td>{{ $result->stage  }}</td>
 
 
@@ -78,19 +74,5 @@
       </tbody>
     </table>
 </div>
-</div>
-</div>
 
-@push('js')
-    
-<script>
- 
-    function  show_result_report_div(result,id){
 
-    $('.result_report_'+result+'_'+id).toggleClass('d-none');
-
-    }
-
-</script>
-    
-@endpush

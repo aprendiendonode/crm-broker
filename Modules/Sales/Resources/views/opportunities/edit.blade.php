@@ -89,6 +89,21 @@
 
 
 
+                
+        <div class="form-group"> 
+
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.landline')</lable>
+    
+                
+            <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.landline')" type="text" class="form-control" name="edit_landline_{{ $opportunity->id }}"   value="{{ old("edit_landline_{$opportunity->id}",$opportunity->landline) }}" placeholder="@lang('sales.landline')">
+             
+            
+          </div>
+  
+  
+
+
+
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.email1')</lable>
 
@@ -106,14 +121,9 @@
 
 
 
-    </div>
 
+        
 
-
-
-    <div class="col-md-4">
-
-     
 
                 
         <div class="form-group">
@@ -130,7 +140,7 @@
         </div>
     
     
-        <div class="form-group">
+        {{-- <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.country')</lable>
 
             <select required   id="country_{{ $opportunity->id }}" class="form-control select2 " name="edit_country_{{ $opportunity->id }}"
@@ -143,35 +153,35 @@
             </select>
         </div>
     
-    
-
-        <div class="">
-            <h4 class="header-title">@lang('sales.probability_of_winning')</h4>
-
-                <input type="text"  id="range_{{ $opportunity->id }}" class="range">
-                <input type="hidden" class="opportunity_probability_of_winning_{{ $opportunity->id }}" name="opportunity_probability_of_winning_{{ $opportunity->id }}">
-          
-        </div> 
+     --}}
 
 
-     
 
-        
+
     </div>
+
+
 
 
     <div class="col-md-4">
 
-    
+     
+
+
+
+
+
+
+                        
         <div class="form-group ">
 
 
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.lead_sources')</lable>
 
-           <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between">
 
-               
-               <div style="flex:4">
+            
+            <div style="flex:4">
                     <select  style="" class="form-control select_souce_id select2" name="edit_source_id_{{ $opportunity->id }}" data-toggle="select2" data-placeholder="@lang('sales.lead_sources')" required>
                         <option value="" class="font-weight-medium text-muted"></option>
                         @forelse($lead_sources as $source)
@@ -181,8 +191,8 @@
                         @endforelse
 
                     </select>
-               </div>
-                     @can('manage_lead_setting')
+                </div>
+                    @can('manage_lead_setting')
                         <a 
                             style="margin-top:4px;"
                             data-plugin="tippy" title="@lang('sales.new_lead_source')"
@@ -194,18 +204,18 @@
                         </a>
 
                     @endcan
-           
-               </div>     
-       </div>
+        
+            </div>     
+    </div>
 
 
 
 
-    
-       <div class="form-group ">
+
+    <div class="form-group ">
 
 
-                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.lead_types')</lable>
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.lead_types')</lable>
 
             <div class="d-flex justify-content-between">
 
@@ -221,7 +231,7 @@
 
                         @endforelse
                 
-                </select>
+                    </select>
                 </div>
                         @can('manage_opportunity_setting')
                             <a style="margin-top:4px;"
@@ -234,20 +244,20 @@
 
                         @endcan 
             
-                </div>     
-        </div>
+            </div>     
+    </div>
+
+        
+    <div class="form-group ">
+
+
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.lead_qualifications')</lable>
+
+        <div class="d-flex justify-content-between">
 
             
-        <div class="form-group ">
-
-
-                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.lead_qualifications')</lable>
-
-            <div class="d-flex justify-content-between">
-
-                
                 <div style="flex:4">
-          
+        
                     <select  class="form-control select2 select_qualification_id" name="edit_qualification_id_{{ $opportunity->id }}" data-toggle="select2" data-placeholder="@lang('sales.lead_qualifications')" required >
                     
                             <option value=""></option>
@@ -258,131 +268,131 @@
                             @endforelse
                     
                     </select>
-                 </div>
-                    @can('manage_opportunity_setting')
-                        <a style="margin-top:4px;"
-                        data-plugin="tippy" title="@lang('sales.new_lead_qualification')"
-                        data-tippy-placement="top-start" 
-                
-                        data-toggle="modal"
-                        data-target="#add_qualification" 
-                        ><i style="padding:9px !important; margin-top:-2px !important;margin-right: 1px !important;" class=" btn btn-secondary fa fa-plus"></i></a>
-                
-                    @endcan 
+                </div>
+                @can('manage_opportunity_setting')
+                    <a style="margin-top:4px;"
+                    data-plugin="tippy" title="@lang('sales.new_lead_qualification')"
+                    data-tippy-placement="top-start" 
             
-                </div>     
-        </div>
-
-
-        
-        
+                    data-toggle="modal"
+                    data-target="#add_qualification" 
+                    ><i style="padding:9px !important; margin-top:-2px !important;margin-right: 1px !important;" class=" btn btn-secondary fa fa-plus"></i></a>
             
-        <div class="form-group ">
-
-
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.way_of_communications')</lable>
-
-        <div class="d-flex justify-content-between">
-
-            
-            <div style="flex:4">
-      
-                <select  class="form-control  select_communication_id select2 " name="edit_communication_id_{{ $opportunity->id }}"
-                        data-toggle="select2" data-placeholder="@lang('sales.way_of_communications')" required>
-        
-                    <option value="" ></option>
-                        @forelse($lead_communications as $communication)
-                    <option @if(old("edit_communication_id_{$opportunity->id}",$opportunity->communication_id) == $communication->id) selected @endif value="{{ $communication->id}}">{{ $communication->{'name_'.app()->getLocale()} }}</option>
-                    @empty
-        
-                    @endforelse
-                
-                </select>
-             </div>
-             @can('manage_opportunity_setting')
-             <a style="margin-top:4px;" 
-             
-             data-plugin="tippy" title="@lang('sales.new_lead_communication')"
-             data-tippy-placement="top-start" 
-     
-             data-toggle="modal"
-             data-target="#add_communication" 
-              ><i style="padding:9px !important; margin-top:-2px !important;margin-right: 1px !important;" class=" btn btn-secondary fa fa-plus"></i></a>
-     
-             @endcan 
+                @endcan 
         
             </div>     
     </div>
 
 
-       
-        
-            
+
+
+
     <div class="form-group ">
 
 
-        <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.priority')</lable>
+        <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.way_of_communications')</lable>
 
     <div class="d-flex justify-content-between">
 
+                
+                <div style="flex:4">
         
-        <div style="flex:4">
-  
-            <select  class="form-control select2 select_priority_id" name="edit_priority_id_{{ $opportunity->id }}" data-placeholder="@lang('sales.priority')"
-                data-toggle="select2" required>
-            <option name="edit__{{ $opportunity->id }}" ></option>
-    
-            @forelse($lead_priorities as $priority)
-            <option @if(old("edit_priority_id_{$opportunity->id}",$opportunity->priority_id) == $priority->id) selected @endif value="{{ $priority->id}}">{{ $priority->{'name_'.app()->getLocale()} }}</option>
-            @empty
-
-            @endforelse
-        
-        </select>
-         </div>
-         @can('manage_opportunity_setting')
-        <a style="margin-top:4px;"
-                data-plugin="tippy"
-                title="@lang('sales.new_lead_priority')"
+                    <select  class="form-control  select_communication_id select2 " name="edit_communication_id_{{ $opportunity->id }}"
+                            data-toggle="select2" data-placeholder="@lang('sales.way_of_communications')" required>
+            
+                        <option value="" ></option>
+                            @forelse($lead_communications as $communication)
+                        <option @if(old("edit_communication_id_{$opportunity->id}",$opportunity->communication_id) == $communication->id) selected @endif value="{{ $communication->id}}">{{ $communication->{'name_'.app()->getLocale()} }}</option>
+                        @empty
+            
+                        @endforelse
+                    
+                    </select>
+                </div>
+                @can('manage_opportunity_setting')
+                <a style="margin-top:4px;" 
+                
+                data-plugin="tippy" title="@lang('sales.new_lead_communication')"
                 data-tippy-placement="top-start" 
-
+        
                 data-toggle="modal"
-                data-target="#add_priority" 
-              ><i style="padding:9px !important; margin-top:-2px !important;margin-right: 1px !important;" class=" btn btn-secondary fa fa-plus"></i></a>
-
-        @endcan 
+                data-target="#add_communication" 
+                ><i style="padding:9px !important; margin-top:-2px !important;margin-right: 1px !important;" class=" btn btn-secondary fa fa-plus"></i></a>
+        
+                @endcan 
     
         </div>     
-</div>
+    </div>
 
 
 
 
 
-        
-                
     <div class="form-group ">
 
 
-        <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_type')</lable>
+       <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.priority')</lable>
+
+        <div class="d-flex justify-content-between">
+
+            
+            <div style="flex:4">
+
+                <select  class="form-control select2 select_priority_id" name="edit_priority_id_{{ $opportunity->id }}" data-placeholder="@lang('sales.priority')"
+                    data-toggle="select2" required>
+                <option name="edit__{{ $opportunity->id }}" ></option>
+        
+                @forelse($lead_priorities as $priority)
+                <option @if(old("edit_priority_id_{$opportunity->id}",$opportunity->priority_id) == $priority->id) selected @endif value="{{ $priority->id}}">{{ $priority->{'name_'.app()->getLocale()} }}</option>
+                @empty
+
+                @endforelse
+            
+               </select>
+            </div>
+            @can('manage_opportunity_setting')
+            <a style="margin-top:4px;"
+                    data-plugin="tippy"
+                    title="@lang('sales.new_lead_priority')"
+                    data-tippy-placement="top-start" 
+
+                    data-toggle="modal"
+                    data-target="#add_priority" 
+                ><i style="padding:9px !important; margin-top:-2px !important;margin-right: 1px !important;" class=" btn btn-secondary fa fa-plus"></i></a>
+
+            @endcan 
+
+        </div>     
+    </div>
+
+
+
+
+
+
+    
+<div class="form-group ">
+
+
+    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_type')</lable>
 
     <div class="d-flex justify-content-between">
 
-    
-    <div style="flex:4">
 
-        <select  class="form-control select_property_id select2 " name="edit_property_id_{{ $opportunity->id }}"
-            data-toggle="select2" data-placeholder="@lang('sales.property_type')" required>
-            <option value=""></option>
+        <div style="flex:4">
 
-            @forelse($lead_properties as $property)
-            <option @if(old("edit_property_id_{$opportunity->id}",$opportunity->property_id) == $property->id) selected @endif value="{{ $property->id}}">{{ $property->{'name_'.app()->getLocale()} }}</option>
-            @empty
+            <select  class="form-control select_property_id select2 " name="edit_property_id_{{ $opportunity->id }}"
+                data-toggle="select2" data-placeholder="@lang('sales.property_type')" required>
+                <option value=""></option>
 
-            @endforelse
-        
-        </select>
-     </div>
+                @forelse($lead_properties as $property)
+                <option @if(old("edit_property_id_{$opportunity->id}",$opportunity->property_id) == $property->id) selected @endif value="{{ $property->id}}">{{ $property->{'name_'.app()->getLocale()} }}</option>
+                @empty
+
+                @endforelse
+            
+            </select>
+        </div>
         @can('manage_opportunity_setting')
         <a style="margin-top:4px;"
         data-plugin="tippy" title="@lang('sales.new_opportunity_property')"
@@ -402,86 +412,259 @@
 
 
 
-<div class="form-group">
-
-    <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.city')<span class="text-danger">*</span></label>
-    <div style="flex:2;">
-        <select required onchange="getCommunitites('edit',{{ $opportunity->id }})" class="form-control select2 city-in-edit-{{ $opportunity->id }}" name="edit_city_id_{{ $opportunity->id }}"
-         data-toggle="select2" data-placeholder="@lang('listing.city')">
-                <option value=""></option>
-            
-            @foreach($cities as $city)
-                <option @if(old('edit_city_id_'.$opportunity->id,$opportunity->city_id) == $city->id  ) selected @endif value="{{ $city->id }}">
-                    {{ $city->{'name_'.app()->getLocale()} }}
-                </option>
-            @endforeach
-
-        </select>
-  
-    </div>
-</div>
 
 
 
-<div class="form-group">
 
-<label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') <span class="text-danger">*</span></label>
-<div style="flex:2;">
-    <select required onchange="getSubCommunities('edit',{{ $opportunity->id }})" class="form-control select2 community-in-edit-{{ $opportunity->id }}" name="edit_community_{{ $opportunity->id }}"
-     data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
-     <option value=""></option>
-     @foreach($communities->where('city_id',$opportunity->city_id) as $community)
-     <option class="edit-appended-communities-{{ $opportunity->id }}"
-        @if(old('edit_community_'.$opportunity->id,$opportunity->community) == $community->id)  
-         selected  
-         @endif
-         value="{{ $community->id }}">
 
-        {{ $community->{'name_'.app()->getLocale()}  }}
-     </option>
-     @endforeach
+        <div class="">
+            <h4 class="header-title">@lang('sales.probability_of_winning')</h4>
 
-        
+                <input type="text"  id="range_{{ $opportunity->id }}" class="range">
+                <input type="hidden" class="opportunity_probability_of_winning_{{ $opportunity->id }}" name="edit_probability_of_winning_{{ $opportunity->id }}">
+          
+        </div> 
+
+
      
 
-    </select>
-
-</div>
-</div>
-
-
-<div class="form-group">
-
-<label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.sub_community')</label>
-<div style="flex:2;">
-    <select class="form-control select2 sub-community-in-edit-{{ $opportunity->id }}" name="edit_sub_community_{{ $opportunity->id }}"
-     data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
-     <option value=""></option>
-
-     @foreach($sub_communities->where('community_id',$opportunity->community) as $sub_community)
-     <option class="edit-appended-sub-communities-{{ $opportunity->id }}"
-     @if(old('edit_sub_community_id_'.$opportunity->id,$opportunity->sub_community) == $sub_community->id)  
-     selected  
-     @endif
-     value="{{ $sub_community->id }}">
-
-    {{ $sub_community->{'name_'.app()->getLocale()}  }}
- </option>
- @endforeach
-
         
-    </select>
-
-</div>
-</div>
+    </div>
 
 
+    <div class="col-md-4">
 
 
 
+                        
+                        <div class="form-group ">
+                            <label class="font-weight-medium text-muted">
+                                @lang('sales.developer')
+                            </label>
+
+                            <div class="input-group">
+                            <div class="input-group-prepend w-100">
+                                    @can('manage_opportunity_setting')
+                                        <div 
+                                        class="input-group-text cursor-pointer"
+                                        data-toggle="modal"
+                                        data-target="#add_developer" 
+                                        onclick="event.preventDefault()" id="basic-addon1">
+                                            <i 
+                                            data-plugin="tippy" title="@lang('sales.new_developer')"
+                                            data-tippy-placement="top-start" 
+
+                                            class="fas fa-plus-circle"
+                                            ></i>
+                                        </div>
+                                    @endcan
+                    
+                                    <select  style="" class="form-control select_developer_id select2" name="edit_developer_{{ $opportunity->id }}" data-toggle="select2" data-placeholder="@lang('sales.developer')" >
+                                            <option value="" class="font-weight-medium text-muted"></option>
+                                            @foreach($developers as $developer)
+                                
+                                                <option 
+                                                @if(old("edit_developer_".$opportunity->id,$opportunity->developer) == $developer->id) selected @endif 
+                                                value="{{ $developer->id}}">
+                                                    {{ $developer->{'name_'.app()->getLocale()} }}
+                                                </option>
+                                            @endforeach    
+
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
 
 
-  
+
+
+                        <div class="form-group">
+
+                            <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.city')<span class="text-danger">*</span></label>
+                            <div style="flex:2;">
+                                <select required onchange="getCommunitites('edit',{{ $opportunity->id }})" class="form-control select2 city-in-edit-{{ $opportunity->id }}" name="edit_city_id_{{ $opportunity->id }}"
+                                data-toggle="select2" data-placeholder="@lang('listing.city')">
+                                        <option value=""></option>
+                                    
+                                    @foreach($cities as $city)
+                                        <option @if(old('edit_city_id_'.$opportunity->id,$opportunity->city_id) == $city->id  ) selected @endif value="{{ $city->id }}">
+                                            {{ $city->{'name_'.app()->getLocale()} }}
+                                        </option>
+                                    @endforeach
+                        
+                                </select>
+                        
+                            </div>
+                        </div>
+                        
+                    
+                    
+                        <div class="form-group">
+                        
+                        <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') <span class="text-danger">*</span></label>
+                        <div style="flex:2;">
+                            <select required onchange="getSubCommunities('edit',{{ $opportunity->id }})" class="form-control select2 community-in-edit-{{ $opportunity->id }}" name="edit_community_{{ $opportunity->id }}"
+                            data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
+                            <option value=""></option>
+                            @foreach($communities->where('city_id',$opportunity->city_id) as $community)
+                            <option class="edit-appended-communities-{{ $opportunity->id }}"
+                                @if(old('edit_community_'.$opportunity->id,$opportunity->community) == $community->id)  
+                                selected  
+                                @endif
+                                value="{{ $community->id }}">
+                        
+                                {{ $community->{'name_'.app()->getLocale()}  }}
+                            </option>
+                            @endforeach
+                        
+                                
+                            
+                        
+                            </select>
+                        
+                        </div>
+                        </div>
+                        
+                        
+                        <div class="form-group">
+                        
+                        <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.sub_community')</label>
+                        <div style="flex:2;">
+                            <select class="form-control select2 sub-community-in-edit-{{ $opportunity->id }}" name="edit_sub_community_{{ $opportunity->id }}"
+                            data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
+                            <option value=""></option>
+                        
+                            @foreach($sub_communities->where('community_id',$opportunity->community) as $sub_community)
+                            <option class="edit-appended-sub-communities-{{ $opportunity->id }}"
+                            @if(old('edit_sub_community_id_'.$opportunity->id,$opportunity->sub_community) == $sub_community->id)  
+                            selected  
+                            @endif
+                            value="{{ $sub_community->id }}">
+                        
+                            {{ $sub_community->{'name_'.app()->getLocale()}  }}
+                        </option>
+                        @endforeach
+                        
+                                
+                            </select>
+                        
+                        </div>
+                        </div>
+                        
+
+
+        <div class="form-group" >
+
+            <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.location')</label>
+            <div class="d-flex align-items-center" style="flex:2">
+                <input type="text" class="form-control" name="edit_address_{{ $opportunity->id }}" id="location_input_{{ $opportunity->id }}"  
+                value="{{ old('edit_address_'.$opportunity->id,$opportunity->address) }}" 
+                 placeholder="">
+                 <input type="hidden" name="edit_loc_lat_{{ $opportunity->id }}" id="latitude_{{ $opportunity->id }}" value="{{ old('edit_loc_lat_'.$opportunity->id,$opportunity->loc_lat) }}" >
+                 <input type="hidden" name="edit_loc_lng_{{ $opportunity->id }}" id="longitude_{{ $opportunity->id }}" value="{{ old('edit_loc_lng_'.$opportunity->id,$opportunity->loc_lng) }}">
+                <div class="text-center pl-1">
+                    <i class="fas fa-map-marker-alt" style="font-size:1.2rem"  data-toggle="modal" data-target="#map-modal-{{ $opportunity->id }}"></i>
+                </div>
+            </div>
+        </div>
+
+    
+
+
+
+        <div class="form-group d-flex  ">
+    
+            <p class="text-muted pr-2 font-weight-medium" style="flex:2">@lang('sales.property_purpose')</p>
+            <div style="flex:4">
+                <div class="radio radio-info form-check-inline">
+                    <input type="radio" id="inlineRadio1_{{ $opportunity->id }}" value="rent" name="edit_property_purpose_{{ $opportunity->id }}" @if($opportunity->property_purpose == 'rent') checked @endif>
+                    <label for="inlineRadio1"> @lang('sales.rent') </label>
+                </div>
+                <div class="radio radio-info form-check-inline">
+                    <input type="radio" id="inlineRadio2_{{ $opportunity->id }}" value="buy" name="edit_property_purpose_{{ $opportunity->id }}" @if($opportunity->property_purpose == 'buy') checked @endif>
+                    <label for="inlineRadio2"> @lang('sales.buy') </label>
+                </div>
+             </div>
+    
+        </div>
+    
+                          
+        <div class="form-group">
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.buliding_name')</lable>
+
+            <input type="text" class="form-control"  name="edit_building_name_{{ $opportunity->id }}"  value="{{ old("edit_building_name_{$opportunity->id}",$opportunity->building_name) }}" placeholder="@lang('sales.buliding_name')" >
+        </div>
+    
+    
+     
+
+    
+
+        <div class="form-group">
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_no')</lable>
+
+            <input type="text" class="form-control"   name="edit_property_no_{{ $opportunity->id }}" id="property_no_{{ $opportunity->id }}" value="{{ old("edit_property_no_{$opportunity->id}",$opportunity->property_no) }}" placeholder="@lang('sales.property_no')" >
+        </div>
+ 
+        
+        {{-- <div class="form-group">
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_reference')</lable>
+
+            <input type="text" class="form-control"  name="edit_property_reference_{{ $opportunity->id }}" value="{{ old("edit_property_reference_{$opportunity->id}",$opportunity->property_reference) }}" placeholder="@lang('sales.property_reference')" >
+        </div>
+    
+     --}}
+    
+          
+        <div class="form-group">
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_size_sqft')</lable>
+
+            <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"   name="edit_size_sqft_{{ $opportunity->id }}"  value="{{ old("edit_size_sqft_{$opportunity->id}",$opportunity->size_sqft) }}" placeholder="@lang('sales.property_size_sqft')" >
+        </div>
+    
+    
+        <div class="form-group">
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_size_sqm')</lable>
+
+            <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_size_sqm_{{ $opportunity->id }}"  value="{{ old("edit_size_sqm_{$opportunity->id}",$opportunity->size_sqm) }}" placeholder="@lang('sales.property_size_sqm')" >
+        </div>
+        <div class="d-flex justify-content-between">
+
+            <div class="form-group pr-2">
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.bedrooms')</lable>
+
+                <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_bedrooms_{{ $opportunity->id }}"  value="{{ old("edit_bedrooms_{$opportunity->id}",$opportunity->bedrooms) }}" placeholder="@lang('sales.bedrooms')" >
+            </div>
+        
+    
+            <div class="form-group pr-2">
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.bathrooms')</lable>
+
+
+                <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_bathrooms_{{ $opportunity->id }}" value="{{ old("edit_bathrooms_{$opportunity->id}",$opportunity->bathrooms) }}" placeholder="@lang('sales.bathrooms')" >
+            </div>
+            <div class="form-group">
+
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.parkings')</lable>
+
+                <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_parkings_{{ $opportunity->id }}" id="parkings_{{ $opportunity->id }}" value="{{ old("edit_parkings_{$opportunity->id}",$opportunity->parkings) }}" placeholder="@lang('sales.parkings')" >
+            </div>
+    
+       </div>
+    
+     
+        <div class="form-group">
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.other')</lable>
+
+            <input type="text" class="form-control"  name="edit_other_{{ $opportunity->id }}"  value="{{ old("edit_other_{$opportunity->id}",$opportunity->other) }}" placeholder="@lang('sales.other')" >
+        </div>
+    
+    
+       
+
+
+
 
     </div>
 
@@ -620,17 +803,6 @@
         </div>
     
     
-        
-        <div class="form-group"> 
-
-          <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.landline')</lable>
-  
-              
-          <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.landline')" type="text" class="form-control" name="edit_landline_{{ $opportunity->id }}"   value="{{ old("edit_landline_{$opportunity->id}",$opportunity->landline) }}" placeholder="@lang('sales.landline')">
-           
-          
-        </div>
-
 
     
     </div>
@@ -640,116 +812,8 @@
     
     <div class="col-md-4">
            
-         
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.developer')</lable>
 
-            <input type="text" class="form-control"  name="edit_developer_{{ $opportunity->id }}"  value="{{ old("edit_developer_{$opportunity->id}",$opportunity->developer) }}" placeholder="@lang('sales.developer')" >
-        </div>
-    
-    
-    
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.community')</lable>
-
-            <input type="text" class="form-control"  name="edit_community_{{ $opportunity->id }}"  value="{{ old("edit_community_{$opportunity->id}",$opportunity->community) }}" placeholder="@lang('sales.community')" >
-        </div>
-    
-    
-    
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.buliding_name')</lable>
-
-            <input type="text" class="form-control"  name="edit_building_name_{{ $opportunity->id }}"  value="{{ old("edit_building_name_{$opportunity->id}",$opportunity->building_name) }}" placeholder="@lang('sales.buliding_name')" >
-        </div>
-    
-    
-        <div class="form-group">
-
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.address')</lable>
-
-            <input type="text" class="form-control"  name="edit_address_{{ $opportunity->id }}"  value="{{ old("edit_address_{$opportunity->id}",$opportunity->address) }}" placeholder="@lang('sales.address')" >
-        </div>
-    
-
-    
-        <div class="form-group d-flex  ">
-    
-            <p class="text-muted pr-2 font-weight-medium" style="flex:2">@lang('sales.property_purpose')</p>
-            <div style="flex:4">
-                <div class="radio radio-info form-check-inline">
-                    <input type="radio" id="inlineRadio1_{{ $opportunity->id }}" value="rent" name="edit_property_purpose_{{ $opportunity->id }}" @if($opportunity->property_purpose == 'rent') checked @endif>
-                    <label for="inlineRadio1"> @lang('sales.rent') </label>
-                </div>
-                <div class="radio radio-info form-check-inline">
-                    <input type="radio" id="inlineRadio2_{{ $opportunity->id }}" value="buy" name="edit_property_purpose_{{ $opportunity->id }}" @if($opportunity->property_purpose == 'buy') checked @endif>
-                    <label for="inlineRadio2"> @lang('sales.buy') </label>
-                </div>
-             </div>
-    
-        </div>
-    
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_no')</lable>
-
-            <input type="text" class="form-control"   name="edit_property_no_{{ $opportunity->id }}" id="property_no_{{ $opportunity->id }}" value="{{ old("edit_property_no_{$opportunity->id}",$opportunity->property_no) }}" placeholder="@lang('sales.property_no')" >
-        </div>
- 
-        
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_reference')</lable>
-
-            <input type="text" class="form-control"  name="edit_property_reference_{{ $opportunity->id }}" value="{{ old("edit_property_reference_{$opportunity->id}",$opportunity->property_reference) }}" placeholder="@lang('sales.property_reference')" >
-        </div>
-    
-    
-    
-          
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_size_sqft')</lable>
-
-            <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"   name="edit_size_sqft_{{ $opportunity->id }}"  value="{{ old("edit_size_sqft_{$opportunity->id}",$opportunity->size_sqft) }}" placeholder="@lang('sales.property_size_sqft')" >
-        </div>
-    
-    
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_size_sqm')</lable>
-
-            <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_size_sqm_{{ $opportunity->id }}"  value="{{ old("edit_size_sqm_{$opportunity->id}",$opportunity->size_sqm) }}" placeholder="@lang('sales.property_size_sqm')" >
-        </div>
-        <div class="d-flex justify-content-between">
-
-        <div class="form-group pr-2">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.bedrooms')</lable>
-
-            <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_bedrooms_{{ $opportunity->id }}"  value="{{ old("edit_bedrooms_{$opportunity->id}",$opportunity->bedrooms) }}" placeholder="@lang('sales.bedrooms')" >
-        </div>
-    
-    
-        <div class="form-group pr-2">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.bathrooms')</lable>
-
-
-            <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_bathrooms_{{ $opportunity->id }}" value="{{ old("edit_bathrooms_{$opportunity->id}",$opportunity->bathrooms) }}" placeholder="@lang('sales.bathrooms')" >
-        </div>
-        <div class="form-group">
-
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.parkings')</lable>
-
-            <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_parkings_{{ $opportunity->id }}" id="parkings_{{ $opportunity->id }}" value="{{ old("edit_parkings_{$opportunity->id}",$opportunity->parkings) }}" placeholder="@lang('sales.parkings')" >
-        </div>
-    
-         </div>
-    
-     
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.other')</lable>
-
-            <input type="text" class="form-control"  name="edit_other_{{ $opportunity->id }}"  value="{{ old("edit_other_{$opportunity->id}",$opportunity->other) }}" placeholder="@lang('sales.other')" >
-        </div>
-    
-    
-       
+  
     
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.skype')</lable>
