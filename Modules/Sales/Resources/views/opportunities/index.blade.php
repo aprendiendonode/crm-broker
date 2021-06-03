@@ -627,37 +627,37 @@ var  googleMapsScriptIsInjected = false;
 
 
         if(id == 'client_'+row_id && load_listing == false){
-             var locale =  @json(app()->getLocale());
+             var locale  =  @json(app()->getLocale());
+             var agency  =  @json($agency);
                 $.ajax({
                     url  : "{{ route('sales.load-listings') }}",
                     type : 'POST',
+                    data :{
+                        _token :'{{ csrf_token() }}',
+                        agency_id : agency
+                    },
                     success: function(data){
+                        load_listing = true;
                         var option = '';
-
-
                         data.listings.forEach(function(value,key){
-                             
-                  
-                            option += '<option value="'+value.id+'" >';
-
-                                option += value.listing_ref;
-                        
-                        option += '</option>';
-
-                    
-                    }
-
+                                  option += '<option value="'+value.id+'" >';
+                                  option += value.listing_ref;
+                                  option += '</option>';
+                             })
+ 
                     $('listing-loading-'+row_id).append(option)
              
-                
-
-            
-              
-
-    
             }
         })
     }
+
+
+    if($('.'+id).hasClass('d-none')){
+            $('.'+id).removeClass('d-none');
+        }else{
+            $('.'+id).addClass('d-none');
+
+        }
     }
    
     function table_row_hide(id){

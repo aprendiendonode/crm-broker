@@ -241,7 +241,7 @@ class OpportunitiesController extends Controller
     {
         return $repo->approve_client($request);
     }
-    public function load_listing(Request $request, OpportunityRepo $repo)
+    public function load_listings(Request $request, OpportunityRepo $repo)
     {
         return $repo->load_listing($request);
     }

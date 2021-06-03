@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\Client;
 use Modules\Activity\Entities\Task;
 use App\Events\OpportunityTaskEvent;
+use Modules\Listing\Entities\Listing;
 use App\Events\OpportunityAnswerEvent;
 use App\Events\OpportunityResultEvent;
 use Modules\Sales\Entities\CallStatus;
@@ -1876,6 +1877,9 @@ class OpportunityRepo
 
     public function load_listing($request)
     {
-        dd($request);
+        if ($request->ajax()) {
+            $agency = Agency::findOrFail($request->agency_id);
+            return response()->json(['listings' => Listing::where('agency_id', $agency->id)->pluck('listing_ref', 'id')]);
+        }
     }
 }
