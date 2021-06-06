@@ -481,7 +481,8 @@ return [
     'developer_deleted'         => 'Developer Deleted',
 
 
-
+    "first_name" => 'First Name',
+    "sec_name" => 'Second Name',
     'smart_bulk_import'         => 'Smart Bulk Import',
     'sheet'                     => 'Sheet',
     'leads_imported'            => 'Leads Imported Successfully',
@@ -492,5 +493,6 @@ return [
     'new_opportunity_property' => 'New Opportunity Property',
     'qualifications'            => 'Qualifications',
     'no_action'                 => 'No Action',
+    'hold_date' => 'Hold Date',
 
 ];

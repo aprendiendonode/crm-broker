@@ -43,9 +43,16 @@
        
             <div class="form-group">
 
-                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.name')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.first_name')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
 
-                <input type="text" class="form-control"  name="client_name_{{ $opportunity->id }}" required  value="{{ old('client_name_'.$opportunity->id,$opportunity->full_name) }}" placeholder="@lang('sales.name')" >
+                <input type="text" class="form-control"  name="client_first_name_{{ $opportunity->id }}" required  value="{{ old('client_first_name_'.$opportunity->id,$opportunity->first_name) }}" placeholder="@lang('sales.name')" >
+        
+             </div>
+            <div class="form-group">
+
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.sec_name')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+
+                <input type="text" class="form-control"  name="client_sec_name_{{ $opportunity->id }}" required  value="{{ old('client_sec_name_'.$opportunity->id,$opportunity->sec_name) }}" placeholder="@lang('sales.name')" >
         
              </div>
 
@@ -62,7 +69,7 @@
             <div class="form-group">
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.national_id')</lable>
     
-                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"  name="client_national_id_{{ $opportunity->id }}"  value="{{ old("client_national_id_{$opportunity->id}") }}" placeholder="@lang('sales.national_id')">
+                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"  name="client_national_id_{{ $opportunity->id }}"  value="{{ old("client_national_id_{$opportunity->id}",$opportunity->national_id) }}" placeholder="@lang('sales.national_id')">
             </div>
             <div class="form-group">
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.passport')</lable>
@@ -124,7 +131,7 @@
                  
 
 
-        <div class="form-group">
+        {{-- <div class="form-group">
 
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.country')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> 
 
@@ -137,12 +144,12 @@
     
             </select>
         </div>
-
+ --}}
 
                      
  
 
-        <div class="form form-group">
+    {{--     <div class="form form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.language')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> 
 
             <select required  style="" class="form-control  select2" name="client_language_{{ $opportunity->id }}" data-toggle="select2" data-placeholder="@lang('sales.language')" required>
@@ -155,7 +162,7 @@
 
             </select>
         </div>
-         
+          --}}
 
         {{-- <div class="form form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.currency')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> 
@@ -174,7 +181,7 @@
 
     </div>
 
-    <div class="row">
+   {{--  <div class="row">
    
         <div class="col-md-12">
 
@@ -341,11 +348,7 @@
 
 
     </div>
-    <div class="row">
-
-        <button type="button" class=" btn btn-primary mb-3" onclick="toggle_additional_data_({{ $opportunity->id }})">@lang('sales.additional_data') <i class="fe-eye"></i></button>
-    </div>
-
+  --}}
  
     <div class="d-flex justify-content-end">
     
@@ -374,18 +377,6 @@ $(document).ready(function() {
   });
 });
 
-function toggle_additional_data_(id){
-
-        var lead_div = $('.toggled_additional_'+id);
-        if(lead_div.hasClass('d-none')){
-
-            lead_div.removeClass('d-none');
-
-        } else {
-            lead_div.addClass('d-none');
-
-        }
-        }
 
 
 function generate(event,id){

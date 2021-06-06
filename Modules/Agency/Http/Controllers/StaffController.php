@@ -5,7 +5,7 @@ namespace Modules\Agency\Http\Controllers;
 use Gate;
 use App\Models\Team;
 use App\Models\User;
-use App\Models\Country;
+
 
 use App\Exports\UsersExport;
 use Illuminate\Http\Request;
@@ -14,6 +14,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\SuperAdmin\Entities\Country;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Renderable;

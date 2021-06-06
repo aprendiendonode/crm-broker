@@ -138,7 +138,8 @@ class Opportunity extends Model
 
             "client_website_" .  $request->opportunity_id                      => "sometimes|nullable|string|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/",
 
-            "client_name_" .  $request->opportunity_id                         => "required|string",
+            "client_first_name_" .  $request->opportunity_id                         => "required|string",
+            "client_sec_name_" .  $request->opportunity_id                         => "required|string",
             "client_date_of_birth_" .  $request->opportunity_id                => "required|string|date_format:Y-m-d",
 
             "client_landline_" .  $request->opportunity_id                     => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
@@ -151,7 +152,7 @@ class Opportunity extends Model
             "client_phone1_" .  $request->opportunity_id                       => "required|regex:/^([0-9\s\-\+\(\)]*)$/",
             "client_phone2_" .  $request->opportunity_id                       => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
 
-            "client_country_" .  $request->opportunity_id                      => "required|string|exists:countries,value",
+            // "client_country_" .  $request->opportunity_id                      => "required|string|exists:countries,value",
 
             "client_skype_" .  $request->opportunity_id                         => "sometimes|nullable|string|email",
             "client_twitter_" .  $request->opportunity_id                       => "sometimes|nullable|string",
@@ -164,8 +165,8 @@ class Opportunity extends Model
             "client_city_" .  $request->opportunity_id                          => "sometimes|nullable|string",
 
 
-            "client_language_" .  $request->opportunity_id                      => "required|string|exists:languages,code",
-            "client_currency_" .  $request->opportunity_id                      => "required|string|exists:currencies,code",
+            // "client_language_" .  $request->opportunity_id                      => "required|string|exists:languages,code",
+            // "client_currency_" .  $request->opportunity_id                      => "required|string|exists:currencies,code",
 
             //            "client_contract_type_" .  $request->opportunity_id                 => "required|in:rent,sale",
             //            "client_landlord_" .  $request->opportunity_id                      => "required|string",
@@ -203,7 +204,8 @@ class Opportunity extends Model
         return [
 
 
-            "hold_name_" .  $request->opportunity_id                         => "required|string",
+            "hold_first_name_" .  $request->opportunity_id                         => "required|string",
+            "hold_sec_name_" .  $request->opportunity_id                         => "required|string",
             "hold_date_of_birth_" .  $request->opportunity_id                => "required|string|date_format:Y-m-d",
 
 
@@ -212,13 +214,13 @@ class Opportunity extends Model
 
             "hold_phone1_" .  $request->opportunity_id                       => "required|regex:/^([0-9\s\-\+\(\)]*)$/",
 
-            "hold_country_" .  $request->opportunity_id                      => "required|string|exists:countries,value",
+            // "hold_country_" .  $request->opportunity_id                      => "required|string|exists:countries,value",
 
 
 
 
-            "hold_language_" .  $request->opportunity_id                      => "required|string|exists:languages,code",
-            "hold_currency_" .  $request->opportunity_id                      => "required|string|exists:currencies,code",
+            // "hold_language_" .  $request->opportunity_id                      => "required|string|exists:languages,code",
+            // "hold_currency_" .  $request->opportunity_id                      => "required|string|exists:currencies,code",
 
             //            "hold_contract_type_" .  $request->opportunity_id                 => "required|in:rent,sale",
             //            "hold_landlord_" .  $request->opportunity_id                      => "required|string",

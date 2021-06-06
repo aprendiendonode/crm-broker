@@ -131,28 +131,21 @@
 
 <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script>
-
-
 <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
 <!-- Footable js -->
 <script src="{{ asset('assets/libs/footable/footable.all.min.js') }}"></script>
 <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
-
 {{-- tooltip --}}
 <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
-
 <script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script>
 <script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script>
 <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
-
 <!-- Init js-->
 <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script>
-
-
 <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
 
 
@@ -214,7 +207,7 @@
 
 function  show_add_div(){
     hide_check_div();
- var  div = document.querySelector('.add_lead');
+    var  div = document.querySelector('.add_lead');
     if(div.style.display === 'none'){
 
 
@@ -344,60 +337,57 @@ function  show_check_div(){
 
 function getCommunitites(type,id){
 
-var city_id ='';
-if(type == "create"){
-    city_id = $('.city-in-create').val();
+        var city_id ='';
+        if(type == "create"){
+            city_id = $('.city-in-create').val();
 
-}else{
-    city_id = $('.city-in-edit-'+id).val();
+        }else{
+            city_id = $('.city-in-edit-'+id).val();
 
-}
-
-var option = '';
-var locale      = @json(app()->getLocale());
-var communities = @json($communities);
-communities.forEach(function(value,key){
-
-    if(value.city_id == city_id){
-
-
-    if(type == 'create'){
-        option += '<option value="'+value.id+'" class="create-appended-communities">';
-    } else{
-        option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
-    }
-
-
-        if(locale == 'en'){
-
-            option += value.name_en;
-        } else{
-            option += value.name_ar;
         }
-    option += '</option>';
+
+        var option = '';
+        var locale      = @json(app()->getLocale());
+        var communities = @json($communities);
+        communities.forEach(function(value,key){
+
+            if(value.city_id == city_id){
+
+
+            if(type == 'create'){
+                option += '<option value="'+value.id+'" class="create-appended-communities">';
+            } else{
+                option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
+            }
+
+
+                if(locale == 'en'){
+
+                    option += value.name_en;
+                } else{
+                    option += value.name_ar;
+                }
+            option += '</option>';
+
+        }
+
+        })
+
+
+        if(type == "create"){
+            $('.create-appended-communities').remove();
+            $('.create-appended-sub-communities').remove();
+            $('.community-in-create').append(option)
+
+
+        }else{
+            $('.edit-appended-communities-'+id).remove();
+            $('.edit-appended-sub-communities-'+id).remove();
+            $('.community-in-edit-'+id).append(option)
+        }
+
 
 }
-
-})
-
-
-if(type == "create"){
-    $('.create-appended-communities').remove();
-    $('.create-appended-sub-communities').remove();
-    $('.community-in-create').append(option)
-
-
-}else{
-    $('.edit-appended-communities-'+id).remove();
-    $('.edit-appended-sub-communities-'+id).remove();
-    $('.community-in-edit-'+id).append(option)
-}
-
-
-}
-
-
-
 
 function getSubCommunities(type,id){
         var community_id ='';
@@ -476,13 +466,8 @@ var  googleMapsScriptIsInjected = false;
                 googleMapsScriptIsInjected = true;
             };
 
-
-
-
-            var leads = @json($leads);
-            function initMap() {
-
-
+ var leads = @json($leads);
+ function initMap() {
 
 leads.data.forEach(function(value,key){
 
@@ -545,92 +530,89 @@ leads.data.forEach(function(value,key){
 })
 
 
- autocompletelocation_input = new google.maps.places.Autocomplete((document.getElementById('location_input')), {
-types: ["establishment"],
-});
-autocompletelocation_input.setComponentRestrictions({
-country: ['EG'],
-});
+        autocompletelocation_input = new google.maps.places.Autocomplete((document.getElementById('location_input')), {
+        types: ["establishment"],
+        });
+        autocompletelocation_input.setComponentRestrictions({
+        country: ['EG'],
+        });
 
-google.maps.event.addListener(autocompletelocation_input, 'place_changed', function () {
- var place = autocompletelocation_input.getPlace();
-         $('#latitude').val(place.geometry.location.lat());
-         $('#longitude').val(place.geometry.location.lng());
-
-
-});
+        google.maps.event.addListener(autocompletelocation_input, 'place_changed', function () {
+        var place = autocompletelocation_input.getPlace();
+                $('#latitude').val(place.geometry.location.lat());
+                $('#longitude').val(place.geometry.location.lng());
 
 
-var map = new google.maps.Map(document.getElementById('map'), {
-     center: {lat:30.0444, lng: 31.2357 },
-     zoom: 13,
-     
-     mapTypeId: 'roadmap'
- }); 
+        });
 
 
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat:30.0444, lng: 31.2357 },
+        zoom: 13,
+        
+        mapTypeId: 'roadmap'
+    }); 
+
+    var geocoder = new google.maps.Geocoder();
+    google.maps.event.addListener(map, 'click', function(event) {
+        SelectedLatLng = event.latLng;
+        geocoder.geocode({
+            'latLng': event.latLng
+        }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    deleteMarkers();
+                    addMarkerRunTime(event.latLng);
+                    SelectedLocation = results[0].formatted_address;
+                    console.log( results[0].formatted_address);
+                    splitLatLng(String(event.latLng));
+                    $("#location_input").val(results[0].formatted_address);
+                }
+            }
+        });
+    });
 
 
- var geocoder = new google.maps.Geocoder();
- google.maps.event.addListener(map, 'click', function(event) {
-     SelectedLatLng = event.latLng;
-     geocoder.geocode({
-         'latLng': event.latLng
-     }, function(results, status) {
-         if (status == google.maps.GeocoderStatus.OK) {
-             if (results[0]) {
-                 deleteMarkers();
-                 addMarkerRunTime(event.latLng);
-                 SelectedLocation = results[0].formatted_address;
-                 console.log( results[0].formatted_address);
-                 splitLatLng(String(event.latLng));
-                 $("#location_input").val(results[0].formatted_address);
-             }
-         }
-     });
- });
+    function addMarkerRunTime(location) {
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+        markers.push(marker);
+    }
+    function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+    }
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+    }
 
-
- function addMarkerRunTime(location) {
-     var marker = new google.maps.Marker({
-         position: location,
-         map: map
-     });
-     markers.push(marker);
- }
- function setMapOnAll(map) {
-     for (var i = 0; i < markers.length; i++) {
-         markers[i].setMap(map);
-     }
- }
- function clearMarkers() {
-     setMapOnAll(null);
- }
- function deleteMarkers() {
-     clearMarkers();
-     markers = [];
- }
-
- var markers = [];
+    var markers = [];
 
 
 }
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
- infoWindow.setPosition(pos);
- infoWindow.setContent(browserHasGeolocation ?
-     'Error: The Geolocation service failed.' :
-     'Error: Your browser doesn\'t support geolocation.');
- infoWindow.open(map);
-}
-function splitLatLng(latLng){
- var newString = latLng.substring(0, latLng.length-1);
- var newString2 = newString.substring(1);
- var trainindIdArray = newString2.split(',');
- var lat = trainindIdArray[0];
- var Lng  = trainindIdArray[1];
- $("#latitude").val(lat);
- $("#longitude").val(Lng);
-}
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+    infoWindow.open(map);
+    }
+    function splitLatLng(latLng){
+    var newString = latLng.substring(0, latLng.length-1);
+    var newString2 = newString.substring(1);
+    var trainindIdArray = newString2.split(',');
+    var lat = trainindIdArray[0];
+    var Lng  = trainindIdArray[1];
+    $("#latitude").val(lat);
+    $("#longitude").val(Lng);
+    }
 </script>
 
 

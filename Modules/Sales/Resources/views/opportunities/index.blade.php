@@ -183,63 +183,6 @@
 <script>
     
     
-    function  toggleCountryData(){
-        var agency = @json($agency);
-        var country = $('#nationality_id').val();
-        
-        
-        
-        
-        var countries = @json($countries);
-        filtered_country =  countries.filter(function(q){
-            return q.id == country
-        })
-        
-        $('#country option')
-        .removeAttr('selected')
-        .filter('[value='+filtered_country[0].value+']')
-        .attr('selected', true)
-        
-        $('#country').val(filtered_country[0].value).change();
-        
-        
-        $('.country_code').val(filtered_country[0].phone_code);            
-        $('.timezone').val(filtered_country[0].time_zone);            
-        $('.country_flag').val(filtered_country[0].flag);            
-        
-        
-        
-    }
-    
-    function  toggleEditCountryData(id){
-        var agency = @json($agency);
-        var country = $('#nationality_id_'+id).val();
-        
-                
-        var countries = @json($countries);
-        filtered_country =  countries.filter(function(q){
-            return q.id == country
-        })
-        
-        $('#country_'+id +' option')
-        .removeAttr('selected')
-        .filter('[value='+filtered_country[0].value+']')
-        .attr('selected', true)
-        
-        $('#country_'+id ).val(filtered_country[0].value).change();
-                
-        $('.country_code').val(filtered_country[0].phone_code);            
-        $('.timezone').val(filtered_country[0].time_zone);            
-        $('.country_flag').val(filtered_country[0].flag);            
-        
-        
-        
-    }
-</script>
-
-<script>
-    
-    
     
     
     function  show_add_div(){
@@ -311,55 +254,8 @@
         
     }
     
+   
     
-    
-    
-    
-    function  show_check_div(){
-        
-        hide_add_div();
-        
-        
-        var  div = document.querySelector('.check_opportunity');
-        if(div.style.display === 'none'){
-            div.style.display = 'block';
-            
-            setTimeout(function(){
-                
-                div.style.opacity = 1;
-                
-            },10);
-        } else {
-            div.style.display = 'none';
-            setTimeout(function(){
-                
-                div.style.opacity = 0;
-                
-                
-            },10);
-            
-        }
-        
-    }
-    
-    
-    
-    function  hide_check_div(){
-        var  div = document.querySelector('.check_opportunity');
-        
-        div.style.display = 'none';
-        setTimeout(function(){
-            
-            div.style.opacity = 0;
-            
-            
-        },10);
-        
-        
-        
-    }
-    
-
 
 
 

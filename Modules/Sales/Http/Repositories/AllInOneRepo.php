@@ -22,7 +22,7 @@ class AllInOneRepo
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
-            'task_status', 'task_types'
+            'task_status', 'task_types', 'developers'
         ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
         $opportunities = null;
@@ -243,14 +243,30 @@ class AllInOneRepo
         } else {
         }
 
-
+        $developers = $agency->developers;
 
         $agency = $agency->id;
 
+        $cities               =
+            cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                return DB::table('cities')->get();
+            });
+        $communities          =
+            cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
+                return DB::table('communities')->get();
+            });
+        $sub_communities     =
+            cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
+                return DB::table('sub_communities')->get();
+            });
         return view(
             'sales::all_in_one.index',
             compact(
                 'search',
+                'developers',
+                'communities',
+                'sub_communities',
+                'cities',
                 'staffs',
                 'opportunities',
                 'leads',

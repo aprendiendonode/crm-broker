@@ -92,7 +92,7 @@ onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_task_{{ $
             }
             function table_row_hide(id){
             
-            $('.'+id).addClass('d-none');
+                $('.'+id).addClass('d-none');
 
             }
 
