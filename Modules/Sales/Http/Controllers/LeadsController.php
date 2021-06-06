@@ -3,6 +3,7 @@
 namespace Modules\Sales\Http\Controllers;
 
 use App\Imports\LeadsImport;
+use App\Jobs\SendFailedLeadsMail;
 use App\Models\SystemTemplate;
 use Gate;
 
@@ -14,6 +15,7 @@ use App\Models\Agency;
 use App\Jobs\SendEmail;
 use App\Models\Country;
 use App\Mail\EmailGeneral;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use App\Exports\UsersExport;
 use Illuminate\Http\Request;
@@ -2267,7 +2269,6 @@ class LeadsController extends Controller
 
     public function bulk_uploads_process(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'file' => 'required|file|mimes:xlsx,csv,xls',
             "source_id" => "required|integer|exists:lead_sources,id",
@@ -2275,8 +2276,6 @@ class LeadsController extends Controller
             "qualification_id" => "required|integer|exists:lead_qualifications,id",
             "communication_id" => "required|integer|exists:lead_communications,id",
             "priority_id" => "required|integer|exists:lead_priorities,id",
-            //            'staff' => 'required|array',
-            //            'staff*' => 'required|integer|exists:users,id',
         ]);
 
         if ($validator->fails()) {
@@ -2295,19 +2294,22 @@ class LeadsController extends Controller
             $request->priority_id,
             $business,
             $agency
-        ), $request->file);
+        ), $request->file)->chain([
+            SendFailedLeadsMail::dispatch(auth()->user()->email)
+        ]);
 
 
+//                Excel::Import(new LeadsImport(
+//                    $request->source_id,
+//                    $request->qualification_id,
+//                    $request->type_id,
+//                    $request->communication_id,
+//                    $request->priority_id,
+//                    $business,
+//                    $agency
+//                ), $request->file);
 
-        //        Excel::Import(new LeadsImport(
-        //            $request->source_id,
-        //            $request->qualification_id,
-        //            $request->type_id,
-        //            $request->communication_id,
-        //            $request->priority_id,
-        //            $business,
-        //            $agency
-        //        ), $request->file);
+//        dispatch(new SendFailedLeadsMail());
 
         return back()->with(flash(trans('sales.leads_imported'), 'success'));
     }
