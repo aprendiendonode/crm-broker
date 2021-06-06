@@ -72,6 +72,7 @@ class CountryController extends Controller
             }
 
             DB::commit();
+            cache()->forget('countries');
             return back()->with(flash(trans('superadmin.countries.countries.country_added'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();
@@ -101,7 +102,7 @@ class CountryController extends Controller
                 'edit_value_' . $id      => ['required', 'string', 'max:225'],
                 'edit_timezone_' . $id   => ['required', 'string', 'max:225'],
                 'edit_code_' . $id       => ['required', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
-                'edit_flag_' . $id       => ['required', 'mimes:png,jpg,jpeg,gif', 'max:2048']
+                'edit_flag_' . $id       => ['sometimes', 'nullable', 'mimes:png,jpg,jpeg,gif', 'max:2048']
 
 
             ]);
@@ -110,9 +111,10 @@ class CountryController extends Controller
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-edit-tab', $id);
             }
 
-            $name = Str::lower($country->value) . '.' . $request->file('edit_flag_' . $id)->getClientOriginalExtension();
             $flag = '';
-            if ($request->{'edit_flag_' . $id} != null) {
+            if ($request->has('edit_flag_' . $id)) {
+                $name = Str::lower($country->value) . '.' . $request->file('edit_flag_' . $id)->getClientOriginalExtension();
+
                 $flag =  upload_flag($request->{'edit_flag_' . $id}, 'images/flags', $name, $country);
             }
             $country->update([
@@ -123,8 +125,11 @@ class CountryController extends Controller
                 'time_zone'       => $request->{'edit_timezone_' . $id},
                 'flag'            => $flag,
             ]);
+
+            cache()->forget('countries');
             return back()->with(flash(trans('superadmin.countries.country_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }

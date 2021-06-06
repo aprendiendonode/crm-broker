@@ -1061,6 +1061,7 @@ class LeadsController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             //            throw $e;
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }
@@ -2299,17 +2300,17 @@ class LeadsController extends Controller
         ]);
 
 
-//                Excel::Import(new LeadsImport(
-//                    $request->source_id,
-//                    $request->qualification_id,
-//                    $request->type_id,
-//                    $request->communication_id,
-//                    $request->priority_id,
-//                    $business,
-//                    $agency
-//                ), $request->file);
+        //                Excel::Import(new LeadsImport(
+        //                    $request->source_id,
+        //                    $request->qualification_id,
+        //                    $request->type_id,
+        //                    $request->communication_id,
+        //                    $request->priority_id,
+        //                    $business,
+        //                    $agency
+        //                ), $request->file);
 
-//        dispatch(new SendFailedLeadsMail());
+        //        dispatch(new SendFailedLeadsMail());
 
         return back()->with(flash(trans('sales.leads_imported'), 'success'));
     }

@@ -216,6 +216,16 @@ function  show_add_div(){
     hide_check_div();
  var  div = document.querySelector('.add_lead');
     if(div.style.display === 'none'){
+
+
+        injectGoogleMapsApiScript({
+                    key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
+                    libraries: 'places',
+                    language: 'ar',
+                    region: 'EG',
+                    callback: 'initMap',
+                });
+
         div.style.display = 'block';
 
         setTimeout(function(){
@@ -329,96 +339,82 @@ function  show_check_div(){
 
     }
 
+
+
+
 function getCommunitites(type,id){
 
-    var city_id ='';
-    if(type == "create"){
-        city_id = $('.city-in-create').val();
+var city_id ='';
+if(type == "create"){
+    city_id = $('.city-in-create').val();
 
-    }else{
-        city_id = $('.city-in-edit-'+id).val();
+}else{
+    city_id = $('.city-in-edit-'+id).val();
 
+}
+
+var option = '';
+var locale      = @json(app()->getLocale());
+var communities = @json($communities);
+communities.forEach(function(value,key){
+
+    if(value.city_id == city_id){
+
+
+    if(type == 'create'){
+        option += '<option value="'+value.id+'" class="create-appended-communities">';
+    } else{
+        option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
     }
 
 
+        if(locale == 'en'){
 
-    $.ajax({
-    url:'{{  route("listings.get-communities") }}',
-    type:'POST',
-    data:{
-        _token: '{{ csrf_token() }}',
-        city_id    : city_id,
-    },
-    success: function(data){
-        
-        var option = '';
-        var locale = @json(app()->getLocale());
-        data.communities.forEach(function(value,key){
-            if(type == 'create'){
-                option += '<option value="'+value.id+'" class="create-appended-communities">';
-            } else{
-                option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
-            }
-           
-     
-                if(locale == 'en'){
-
-                    option += value.name_en;
-                } else{
-                    option += value.name_ar;
-                }
-            option += '</option>';
-
-        })
-
-
-        if(type == "create"){
-            $('.create-appended-communities').remove();
-            $('.create-appended-sub-communities').remove();
-            $('.community-in-create').append(option)
-
-
-        }else{
-            $('.edit-appended-communities-'+id).remove();
-            $('.edit-appended-sub-communities-'+id).remove();
-            $('.community-in-edit-'+id).append(option)
-
+            option += value.name_en;
+        } else{
+            option += value.name_ar;
         }
+    option += '</option>';
 
-  
+}
 
-    
-    },
-    error: function(error){
-    
-    },
-    })
+})
+
+
+if(type == "create"){
+    $('.create-appended-communities').remove();
+    $('.create-appended-sub-communities').remove();
+    $('.community-in-create').append(option)
+
+
+}else{
+    $('.edit-appended-communities-'+id).remove();
+    $('.edit-appended-sub-communities-'+id).remove();
+    $('.community-in-edit-'+id).append(option)
+}
 
 
 }
 
+
+
+
 function getSubCommunities(type,id){
-    var community_id ='';
-    if(type == "create"){
-    community_id = $('.community-in-create').val();
+        var community_id ='';
+        if(type == "create"){
+        community_id = $('.community-in-create').val();
 
-    }else{
-        community_id = $('.community-in-edit-'+id).val();
-    }
+        }else{
+            community_id = $('.community-in-edit-'+id).val();
+        }
 
 
-    $.ajax({
-    url:'{{  route("listings.get-sub-communities") }}',
-    type:'POST',
-    data:{
-        _token: '{{ csrf_token() }}',
-        community_id    : community_id,
-    },
-    success: function(data){
+    var option = '';
+    var locale = @json(app()->getLocale());
+    var sub_communities = @json($sub_communities);
+    sub_communities.forEach(function(value,key){
+        if(value.community_id ==community_id ){
 
-        var option = '';
-        var locale = @json(app()->getLocale());
-        data.sub_communities.forEach(function(value,key){
             if(type == 'create'){
                 option += '<option value="'+value.id+'" class="create-appended-sub-communities">';
                 } else{
@@ -426,37 +422,214 @@ function getSubCommunities(type,id){
                 }
         
                 if(locale == 'en'){
-
+    
                     option += value.name_en;
                 } else{
                     option += value.name_ar;
                 }
             option += '</option>';
-
-        })
-
-
-        if(type == "create"){
-            $('.create-appended-sub-communities').remove();
-            $('.sub-community-in-create').append(option)
-
-        }else{
-            $('.edit-appended-sub-communities-'+id).remove();
-            $('.sub-community-in-edit-'+id).append(option)
         }
 
-
-
-
-
-    },
-    error: function(error){
-
-    },
     })
 
 
+    if(type == "create"){
+        $('.create-appended-sub-communities').remove();
+        $('.sub-community-in-create').append(option)
 
+    }else{
+        $('.edit-appended-sub-communities-'+id).remove();
+        $('.sub-community-in-edit-'+id).append(option)
+    }
+
+
+
+
+}
+  
+
+
+
+  
+var  googleMapsScriptIsInjected = false;
+        function injectGoogleMapsApiScript(options){
+
+            if(googleMapsScriptIsInjected){
+                return;
+            }
+
+    
+                const optionsQuery = Object.keys(options)
+                    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(options[k])}`)
+                    .join('&');
+
+                const url = `https://maps.googleapis.com/maps/api/js?${optionsQuery}`;
+
+                const script = document.createElement('script');
+
+                script.setAttribute('src', url);
+                script.setAttribute('async', '');
+                script.setAttribute('defer', '');
+
+                document.head.appendChild(script);
+
+                googleMapsScriptIsInjected = true;
+            };
+
+
+
+
+            var leads = @json($leads);
+            function initMap() {
+
+
+
+leads.data.forEach(function(value,key){
+
+
+             edit_autocompletelocation_input = new google.maps.places.Autocomplete((document.getElementById('location_input_'+value.id)), {
+                 types: ["establishment"],
+                 });
+                 edit_autocompletelocation_input.setComponentRestrictions({
+                 country: ['EG'],
+             });
+
+             google.maps.event.addListener(edit_autocompletelocation_input, 'place_changed', function () {
+                     var place = edit_autocompletelocation_input.getPlace();
+                             $('#latitude_'+value.id).val(place.geometry.location.lat());
+                             $('#longitude_'+value.id).val(place.geometry.location.lng());
+             
+             
+
+                 });
+
+
+                 var editMap = new google.maps.Map(document.getElementById('map_'+value.id), {
+                         center: {lat: value.loc_lat ? parseInt(value.loc_lat) : 30.0444 , lng:  value.loc_lng ? parseInt(value.loc_lng ) : 31.2357  },
+                         zoom: 13,
+                         
+                         mapTypeId: 'roadmap'
+                     }); 
+
+                     var geocoder = new google.maps.Geocoder();
+                     google.maps.event.addListener(editMap, 'click', function(event) {
+                         SelectedLatLng = event.latLng;
+                         geocoder.geocode({
+                             'latLng': event.latLng
+                         }, function(results, status) {
+                             if (status == google.maps.GeocoderStatus.OK) {
+                                 if (results[0]) {
+                                     deleteMarkers();
+                                     addMarkerRunTime(event.latLng);
+                                     SelectedLocation = results[0].formatted_address;
+                                     console.log( results[0].formatted_address);
+                                     editSplitLatLng(String(event.latLng),value.id);
+                                     $("#location_input_"+value.id).val(results[0].formatted_address);
+                                 }
+                             }
+                         });
+                     });
+
+
+                     function addMarkerRunTime(location) {
+                         var marker = new google.maps.Marker({
+                             position: location,
+                             map: editMap
+                         });
+                         markers.push(marker);
+                     }
+
+
+
+
+})
+
+
+ autocompletelocation_input = new google.maps.places.Autocomplete((document.getElementById('location_input')), {
+types: ["establishment"],
+});
+autocompletelocation_input.setComponentRestrictions({
+country: ['EG'],
+});
+
+google.maps.event.addListener(autocompletelocation_input, 'place_changed', function () {
+ var place = autocompletelocation_input.getPlace();
+         $('#latitude').val(place.geometry.location.lat());
+         $('#longitude').val(place.geometry.location.lng());
+
+
+});
+
+
+var map = new google.maps.Map(document.getElementById('map'), {
+     center: {lat:30.0444, lng: 31.2357 },
+     zoom: 13,
+     
+     mapTypeId: 'roadmap'
+ }); 
+
+
+
+
+ var geocoder = new google.maps.Geocoder();
+ google.maps.event.addListener(map, 'click', function(event) {
+     SelectedLatLng = event.latLng;
+     geocoder.geocode({
+         'latLng': event.latLng
+     }, function(results, status) {
+         if (status == google.maps.GeocoderStatus.OK) {
+             if (results[0]) {
+                 deleteMarkers();
+                 addMarkerRunTime(event.latLng);
+                 SelectedLocation = results[0].formatted_address;
+                 console.log( results[0].formatted_address);
+                 splitLatLng(String(event.latLng));
+                 $("#location_input").val(results[0].formatted_address);
+             }
+         }
+     });
+ });
+
+
+ function addMarkerRunTime(location) {
+     var marker = new google.maps.Marker({
+         position: location,
+         map: map
+     });
+     markers.push(marker);
+ }
+ function setMapOnAll(map) {
+     for (var i = 0; i < markers.length; i++) {
+         markers[i].setMap(map);
+     }
+ }
+ function clearMarkers() {
+     setMapOnAll(null);
+ }
+ function deleteMarkers() {
+     clearMarkers();
+     markers = [];
+ }
+
+ var markers = [];
+
+
+}
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+ infoWindow.setPosition(pos);
+ infoWindow.setContent(browserHasGeolocation ?
+     'Error: The Geolocation service failed.' :
+     'Error: Your browser doesn\'t support geolocation.');
+ infoWindow.open(map);
+}
+function splitLatLng(latLng){
+ var newString = latLng.substring(0, latLng.length-1);
+ var newString2 = newString.substring(1);
+ var trainindIdArray = newString2.split(',');
+ var lat = trainindIdArray[0];
+ var Lng  = trainindIdArray[1];
+ $("#latitude").val(lat);
+ $("#longitude").val(Lng);
 }
 </script>
 

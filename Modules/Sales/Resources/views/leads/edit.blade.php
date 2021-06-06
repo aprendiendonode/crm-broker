@@ -734,14 +734,44 @@
             </div>
 
 
-            <div class="form-group">
-                <div>
-                    <label class="text-muted font-weight-medium" for="">@lang('sales.address')</label>
+            
+        <div class="form-group" >
+
+            <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.location')</label>
+            <div class="d-flex align-items-center" style="flex:2">
+                <input type="text" class="form-control" name="edit_address_{{ $lead->id }}" id="location_input_{{ $lead->id }}"  
+                value="{{ old('edit_address_'.$lead->id,$lead->address) }}" 
+                 placeholder="">
+                 <input type="hidden" name="edit_loc_lat_{{ $lead->id }}" id="latitude_{{ $lead->id }}" value="{{ old('edit_loc_lat_'.$lead->id,$lead->loc_lat) }}" >
+                 <input type="hidden" name="edit_loc_lng_{{ $lead->id }}" id="longitude_{{ $lead->id }}" value="{{ old('edit_loc_lng_'.$lead->id,$lead->loc_lng) }}">
+                <div class="text-center pl-1">
+                    <i class="fas fa-map-marker-alt" style="font-size:1.2rem"  data-toggle="modal" data-target="#map-modal-{{ $lead->id }}"></i>
                 </div>
-                <input type="text" class="form-control" name="edit_address_{{ $lead->id }}"
-                       value="{{ old("edit_address_{$lead->id}",$lead->address) }}"
-                       placeholder="@lang('sales.address')">
             </div>
+        </div>
+
+
+
+
+        <div id="map-modal-{{ $lead->id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="cheque-modalLabel" aria-hidden="true">
+            <div style="overflow:auto;" class="modal-dialog ">
+                <div class="modal-content ">
+                    <div class="modal-header py-2">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+        
+        
+        
+                        <div id="map_{{ $lead->id }}" style="width:490px;height:500px;"></div>
+        
+                    </div>
+               
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        
+
 
 
             <div class="form-group d-flex  ">

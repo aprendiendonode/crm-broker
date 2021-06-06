@@ -365,57 +365,57 @@
 
     function getCommunitites(type,id){
 
-    var city_id ='';
-    if(type == "create"){
-        city_id = $('.city-in-create').val();
+        var city_id ='';
+        if(type == "create"){
+            city_id = $('.city-in-create').val();
 
-    }else{
-        city_id = $('.city-in-edit-'+id).val();
+        }else{
+            city_id = $('.city-in-edit-'+id).val();
 
-    }
-    
-    var option = '';
-    var locale      = @json(app()->getLocale());
-    var communities = @json($communities);
-       communities.forEach(function(value,key){
-
-        if(value.city_id == city_id){
-
-      
-        if(type == 'create'){
-            option += '<option value="'+value.id+'" class="create-appended-communities">';
-        } else{
-            option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
         }
-       
- 
-            if(locale == 'en'){
+        
+        var option = '';
+        var locale      = @json(app()->getLocale());
+        var communities = @json($communities);
+        communities.forEach(function(value,key){
 
-                option += value.name_en;
+            if(value.city_id == city_id){
+
+        
+            if(type == 'create'){
+                option += '<option value="'+value.id+'" class="create-appended-communities">';
             } else{
-                option += value.name_ar;
+                option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
             }
-        option += '</option>';
+        
+    
+                if(locale == 'en'){
+
+                    option += value.name_en;
+                } else{
+                    option += value.name_ar;
+                }
+            option += '</option>';
+
+        }
+
+        })
+
+
+        if(type == "create"){
+            $('.create-appended-communities').remove();
+            $('.create-appended-sub-communities').remove();
+            $('.community-in-create').append(option)
+
+
+        }else{
+            $('.edit-appended-communities-'+id).remove();
+            $('.edit-appended-sub-communities-'+id).remove();
+            $('.community-in-edit-'+id).append(option)
+        }
+
 
     }
-
-    })
-
-
-    if(type == "create"){
-        $('.create-appended-communities').remove();
-        $('.create-appended-sub-communities').remove();
-        $('.community-in-create').append(option)
-
-
-    }else{
-        $('.edit-appended-communities-'+id).remove();
-        $('.edit-appended-sub-communities-'+id).remove();
-        $('.community-in-edit-'+id).append(option)
-    }
-
-
-}
 
 function getSubCommunities(type,id){
         var community_id ='';
