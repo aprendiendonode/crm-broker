@@ -152,7 +152,8 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
         if (sizeof($failds_data)) {
             FaildLead::create([
                 'reference'   => $lead->reference,
-                'failed_data'=> json_encode($failds_data)
+                'failed_data'=> json_encode($failds_data),
+                'agency_id' => $this->agency
             ]);
         }
         return $lead;

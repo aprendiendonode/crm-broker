@@ -32,6 +32,15 @@
                 </div>
             </div>
 
+            <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                    <label class="mb-1 font-weight-medium text-muted">@lang('agency.reference')</label>
+                    <input type="text" class="form-control" maxlength="25" name="filter_reference"
+                           value="{{ request()->has('filter_reference') ? request()->get('filter_reference') : '' }}"
+                           id="defaultconfig">
+                </div>
+            </div>
+
 
 
             <div class="col-md-6 col-lg-4">

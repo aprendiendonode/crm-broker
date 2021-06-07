@@ -99,6 +99,11 @@ class LeadsController extends Controller
             });
         }
 
+        if (request('filter_reference') != null) {
+            $leads->where('reference', request('filter_reference'));
+
+        }
+
 
         if (request('filter_name') != null) {
             $leads->where(function ($query) {
@@ -2296,7 +2301,7 @@ class LeadsController extends Controller
             $business,
             $agency
         ), $request->file)->chain([
-            SendFailedLeadsMail::dispatch(auth()->user()->email)
+            new SendFailedLeadsMail(auth()->user()->email,$agency)
         ]);
 
 
