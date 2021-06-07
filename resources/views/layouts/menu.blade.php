@@ -43,6 +43,22 @@
                         </li>
                         @endif
 
+
+                    @if(owner())
+                        <li>
+                            <a href="{{ url('sales/failed_leads/'.request('agency')) }}">@lang('sales.manage_failed_leads')</a>
+                        </li>
+
+                        @elseif(moderator())
+                        <li>
+                            <a href="{{ url('sales/failed_leads/'.request('agency')) }}">@lang('sales.manage_failed_leads')</a>
+                        </li>
+                        @else
+                        <li>
+                            <a href="{{ url('sales/failed_leads/'.auth()->user()->agency_id) }}">@lang('sales.manage_failed_leads')</a>
+                        </li>
+                        @endif
+
                         
                         @if(owner())
                         <li>

@@ -82,6 +82,7 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
             }
         });
         Route::get('leads/{agency}', 'LeadsController@index');
+        Route::get('failed_leads/{agency}', 'FailedLeadsController@index');
         Route::get('leads/bulk_uploads/{agency}', 'LeadsController@bulk_uploads');
         Route::post('leads/smart_import_sheet', 'LeadsController@bulk_uploads_process')->name('smart_import_sheet');
 

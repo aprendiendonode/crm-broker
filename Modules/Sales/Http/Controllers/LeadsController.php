@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\FaildLead;
 use App\Imports\LeadsImport;
 use App\Jobs\SendFailedLeadsMail;
 use App\Models\SystemTemplate;
@@ -1062,6 +1063,15 @@ class LeadsController extends Controller
 
 
             DB::commit();
+
+
+            //check if failed before
+            $failedLead = FaildLead::where('agency_id', $lead->agency_id)->where('reference',$lead->reference)->first();
+            if($failedLead){
+                if($lead->country&&$lead->community&&$lead->sub_community){
+                    $failedLead->delete();
+                }
+            }
             return back()->with(flash(trans('sales.lead_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             DB::rollback();

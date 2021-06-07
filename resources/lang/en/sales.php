@@ -494,5 +494,8 @@ return [
     'qualifications'            => 'Qualifications',
     'no_action'                 => 'No Action',
     'hold_date' => 'Hold Date',
+    'manage_failed_leads' => 'Manage Failed Leads',
+    'reference' => 'Reference',
+    'failed_data' => 'Failed Data',
 
 ];
