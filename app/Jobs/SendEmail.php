@@ -22,11 +22,18 @@ class SendEmail implements ShouldQueue
     public $to;
     public $template;
     public $message;
-    public function __construct($to, $template, $message)
+    public $attach;
+    public $cc;
+    public $bcc;
+
+    public function __construct($to, $template, $message,$attach=null,$cc=null,$bcc=null)
     {
-        $this->to = $to;
+        $this->to       = $to;
         $this->template = $template;
-        $this->message = $message;
+        $this->message  = $message;
+        $this->attach   = $attach;
+        $this->cc       = $cc;
+        $this->bcc      = $bcc;
         // dd($this->to, $this->template, $this->message);
     }
 
@@ -38,8 +45,24 @@ class SendEmail implements ShouldQueue
     public function handle()
     {
 
+        if ($this->cc){
+            if ($this->bcc){
 
+                Mail::to($this->to)->cc($this->cc)->bcc($this->bcc)
+                    ->send(new EmailGeneral($this->template, $this->message,$this->attach));
+            }else{
 
-        Mail::to($this->to)->send(new EmailGeneral($this->template, $this->message));
+                Mail::to($this->to)->cc($this->cc)
+                    ->send(new EmailGeneral($this->template, $this->message,$this->attach));
+            }
+
+        }else if ($this->bcc){
+
+            Mail::to($this->to)->bcc($this->bcc)
+                ->send(new EmailGeneral($this->template, $this->message,$this->attach));
+        }else{
+            Mail::to($this->to)->send(new EmailGeneral($this->template, $this->message,$this->attach));
+        }
+
     }
 }

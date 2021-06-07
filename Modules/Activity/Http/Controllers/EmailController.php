@@ -2,6 +2,7 @@
 
 namespace Modules\Activity\Http\Controllers;
 
+use App\Jobs\SendEmail;
 use App\Mail\EmailGeneral;
 use App\Models\Agency;
 use App\Models\Contact;
@@ -150,8 +151,9 @@ class EmailController extends Controller
 
                         $attach = $path.'/'.$fileName;
                     }
-                    Mail::to($contact)->cc($email_address_array)->bcc($request->bcc)
-                        ->send(new EmailGeneral($request->email_content, $request->subject, $attach));
+//                    Mail::to($contact)->cc($email_address_array)->bcc($request->bcc)
+//                        ->send(new EmailGeneral($request->email_content, $request->subject, $attach));
+                    SendEmail::dispatch($contact, $request->email_content, $request->subject,$attach,$email_address_array,$request->bcc);
 
                     //store email data
                     $email = Email::create([
@@ -189,7 +191,8 @@ class EmailController extends Controller
                             $attach = $path.'/'.$fileName;
                         }
 
-                        Mail::to($emailaddress)->bcc($request->bcc)->send(new EmailGeneral($request->email_content, $request->subject ,$attach));
+//                        Mail::to($emailaddress)->bcc($request->bcc)->send(new EmailGeneral($request->email_content, $request->subject ,$attach));
+                        SendEmail::dispatch($emailaddress, $request->email_content, $request->subject,$attach,null,$request->bcc);
 
                         //store email data
                         $email = Email::create([
