@@ -70,6 +70,18 @@ onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_task_{{ $
         function table_row_show(row_id,id){
  
             $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
+
+
+            if(id == 'edit_lead_'+row_id){
+                    injectGoogleMapsApiScript({
+                        key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
+                        libraries: 'places',
+                        language: 'ar',
+                        region: 'EG',
+                        callback: 'initMap',
+                    });
+                }
+
             if($('.'+id).hasClass('d-none')){
                 $('.'+id).removeClass('d-none');
             }else{
@@ -80,7 +92,7 @@ onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_task_{{ $
             }
             function table_row_hide(id){
             
-            $('.'+id).addClass('d-none');
+                $('.'+id).addClass('d-none');
 
             }
 

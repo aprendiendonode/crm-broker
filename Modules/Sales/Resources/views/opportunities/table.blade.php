@@ -285,7 +285,6 @@
     
     
     
-    @can('convert_opportunity_to_client')
     
     <tr  class="table-row_{{ $opportunity->id }} client_{{ $opportunity->id }}
         @if( (session()->has('open-client-tab') && session('open-client-tab') ==  $opportunity->id )) 
@@ -298,9 +297,6 @@
         </td>
     </tr>
     
-    @endcan
-    
-    @if($opportunity->client)
     @can('convert_opportunity_to_client')
     @if($opportunity->converting_approval == 'waiting_for_approve')
     <tr  class="table-row_{{ $opportunity->id }} approve_{{ $opportunity->id }}
@@ -332,7 +328,7 @@
     @endcan
     
     
-    @endif
+   
     
     
     @empty

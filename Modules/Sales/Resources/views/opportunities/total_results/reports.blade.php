@@ -25,8 +25,7 @@
          @endphp
         
           <tr>
-          <td>{{ ($loop->index + 1) }}  </td>
-
+          <td>#</td>
           {{-- <td>{{ str_replace(['_','-'],' ',$result->status)  }}</td> --}}
           <td>{{ $result->stage  }}</td>
 

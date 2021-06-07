@@ -84,14 +84,14 @@
                 <li class="d-none d-lg-block">
                     <form class="app-search">
                         <div class="app-search-box dropdown">
-                            <div class="input-group">
+                   {{--          <div class="input-group">
                                 <input type="search" class="form-control" placeholder="Search..." id="top-search">
                                 <div class="input-group-append">
                                     <button class="btn" type="submit">
                                         <i class="fe-search"></i>
                                     </button>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="dropdown-menu dropdown-lg" id="search-dropdown">
                                 <!-- item-->
                                 <div class="dropdown-header noti-title">
@@ -162,12 +162,12 @@
                        href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <i class="fe-search noti-icon"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-lg dropdown-menu-right p-0">
+          {{--           <div class="dropdown-menu dropdown-lg dropdown-menu-right p-0">
                         <form class="p-3">
                             <input type="text" class="form-control" placeholder="Search ..."
                                    aria-label="Recipient's username">
                         </form>
-                    </div>
+                    </div> --}}
                 </li>
 
                 <li class="dropdown d-none d-lg-inline-block">
@@ -269,7 +269,7 @@
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown"
                        href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <img src="{{asset('assets/images/users/user-6.jpg')}}" alt="user-image" class="rounded-circle">
+                        <img src="{{ auth()->user()->image != null ? asset('profile_images/'.auth()->user()->image) : ''  }}" alt="user-image" class="rounded-circle">
                         <span class="pro-user-name ml-1">
                                     {{ auth()->user() ? auth()->user()->name_en : '' }} <i
                                     class="mdi mdi-chevron-down"></i>
@@ -530,12 +530,12 @@
 
             <!-- User box -->
             <div class="user-box text-center">
-                <img src="{{asset('assets/images/users/user-6.jpg')}}" alt="user-img" title="Mat Helme"
+                <img src="{{auth()->user()->image != null ? asset('profile_images/'.auth()->user()->image) : ''}}" alt="user-img" title="Mat Helme"
                      class="rounded-circle avatar-md">
                 <div class="dropdown">
                     <a href="javascript: void(0);"
                        class="text-dark font-weight-normal dropdown-toggle h5 mt-2 mb-1 d-block"
-                       data-toggle="dropdown">Stanley Parker</a>
+                       data-toggle="dropdown">{{ auth()->user()->{'name_'.app()->getLocale()} }}</a>
                     <div class="dropdown-menu user-pro-dropdown">
 
                         <!-- item-->
@@ -574,7 +574,7 @@
 
                     </div>
                 </div>
-                <p class="text-muted">Admin Head</p>
+                {{-- <p class="text-muted">Admin Head</p> --}}
             </div>
 
 
@@ -659,13 +659,13 @@ justify-content: space-between; min-height: 92vh;">
         <div class="tab-content pt-0">
             <div class="tab-pane" id="chat-tab" role="tabpanel">
 
-                <form class="search-bar p-3">
+           {{--      <form class="search-bar p-3">
                     <div class="position-relative">
                         <input type="text" class="form-control" placeholder="Search...">
                         <span class="mdi mdi-magnify"></span>
                     </div>
                 </form>
-
+ --}}
                 <h6 class="font-weight-medium px-3 mt-2 text-uppercase">Group Chats</h6>
 
                 <div class="p-2">

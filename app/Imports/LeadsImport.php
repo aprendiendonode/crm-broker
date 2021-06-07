@@ -3,23 +3,30 @@
 namespace App\Imports;
 
 
-
+use App\Exports\FaildLeadsExport;
+use App\FaildLead;
+use App\Mail\EmailGeneral;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Events\AfterImport;
 use Modules\Sales\Entities\Lead;
 use Modules\Sales\Entities\Developer;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Modules\Sales\Entities\LeadProperty;
+use Modules\SuperAdmin\Entities\Community;
 use Modules\SuperAdmin\Entities\Country;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Modules\SuperAdmin\Entities\SubCommunity;
 
 //class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow
+//class LeadsImport implements ToModel, WithValidation, WithHeadingRow
 class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
 {
 
-    public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency, $priority_id;
+    public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency, $priority_id, $communities, $sub_community, $countries,$user_email;
 
     public function __construct($source_id, $qualification_id, $type_id, $communication_id, $priority_id, $business, $agency)
     {
@@ -31,6 +38,10 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
         $this->priority_id = $priority_id;
         $this->business = $business;
         $this->agency = $agency;
+        $this->user_email = auth()->user()->email;
+        $this->communities = new Community();
+        $this->sub_community = new  SubCommunity();
+        $this->countries = new Country();
     }
 
     /**
@@ -42,19 +53,12 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
     {
 
 
-        $nationality = Country::where('value', ucwords($row['nationality']))->first();
-        if (!$nationality) {
-            $nationality = Country::create([
-                'value', ucwords($row['nationality'])
-            ]);
-        }
-
         $property_id = LeadProperty::where('slug', str_replace(" ", "_", strtolower($row['property_type'])))->first();
         if (!$property_id) {
             $property_id = LeadProperty::create([
                 'name_en' => ucwords($row['property_type']),
                 'name_ar' => ucwords($row['property_type']),
-                'slug' =>  str_replace(" ", "_", strtolower($row['property_type'])),
+                'slug' => str_replace(" ", "_", strtolower($row['property_type'])),
                 'agency_id' => $this->agency,
                 'business_id' => $this->business,
             ]);
@@ -64,35 +68,51 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             $developer = Developer::create([
                 'name_en' => ucwords($row['developer']),
                 'name_ar' => ucwords($row['developer']),
-                'slug' =>  str_replace(" ", "_", strtolower($row['developer'])),
+                'slug' => str_replace(" ", "_", strtolower($row['developer'])),
                 'agency_id' => $this->agency,
                 'business_id' => $this->business,
             ]);
         }
 
 
-        $bedrooms   = preg_replace('/[^0-9]/', '',  $row['bedrooms'])  != '' ? preg_replace('/[^0-9]/', '',  $row['bedrooms']) : null;
-        $bathrooms  = preg_replace('/[^0-9]/', '',  $row['bathrooms']) != '' ? preg_replace('/[^0-9]/', '',  $row['bathrooms']) : null;
-        $parkings   = preg_replace('/[^0-9]/', '',  $row['parking'])  != '' ? preg_replace('/[^0-9]/', '',  $row['parking']) : null;
-        $fullname   =  explode(' ', $row['full_name']);
+        $bedrooms = preg_replace('/[^0-9]/', '', $row['bedrooms']) != '' ? preg_replace('/[^0-9]/', '', $row['bedrooms']) : null;
+        $bathrooms = preg_replace('/[^0-9]/', '', $row['bathrooms']) != '' ? preg_replace('/[^0-9]/', '', $row['bathrooms']) : null;
+        $parkings = preg_replace('/[^0-9]/', '', $row['parking']) != '' ? preg_replace('/[^0-9]/', '', $row['parking']) : null;
+        $fullname = explode(' ', $row['full_name']);
         $first_name = $fullname[0] ?? null;
-        $last_name  = $fullname[1] ?? null;
+        $last_name = $fullname[1] ?? null;
 
         $output = ($row['date_of_birth'] - 25569) * 86400;
         $output = $output - date('Z', $output);
 
+        $failds_data = [];
+        $country = $this->countries->where('value', ucwords($row['nationality']))->orwhere('name_en', ucwords($row['nationality']))->orwhere('name_ar', ucwords($row['nationality']))->first();
+        $community = $this->communities->where('name_en', $row['community'])->orwhere('name_ar', $row['community'])->first();
+        $sub_community = $this->sub_community->where('name_en', $row['sub_community'])->orwhere('name_ar', $row['sub_community'])->first();
 
-        return new Lead([
-            'developer'          => $developer->id,
-            'community'          => $row['community'],
-            'sub_community'      => $row['sub_community'],
-            'property_no'        => $row['property_number'],
-            'property_purpose'   => $row['property_purpose'],
+        if (!$country) {
+            array_push($failds_data, 'country');
+        }
+        if (!$community) {
+            array_push($failds_data, 'community');
+        }
+        if (!$sub_community) {
+            array_push($failds_data, 'sub community');
+        }
+
+
+        $lead = new Lead([
+            'reference' => uniqid(),
+            'developer' => $developer->id,
+            'community' => $community->id ?? null,
+            'sub_community' => $sub_community->id ?? null,
+            'property_no' => $row['property_number'],
+            'property_purpose' => $row['property_purpose'],
             'property_reference' => $row['property_reference'],
-            'size_sqft'          => $row['property_size_sqft'],
-            'size_sqm'           => $row['property_size_sqm'],
-            'bedrooms'           => $bedrooms,
-            'bathrooms'          => $bathrooms,
+            'size_sqft' => $row['property_size_sqft'],
+            'size_sqm' => $row['property_size_sqm'],
+            'bedrooms' => $bedrooms,
+            'bathrooms' => $bathrooms,
             'parkings' => $parkings,
             'other' => $row['others'],
             'salutation' => $row['salutation'],
@@ -112,7 +132,8 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             'fax' => $row['fax'],
             'address' => $row['address'],
             'po_box' => $row['po_box'],
-            'nationality_id' => $nationality->id,
+            'nationality_id' => $country->id ?? null,
+            'country' => $country->id ?? null,
             'date_of_birth' => date('Y-m-d', $output),
             'passport' => $row['passport_number'],
             'passport_expiration_date' => $row['passport_expiration_date'],
@@ -127,6 +148,15 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
             'business_id' => $this->business,
 
         ]);
+
+        if (sizeof($failds_data)) {
+            FaildLead::create([
+                'reference'   => $lead->reference,
+                'failed_data'=> json_encode($failds_data),
+                'agency_id' => $this->agency
+            ]);
+        }
+        return $lead;
     }
 
     public function rules(): array
@@ -172,4 +202,10 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
     {
         return 100;
     }
+
+
+//    public function afterImport(AfterImport $event)
+//    {
+//        Mail::to($this->user_email)->send(new EmailGeneral('this is some leads failed to insert some data','Broker Leads',new FaildLeadsExport(), 'users.xlsx'));
+//    }
 }

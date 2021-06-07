@@ -82,6 +82,7 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
             }
         });
         Route::get('leads/{agency}', 'LeadsController@index');
+        Route::get('failed_leads/{agency}', 'FailedLeadsController@index');
         Route::get('leads/bulk_uploads/{agency}', 'LeadsController@bulk_uploads');
         Route::post('leads/smart_import_sheet', 'LeadsController@bulk_uploads_process')->name('smart_import_sheet');
 
@@ -211,7 +212,7 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
 
 
         Route::post('convert-to-opportunity', 'LeadsController@convert_to_opportunity');
-        Route::post('load-listings', 'OpportunityController@load_listings')->name('sales.load-listings');
+        Route::post('load-listings', 'OpportunitiesController@load_listings')->name('sales.load-listings');
 
         // Route::post('opportunities-update-stage', 'OpportunitiesController@update_stage_index');
         Route::post('opportunities-update-qualification', 'OpportunitiesController@update_qualification_index');

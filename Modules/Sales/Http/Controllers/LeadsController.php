@@ -2,7 +2,9 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\FaildLead;
 use App\Imports\LeadsImport;
+use App\Jobs\SendFailedLeadsMail;
 use App\Models\SystemTemplate;
 use Gate;
 
@@ -14,6 +16,7 @@ use App\Models\Agency;
 use App\Jobs\SendEmail;
 use App\Models\Country;
 use App\Mail\EmailGeneral;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use App\Exports\UsersExport;
 use Illuminate\Http\Request;
@@ -95,6 +98,11 @@ class LeadsController extends Controller
                     ->orWhere('landline', request('filter_phone'))
                     ->orWhere('fax', request('filter_phone'));
             });
+        }
+
+        if (request('filter_reference') != null) {
+            $leads->where('reference', request('filter_reference'));
+
         }
 
 
@@ -1055,10 +1063,20 @@ class LeadsController extends Controller
 
 
             DB::commit();
+
+
+            //check if failed before
+            $failedLead = FaildLead::where('agency_id', $lead->agency_id)->where('reference',$lead->reference)->first();
+            if($failedLead){
+                if($lead->country&&$lead->community&&$lead->sub_community){
+                    $failedLead->delete();
+                }
+            }
             return back()->with(flash(trans('sales.lead_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             DB::rollback();
             //            throw $e;
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }
@@ -2243,7 +2261,8 @@ class LeadsController extends Controller
             }
 
 
-            return back()->with(flash(trans('sales.lead_converted'), 'success'));
+            return redirect('sales/opportunities/' . $lead->agency_id . '?id=' . $opportunity->id)->with(flash(trans('sales.lead_converted'), 'success'));
+            // return back()->with(flash(trans('sales.lead_converted'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();
             // throw $e;
@@ -2267,7 +2286,6 @@ class LeadsController extends Controller
 
     public function bulk_uploads_process(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'file' => 'required|file|mimes:xlsx,csv,xls',
             "source_id" => "required|integer|exists:lead_sources,id",
@@ -2275,8 +2293,6 @@ class LeadsController extends Controller
             "qualification_id" => "required|integer|exists:lead_qualifications,id",
             "communication_id" => "required|integer|exists:lead_communications,id",
             "priority_id" => "required|integer|exists:lead_priorities,id",
-            //            'staff' => 'required|array',
-            //            'staff*' => 'required|integer|exists:users,id',
         ]);
 
         if ($validator->fails()) {
@@ -2295,19 +2311,22 @@ class LeadsController extends Controller
             $request->priority_id,
             $business,
             $agency
-        ), $request->file);
+        ), $request->file)->chain([
+            new SendFailedLeadsMail(auth()->user()->email,$agency)
+        ]);
 
 
+        //                Excel::Import(new LeadsImport(
+        //                    $request->source_id,
+        //                    $request->qualification_id,
+        //                    $request->type_id,
+        //                    $request->communication_id,
+        //                    $request->priority_id,
+        //                    $business,
+        //                    $agency
+        //                ), $request->file);
 
-        //        Excel::Import(new LeadsImport(
-        //            $request->source_id,
-        //            $request->qualification_id,
-        //            $request->type_id,
-        //            $request->communication_id,
-        //            $request->priority_id,
-        //            $business,
-        //            $agency
-        //        ), $request->file);
+        //        dispatch(new SendFailedLeadsMail());
 
         return back()->with(flash(trans('sales.leads_imported'), 'success'));
     }

@@ -504,7 +504,7 @@
 
     <script>
       var  googleMapsScriptIsInjected = false;
-        function injectGoogleMapsApiScript(options){
+    function injectGoogleMapsApiScript(options){
 
             if(googleMapsScriptIsInjected){
                 return;

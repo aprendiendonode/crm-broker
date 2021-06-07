@@ -739,13 +739,46 @@
             </div>
 
 
-            <div class="form-group">
-                <div>
-                    <label class="text-muted font-weight-medium" for="">@lang('sales.address')</label>
+    
+            <div class="form-group" >
+                <label class="font-weight-medium text-muted" style="flex:1">@lang('sales.address')</label>
+                <div class="d-flex align-items-center" style="flex:2">
+                    <input type="text" class="form-control" name="address"  id="location_input"  value="{{ old('address') }}" 
+                     >
+                     <input type="hidden" name="loc_lat" id="latitude" value="{{ old('loc_lat') }}" >
+                     <input type="hidden" name="loc_lng" id="longitude" value="{{ old('loc_long') }}">
+                 
+                    <div class="text-center pl-1">
+                        {{-- <i class="fas fa-map-marker-alt" style="font-size:1.2rem"  onclick="initModal()"></i> --}}
+                        <i class="fas fa-map-marker-alt" style="font-size:1.2rem"  data-toggle="modal" data-target="#map-modal"></i>
+                    </div>
                 </div>
-                <input type="text" class="form-control" name="address" value="{{ old('address') }}"
-                       placeholder="@lang('sales.address')">
             </div>
+
+
+
+
+
+
+            <div id="map-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="cheque-modalLabel" aria-hidden="true">
+                <div style="overflow:auto;" class="modal-dialog ">
+                    <div class="modal-content ">
+                        <div class="modal-header py-2">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+            
+            
+            
+                            <div id="map" style="width:490px;height:500px;"></div>
+            
+                        </div>
+                   
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            
+
 
 
             <div class="form-group d-flex  ">

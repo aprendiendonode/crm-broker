@@ -183,63 +183,6 @@
 <script>
     
     
-    function  toggleCountryData(){
-        var agency = @json($agency);
-        var country = $('#nationality_id').val();
-        
-        
-        
-        
-        var countries = @json($countries);
-        filtered_country =  countries.filter(function(q){
-            return q.id == country
-        })
-        
-        $('#country option')
-        .removeAttr('selected')
-        .filter('[value='+filtered_country[0].value+']')
-        .attr('selected', true)
-        
-        $('#country').val(filtered_country[0].value).change();
-        
-        
-        $('.country_code').val(filtered_country[0].phone_code);            
-        $('.timezone').val(filtered_country[0].time_zone);            
-        $('.country_flag').val(filtered_country[0].flag);            
-        
-        
-        
-    }
-    
-    function  toggleEditCountryData(id){
-        var agency = @json($agency);
-        var country = $('#nationality_id_'+id).val();
-        
-                
-        var countries = @json($countries);
-        filtered_country =  countries.filter(function(q){
-            return q.id == country
-        })
-        
-        $('#country_'+id +' option')
-        .removeAttr('selected')
-        .filter('[value='+filtered_country[0].value+']')
-        .attr('selected', true)
-        
-        $('#country_'+id ).val(filtered_country[0].value).change();
-                
-        $('.country_code').val(filtered_country[0].phone_code);            
-        $('.timezone').val(filtered_country[0].time_zone);            
-        $('.country_flag').val(filtered_country[0].flag);            
-        
-        
-        
-    }
-</script>
-
-<script>
-    
-    
     
     
     function  show_add_div(){
@@ -311,111 +254,64 @@
         
     }
     
+   
     
-    
-    
-    
-    function  show_check_div(){
-        
-        hide_add_div();
-        
-        
-        var  div = document.querySelector('.check_opportunity');
-        if(div.style.display === 'none'){
-            div.style.display = 'block';
-            
-            setTimeout(function(){
-                
-                div.style.opacity = 1;
-                
-            },10);
-        } else {
-            div.style.display = 'none';
-            setTimeout(function(){
-                
-                div.style.opacity = 0;
-                
-                
-            },10);
-            
-        }
-        
-    }
-    
-    
-    
-    function  hide_check_div(){
-        var  div = document.querySelector('.check_opportunity');
-        
-        div.style.display = 'none';
-        setTimeout(function(){
-            
-            div.style.opacity = 0;
-            
-            
-        },10);
-        
-        
-        
-    }
-    
-
 
 
 
     function getCommunitites(type,id){
 
-    var city_id ='';
-    if(type == "create"){
-        city_id = $('.city-in-create').val();
+        var city_id ='';
+        if(type == "create"){
+            city_id = $('.city-in-create').val();
 
-    }else{
-        city_id = $('.city-in-edit-'+id).val();
+        }else{
+            city_id = $('.city-in-edit-'+id).val();
 
-    }
-    
-    var option = '';
-    var locale      = @json(app()->getLocale());
-    var communities = @json($communities);
-       communities.forEach(function(value,key){
-
-        if(value.city_id == city_id){
-
-      
-        if(type == 'create'){
-            option += '<option value="'+value.id+'" class="create-appended-communities">';
-        } else{
-            option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
         }
-       
- 
-            if(locale == 'en'){
+        
+        var option = '';
+        var locale      = @json(app()->getLocale());
+        var communities = @json($communities);
+        communities.forEach(function(value,key){
 
-                option += value.name_en;
+            if(value.city_id == city_id){
+
+        
+            if(type == 'create'){
+                option += '<option value="'+value.id+'" class="create-appended-communities">';
             } else{
-                option += value.name_ar;
+                option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
             }
-        option += '</option>';
+        
+    
+                if(locale == 'en'){
+
+                    option += value.name_en;
+                } else{
+                    option += value.name_ar;
+                }
+            option += '</option>';
+
+        }
+
+        })
+
+
+        if(type == "create"){
+            $('.create-appended-communities').remove();
+            $('.create-appended-sub-communities').remove();
+            $('.community-in-create').append(option)
+
+
+        }else{
+            $('.edit-appended-communities-'+id).remove();
+            $('.edit-appended-sub-communities-'+id).remove();
+            $('.community-in-edit-'+id).append(option)
+        }
+
 
     }
-
-    })
-
-
-    if(type == "create"){
-        $('.create-appended-communities').remove();
-        $('.create-appended-sub-communities').remove();
-        $('.community-in-create').append(option)
-
-
-    }else{
-        $('.edit-appended-communities-'+id).remove();
-        $('.edit-appended-sub-communities-'+id).remove();
-        $('.community-in-edit-'+id).append(option)
-    }
-
-
-}
 
 function getSubCommunities(type,id){
         var community_id ='';
@@ -627,37 +523,37 @@ var  googleMapsScriptIsInjected = false;
 
 
         if(id == 'client_'+row_id && load_listing == false){
-             var locale =  @json(app()->getLocale());
+             var locale  =  @json(app()->getLocale());
+             var agency  =  @json($agency);
                 $.ajax({
                     url  : "{{ route('sales.load-listings') }}",
                     type : 'POST',
+                    data :{
+                        _token :'{{ csrf_token() }}',
+                        agency_id : agency
+                    },
                     success: function(data){
+                        load_listing = true;
                         var option = '';
-
-
                         data.listings.forEach(function(value,key){
-                             
-                  
-                            option += '<option value="'+value.id+'" >';
-
-                                option += value.listing_ref;
-                        
-                        option += '</option>';
-
-                    
-                    }
-
+                                  option += '<option value="'+value.id+'" >';
+                                  option += value.listing_ref;
+                                  option += '</option>';
+                             })
+ 
                     $('listing-loading-'+row_id).append(option)
              
-                
-
-            
-              
-
-    
             }
         })
     }
+
+
+    if($('.'+id).hasClass('d-none')){
+            $('.'+id).removeClass('d-none');
+        }else{
+            $('.'+id).addClass('d-none');
+
+        }
     }
    
     function table_row_hide(id){
