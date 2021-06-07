@@ -740,7 +740,7 @@ class OpportunityRepo
                 }
             }
 
-            if ($request->{"client_recurring_type_" . $request->opportunity_id} == 'yes') {
+            /*       if ($request->{"client_recurring_type_" . $request->opportunity_id} == 'yes') {
 
 
                 if (count($request->{'recurrings_amount_' . $request->opportunity_id}) != count($request->{'recurrings_dates_' . $request->opportunity_id})) {
@@ -765,7 +765,7 @@ class OpportunityRepo
                     return back()->withInput()->with(flash(trans('sales.recurrings_not_equal_amount'), 'error'))->with('open-client-tab', $request->opportunity_id);
                 }
             }
-
+ */
 
             $check_unique_emails = Client::where('business_id', $opportunity->business_id)->where('agency_id', $opportunity->agency_id)->where(function ($query) {
 
@@ -1005,7 +1005,7 @@ class OpportunityRepo
 
             // ]);
 
-            $contract = OpportunityTempContract::create([
+            /*   $contract = OpportunityTempContract::create([
                 'opportunity_id' => $opportunity->id,
                 'converted_by' => auth()->user()->id,
                 'status' => 'pending',
@@ -1033,9 +1033,9 @@ class OpportunityRepo
 
 
             ]);
+ */
 
-
-            if ($request->{'client_recurring_type_' . $request->opportunity_id} == 'yes') {
+            /*   if ($request->{'client_recurring_type_' . $request->opportunity_id} == 'yes') {
 
                 $amounts = $request->{'recurrings_amount_' . $request->opportunity_id};
                 $dates = $request->{'recurrings_dates_' . $request->opportunity_id};
@@ -1052,7 +1052,7 @@ class OpportunityRepo
                     ]);
                 }
             }
-
+ */
 
             //                    foreach (request()->{'client_contract_documents_' . $request->opportunity_id} as $file) {
             //                        $size =  $file->getSize();
@@ -1073,9 +1073,19 @@ class OpportunityRepo
             //                        ]);
             //                    }
 
-
+            // dd($request->all());
             $opportunity->update([
+                'first_name'     =>   $request->{'client_first_name_' . $request->opportunity_id},
+                'sec_name'       =>   $request->{'client_sec_name_' . $request->opportunity_id},
+                "date_of_birth"  =>    $request->{'client_date_of_birth_' . $request->opportunity_id},
+                "passport"       =>    $request->{'client_passport_' . $request->opportunity_id},
+                "national_id"    =>    $request->{'client_national_id_' . $request->opportunity_id},
+                "passport_expiration_date"     =>    $request->{"client_passport_expiration_date_" . $request->opportunity_id},
+                "email1"       =>    $request->{"client_email1_" . $request->opportunity_id},
+                "phone1"     =>     $request->{"client_phone1_" . $request->opportunity_id},
+
                 'converting_approval' => 'waiting_for_approve',
+
                 'reject_reason' => null,
                 'rejected_by' => null,
                 'reject_date' => null,
@@ -1087,6 +1097,7 @@ class OpportunityRepo
 
                 'submit_for_approve_by' => auth()->user()->id,
                 'submit_for_approve_date' => date('Y-m-d'),
+
 
             ]);
 
@@ -1509,28 +1520,28 @@ class OpportunityRepo
                 }
             }
 
-            if ($request->{"hold_recurring_type_" . $request->opportunity_id} == 'yes') {
+            // if ($request->{"hold_recurring_type_" . $request->opportunity_id} == 'yes') {
 
 
-                if (count($request->{'recurrings_amount_' . $request->opportunity_id}) != count($request->{'recurrings_dates_' . $request->opportunity_id})) {
+            //     if (count($request->{'recurrings_amount_' . $request->opportunity_id}) != count($request->{'recurrings_dates_' . $request->opportunity_id})) {
 
-                    return back()->withInput()->with(flash(trans('sales.recurring_and_dates_not_equal'), 'error'))->with('open-hold-tab', $request->opportunity_id);
-                }
-                if (count($request->{'recurrings_dates_' . $request->opportunity_id}) > count(array_unique($request->{'recurrings_dates_' . $request->opportunity_id}))) {
+            //         return back()->withInput()->with(flash(trans('sales.recurring_and_dates_not_equal'), 'error'))->with('open-hold-tab', $request->opportunity_id);
+            //     }
+            //     if (count($request->{'recurrings_dates_' . $request->opportunity_id}) > count(array_unique($request->{'recurrings_dates_' . $request->opportunity_id}))) {
 
-                    return back()->withInput()->with(flash(trans('sales.dates_of_recurrings_are_repeated'), 'error'))->with('open-hold-tab', $request->opportunity_id);
-                }
+            //         return back()->withInput()->with(flash(trans('sales.dates_of_recurrings_are_repeated'), 'error'))->with('open-hold-tab', $request->opportunity_id);
+            //     }
 
-                $recurring_value = 0;
-                foreach ($request->{'recurrings_amount_' . $request->opportunity_id} as $r) {
-                    $recurring_value += $r;
-                }
+            //     $recurring_value = 0;
+            //     foreach ($request->{'recurrings_amount_' . $request->opportunity_id} as $r) {
+            //         $recurring_value += $r;
+            //     }
 
-                if ($request->{'hold_amount_' . $request->opportunity_id} != $recurring_value) {
-                    return back()->withInput()->with(flash(trans('sales.recurrings_not_equal_amount'), 'error'))
-                        ->with('open-hold-tab', $request->opportunity_id);
-                }
-            }
+            //     if ($request->{'hold_amount_' . $request->opportunity_id} != $recurring_value) {
+            //         return back()->withInput()->with(flash(trans('sales.recurrings_not_equal_amount'), 'error'))
+            //             ->with('open-hold-tab', $request->opportunity_id);
+            //     }
+            // }
 
             $check_unique_emails = Client::where('id', '!=', $request->client_id)->where('business_id', $opportunity->business_id)
                 ->where('agency_id', $opportunity->agency_id)->where(function ($query) {
@@ -1602,16 +1613,17 @@ class OpportunityRepo
 
             DB::beginTransaction();
 
-            $opportunity->client->update([
+            $opportunity->update([
 
 
-                'name' => $request->{"hold_name_" . $request->opportunity_id},
+                'first_name' => $request->{"hold_first_name_" . $request->opportunity_id},
+                'sec_name' => $request->{"hold_sec_name_" . $request->opportunity_id},
                 'email1' => $request->{"hold_email1_" . $request->opportunity_id},
                 'phone1' => $request->{"hold_phone1_" . $request->opportunity_id},
-                'country' => $request->{"hold_country_" . $request->opportunity_id},
+                // 'country' => $request->{"hold_country_" . $request->opportunity_id},
 
-                'language' => $request->{"hold_language_" . $request->opportunity_id},
-                'currency' => $request->{"hold_currency_" . $request->opportunity_id},
+                // 'language' => $request->{"hold_language_" . $request->opportunity_id},
+                // 'currency' => $request->{"hold_currency_" . $request->opportunity_id},
                 'passport' => $request->{"hold_passport_" . $request->opportunity_id},
                 'national_id' => $request->{"hold_national_id_" . $request->opportunity_id},
                 'passport_expiration_date' => $request->{"hold_passport_expiration_date_" . $request->opportunity_id},
@@ -1620,15 +1632,30 @@ class OpportunityRepo
                 "date_of_birth" => $request->{"hold_date_of_birth_" . $request->opportunity_id},
 
 
-                "source_id" => $opportunity->source_id,
+                'converting_approval' => 'waiting_for_approve',
+
+
+                'reject_reason' => null,
+                'rejected_by' => null,
+                'reject_date' => null,
+
+
+                'hold_reason' => null,
+                'hold_by' => null,
+                'hold_date' => null,
+
+                'submit_for_approve_by' => auth()->user()->id,
+                'submit_for_approve_date' => date('Y-m-d'),
+
+                // "source_id" => $opportunity->source_id,
 
 
             ]);
 
 
-            $contract = ClientContract::findorfail($request->{"hold_contract_id_" . $request->opportunity_id});
+            // $contract = ClientContract::findorfail($request->{"hold_contract_id_" . $request->opportunity_id});
 
-            $contract->update([
+            /*      $contract->update([
 
                 'status' => 'pending',
                 'contract_type' => $request->{'hold_contract_type_' . $request->opportunity_id},
@@ -1654,9 +1681,9 @@ class OpportunityRepo
 
 
             ]);
+ */
 
-
-            if ($request->{'hold_recurring_type_' . $request->opportunity_id} == 'yes') {
+            /*     if ($request->{'hold_recurring_type_' . $request->opportunity_id} == 'yes') {
 
                 // deleteing all recuring then adding a new ones
                 $contract->recurrings->each(function ($q) {
@@ -1686,8 +1713,8 @@ class OpportunityRepo
                     ]);
                 }
             }
-
-            if ($request->has('hold_contract_documents_' . $request->opportunity_id)) {
+ */
+            /*     if ($request->has('hold_contract_documents_' . $request->opportunity_id)) {
 
                 foreach (request()->{'hold_contract_documents_' . $request->opportunity_id} as $file) {
                     $size = $file->getSize();
@@ -1712,29 +1739,12 @@ class OpportunityRepo
                     //                    return back()->withInput()->with(flash(trans('sales.documents_required'), 'error'))->with('open-hold-tab', $request->opportunity_id);
                 }
             }
+ */
 
-
-            $opportunity->update([
-                'converting_approval' => 'waiting_for_approve',
-
-
-                'reject_reason' => null,
-                'rejected_by' => null,
-                'reject_date' => null,
-
-
-                'hold_reason' => null,
-                'hold_by' => null,
-                'hold_date' => null,
-
-                'submit_for_approve_by' => auth()->user()->id,
-                'submit_for_approve_date' => date('Y-m-d'),
-
-            ]);
 
             DB::commit();
 
-            return back()->with(flash(trans('sales.opportunity_waiting_for_approval'), 'success'));
+            return back()->with(flash(trans('sales.opportunity_waiting_for_approval'), 'success'))->with('open-hold-tab', $request->opportunity_id);
         } catch (\Exception $e) {
 
             DB::rollback();
@@ -1792,12 +1802,12 @@ class OpportunityRepo
 
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))
-                    ->with('open-approve-tab', $opportunity->id);
+                    ->with('open-reject-tab', $opportunity->id);
             }
 
             DB::beginTransaction();
 
-            $opportunity->client->contracts->first()->documents->each(function ($q) use ($opportunity) {
+            /*  $opportunity->client->contracts->first()->documents->each(function ($q) use ($opportunity) {
                 if (file_exists(public_path('upload/contracts/' . $opportunity->client->id . '/' . $q->document))) {
                     unlink(public_path('upload/contracts/' . $opportunity->client->id . '/' . $q->document));
                 }
@@ -1812,7 +1822,7 @@ class OpportunityRepo
             });
 
             $opportunity->client->delete();
-
+ */
             $opportunity->update([
                 'converting_approval' => 'rejected',
                 'reject_reason' => $request->{'reject_reason_' . $opportunity->id},
@@ -1849,15 +1859,97 @@ class OpportunityRepo
             $opportunity = Opportunity::where('id', $request->opportunity_id)
                 ->where('business_id', auth()->user()->business_id)->firstOrFail();
 
-            $client = Client::where('id', $request->client_id)->where('converted_from', $opportunity->id)
-                ->where('business_id', auth()->user()->business_id)->firstOrFail();
-
 
 
             DB::beginTransaction();
-            $client->update(['status' => 'accepted']);
+
+
+
+            $client = Client::create([
+                'table_name' => 'clients',
+                'agency_id' => $opportunity->agency_id,
+
+                "business_id" => $opportunity->business_id,
+                'website'     => $opportunity->website,
+
+                'name'        =>  $opportunity->first_name . ' ' . $opportunity->sec_name,
+
+                'landline'     => $opportunity->landline,
+
+                'email1'      => $opportunity->email1,
+                'email2'      => $opportunity->email2,
+
+                'fax'     => $opportunity->fax,
+
+                'phone1'  => $opportunity->phone1,
+                'phone2'  =>  $opportunity->phone2,
+
+                /*    'country' => $request->{"client_country_" . $request->opportunity_id},
+                'city'    => $request->{"client_city_" . $request->opportunity_id},
+ */
+                'skype' => $opportunity->skype,
+                'twitter' => $opportunity->twitter,
+                'facebook' => $opportunity->facebook,
+                'linkedin' => $opportunity->linkedin,
+
+                /*    'longitude' => $request->{"client_longitude_" . $request->opportunity_id},
+                'latitude' => $request->{"client_latitude_" . $request->opportunity_id},
+ */
+
+                // 'language' => $request->{"client_language_" . $request->opportunity_id},
+                // 'currency' => $request->{"client_currency_" . $request->opportunity_id},
+
+
+                'company'     => $opportunity->company,
+                'passport'    => $opportunity->passport,
+                'national_id' => $opportunity->national_id,
+                'passport_expiration_date' => $opportunity->passport_expiration_date,
+
+
+                "date_of_birth" =>  $opportunity->date_of_birth,
+
+
+                'converted_by' => auth()->user()->id,
+
+                "source_id" => $opportunity->source_id,
+
+                "type_id" => $opportunity->type_id,
+                "communication_id" => $opportunity->communication_id,
+
+
+                "po_box" => $opportunity->po_box,
+
+
+                "partner_name" => $opportunity->partner_name,
+
+                'converted_from' => $opportunity->id,
+                'status' => 'accepted',
+
+                "developer" => $opportunity->developer,
+                "community" => $opportunity->community,
+                "community"         => $opportunity->community,
+                "building_name"     => $opportunity->building_name,
+                "property_purpose"  => $opportunity->property_purpose,
+                "property_no"       => $opportunity->property_no,
+                "property_id"       => $opportunity->property_id,
+
+                "property_reference" => $opportunity->property_reference,
+                "size_sqft"   => $opportunity->size_sqft,
+                "size_sqm"              => $opportunity->size_sqm,
+                "bedrooms"         => $opportunity->bedrooms,
+                "bathrooms"        => $opportunity->bathrooms,
+                "parkings"         => $opportunity->parkings,
+
+                "salutation"        => $opportunity->salutation,
+                "other"             => $opportunity->other,
+                "nationality_id"    => $opportunity->nationality_id,
+
+            ]);
+
+
             $opportunity->delete();
             DB::commit();
+            return redirect('sales/clients/' . $client->agency_id . '?id=' . $client->id)->with(flash(trans('sales.client_approved'), 'success'));
             return back()->with(flash(trans('sales.client_approved'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();

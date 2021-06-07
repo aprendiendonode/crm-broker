@@ -4,15 +4,15 @@ namespace Modules\Agency\Http\Controllers;
 
 use Gate;
 
-use App\Models\City;
 use App\Models\User;
 use App\Models\Agency;
-use App\Models\Country;
 use App\Exports\TeamsExport;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\SuperAdmin\Entities\City;
+use Modules\SuperAdmin\Entities\Country;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 

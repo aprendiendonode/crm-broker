@@ -2251,7 +2251,8 @@ class LeadsController extends Controller
             }
 
 
-            return back()->with(flash(trans('sales.lead_converted'), 'success'));
+            return redirect('sales/opportunities/' . $lead->agency_id . '?id=' . $opportunity->id)->with(flash(trans('sales.lead_converted'), 'success'));
+            // return back()->with(flash(trans('sales.lead_converted'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();
             // throw $e;

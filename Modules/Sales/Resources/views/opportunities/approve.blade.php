@@ -5,7 +5,7 @@
     
 
             <input type="hidden" value="{{ $opportunity->id }}" name="opportunity_id">
-            <input type="hidden" value="{{ $opportunity->client->id }}" name="client_id">
+            <input type="hidden" value="{{ $opportunity->id }}" name="client_id">
     
   
         <div class="col-md-6">
@@ -13,73 +13,79 @@
 
         
        
-            <div class="form-group">
+     {{--        <div class="form-group">
 
-                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.name')</lable>
-                <p class="h5">{{ ucfirst($opportunity->client->name )}}</p>
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.first_name')</lable>
+                <p class="h5">{{ ucfirst($opportunity->first_name )}}</p>
+        
+             </div> --}}
+    {{--         <div class="form-group">
+
+                <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.sec_name')</lable>
+                <p class="h5">{{ ucfirst($opportunity->sec_name )}}</p>
         
              </div>
-
-             <div class="form-group">
+ --}}
+    {{--          <div class="form-group">
 
 
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.date_of_birth')</lable>
-                <p class="h5">{{ ucfirst($opportunity->client->date_of_birth )}}</p>
+                <p class="h5">{{ ucfirst($opportunity->date_of_birth )}}</p>
 
     
             </div>
+ --}}
 
 
-
-            @if($opportunity->client->national_id != null)
+  {{--           @if($opportunity->national_id != null)
                 <div class="form-group">
 
 
                     <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.national_id')</lable>
-                    <p class="h5">{{ ucfirst($opportunity->client->national_id )}}</p>
+                    <p class="h5">{{ ucfirst($opportunity->national_id )}}</p>
 
                 </div>
-            @endif
+            @endif --}}
 
-            @if($opportunity->client->passport != null)
+      {{--       @if($opportunity->passport != null)
 
                 <div class="form-group">
 
                     <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.passport')</lable>
-                    <p class="h5">{{ ucfirst($opportunity->client->passport )}}</p>
+                    <p class="h5">{{ ucfirst($opportunity->passport )}}</p>
 
                  
                 </div>
             @endif
+     --}}
     
-    
-            @if($opportunity->client->passport_expiration_date != null)
+    {{--         @if($opportunity->passport_expiration_date != null)
 
             <div class="form-group ">
 
 
                 
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.passport_expiration_date')</lable>
-                <p class="h5">{{ ucfirst($opportunity->client->passport_expiration_date )}}</p>
+                <p class="h5">{{ ucfirst($opportunity->passport_expiration_date )}}</p>
 
                 
             </div>
 
             @endif
-    
+     --}}
         
     
 
              
-            <div class="form-group">
+         {{--    <div class="form-group">
 
 
 
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.email1')</lable>
-                <p class="h5">{{ ucfirst($opportunity->client->email1 )}}</p>
+                <p class="h5">{{ ucfirst($opportunity->email1 )}}</p>
 
             </div>
-
+ --}}
 
             
     
@@ -104,37 +110,37 @@
    
 
                  
-        <div class="form-group">     
+      {{--   <div class="form-group">     
             
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.phone1')</lable>
-            <p class="h5">{{ ucfirst($opportunity->client->phone1 )}}</p>
+            <p class="h5">{{ ucfirst($opportunity->phone1 )}}</p>
 
         </div>
-
+ --}}
 
 
                  
 
-
+{{-- 
         <div class="form-group">
 
 
              
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.country')</lable>
-            <p class="h5">{{ ucfirst($opportunity->client->country)}}</p>
+            <p class="h5">{{ ucfirst($opportunity->country)}}</p>
 
          
-        </div>
+        </div> --}}
 
 
-        <div class="form form-group">
+  {{--       <div class="form form-group">
 
 
             
              
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.language')</lable>
-            <p class="h5">{{ ucfirst($opportunity->client->language )}}</p>
-
+            <p class="h5">{{ ucfirst($opportunity->language )}}</p>
+ --}}
 
 {{-- 
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.language')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> 
@@ -148,17 +154,17 @@
                 @endforelse
 
             </select> --}}
-        </div>
+        {{-- </div> --}}
          
 
-        <div class="form form-group">
+      {{--   <div class="form form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.language')</lable>
-            <p class="h5">{{ ucfirst($opportunity->client->currency )}}</p>
+            <p class="h5">{{ ucfirst($opportunity->currency )}}</p>
 
 
 
         </div>
-
+ --}}
 
 
  
@@ -504,7 +510,7 @@
             @csrf
 
             <input type="hidden" name="hold_opportunity_id" value="{{ $opportunity->id }}">
-            <input type="hidden" name="hold_client_id" value="{{ $opportunity->client->id }}">
+            <input type="hidden" name="hold_client_id" value="{{ $opportunity->id }}">
                 <div class="col-md-12 mt-2 mb-2">
             
 
@@ -537,7 +543,7 @@
         <div class="row">
             @csrf
             <input  type="hidden" name="opportunity_id" value="{{ $opportunity->id }}">
-            <input  type="hidden" name="client_id" value="{{ $opportunity->client->id }}">
+            <input  type="hidden" name="client_id" value="{{ $opportunity->id }}">
                 <div class="col-md-12 mt-2 mb-2">
             
 
