@@ -497,5 +497,6 @@ return [
     'manage_failed_leads' => 'Manage Failed Leads',
     'reference' => 'Reference',
     'failed_data' => 'Failed Data',
+    'download_sample' => 'Download Sample',
 
 ];

@@ -21,6 +21,8 @@
 @section('content')
 
     <div class="content p-3">
+
+
         <form action="{{route('smart_import_sheet')}}" data-parsley-validate="" method="post"
               enctype="multipart/form-data">
             @csrf
@@ -32,12 +34,23 @@
                         value="{{ request('agency') }}"
                    @else
                         value="{{ auth()->user()->agency_id }}"
-                   @endif>
+                   @endif >
 
 
             <div class="mb-2">
-                <h3>@lang('sales.smart_bulk_import')</h3>
+               
+                    <h3 class="p-2">@lang('sales.smart_bulk_import')</h3>
+          
+                
+ 
+
+                  <a download href="{{ asset('sample.xlsx') }}" class="float-right btn btn-info waves-effect waves-light">
+                    <i class="fe-plus-square"></i>@lang('sales.download_sample')
+                  </a>
+         
                 <hr>
+
+
                 <div class="row ml-2">
                     <div class="col-md-12">
                         <div class="form-group">

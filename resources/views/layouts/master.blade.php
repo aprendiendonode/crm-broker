@@ -329,6 +329,10 @@
 
             </ul>
 
+            <form method="post" action="{{ url('logout') }}" id="logout-form" style="display:none">
+                @csrf
+            </form>
+
             <!-- LOGO -->
             <div class="logo-box">
                 <a href="index.html" class="logo logo-dark text-center">
