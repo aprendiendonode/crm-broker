@@ -102,7 +102,6 @@ class LeadsController extends Controller
 
         if (request('filter_reference') != null) {
             $leads->where('reference', request('filter_reference'));
-
         }
 
 
@@ -236,7 +235,7 @@ class LeadsController extends Controller
                 // "next_action_date"              => "sometimes|nullable|date",
                 "note" => "sometimes|nullable|string",
                 "po_box" => "sometimes|nullable|string|min:1|max:30",
-                "passport" => "sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:1|max:30",
+                "passport" => "sometimes|nullable|string|min:1|max:30",
                 "passport_expiration_date" => "sometimes|nullable|date",
                 "first_name" => "required|string",
                 "sec_name" => "sometimes|nullable|string",
@@ -685,7 +684,7 @@ class LeadsController extends Controller
                 "edit_website_" . $id => "sometimes|nullable|string|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/",
                 "edit_note_" . $id => "sometimes|nullable|string",
                 "edit_po_box_" . $id => "sometimes|nullable|string|min:1|max:30",
-                "edit_passport_" . $id => "sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:1|max:30",
+                "edit_passport_" . $id => "sometimes|nullable|string|min:1|max:30",
                 "edit_passport_expiration_date_" . $id => "sometimes|nullable|date",
                 "edit_first_name_" . $id => "required|string",
                 "edit_sec_name_" . $id => "sometimes|nullable|string",
@@ -697,7 +696,7 @@ class LeadsController extends Controller
                 "edit_email3_" . $id => "sometimes|nullable|string|email",
                 "edit_nationality_id_" . $id => "required|integer|exists:countries,id",
 
-                "edit_country_" . $id => "required|string|exists:countries,value",
+                // "edit_country_" . $id => "required|string|exists:countries,value",
                 "edit_phone1_" . $id => "required|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "edit_phone2_" . $id => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "edit_phone3_" . $id => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
@@ -1057,6 +1056,10 @@ class LeadsController extends Controller
                 "skype" => $request->{'edit_skype_' . $id},
                 "other" => $request->{'edit_other_' . $id},
                 // "assigned_to"                  => serialize($request->{'edit_assigned_to_' . $id}),
+                "phone1_code" => $request->{'edit_phone1_code_' . $id},
+                "phone2_code" => $request->{'edit_phone2_code_' . $id},
+                "phone3_code" => $request->{'edit_phone3_code_' . $id},
+                "phone4_code" => $request->{'edit_phone4_code_' . $id},
 
 
             ]);
@@ -1066,9 +1069,9 @@ class LeadsController extends Controller
 
 
             //check if failed before
-            $failedLead = FaildLead::where('agency_id', $lead->agency_id)->where('reference',$lead->reference)->first();
-            if($failedLead){
-                if($lead->country&&$lead->community&&$lead->sub_community){
+            $failedLead = FaildLead::where('agency_id', $lead->agency_id)->where('reference', $lead->reference)->first();
+            if ($failedLead) {
+                if ($lead->country && $lead->community && $lead->sub_community) {
                     $failedLead->delete();
                 }
             }
@@ -2312,7 +2315,7 @@ class LeadsController extends Controller
             $business,
             $agency
         ), $request->file)->chain([
-            new SendFailedLeadsMail(auth()->user()->email,$agency)
+            new SendFailedLeadsMail(auth()->user()->email, $agency)
         ]);
 
 

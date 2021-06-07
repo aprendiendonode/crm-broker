@@ -89,7 +89,7 @@ class Opportunity extends Model
             "edit_company_" . $id                       => "sometimes|nullable|string",
             "edit_website_" . $id                       => "sometimes|nullable|string|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/",
             "edit_po_box_" . $id                        => "sometimes|nullable|string|min:1|max:30",
-            "edit_passport_" . $id                      => "sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:1|max:30",
+            "edit_passport_" . $id                      => "sometimes|nullable|string|min:1|max:30",
             "edit_passport_expiration_date_" . $id      => "sometimes|nullable|date",
             "edit_first_name_" . $id                    => "required|string",
             "edit_sec_name_" . $id                      => "sometimes|nullable|string",
@@ -189,7 +189,7 @@ class Opportunity extends Model
 
 
             "client_national_id_" .  $request->opportunity_id                   => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
-            "client_passport_" .  $request->opportunity_id                      => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
+            "client_passport_" .  $request->opportunity_id                      => "sometimes|nullable",
             "client_expiration_passport_date_" .  $request->opportunity_id      => "sometimes|nullable|date_format:Y-m-d",
 
 
@@ -242,7 +242,7 @@ class Opportunity extends Model
 
 
             "hold_national_id_" .  $request->opportunity_id                   => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
-            "hold_passport_" .  $request->opportunity_id                      => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
+            "hold_passport_" .  $request->opportunity_id                      => "sometimes|nullable",
             "hold_expiration_passport_date_" .  $request->opportunity_id      => "sometimes|nullable|date_format:Y-m-d",
 
 

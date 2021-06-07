@@ -74,7 +74,7 @@
             <div class="form-group">
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.passport')</lable>
     
-                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"  name="client_passport_{{ $opportunity->id }}"  value="{{ old("client_passport_{$opportunity->id}",$opportunity->passport) }}" placeholder="@lang('sales.passport')">
+                <input type="text" class="form-control"  name="client_passport_{{ $opportunity->id }}"  value="{{ old("client_passport_{$opportunity->id}",$opportunity->passport) }}" placeholder="@lang('sales.passport')">
             </div>
     
     

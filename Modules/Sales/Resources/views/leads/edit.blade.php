@@ -581,7 +581,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.passport')</label>
                 </div>
-                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"
+                <input type="text" class="form-control" 
                        name="edit_passport_{{ $lead->id }}"
                        value="{{ old("edit_passport_{$lead->id}",$lead->passport) }}"
                        placeholder="@lang('sales.passport')">
@@ -864,7 +864,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.property_size_sqft')</label>
                 </div>
-                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"
+                <input type="text" class="form-control" 
                        name="edit_size_sqft_{{ $lead->id }}"
                        value="{{ old("edit_size_sqft_{$lead->id}",$lead->size_sqft) }}"
                        placeholder="@lang('sales.property_size_sqft')">
@@ -875,7 +875,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.property_size_sqm')</label>
                 </div>
-                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"
+                <input type="text" class="form-control"
                        name="edit_size_sqm_{{ $lead->id }}"
                        value="{{ old("edit_size_sqm_{$lead->id}",$lead->size_sqm) }}"
                        placeholder="@lang('sales.property_size_sqm')">

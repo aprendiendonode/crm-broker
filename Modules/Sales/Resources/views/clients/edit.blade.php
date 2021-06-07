@@ -117,7 +117,7 @@
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.nationality')</lable>
 
-            <select required onchange="toggleEditCountryData({{ $client->id }})" id="nationality_id_{{ $client->id }}" class="form-control select2 " name="edit_nationality_id_{{ $client->id }}"
+            <select required onchange="" id="nationality_id_{{ $client->id }}" class="form-control select2 " name="edit_nationality_id_{{ $client->id }}"
                     data-toggle="select2" data-placeholder="@lang('sales.nationality')">
                 <option value=""></option>
                 @foreach($countries as $nationality)
@@ -127,7 +127,7 @@
             </select>
         </div>
     
-    
+{{--     
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.country')</lable>
 
@@ -141,7 +141,7 @@
             </select>
         </div>
 
-        
+         --}}
     
     
     
@@ -162,7 +162,7 @@
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.passport')</lable>
 
-            <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"  name="edit_passport_{{ $client->id }}"  value="{{ old("edit_passport_{$client->id}",$client->passport) }}" placeholder="@lang('sales.passport')">
+            <input type="text" class="form-control"   name="edit_passport_{{ $client->id }}"  value="{{ old("edit_passport_{$client->id}",$client->passport) }}" placeholder="@lang('sales.passport')">
         </div>
 
 
@@ -532,14 +532,14 @@
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_size_sqft')</lable>
 
-            <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"   name="edit_size_sqft_{{ $client->id }}"  value="{{ old("edit_size_sqft_{$client->id}",$client->size_sqft) }}" placeholder="@lang('sales.property_size_sqft')" >
+            <input type="text" class="form-control"   name="edit_size_sqft_{{ $client->id }}"  value="{{ old("edit_size_sqft_{$client->id}",$client->size_sqft) }}" placeholder="@lang('sales.property_size_sqft')" >
         </div>
     
     
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.property_size_sqm')</lable>
 
-            <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_size_sqm_{{ $client->id }}"  value="{{ old("edit_size_sqm_{$client->id}",$client->size_sqm) }}" placeholder="@lang('sales.property_size_sqm')" >
+            <input type="text" class="form-control"  name="edit_size_sqm_{{ $client->id }}"  value="{{ old("edit_size_sqm_{$client->id}",$client->size_sqm) }}" placeholder="@lang('sales.property_size_sqm')" >
         </div>
         <div class="d-flex justify-content-between">
 
