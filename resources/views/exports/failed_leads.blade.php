@@ -9,13 +9,8 @@
     @forelse($failed_leads as $item)
         <tr>
             <td>{{ $item->reference ?? '' }}</td>
-            @forelse(json_decode($item->failed_data) as $key => $data)
-                @if($key != 0)
-                    &
-                @endif
-                {{$data}}
-            @empty
-            @endforelse
+            <td>{{str_replace(array('[', ']','"',','),array(' ', ' ', ' ', '&'),$item->failed_data) ?? '' }}</td>
+
         </tr>
     @empty
     @endforelse
