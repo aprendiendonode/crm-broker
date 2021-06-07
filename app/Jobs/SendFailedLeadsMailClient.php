@@ -14,20 +14,20 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
-class SendFailedLeadsMail implements ShouldQueue
+class SendFailedLeadsMailClient implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $email,$agency;
+    public $email,$filename;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($email,$agency)
+    public function __construct($email,$filename)
     {
         $this->email = $email;
-        $this->agency = $agency;
+        $this->filename = $filename;
     }
 
     /**
@@ -37,9 +37,6 @@ class SendFailedLeadsMail implements ShouldQueue
      */
     public function handle()
     {
-
-        $filename = 'failed leads'.time().'.xlsx';
-        Excel::store(new FaildLeadsExport($this->agency),$filename );
-        Mail::to($this->email )->send(new EmailGeneral('this is some leads failed to insert some data','Broker Leads',storage_path('app/'.$filename)));
+        Mail::to($this->email )->send(new EmailGeneral('this is some leads failed to insert some data','Broker Leads',storage_path('app/'.$this->filename)));
     }
 }

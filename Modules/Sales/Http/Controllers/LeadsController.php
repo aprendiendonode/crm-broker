@@ -4,7 +4,11 @@ namespace Modules\Sales\Http\Controllers;
 
 use App\FaildLead;
 use App\Imports\LeadsImport;
+use App\Jobs\ExportFailedLeadsFile;
+use App\Jobs\ImportLeadsSheet;
 use App\Jobs\SendFailedLeadsMail;
+use App\Jobs\SendFailedLeadsMailClient;
+use App\Jobs\StartLeadsInsertJobs;
 use App\Models\SystemTemplate;
 use Gate;
 
@@ -63,7 +67,6 @@ class LeadsController extends Controller
     {
 
 
-
         abort_if(Gate::denies('view_lead'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $pagination = true;
@@ -75,8 +78,6 @@ class LeadsController extends Controller
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
             'task_status', 'task_types', 'leads', 'developers'
         ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
-
-
 
 
         // $currencies  = DB::table('currencies')->get();
@@ -150,48 +151,47 @@ class LeadsController extends Controller
         }
 
 
-
         return view(
             'sales::leads.index',
             [
-                'leads'                  => $leads->paginate($per_page),
-                'pagination'             => $pagination,
-                'total_leads'            => $agency->leads,
+                'leads' => $leads->paginate($per_page),
+                'pagination' => $pagination,
+                'total_leads' => $agency->leads,
 
-                'staffs'                 => staff($agency->id),
-                'countries'              =>
-                cache()->remember('countries', 60 * 60 * 24, function () use ($agency) {
-                    return DB::table('countries')->get();
-                }),
-                'cities'                 =>
-                cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
-                    return DB::table('cities')->get();
-                }),
-                'communities'            =>
-                cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
-                    return DB::table('communities')->get();
-                }),
-                'sub_communities'        =>
-                cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
-                    return DB::table('sub_communities')->get();
-                }),
+                'staffs' => staff($agency->id),
+                'countries' =>
+                    cache()->remember('countries', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('countries')->get();
+                    }),
+                'cities' =>
+                    cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('cities')->get();
+                    }),
+                'communities' =>
+                    cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('communities')->get();
+                    }),
+                'sub_communities' =>
+                    cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('sub_communities')->get();
+                    }),
 
-                'agency'                 => $agency->id,
-                'business'               => $business,
-                'lead_sources'           => $agency->lead_sources,
-                'lead_communications'    => $agency->lead_communications,
-                'lead_priorities'        => $agency->lead_priorities,
-                'lead_qualifications'    => $agency->lead_qualifications,
-                'lead_types'             => $agency->lead_types,
-                'lead_properties'        => $agency->lead_properties,
-                'task_status'            => $agency->task_status,
-                'task_types'             => $agency->task_types,
-                'call_status'            => $agency->call_status,
-                'developers'             => $agency->developers,
-                'languages'              =>
-                cache()->remember('languages', 60 * 60 * 24, function () use ($agency) {
-                    return DB::table('languages')->get();
-                }),
+                'agency' => $agency->id,
+                'business' => $business,
+                'lead_sources' => $agency->lead_sources,
+                'lead_communications' => $agency->lead_communications,
+                'lead_priorities' => $agency->lead_priorities,
+                'lead_qualifications' => $agency->lead_qualifications,
+                'lead_types' => $agency->lead_types,
+                'lead_properties' => $agency->lead_properties,
+                'task_status' => $agency->task_status,
+                'task_types' => $agency->task_types,
+                'call_status' => $agency->call_status,
+                'developers' => $agency->developers,
+                'languages' =>
+                    cache()->remember('languages', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('languages')->get();
+                    }),
             ]
         );
     }
@@ -249,21 +249,21 @@ class LeadsController extends Controller
                 "nationality_id" => "required|integer|exists:countries,id",
 
 
-                "phone1"      => "required|regex:/^([0-9\s\-\+\(\)]*)$/",
+                "phone1" => "required|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "phone1_code" => "required|exists:countries,phone_code",
 
-                "phone2"     =>  "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
+                "phone2" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "phone2_code" => "sometimes|nullable|exists:countries,phone_code",
-                "phone3"     =>  "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
+                "phone3" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "phone3_code" => "sometimes|nullable|exists:countries,phone_code",
-                "phone4"     =>  "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
+                "phone4" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "phone4_code" => "sometimes|nullable|exists:countries,phone_code",
-                "landline"   =>  "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
-                "fax"        =>  "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
-                "developer"  =>  ["sometimes", "nullable", Rule::exists('developers', 'id')->where(function ($q) use ($request) {
+                "landline" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
+                "fax" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
+                "developer" => ["sometimes", "nullable", Rule::exists('developers', 'id')->where(function ($q) use ($request) {
                     $q->where('agency_id', $request->agency_id);
                 })],
-                "city_id"    => "required|exists:cities,id",
+                "city_id" => "required|exists:cities,id",
                 "community" => "required|exists:communities,id",
                 "sub_community" => "sometimes|nullable|exists:sub_communities,id",
                 "building_name" => "sometimes|nullable|string",
@@ -663,7 +663,6 @@ class LeadsController extends Controller
                 "edit_priority_id_" . $id => "required|integer|exists:lead_priorities,id",
 
 
-
                 "edit_source_id_" . $id => ["required", Rule::exists('lead_sources', 'id')->where(function ($q) use ($lead) {
                     $q->where('agency_id', $lead->agency_id);
                 })],
@@ -705,7 +704,7 @@ class LeadsController extends Controller
                 "edit_landline_" . $id => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "edit_fax_" . $id => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
 
-                "edit_developer_" . $id  => ["sometimes", "nullable", Rule::exists('developers', 'id')->where(function ($q) use ($lead) {
+                "edit_developer_" . $id => ["sometimes", "nullable", Rule::exists('developers', 'id')->where(function ($q) use ($lead) {
                     $q->where('agency_id', $lead->agency_id);
                 })],
                 "edit_city_id_" . $id => "sometimes|nullable|exists:cities,id",
@@ -1066,9 +1065,9 @@ class LeadsController extends Controller
 
 
             //check if failed before
-            $failedLead = FaildLead::where('agency_id', $lead->agency_id)->where('reference',$lead->reference)->first();
-            if($failedLead){
-                if($lead->country&&$lead->community&&$lead->sub_community){
+            $failedLead = FaildLead::where('agency_id', $lead->agency_id)->where('reference', $lead->reference)->first();
+            if ($failedLead) {
+                if ($lead->country && $lead->community && $lead->sub_community) {
                     $failedLead->delete();
                 }
             }
@@ -2301,32 +2300,17 @@ class LeadsController extends Controller
 
         $business = auth()->user()->business_id;
         $agency = request('agency');
+        $filename = 'failed leads' . time() . '.xlsx';
+        $leads_filename = time(). $request->file->getClientOriginalName();
 
+        $request->file->move(public_path('leads_sheets'), $leads_filename);
 
-        Excel::queueImport(new LeadsImport(
-            $request->source_id,
-            $request->qualification_id,
-            $request->type_id,
-            $request->communication_id,
-            $request->priority_id,
-            $business,
-            $agency
-        ), $request->file)->chain([
-            new SendFailedLeadsMail(auth()->user()->email,$agency)
-        ]);
+        StartLeadsInsertJobs::withChain([
+            new ImportLeadsSheet(auth()->user()->email,$request->source_id, $request->qualification_id, $request->type_id, $request->communication_id, $request->priority_id, $business, $agency, $leads_filename),
+            new ExportFailedLeadsFile(auth()->user()->email, $agency, $filename),
+            new SendFailedLeadsMailClient(auth()->user()->email, $filename)
+        ])->dispatch();
 
-
-        //                Excel::Import(new LeadsImport(
-        //                    $request->source_id,
-        //                    $request->qualification_id,
-        //                    $request->type_id,
-        //                    $request->communication_id,
-        //                    $request->priority_id,
-        //                    $business,
-        //                    $agency
-        //                ), $request->file);
-
-        //        dispatch(new SendFailedLeadsMail());
 
         return back()->with(flash(trans('sales.leads_imported'), 'success'));
     }

@@ -3,32 +3,26 @@
 namespace App\Imports;
 
 
-use App\Exports\FaildLeadsExport;
 use App\FaildLead;
-use App\Mail\EmailGeneral;
-use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Events\AfterImport;
 use Modules\Sales\Entities\Lead;
 use Modules\Sales\Entities\Developer;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Modules\Sales\Entities\LeadProperty;
 use Modules\SuperAdmin\Entities\Community;
 use Modules\SuperAdmin\Entities\Country;
-use Illuminate\Contracts\Queue\ShouldQueue;
+//use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Modules\SuperAdmin\Entities\SubCommunity;
 
-//class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow
-//class LeadsImport implements ToModel, WithValidation, WithHeadingRow
-class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
+//class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
+class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow
 {
 
     public $source_id, $qualification_id, $type_id, $communication_id, $business, $agency, $priority_id, $communities, $sub_community, $countries,$user_email;
 
-    public function __construct($source_id, $qualification_id, $type_id, $communication_id, $priority_id, $business, $agency)
+    public function __construct($email,$source_id, $qualification_id, $type_id, $communication_id, $priority_id, $business, $agency)
     {
 
         $this->source_id = $source_id;
@@ -38,7 +32,7 @@ class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHead
         $this->priority_id = $priority_id;
         $this->business = $business;
         $this->agency = $agency;
-        $this->user_email = auth()->user()->email;
+        $this->user_email = $email;
         $this->communities = new Community();
         $this->sub_community = new  SubCommunity();
         $this->countries = new Country();
