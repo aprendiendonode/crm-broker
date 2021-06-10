@@ -44,10 +44,10 @@
                 
  
 
-                  <a download href="{{ asset('sample.xlsx') }}" class="float-right btn btn-info waves-effect waves-light">
+                  {{-- <a download href="{{ asset('sample.xlsx') }}" class="float-right btn btn-info waves-effect waves-light">
                     <i class="fe-plus-square"></i>@lang('sales.download_sample')
                   </a>
-         
+          --}}
                 <hr>
 
 
