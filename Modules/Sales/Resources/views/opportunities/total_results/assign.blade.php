@@ -57,6 +57,7 @@
                     
                     
                     <i
+                    
                         onclick="event.preventDefault();show_current_note_assign_div({{ $current_assign->id }} , {{ $opportunity->id }} )"
                         data-plugin="tippy" 
                         data-tippy-placement="top-start" 
