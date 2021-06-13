@@ -215,220 +215,186 @@ if (!function_exists('agency_settings')) {
             return $agency_setting_data;
         }
     }
-
 }
-    if (!function_exists('words')) {
+if (!function_exists('words')) {
 
-        function words($value, $words = 100, $end = '...')
-        {
-            return \Illuminate\Support\Str::words($value, $words, $end);
-        }
-    }
-
-
-
-    if (!function_exists('staff')) {
-
-        function staff($agency)
-        {
-            $staff       = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type',  'staff')->where('agency_id', $agency)->get();
-            $moderators  = \App\Models\User::where('type', 'moderator')->get()->filter(function ($q) use ($agency) {
-                $can_access = explode(',', $q->can_access);
-                return in_array($agency, $can_access);
-            });
-
-
-            $merged = $staff->merge($moderators);
-
-
-            $owner  = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type',  'owner')->get();
-
-            $final = $merged->merge($owner);
-
-
-            return $final;
-        }
-    }
-
-
-
-
-    function array_replace_key($search, $replace, array $subject)
+    function words($value, $words = 100, $end = '...')
     {
-        $updatedArray = [];
+        return \Illuminate\Support\Str::words($value, $words, $end);
+    }
+}
 
-        foreach ($subject as $key => $value) {
-            if (!is_array($value) && $key == $search) {
-                $updatedArray = array_merge($updatedArray, [$replace => $value]);
 
+
+if (!function_exists('staff')) {
+
+    function staff($agency)
+    {
+        $staff       = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type',  'staff')->where('agency_id', $agency)->get();
+        $moderators  = \App\Models\User::where('type', 'moderator')->get()->filter(function ($q) use ($agency) {
+            $can_access = explode(',', $q->can_access);
+            return in_array($agency, $can_access);
+        });
+
+
+        $merged = $staff->merge($moderators);
+
+
+        $owner  = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type',  'owner')->get();
+
+        $final = $merged->merge($owner);
+
+
+        return $final;
+    }
+}
+
+
+
+
+function array_replace_key($search, $replace, array $subject)
+{
+    $updatedArray = [];
+
+    foreach ($subject as $key => $value) {
+        if (!is_array($value) && $key == $search) {
+            $updatedArray = array_merge($updatedArray, [$replace => $value]);
+
+            continue;
+        }
+
+        $updatedArray = array_merge($updatedArray, [$key => $value]);
+    }
+
+    return $updatedArray;
+}
+
+if (!function_exists('deleteDirectory')) {
+
+    function deleteDirectory($dir)
+    {
+        if (!file_exists($dir)) {
+            return true;
+        }
+
+        if (!is_dir($dir)) {
+            return unlink($dir);
+        }
+        $loop_dir = scandir($dir);
+        foreach ($loop_dir  as $item) {
+            if ($item == '.' || $item == '..') {
                 continue;
             }
 
-            $updatedArray = array_merge($updatedArray, [$key => $value]);
+            if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
         }
 
-        return $updatedArray;
+        return rmdir($dir);
     }
+}
 
-    if (!function_exists('deleteDirectory')) {
+if (!function_exists('setActivity')) {
 
-        function deleteDirectory($dir)
-        {
-            if (!file_exists($dir)) {
-                return true;
-            }
+    function setActivity($group, $group_id, $agency_id, $business_id, $log_en, $log_ar)
+    {
+        $activityData = [
+            'add_by'            =>  auth()->user()->id,
+            'group'             =>  $group,
+            'group_id'          =>  $group_id,
+            'agency_id'         =>  $agency_id,
+            'business_id'       =>  $business_id,
+            'log_en'            =>  $log_en,
+            'log_ar'            =>  $log_ar,
+        ];
 
-            if (!is_dir($dir)) {
-                return unlink($dir);
-            }
-            $loop_dir = scandir($dir);
-            foreach ($loop_dir  as $item) {
-                if ($item == '.' || $item == '..') {
-                    continue;
-                }
-
-                if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
-                    return false;
-                }
-            }
-
-            return rmdir($dir);
-        }
+        ActivityLog::create($activityData);
     }
-
-    if (!function_exists('setActivity')) {
-
-        function setActivity($group,$group_id,$agency_id,$business_id,$log_en,$log_ar)
-        {
-            $activityData = [
-                'add_by'            =>  auth()->user()->id,
-                'group'             =>  $group,
-                'group_id'          =>  $group_id,
-                'agency_id'         =>  $agency_id,
-                'business_id'       =>  $business_id,
-                'log_en'            =>  $log_en,
-                'log_ar'            =>  $log_ar,
-            ];
-
-            ActivityLog::create($activityData);
-        }
-    }
+}
 
 
-    if (!function_exists('tasks_with_custom_reminder')) {
+if (!function_exists('tasks_with_custom_reminder')) {
 
-        function tasks_with_custom_reminder($agency_id)
-        {
+    function tasks_with_custom_reminder($agency_id)
+    {
 
-            $tasks = Task::with('staff','agency')->where('agency_id', $agency_id)->get();
-            $tasks_reminder_byDate = [];
+        $tasks = Task::with('staff', 'agency')->where('agency_id', $agency_id)->get();
+        $tasks_reminder_byDate = [];
 
-            foreach ($tasks as $task) {
-                if ($task->custom_reminder == 'on') {
-                    if ($task->period_reminder == 'before') {
-                        if ($task->type_reminder == 'days') {
+        foreach ($tasks as $task) {
+            if ($task->custom_reminder == 'on') {
+                if ($task->period_reminder == 'before') {
+                    if ($task->type_reminder == 'days') {
 
-                            $date = strtotime('-' . $task->type_reminder_number . ' day', strtotime($task->deadline));
-                            $date_remind = date('Y-m-d', $date);
-                            if (date('Y-m-d') == $date_remind) {
+                        $date = strtotime('-' . $task->type_reminder_number . ' day', strtotime($task->deadline));
+                        $date_remind = date('Y-m-d', $date);
+                        if (date('Y-m-d') == $date_remind) {
 
-                                $tasks_reminder_byDate[$date_remind][$task->time][] = $task;
-                            }
-
-                        } else {
-                            //hours
-                            $time = strtotime('-' . $task->type_reminder_number . ' hour', strtotime($task->time));
-                            $time_remind = date('h:i:s', $time);
-                            if (date('Y-m-d') == $task->deadline) {
-
-                             $tasks_reminder_byDate[$task->deadline][$time_remind][] = $task;
-                            }
+                            $tasks_reminder_byDate[$date_remind][$task->time][] = $task;
                         }
-
                     } else {
-                        //after
-                        if ($task->type_reminder == 'days') {
+                        //hours
+                        $time = strtotime('-' . $task->type_reminder_number . ' hour', strtotime($task->time));
+                        $time_remind = date('h:i:s', $time);
+                        if (date('Y-m-d') == $task->deadline) {
 
-                            $date = strtotime('+' . $task->type_reminder_number . ' day', strtotime($task->deadline));
-                            $date_remind = date('Y-m-d', $date);
-                            if (date('Y-m-d') == $date_remind){
-
-                                $tasks_reminder_byDate[$date_remind][$task->time][] = $task;
-                            }
-
-                        } else {
-                            //hours
-                            $time = strtotime('+' . $task->type_reminder_number . ' hour', strtotime($task->time));
-                            $time_remind = date('h:i:s', $time);
-                            if (date('Y-m-d') == $task->deadline){
-
-                                $tasks_reminder_byDate[$task->deadline][$time_remind][] = $task;
-                            }
+                            $tasks_reminder_byDate[$task->deadline][$time_remind][] = $task;
                         }
+                    }
+                } else {
+                    //after
+                    if ($task->type_reminder == 'days') {
 
+                        $date = strtotime('+' . $task->type_reminder_number . ' day', strtotime($task->deadline));
+                        $date_remind = date('Y-m-d', $date);
+                        if (date('Y-m-d') == $date_remind) {
+
+                            $tasks_reminder_byDate[$date_remind][$task->time][] = $task;
+                        }
+                    } else {
+                        //hours
+                        $time = strtotime('+' . $task->type_reminder_number . ' hour', strtotime($task->time));
+                        $time_remind = date('h:i:s', $time);
+                        if (date('Y-m-d') == $task->deadline) {
+
+                            $tasks_reminder_byDate[$task->deadline][$time_remind][] = $task;
+                        }
                     }
                 }
             }
-
-            return $tasks_reminder_byDate;
         }
+
+        return $tasks_reminder_byDate;
     }
+}
 
-    if (!function_exists('tasks_reminder')) {
-        function tasks_reminder($agency_id)
-        {
-            $email_notify = EmailNotify::where('agency_id', $agency_id)->first();
+if (!function_exists('tasks_reminder')) {
+    function tasks_reminder($agency_id)
+    {
+        $email_notify = EmailNotify::where('agency_id', $agency_id)->first();
 
-            $status_complete = TaskStatus::where('agency_id', $agency_id)->where('type_complete', 'on')->pluck('id');
+        $status_complete = TaskStatus::where('agency_id', $agency_id)->where('type_complete', 'on')->pluck('id');
 
-            $tasks = Task::with('staff','agency')->where('agency_id', $agency_id)
-                ->where('custom_reminder', 'off')
-                ->whereNotIn('task_status_id', $status_complete)
-                ->get();
-
-
-            $tasks_reminder_byDate = [];
-            if ($email_notify){
-
-                $general_reminders = EmailNotifyReminder::where('email_notify_id', $email_notify->id)->where('category', 'general_reminder')->get();
-
-                foreach ($general_reminders as $general_reminder) {
-
-                    $type = $general_reminder->type;
-                    $day = $general_reminder->day;
-                    $time = $general_reminder->time;
+        $tasks = Task::with('staff', 'agency')->where('agency_id', $agency_id)
+            ->where('custom_reminder', 'off')
+            ->whereNotIn('task_status_id', $status_complete)
+            ->get();
 
 
-                    foreach ($tasks as $task) {
-                        if ($type == 'before') {
+        $tasks_reminder_byDate = [];
+        if ($email_notify) {
 
-                            $date = strtotime('-' . $day . ' day', strtotime($task->deadline));
-                            $date_remind = date('Y-m-d', $date);
-                            if (date('Y-m-d') == $date_remind) {
-                                $tasks_reminder_byDate[$date_remind][$time][] = $task;
-                            }
+            $general_reminders = EmailNotifyReminder::where('email_notify_id', $email_notify->id)->where('category', 'general_reminder')->get();
 
-                        } else {
-                            //after
-                            $date = strtotime('+' . $day . ' day', strtotime($task->deadline));
-                            $date_remind = date('Y-m-d', $date);
-                            if (date('Y-m-d') == $date_remind) {
-                                $tasks_reminder_byDate[$date_remind][$time][] = $task;
-                            }
+            foreach ($general_reminders as $general_reminder) {
 
-                        }
-                    }
+                $type = $general_reminder->type;
+                $day = $general_reminder->day;
+                $time = $general_reminder->time;
 
-                }
-                return $tasks_reminder_byDate;
-            }else{
 
                 foreach ($tasks as $task) {
-
-                    $type   = '';
-                    $day    = 0;
-                    $time   = $task->time;
-
                     if ($type == 'before') {
 
                         $date = strtotime('-' . $day . ' day', strtotime($task->deadline));
@@ -436,7 +402,6 @@ if (!function_exists('agency_settings')) {
                         if (date('Y-m-d') == $date_remind) {
                             $tasks_reminder_byDate[$date_remind][$time][] = $task;
                         }
-
                     } else {
                         //after
                         $date = strtotime('+' . $day . ' day', strtotime($task->deadline));
@@ -444,29 +409,54 @@ if (!function_exists('agency_settings')) {
                         if (date('Y-m-d') == $date_remind) {
                             $tasks_reminder_byDate[$date_remind][$time][] = $task;
                         }
-
                     }
                 }
             }
             return $tasks_reminder_byDate;
+        } else {
+
+            foreach ($tasks as $task) {
+
+                $type   = '';
+                $day    = 0;
+                $time   = $task->time;
+
+                if ($type == 'before') {
+
+                    $date = strtotime('-' . $day . ' day', strtotime($task->deadline));
+                    $date_remind = date('Y-m-d', $date);
+                    if (date('Y-m-d') == $date_remind) {
+                        $tasks_reminder_byDate[$date_remind][$time][] = $task;
+                    }
+                } else {
+                    //after
+                    $date = strtotime('+' . $day . ' day', strtotime($task->deadline));
+                    $date_remind = date('Y-m-d', $date);
+                    if (date('Y-m-d') == $date_remind) {
+                        $tasks_reminder_byDate[$date_remind][$time][] = $task;
+                    }
+                }
+            }
         }
+        return $tasks_reminder_byDate;
     }
+}
 
 
 if (!function_exists('get_template')) {
-    function get_template($agency_id,$slug)
+    function get_template($agency_id, $slug)
     {
-        $template = Template::where('agency_id',$agency_id)->where('slug',$slug)->where('system','yes')->where('type','email')->first();
+        $template = Template::where('agency_id', $agency_id)->where('slug', $slug)->where('system', 'yes')->where('type', 'email')->first();
 
-        if ($template){
+        if ($template) {
             return $template;
         }
 
-        $system_template = SystemTemplate::where('slug',$slug)->where('type','email')->first();
+        $system_template = SystemTemplate::where('slug', $slug)->where('type', 'email')->first();
 
-        if ($system_template){
-            $agency = Agency::where('id',$agency_id)->first();
-            if ($agency){
+        if ($system_template) {
+            $agency = Agency::where('id', $agency_id)->first();
+            if ($agency) {
                 $template = Template::create([
                     'title' => $system_template->title,
                     'type' => $system_template->type,
@@ -480,7 +470,6 @@ if (!function_exists('get_template')) {
             }
         }
         return $template;
-
     }
 }
 
@@ -493,7 +482,6 @@ if (!function_exists('getClientUpcomingBirthdays')) {
             $query->whereMonth('date_of_birth',  $date->month)
 
                 ->whereDay('date_of_birth', $date->day);
-
         })->get();
 
         return $clients;
@@ -504,7 +492,7 @@ if (!function_exists('getCallUpcoming')) {
     function getCallUpcoming()
     {
         $date = now();
-        $calls = Call::with('agency','madeBy')->Where('next_action_date',date('Y-m-d'))->get();
+        $calls = Call::with('agency', 'madeBy')->Where('next_action_date', date('Y-m-d'))->get();
 
         return $calls;
     }

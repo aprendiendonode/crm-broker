@@ -76,8 +76,8 @@ class LeadsController extends Controller
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
-            'task_status', 'task_types', 'leads', 'developers'
-        ])->withCount('leads')->where('id', $agency)->where('business_id', $business)->firstOrFail();
+            'task_status', 'task_types',  'developers'
+        ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
 
         // $currencies  = DB::table('currencies')->get();
@@ -158,7 +158,7 @@ class LeadsController extends Controller
                 'leads' => $leads->paginate($per_page),
                 'pagination' => $pagination,
                 'total_leads' => $agency->leads,
-                'leads_count' => $agency->leads_count,
+
 
                 'staffs' => staff($agency->id),
                 'countries' =>
