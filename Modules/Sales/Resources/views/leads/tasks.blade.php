@@ -110,18 +110,18 @@
 
 
             <div class="form-group custom-toggle">
-                <div class="d-flex justify-content-between">
+                {{-- <div class="d-flex justify-content-between">
                     <label class="mb-1 font-weight-medium text-muted" for="note_en">@lang('activity.tasks.note')</label>
 
                     <input  name="note_toggle" onchange="toggle_task_note({{ $lead->id }})" class="notes_task_{{ $lead->id }}" type="checkbox"
                            checked data-toggle="toggle" data-on="Ar" data-off="EN" data-onstyle="primary"
                            data-offstyle="success">
 
-                </div>
+                </div> --}}
 
                 <div class="task_note_en_{{ $lead->id }}">
 
-                    <textarea id="task_note_en_{{ $lead->id }}" name="task_note_en_{{ $lead->id }}" >{{old('task_note_en_'.$lead->id)}}</textarea>
+                    <textarea class="form-control" name="task_note_en_{{ $lead->id }}" >{{old('task_note_en_'.$lead->id)}}</textarea>
                 </div>
                 <div class="task_note_ar_{{ $lead->id }} d-none">
 
