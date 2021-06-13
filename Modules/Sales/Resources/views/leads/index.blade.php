@@ -5,36 +5,10 @@
 
 
 <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-
-{{-- <link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css"> --}}
-{{-- <link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css"> --}}
-{{-- <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css"> --}}
-{{-- <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css"> --}}
-{{-- <link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css"> --}}
-{{-- <link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" /> --}}
-
 <link href="{{asset('assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
-<link href="{{asset('assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
 
-
-
-
-<style>
-
-    .toggle.android { border-radius: 0px;}
-    .toggle.android .toggle-handle { border-radius: 0px; }
-  
-      .custom-toggle .btn {
-          padding:0 !important;
-      }
-      .custom-toggle .toggle.btn {
-          min-height: 26px;                                
-          min-width: 46px;
-      }
-</style>
 
 @endsection
 @section('content')
@@ -46,12 +20,12 @@
 
             <a href="{{ url('sales/leads/'.request('agency')) }}" class="list-link @if(!request('filter_type')) active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
-                <div>{{ trans('sales.all') }} ({{ $leads_count }})</div>
+                <div>{{ trans('sales.all') }} ({{ $total_leads->count() }})</div>
             </a>
             @foreach($lead_types as $type)
                 <a href="{{ url('sales/leads/'.request('agency').'?filter_type='. $type->id) }}" class="list-link @if(request('filter_type') == $type->id) active @endif">
                     <i class="fas fa-info-circle mr-1"></i>
-                    <div>{{ ucfirst($type->{'name_'.app()->getLocale()} ) }} ({{ $type->leads->count() }})</div>
+                    <div>{{ ucfirst($type->{'name_'.app()->getLocale()} ) }} ({{ $total_leads->where('type_id',$type->id)->count() }})</div>
                 </a>
       
             @endforeach
@@ -103,13 +77,7 @@
                 {{ $leads->links() }}
                 @endif
             </div>
-            {{--@can('can_generate_reports')--}}
-                {{--<a --}}
-                {{--data-plugin="tippy" --}}
-                {{--data-tippy-placement="bottom-start" --}}
-                {{--title="@lang('sales.export_help')" href="{{ url('agency/export/'.request('agency')) }}" class="mt-2">@lang('sales.generate_report')--}}
-                {{--</a>--}}
-            {{--@endcan--}}
+     
         </div>
         @can('manage_lead_setting') 
                   @include('sales::leads.settings_modals')
@@ -121,21 +89,11 @@
 
 
 <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
-{{-- <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script> --}}
-{{-- <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
-<!-- Footable js -->
-{{-- <script src="{{ asset('assets/libs/footable/footable.all.min.js') }}"></script> --}}
-{{-- <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
-{{-- tooltip --}}
+
 <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
-{{-- <script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script> --}}
-{{-- <script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script> --}}
+
 <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
-<!-- Init js-->
-{{-- <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script> --}}
-{{-- <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script> --}}
-{{-- <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script> --}}
-{{-- <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> --}}
+
 {{-- <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script> --}}
 <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
 
@@ -602,7 +560,92 @@ ClassicEditor
 
 
 </script>
+<script>
 
+        
+    
+    function  show_call_breif_div(call,id){
+    // hide_edit_div(id)
+    // hide_call_div(id)
+    // hide_task_div(id)
+    var  div = document.querySelector('.call_breif_'+call+'_'+id);
+        if(div.style.display === 'none'){
+
+
+
+
+        div.style.display = '';
+
+        setTimeout(function(){
+
+            div.style.opacity = 1;
+    
+        },10);
+    } else {
+        div.style.display = 'none';
+        setTimeout(function(){
+
+        div.style.opacity = 0;
+
+
+        },10);
+
+    }
+
+    }
+
+
+
+
+    function add_call_status(){
+            var name_en  =  $('.callstatus_name_en').val();
+            var name_ar  =  $('.callstatus_name_ar').val();
+            var agency   =  @json($agency);
+            var business =  @json($business);
+
+            var locale = @json(app()->getLocale());
+        
+            if(name_en == ''){
+                $('.callstatus-error-message').text('invalid data');
+                return false;
+            }
+            
+            $.ajax({
+                url:"{{ url('sales/call_status_from_index')  }}",
+                type:'POST',
+                data:{
+                    name_en : name_en,
+                    name_ar : name_ar,
+                    agency  : agency,
+                    business: business,
+                    _token  :'{{ csrf_token() }}'
+                },
+                success: function(data){
+                    $('.callstatus-error-message').text('');
+                    name = '';
+                    if(locale == 'en'){
+                        name = data.data.name_en
+                    } else {
+                        name = data.data.name_ar
+                    
+                    }
+
+                    html = '<option value='+data.data.id+' >'+name+'</option>'
+                    $('.select_callstatus_id').append(html)
+                    $('.callstatus_name_en').val('');
+                    $('.callstatus_name_ar').val('');
+                    $('#add_callstatus').modal('hide');
+
+                    toast(data.message, 'success')
+
+                },
+                error: function (error) {
+                    $('.callstatus-error-message').text(error.responseJSON.message);
+                }
+            })
+        }
+</script>
+    
 
 
 @endpush
