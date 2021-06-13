@@ -91,7 +91,7 @@
 
 
                     @can('edit_lead')
-                    <select onchange="show_source_modal({{ $lead->id }})" id="modify_lead_source_{{ $lead->id }}" class=" selectpicker mb-0 show-tick" name="lsm_listings_per_page"  data-style="btn-outline-secondary">
+                    <select onchange="show_source_modal({{ $lead->id }})" id="modify_lead_source_{{ $lead->id }}" class=" form-control mb-0 show-tick" name="lsm_listings_per_page"  data-style="btn-outline-secondary">
                         @forelse($lead_sources as $source)
                         <option @if($lead->source_id == $source->id) selected @endif  value="{{ $source->id}}">{{ $source->{'name_'.app()->getLocale()} }}</option>
                         @empty
@@ -114,7 +114,7 @@
                     
                     @can('edit_lead')
                     
-                    <select onchange="show_type_modal({{ $lead->id }})" id="modify_lead_type_{{ $lead->id }}" class=" selectpicker mb-0 show-tick" name="lsm_listings_per_page"  data-style="btn-outline-secondary">
+                    <select onchange="show_type_modal({{ $lead->id }})" id="modify_lead_type_{{ $lead->id }}" class=" form-control mb-0 show-tick" name="lsm_listings_per_page"  data-style="btn-outline-secondary">
                         @forelse($lead_types as $type)
                          <option @if($lead->type_id == $type->id) selected @endif  value="{{ $type->id}}">{{ $type->{'name_'.app()->getLocale()} }}</option>
                         @empty
@@ -135,7 +135,7 @@
 
                         
                                                   
-                    <select onchange="show_qualification_modal({{ $lead->id }})" id="modify_lead_qualification_{{ $lead->id }}" class=" selectpicker mb-0 show-tick" name="lsm_listings_per_page"  data-style="btn-outline-secondary">
+                    <select onchange="show_qualification_modal({{ $lead->id }})" id="modify_lead_qualification_{{ $lead->id }}" class=" form-control mb-0 show-tick" name="lsm_listings_per_page"  data-style="btn-outline-secondary">
                         @forelse($lead_qualifications as $qualification)
                          <option @if($lead->qualification_id == $qualification->id) selected @endif  value="{{ $qualification->id}}">{{ $qualification->{'name_'.app()->getLocale()} }}</option>
                         @empty

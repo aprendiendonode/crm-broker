@@ -77,7 +77,7 @@ class LeadsController extends Controller
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
             'task_status', 'task_types', 'leads', 'developers'
-        ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
+        ])->withCount('leads')->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
 
         // $currencies  = DB::table('currencies')->get();
@@ -100,6 +100,8 @@ class LeadsController extends Controller
                     ->orWhere('fax', request('filter_phone'));
             });
         }
+
+
 
         if (request('filter_reference') != null) {
             $leads->where('reference', request('filter_reference'));
@@ -156,6 +158,7 @@ class LeadsController extends Controller
                 'leads' => $leads->paginate($per_page),
                 'pagination' => $pagination,
                 'total_leads' => $agency->leads,
+                'leads_count' => $agency->leads_count,
 
                 'staffs' => staff($agency->id),
                 'countries' =>
@@ -191,6 +194,7 @@ class LeadsController extends Controller
                 cache()->remember('languages', 60 * 60 * 24, function () use ($agency) {
                     return DB::table('languages')->get();
                 }),
+
             ]
         );
     }

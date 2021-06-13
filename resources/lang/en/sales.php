@@ -498,5 +498,8 @@ return [
     'reference' => 'Reference',
     'failed_data' => 'Failed Data',
     'download_sample' => 'Download Sample',
+    'database' => 'Database',
+    'developers' => 'Developer',
+    'all' => 'All',
 
 ];

@@ -36,7 +36,7 @@
         
                 <div class="form-group custom-staff_{{ $lead->id }}">
                     <h4 class="header-title">@lang('sales.select_staff')</h4>
-                    @forelse(staff($agency) as $employee)
+                    @forelse($staffs as $employee)
 
                     
                         <div class="checkbox checkbox-primary mb-2">

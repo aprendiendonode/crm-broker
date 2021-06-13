@@ -154,7 +154,7 @@
   
     
         <h4 class="header-title">@lang('sales.who_responsible')</h4>
-            @forelse(staff($agency) as $employee)
+            @forelse($staffs as $employee)
 
             
                 <div class="checkbox checkbox-primary mb-2">
