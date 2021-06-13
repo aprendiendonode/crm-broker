@@ -43,6 +43,23 @@
                         </li>
                         @endif
 
+                        @if(owner())
+                        <li>
+                            <a href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.opportunities')</a>
+                        </li>
+                     
+                        @elseif(moderator())
+                        <li>
+                            <a href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.opportunities')</a>
+                        </li>
+                        @else
+                        <li>
+                            <a href="{{ url('sales/opportunities/'.auth()->user()->agency_id) }}">@lang('sales.opportunities')</a>
+                        </li>
+                        @endif
+
+
+
 
                     @if(owner())
                         <li>
@@ -60,20 +77,7 @@
                         @endif
 
                         
-                        @if(owner())
-                        <li>
-                            <a href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.manage_opportunities')</a>
-                        </li>
                      
-                        @elseif(moderator())
-                        <li>
-                            <a href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.manage_opportunities')</a>
-                        </li>
-                        @else
-                        <li>
-                            <a href="{{ url('sales/opportunities/'.auth()->user()->agency_id) }}">@lang('sales.manage_opportunities')</a>
-                        </li>
-                        @endif
                         @if(owner())
                         <li>
                             <a href="{{ url('sales/clients/'.request('agency')) }}">@lang('sales.manage_clients')</a>

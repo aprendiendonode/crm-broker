@@ -76,7 +76,7 @@ class LeadsController extends Controller
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
-            'task_status', 'task_types',  'developers'
+            'task_status', 'leads', 'task_types',  'developers'
         ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
 
@@ -2161,6 +2161,10 @@ class LeadsController extends Controller
                 "phone2" => $lead->phone2,
                 "phone3" => $lead->phone3,
                 "phone4" => $lead->phone4,
+                "phone1_code" => $lead->phone1_code,
+                "phone2_code" => $lead->phone2_code,
+                "phone3_code" => $lead->phone3_code,
+                "phone4_code" => $lead->phone4_code,
                 "landline" => $lead->landline,
                 // "zip"                           => $lead->zip,
                 "fax" => $lead->fax,

@@ -11,6 +11,7 @@ use Modules\Sales\Entities\CallStatus;
 use Modules\Sales\Entities\LeadSource;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Activity\Entities\TaskType;
+use Modules\Sales\Entities\Opportunity;
 use Modules\Sales\Entities\LeadPriority;
 use Modules\Sales\Entities\LeadProperty;
 use Modules\Activity\Entities\TaskStatus;
@@ -118,6 +119,10 @@ class Agency extends Model
     public function leads()
     {
         return $this->hasMany(Lead::class);
+    }
+    public function opportunities()
+    {
+        return $this->hasMany(Opportunity::class);
     }
     public function listingsAll()
     {

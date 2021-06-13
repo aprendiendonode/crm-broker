@@ -5,30 +5,17 @@
 <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 
 
-<link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css">
-<link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" />
+{{-- <link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css"> --}}
+{{-- <link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" /> --}}
 
-<link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css">
-<link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css">
+{{-- <link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css"> --}}
+{{-- <link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css"> --}}
 <link href="{{asset('assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
 
 
-<style>
-    
-    .toggle.android { border-radius: 0px;}
-    .toggle.android .toggle-handle { border-radius: 0px; }
-    
-    .custom-toggle .btn {
-        padding:0 !important;
-    }
-    .custom-toggle .toggle.btn {
-        min-height: 26px;                                
-        min-width: 46px;
-    }
-</style>
 
 @endsection
 @section('content')
@@ -40,28 +27,22 @@
         <h4>
             @lang('sales.manage_opportunities')
         </h4>
-        
-        
-        <a href="#" class="list-link active">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.opportunity')</div>
-        </a>
-        @if(owner())
-        <a href="{{ url('sales/leads/'.request('agency')) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.leads')</div>
-        </a>
-        @elseif(moderator())
-        <a href="{{ url('sales/leads/'.request('agency')) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.leads')</div>
-        </a>
-        @else
-        <a href="{{ url('sales/leads/'.auth()->user()->agency_id) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.leads')</div>
-        </a>
-        @endif
+ 
+        <div class="d-flex flex-wrap">
+
+            <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="list-link @if(!request('filter_type')) active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>{{ trans('sales.all') }} ({{ $total_opportunities->count() }})</div>
+            </a>
+            @foreach($lead_types as $type)
+                <a href="{{ url('sales/opportunities/'.request('agency').'?filter_type='. $type->id) }}" class="list-link @if(request('filter_type') == $type->id) active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>{{ ucfirst($type->{'name_'.app()->getLocale()} ) }} ({{ $total_opportunities->where('type_id',$type->id)->count() }})</div>
+                </a>
+      
+            @endforeach
+          
+        </div>
         
         @can('add_opportunity')
         {{-- <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
@@ -122,19 +103,19 @@
 
 <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
 
-<script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
 
 <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
 
 <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
-<script src="{{asset('assets/libs/footable/footable.all.min.js')}}"></script>
+{{-- <script src="{{asset('assets/libs/footable/footable.all.min.js')}}"></script> --}}
 {{-- <script src="{{asset('assets/js/pages/foo-tables.init.js')}}"></script> --}}
 
-<script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script>
-<script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script>
-<script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
+{{-- <script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script> --}}
+{{-- <script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script> --}}
+{{-- <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script> --}}
 
-<script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script> --}}
 
 
 <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
@@ -153,13 +134,7 @@
         });
 
 
-        $(".foo-filtering").footable();
-        $(".foo-assign").footable();
-        $(".foo-task").footable();
-        $(".foo-assign-history").footable();
-        $(".foo-call").footable();
-        $(".foo-question").footable();
-        $(".foo-result").footable();
+      
 
         if(sessionStorage.getItem('open-call-tab')){
             $('.call_'+sessionStorage.getItem('open-call-tab')).removeClass('d-none');
