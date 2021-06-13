@@ -94,3 +94,35 @@ Stack trace:
 #3 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(637): Illuminate\Foundation\Application->resolve('view', Array)
 #4 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(781): Illuminate\Container\Container->make('view', Array)
 #5 /home1/lawkovmy/public_html/broker/vendor/lara in /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 811
+[13-Jun-2021 13:55:59 Africa/Cairo] PHP Fatal error:  Uncaught ReflectionException: Class view does not exist in /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php:809
+Stack trace:
+#0 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(809): ReflectionClass->__construct('view')
+#1 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(691): Illuminate\Container\Container->build('view')
+#2 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(796): Illuminate\Container\Container->resolve('view', Array, true)
+#3 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(637): Illuminate\Foundation\Application->resolve('view', Array)
+#4 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(781): Illuminate\Container\Container->make('view', Array)
+#5 /home1/lawkovmy/public_html/broker/vendor/lara in /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 811
+[13-Jun-2021 13:55:59 Africa/Cairo] PHP Fatal error:  Uncaught ReflectionException: Class view does not exist in /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php:809
+Stack trace:
+#0 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(809): ReflectionClass->__construct('view')
+#1 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(691): Illuminate\Container\Container->build('view')
+#2 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(796): Illuminate\Container\Container->resolve('view', Array, true)
+#3 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(637): Illuminate\Foundation\Application->resolve('view', Array)
+#4 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(781): Illuminate\Container\Container->make('view', Array)
+#5 /home1/lawkovmy/public_html/broker/vendor/lara in /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 811
+[13-Jun-2021 13:56:01 Africa/Cairo] PHP Fatal error:  Uncaught ReflectionException: Class view does not exist in /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php:809
+Stack trace:
+#0 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(809): ReflectionClass->__construct('view')
+#1 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(691): Illuminate\Container\Container->build('view')
+#2 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(796): Illuminate\Container\Container->resolve('view', Array, true)
+#3 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(637): Illuminate\Foundation\Application->resolve('view', Array)
+#4 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(781): Illuminate\Container\Container->make('view', Array)
+#5 /home1/lawkovmy/public_html/broker/vendor/lara in /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 811
+[13-Jun-2021 13:56:01 Africa/Cairo] PHP Fatal error:  Uncaught ReflectionException: Class view does not exist in /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php:809
+Stack trace:
+#0 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(809): ReflectionClass->__construct('view')
+#1 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(691): Illuminate\Container\Container->build('view')
+#2 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(796): Illuminate\Container\Container->resolve('view', Array, true)
+#3 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php(637): Illuminate\Foundation\Application->resolve('view', Array)
+#4 /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(781): Illuminate\Container\Container->make('view', Array)
+#5 /home1/lawkovmy/public_html/broker/vendor/lara in /home1/lawkovmy/public_html/broker/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 811
