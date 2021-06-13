@@ -124,7 +124,7 @@
 {{-- <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script> --}}
 {{-- <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
 <!-- Footable js -->
-<script src="{{ asset('assets/libs/footable/footable.all.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/libs/footable/footable.all.min.js') }}"></script> --}}
 {{-- <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
 {{-- tooltip --}}
 <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
@@ -133,9 +133,9 @@
 <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
 <!-- Init js-->
 {{-- <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script> --}}
-<script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+{{-- <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script> --}}
+{{-- <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script> --}}
+{{-- <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> --}}
 {{-- <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script> --}}
 <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
 
@@ -569,6 +569,20 @@ leads.data.forEach(function(value,key){
     $("#latitude").val(lat);
     $("#longitude").val(Lng);
     }
+
+
+    
+    function editSplitLatLng(latLng,id){
+        var newString = latLng.substring(0, latLng.length-1);
+        var newString2 = newString.substring(1);
+        var trainindIdArray = newString2.split(',');
+        var lat = trainindIdArray[0];
+        var Lng  = trainindIdArray[1];
+        $("#latitude_"+id).val(lat);
+        $("#longitude_"+id).val(Lng);
+    }
+
+
 </script>
 
 

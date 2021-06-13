@@ -568,7 +568,7 @@
 
                 <div class="note">
 
-                    <textarea id="note" name="note" placeholder="@lang('sales.note')">{{old('note')}}</textarea>
+                    <textarea class="form-control" name="note" placeholder="@lang('sales.note')">{{old('note')}}</textarea>
                 </div>
 
 

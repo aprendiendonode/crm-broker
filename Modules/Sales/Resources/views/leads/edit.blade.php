@@ -560,7 +560,7 @@
 
                 <div class="note">
 
-                    <textarea id="edit_note_{{$lead->id}}" name="edit_note_{{ $lead->id }}"
+                    <textarea class="form-control" name="edit_note_{{ $lead->id }}"
                               placeholder="@lang('sales.note')">{{old("edit_note_{$lead->id}",$lead->note)}}</textarea>
                 </div>
 
