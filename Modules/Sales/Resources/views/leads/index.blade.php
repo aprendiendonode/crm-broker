@@ -7,12 +7,12 @@
 <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
-<link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css">
-<link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css">
-<link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css">
+{{-- <link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css"> --}}
+{{-- <link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css"> --}}
 {{-- <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css"> --}}
-<link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css">
-<link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" />
+{{-- <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css"> --}}
+{{-- <link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css"> --}}
+{{-- <link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" /> --}}
 
 <link href="{{asset('assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
@@ -41,46 +41,37 @@
 <div class="content p-3">
 
 
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <div class="d-flex flex-wrap">
 
-            <div class="d-flex justify-content-between mb-3">
-               <h4>
-                   @lang('sales.manage_leads')
-               </h4>
-
-                <a href="#" class="list-link active">
-                    <i class="fas fa-save mr-1"></i>
-                    <div>@lang('sales.leads')</div>
+            <a href="{{ url('sales/leads/'.request('agency')) }}" class="list-link @if(!request('filter_type')) active @endif">
+                <i class="fas fa-info-circle mr-1"></i>
+                <div>{{ trans('sales.all') }} ({{ $leads_count }})</div>
+            </a>
+            @foreach($lead_types as $type)
+                <a href="{{ url('sales/leads/'.request('agency').'?filter_type='. $type->id) }}" class="list-link @if(request('filter_type') == $type->id) active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>{{ ucfirst($type->{'name_'.app()->getLocale()} ) }} ({{ $type->leads->count() }})</div>
                 </a>
-                @if(owner())
-                    <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="list-link">
-                        <i class="fas fa-save mr-1"></i>
-                        <div>@lang('sales.opportunity')</div>
-                    </a>
-                @elseif(moderator())
-                    <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="list-link">
-                        <i class="fas fa-save mr-1"></i>
-                        <div>@lang('sales.opportunity')</div>
-                    </a>
-                @else
-                    <a href="{{ url('sales/opportunities/'.auth()->user()->agency_id) }}" class="list-link">
-                        <i class="fas fa-save mr-1"></i>
-                        <div>@lang('sales.opportunity')</div>
-                    </a>
-                @endif
+      
+            @endforeach
+          
+        </div>
+        @can('add_lead')
+        {{-- <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
+            <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('sales.add_leads')
+        </button> --}}
 
+        {{-- check div --}}
+        <button onclick="show_check_div()" type="button" class="btn btn-info waves-effect waves-light">
+            <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('sales.add_leads')
+        </button>
+    @endcan 
+    </div>    
 
-               @can('add_lead')
-                    {{-- <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
-                        <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('sales.add_leads')
-                    </button> --}}
+            
 
-                    {{-- check div --}}
-                    <button onclick="show_check_div()" type="button" class="btn btn-info waves-effect waves-light">
-                        <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('sales.add_leads')
-                    </button>
-                @endcan 
-            </div>
-
+    
             @can('add_lead')
 
                 <div class="mb-2 check_lead "  style="display: none;opacity:0;transition:0.7s">
@@ -130,22 +121,22 @@
 
 
 <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script>
-<script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script> --}}
+{{-- <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
 <!-- Footable js -->
 <script src="{{ asset('assets/libs/footable/footable.all.min.js') }}"></script>
-<script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
 {{-- tooltip --}}
 <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
-<script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script>
-<script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script>
+{{-- <script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script> --}}
+{{-- <script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script> --}}
 <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
 <!-- Init js-->
-<script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
+{{-- <script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script> --}}
 <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-<script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script> --}}
 <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
 
 
@@ -161,44 +152,9 @@
         });
 
 
-        if($('#nationality_id').val() != '') {
-
-            toggleCountryData();
-        }
-
-        var leads = @json($leads);
-        for (var i = 0; i < leads.data.length; i++) {
-
-            ClassicEditor
-                .create(document.querySelector('#edit_note_' + leads.data[i].id))
-                .then()
-                .catch(error => {
-
-                });
-
-
-
-                ClassicEditor
-                .create(document.querySelector('#task_note_en_' + leads.data[i].id))
-                .then()
-                .catch(error => {
-
-                });
-                ClassicEditor
-                .create(document.querySelector('#task_note_ar_' + leads.data[i].id ),{
-                    language: 'ar'
-                })
-                .then()
-                .catch(error => {
-
-                });
-        }
+   
     })
 </script>
-
-<script>
-
-    </script>
 
 <script>
 

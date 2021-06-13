@@ -9,4 +9,9 @@ class LeadType extends Model
 {
 
     protected $guarded = [];
+
+    public function leads()
+    {
+        return $this->hasMany(Lead::class, 'type_id');
+    }
 }

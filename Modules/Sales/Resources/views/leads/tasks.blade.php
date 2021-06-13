@@ -25,7 +25,7 @@
        
             <div class="form-group">
                 <label class="font-weight-medium text-muted" for="">@lang('activity.tasks.task_type')</label>
-                <select class="selectpicker mb-0 show-tick"  data-toggle="select2" name="task_type_{{ $lead->id }}" id="task_type_{{ $lead->id }}" data-style="btn-outline-secondary" onchange="show_reference_div()"  required>
+                <select class="select2 mb-0 show-tick"  data-toggle="select2" name="task_type_{{ $lead->id }}" id="task_type_{{ $lead->id }}" data-style="btn-outline-secondary" onchange="show_reference_div()"  required>
 
                     <option value="" > @lang('global.pleaseSelect')</option>
                         {{-- <option value="general_reminder"    {{ old('task_type' ) == 'general_reminder'   ? 'selected' : ''}} > General Reminder</option>
@@ -54,7 +54,7 @@
 
             <div class="form-group">
                 <label class="font-weight-medium text-muted" for="  ">@lang('activity.tasks.status')</label>
-                <select class="selectpicker mb-0 show-tick"  data-toggle="select2" name="task_status_{{ $lead->id }}" data-style="btn-outline-secondary" required>
+                <select class="select2 mb-0 show-tick"  data-toggle="select2" name="task_status_{{ $lead->id }}" data-style="btn-outline-secondary" required>
 
                     <option value=""  > @lang('global.pleaseSelect')</option>
                     {{-- <optgroup label="Open">
@@ -113,7 +113,7 @@
                 <div class="d-flex justify-content-between">
                     <label class="mb-1 font-weight-medium text-muted" for="note_en">@lang('activity.tasks.note')</label>
 
-                    <input onchange="toggle_task_note({{ $lead->id }})" class="notes_task_{{ $lead->id }}" type="checkbox"
+                    <input  name="note_toggle" onchange="toggle_task_note({{ $lead->id }})" class="notes_task_{{ $lead->id }}" type="checkbox"
                            checked data-toggle="toggle" data-on="Ar" data-off="EN" data-onstyle="primary"
                            data-offstyle="success">
 
@@ -152,7 +152,7 @@
     
             <div class="form-group custom-task-staff_{{ $lead->id }}">
                 <h4 class="header-title">@lang('sales.select_staff')</h4>
-                @forelse(staff($agency) as $employee)
+                @forelse($staffs as $employee)
                 
                         <div class="checkbox checkbox-primary mb-2">
                             <input   id="task_{{ $lead->id}}_{{ $employee->id }}" value="{{ $employee->id }}" type="checkbox" name="task_staff_{{ $lead->id }}[]">
@@ -214,7 +214,7 @@
             <label class="mb-1 font-weight-medium text-muted">@lang('activity.tasks.custom_reminder')</label>
             <div class="d-flex">
                 <div class="" style="flex:2">
-                    <select class="selectpicker mb-0 show-tick" data-style="btn-outline-secondary"  name="task_period_reminder_{{ $lead->id }}" id="task_period_reminder_{{ $lead->id }}">
+                    <select class="select2 mb-0 show-tick" data-style="btn-outline-secondary"  name="task_period_reminder_{{ $lead->id }}" id="task_period_reminder_{{ $lead->id }}">
 
                             <option value="after" {{ old('task_period_reminder_'.$lead->id) == 'after' ? 'selected' : '' }}>@lang('activity.after')</option>
                             <option value="before" {{ old('task_period_reminder_'.$lead->id) == 'before' ? 'selected' : '' }}>@lang('activity.before')</option>
@@ -222,7 +222,7 @@
                     </select>
                 </div>
                 <div class="px-2" style="flex:2">
-                    <select class="selectpicker mb-0 show-tick"  data-style="btn-outline-secondary" name="task_type_reminder_{{ $lead->id }}" id="task_type_reminder_{{ $lead->id }}">
+                    <select class="select2 mb-0 show-tick"  data-style="btn-outline-secondary" name="task_type_reminder_{{ $lead->id }}" id="task_type_reminder_{{ $lead->id }}">
 
                         <option value="hours" {{ old('task_type_reminder_'.$lead->id) == 'hours' ? 'selected' : '' }}>@lang('activity.hour')</option>
                         <option value="days" {{ old('task_type_reminder_'.$lead->id)  == 'days'  ? 'selected' : '' }}>@lang('activity.day')</option>

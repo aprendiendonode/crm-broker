@@ -9,7 +9,7 @@
                     <label class="mb-1 font-weight-medium text-muted">@lang('agency.name')</label>
                     <input type="text" class="form-control" maxlength="25" name="filter_name"
                            value="{{ request()->has('filter_name') ? request()->get('filter_name') : '' }}"
-                           id="defaultconfig">
+                           >
                 </div>
             </div>
 
@@ -19,7 +19,8 @@
                     <label class="mb-1 font-weight-medium text-muted">@lang('agency.email')</label>
                     <input type="text" class="form-control" maxlength="25" name="filter_email"
                            value="{{ request()->has('filter_email') ? request()->get('filter_email') : '' }}"
-                           id="defaultconfig">
+                           
+                           >
                 </div>
             </div>
 
@@ -28,19 +29,9 @@
                     <label class="mb-1 font-weight-medium text-muted">@lang('agency.phone')</label>
                     <input type="number" class="form-control" maxlength="25" name="filter_phone"
                            value="{{ request()->has('filter_phone') ? request()->get('filter_phone') : '' }}"
-                           id="defaultconfig">
+                           >
                 </div>
             </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="form-group">
-                    <label class="mb-1 font-weight-medium text-muted">@lang('agency.reference')</label>
-                    <input type="text" class="form-control" maxlength="25" name="filter_reference"
-                           value="{{ request()->has('filter_reference') ? request()->get('filter_reference') : '' }}"
-                           id="defaultconfig">
-                </div>
-            </div>
-
 
 
             <div class="col-md-6 col-lg-4">
@@ -120,12 +111,12 @@
                 <p class="text-muted pr-2 font-weight-medium" style="flex:2">@lang('sales.property_purpose')</p>
                 <div style="flex:4">
                     <div class="radio radio-info form-check-inline">
-                        <input type="radio" id="inlineRadio1" value="rent" name="filter_property_purpose" @if( request()->has('filter_property_purpose')  && request('filter_property_purpose')   == 'rent') checked @endif>
-                        <label for="inlineRadio1"> @lang('sales.rent') </label>
+                        <input type="radio" id="inlineRadio12" value="rent" name="filter_property_purpose" @if( request()->has('filter_property_purpose')  && request('filter_property_purpose')   == 'rent') checked @endif>
+                        <label for="inlineRadio12"> @lang('sales.rent') </label>
                     </div>
                     <div class="radio radio-info form-check-inline">
-                        <input type="radio" id="inlineRadio2" value="buy" name="filter_property_purpose" @if( request()->has('filter_property_purpose')  && request('filter_property_purpose')   == 'buy') checked @endif>
-                        <label for="inlineRadio2"> @lang('sales.buy') </label>
+                        <input type="radio" id="inlineRadio22" value="buy" name="filter_property_purpose" @if( request()->has('filter_property_purpose')  && request('filter_property_purpose')   == 'buy') checked @endif>
+                        <label for="inlineRadio22"> @lang('sales.buy') </label>
                     </div>
                 </div>
             </div>
