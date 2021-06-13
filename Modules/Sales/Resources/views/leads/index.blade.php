@@ -63,9 +63,9 @@
         </button> --}}
 
         {{-- check div --}}
-        <button onclick="show_check_div()" type="button" class="btn btn-info waves-effect waves-light">
+        {{-- <button onclick="show_check_div()" type="button" class="btn btn-info waves-effect waves-light">
             <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('sales.add_leads')
-        </button>
+        </button> --}}
     @endcan 
     </div>    
 
