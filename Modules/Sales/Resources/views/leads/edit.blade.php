@@ -183,7 +183,7 @@
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
                 </div>
                 <div class="">
-                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/"
+                    <input  
                             type="text" class="form-control"
                            name="edit_phone1_{{ $lead->id }}" value="{{ old("edit_phone1_{$lead->id}",$lead->phone1) }}"
                            placeholder="@lang('sales.phone1')" required>
@@ -215,7 +215,7 @@
                 </div>
 
                 <div class="">
-                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                    <input   
                             type="text" class="form-control"
                            name="edit_phone2_{{ $lead->id }}" value="{{ old("edit_phone2_{$lead->id}",$lead->phone2) }}"
                            placeholder="@lang('sales.phone2')">
@@ -249,7 +249,7 @@
 
 
                 <div class="">
-                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                    <input   
                             type="text" class="form-control"
                            name="edit_phone3_{{ $lead->id }}" value="{{ old("edit_phone3_{$lead->id}",$lead->phone3) }}"
                            placeholder="@lang('sales.phone3')">
@@ -282,7 +282,7 @@
                 </div>
 
                 <div class="">
-                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                    <input   
                             type="text" class="form-control"
                            name="edit_phone4_{{ $lead->id }}" value="{{ old("edit_phone4_{$lead->id}",$lead->phone4) }}"
                            placeholder="@lang('sales.phone4')">
@@ -296,7 +296,7 @@
                     <label class="text-muted font-weight-medium" for="">@lang('sales.landline')</label>
                 </div>
                 <div class="">
-                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                    <input   
                             type="text" class="form-control"
                            name="edit_landline_{{ $lead->id }}"
                            value="{{ old("edit_landline_{$lead->id}",$lead->landline) }}"
@@ -311,7 +311,7 @@
                     </div>
 
                     <div class="" >
-                        <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.zip')" type="text" class="form-control" name="edit_zip_{{ $lead->id }}"   value="{{ old("zip{$lead->id}") }}"} placeholder="" >lang('sales.zip')"  >
+                        <input data-plugin="tippy"  data-tippy-placement="top-start" title="@lang('sales.zip')" type="text" class="form-control" name="edit_zip_{{ $lead->id }}"   value="{{ old("zip{$lead->id}") }}"} placeholder="" >lang('sales.zip')"  >
                     </div>
 
             </div> --}}
@@ -322,7 +322,7 @@
                 </div>
 
                 <div class="">
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start"
+                    <input data-plugin="tippy"  data-tippy-placement="top-start"
                            title="@lang('sales.fax')" type="text" class="form-control" name="edit_fax_{{ $lead->id }}"
                            value="{{ old("edit_fax_{$lead->id}",$lead->fax) }}" placeholder="{{trans('sales.fax')}}">
                 </div>
@@ -546,7 +546,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.website')</label>
                 </div>
-                <input type="text" pattern="/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/"
+                <input type="text" 
                        class="form-control" name="edit_website_{{ $lead->id }}"
                        value="{{ old("edit_website_{$lead->id}",$lead->website) }}"
                        placeholder="@lang('sales.website')">
@@ -885,7 +885,7 @@
                     <div>
                         <label class="text-muted font-weight-medium" for="">@lang('sales.bedrooms')</label>
                     </div>
-                    <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"
+                    <input type="text" class="form-control" 
                            name="edit_bedrooms_{{ $lead->id }}"
                            value="{{ old("edit_bedrooms_{$lead->id}",$lead->bedrooms) }}"
                            placeholder="@lang('sales.bedrooms')">
@@ -896,7 +896,7 @@
                     <div>
                         <label class="text-muted font-weight-medium" for="">@lang('sales.bathrooms')</label>
                     </div>
-                    <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"
+                    <input type="text" class="form-control" 
                            name="edit_bathrooms_{{ $lead->id }}"
                            value="{{ old("edit_bathrooms_{$lead->id}",$lead->bathrooms) }}"
                            placeholder="@lang('sales.bathrooms')">
@@ -905,7 +905,7 @@
                     <div>
                         <label class="text-muted font-weight-medium" for="">@lang('sales.parkings')</label>
                     </div>
-                    <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"
+                    <input type="text" class="form-control" 
                            name="edit_parkings_{{ $lead->id }}" id="parkings_{{ $lead->id }}"
                            value="{{ old("edit_parkings_{$lead->id}",$lead->parkings) }}"
                            placeholder="@lang('sales.parkings')">

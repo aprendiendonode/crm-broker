@@ -184,7 +184,7 @@
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
                 </div>
                 <div class="">
-                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/"
+                    <input  
                             type="text" class="form-control" name="phone1"
                            value="{{ old('phone1') }}" placeholder="@lang('sales.phone1')" required>
                 </div>
@@ -214,7 +214,7 @@
                 </div>
 
                 <div class="">
-                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                    <input   
                            type="text" class="form-control" name="phone2"
                            value="{{ old('phone2') }}" placeholder="@lang('sales.phone2')">
                 </div>
@@ -248,7 +248,7 @@
 
 
                 <div class="">
-                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                    <input   
                             type="text" class="form-control" name="phone3"
                            value="{{ old('phone3') }}" placeholder="@lang('sales.phone3')">
                 </div>
@@ -279,7 +279,7 @@
                 </div>
 
                 <div class="">
-                    <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                    <input   
                            type="text" class="form-control" name="phone4"
                            value="{{ old('phone4') }}" placeholder="@lang('sales.phone4')">
                 </div>
@@ -293,7 +293,7 @@
                     <label class="text-muted font-weight-medium" for="">@lang('sales.landline')</label>
                 </div>
                 <div class="">
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start"
+                    <input data-plugin="tippy"  data-tippy-placement="top-start"
                            title="@lang('sales.landline')" type="text" class="form-control" name="landline"
                            value="{{ old('landline') }}" placeholder="@lang('sales.landline')">
                 </div>
@@ -308,7 +308,7 @@
              <div class="form-group">
                
                     <div class="" >
-                        <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.zip')" type="text" class="form-control" name="zip"   value="{{ old('zip') }}"  placeholder="@lang('sales.zip')"  >
+                        <input data-plugin="tippy"  data-tippy-placement="top-start" title="@lang('sales.zip')" type="text" class="form-control" name="zip"   value="{{ old('zip') }}"  placeholder="@lang('sales.zip')"  >
                     </div>
                
             </div> --}}
@@ -320,7 +320,7 @@
                 </div>
 
                 <div class="">
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start"
+                    <input data-plugin="tippy"  data-tippy-placement="top-start"
                            title="@lang('sales.fax')" type="text" class="form-control" name="fax"
                            value="{{ old('fax') }}" placeholder="@lang('sales.fax')">
                 </div>
@@ -538,7 +538,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.website')</label>
                 </div>
-                <input type="text" pattern="/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/"
+                <input type="text" 
                        class="form-control" name="website" value="{{ old('website') }}" id="website"
                        placeholder="@lang('sales.website')">
             </div>
@@ -588,7 +588,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.passport')</label>
                 </div>
-                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/" name="passport"
+                <input type="text" class="form-control"  name="passport"
                        value="{{ old('passport') }}" placeholder="@lang('sales.passport')">
             </div>
 
@@ -860,7 +860,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.property_size_sqft')</label>
                 </div>
-                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/" name="size_sqft"
+                <input type="text" class="form-control"  name="size_sqft"
                        value="{{ old('size_sqft') }}" placeholder="@lang('sales.property_size_sqft')">
             </div>
 
@@ -869,7 +869,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.property_size_sqm')</label>
                 </div>
-                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/" name="size_sqm"
+                <input type="text" class="form-control"  name="size_sqm"
                        value="{{ old('size_sqm') }}" placeholder="@lang('sales.property_size_sqm')">
             </div>
             <div class="d-flex justify-content-between">
@@ -878,7 +878,7 @@
                     <div>
                         <label class="text-muted font-weight-medium" for="">@lang('sales.bedrooms')</label>
                     </div>
-                    <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/" name="bedrooms"
+                    <input type="text" class="form-control"  name="bedrooms"
                            value="{{ old('bedrooms') }}" placeholder="@lang('sales.bedrooms')">
                 </div>
 
@@ -887,7 +887,7 @@
                     <div>
                         <label class="text-muted font-weight-medium" for="">@lang('sales.bathrooms')</label>
                     </div>
-                    <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/" name="bathrooms"
+                    <input type="text" class="form-control"  name="bathrooms"
                            value="{{ old('bathrooms') }}" placeholder="@lang('sales.bathrooms')">
                 </div>
 
@@ -896,7 +896,7 @@
                     <div>
                         <label class="text-muted font-weight-medium" for="">@lang('sales.parkings')</label>
                     </div>
-                    <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/" name="parkings"
+                    <input type="text" class="form-control"  name="parkings"
                            id="parkings" value="{{ old('parkings') }}" placeholder="@lang('sales.parkings')">
                 </div>
 

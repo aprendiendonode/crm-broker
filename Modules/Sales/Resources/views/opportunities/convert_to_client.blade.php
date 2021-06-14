@@ -69,7 +69,7 @@
             <div class="form-group">
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.national_id')</lable>
     
-                <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"  name="client_national_id_{{ $opportunity->id }}"  value="{{ old("client_national_id_{$opportunity->id}",$opportunity->national_id) }}" placeholder="@lang('sales.national_id')">
+                <input type="text" class="form-control"   name="client_national_id_{{ $opportunity->id }}"  value="{{ old("client_national_id_{$opportunity->id}",$opportunity->national_id) }}" placeholder="@lang('sales.national_id')">
             </div>
             <div class="form-group">
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.passport')</lable>
@@ -131,7 +131,7 @@
                 <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
             </div>
             <div class="">
-                <input  pattern="/^([0-9\s\-\+\(\)]*)$/"
+                <input  
                         type="text" class="form-control"
                        name="client_phone1_{{ $opportunity->id }}" value="{{ old("client_phone1_{$opportunity->id}",$opportunity->phone1) }}"
                        placeholder="@lang('sales.phone1')" required>
@@ -238,7 +238,7 @@
             <div class="form-group">      
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.landlord_national_id')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
     
-                <input data-plugin="tippy" required  data-tippy-placement="top-start" pattern="/^([0-9\s\-\+\(\)]*)$/" title="@lang('sales.landlord_national_id')" type="text" class="form-control" name="client_landlord_national_id_{{ $opportunity->id }}"   value="{{ old("client_landlord_national_id_{$opportunity->id}",) }}" placeholder="@lang('sales.landlord_national_id')" required>
+                <input data-plugin="tippy" required  data-tippy-placement="top-start"  title="@lang('sales.landlord_national_id')" type="text" class="form-control" name="client_landlord_national_id_{{ $opportunity->id }}"   value="{{ old("client_landlord_national_id_{$opportunity->id}",) }}" placeholder="@lang('sales.landlord_national_id')" required>
                 
             </div>
             <div class="form-group">      
@@ -260,7 +260,7 @@
             <div class="form-group">      
                 <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2"> @lang('sales.customer_national_id')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
 
-                <input  pattern="/^([0-9\s\-\+\(\)]*)$/" type="text" class="form-control" name="client_customer_national_id_{{ $opportunity->id }}"   value="{{ old("client_landlord_national_id_{$opportunity->id}",) }}" placeholder="@lang('sales.customer_national_id')" required>
+                <input   type="text" class="form-control" name="client_customer_national_id_{{ $opportunity->id }}"   value="{{ old("client_landlord_national_id_{$opportunity->id}",) }}" placeholder="@lang('sales.customer_national_id')" required>
                 
             </div>
 
