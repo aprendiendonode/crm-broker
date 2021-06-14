@@ -509,7 +509,7 @@
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.fax')</lable>
 
            
-           <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.fax')" type="text" class="form-control" name="edit_fax_{{ $client->id }}"   value="{{ old("edit_fax_{$client->id}",$client->fax) }}" placeholder="{{trans('sales.fax')}}"  >
+           <input data-plugin="tippy"  data-tippy-placement="top-start" title="@lang('sales.fax')" type="text" class="form-control" name="edit_fax_{{ $client->id }}"   value="{{ old("edit_fax_{$client->id}",$client->fax) }}" placeholder="{{trans('sales.fax')}}"  >
            
         </div>
     
@@ -607,7 +607,7 @@
         <div class="form-group pr-2">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.bedrooms')</lable>
 
-            <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_bedrooms_{{ $client->id }}"  value="{{ old("edit_bedrooms_{$client->id}",$client->bedrooms) }}" placeholder="@lang('sales.bedrooms')" >
+            <input type="text" class="form-control"   name="edit_bedrooms_{{ $client->id }}"  value="{{ old("edit_bedrooms_{$client->id}",$client->bedrooms) }}" placeholder="@lang('sales.bedrooms')" >
         </div>
     
     
@@ -615,13 +615,13 @@
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.bathrooms')</lable>
 
 
-            <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_bathrooms_{{ $client->id }}" value="{{ old("edit_bathrooms_{$client->id}",$client->bathrooms) }}" placeholder="@lang('sales.bathrooms')" >
+            <input type="text" class="form-control"   name="edit_bathrooms_{{ $client->id }}" value="{{ old("edit_bathrooms_{$client->id}",$client->bathrooms) }}" placeholder="@lang('sales.bathrooms')" >
         </div>
         <div class="form-group">
 
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.parkings')</lable>
 
-            <input type="text" class="form-control"  pattern="/^([0-9\s\-\+\(\)]*)$/" name="edit_parkings_{{ $client->id }}" id="parkings_{{ $client->id }}" value="{{ old("edit_parkings_{$client->id}",$client->parkings) }}" placeholder="@lang('sales.parkings')" >
+            <input type="text" class="form-control"   name="edit_parkings_{{ $client->id }}" id="parkings_{{ $client->id }}" value="{{ old("edit_parkings_{$client->id}",$client->parkings) }}" placeholder="@lang('sales.parkings')" >
         </div>
     
          </div>
