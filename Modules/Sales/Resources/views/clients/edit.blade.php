@@ -106,7 +106,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
                 </div>
-                <select class="form-control select2" name="edit_phone2_code_{{ $client->id }}" required>
+                <select class="form-control select2" name="edit_phone2_code_{{ $client->id }}" >
                     <option value=""></option>
                     @foreach($countries as $code)
                     <option 
