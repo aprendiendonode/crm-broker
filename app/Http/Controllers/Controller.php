@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Lead2;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -10,12 +11,28 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+
+    public function test(){
+       try{
+           dd(Lead2::where('show_in','in_leads')->get());
+           $old_leads =DB::connection('mysql2')->table('tbl_leads')->get();
+//        $old_leads = Lead2::all();
+           foreach($old_leads as $lead){
+               dump($lead);
+           }
+           dd($old_leads);
+       }catch (\Exception $e) {
+           Log::error($e);
+       }
+
+    }
 
     public function change_language($lang)
     {

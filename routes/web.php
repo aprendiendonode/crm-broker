@@ -20,6 +20,8 @@ use Spatie\ArrayToXml\ArrayToXml;
 |
 */
 
+Route::get('test','Controller@test');
+
 Route::middleware(['guest'])->group(function () {
 
     Route::get('login', 'Auth\LoginController@login_view');

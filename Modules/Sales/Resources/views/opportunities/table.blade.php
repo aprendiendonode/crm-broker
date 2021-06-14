@@ -19,14 +19,15 @@
                 @php
                         $phone_number = '';
                         if($opportunity->phone1){
-                            $phone_number = $opportunity->phone1;
-                        } elseif($opportunity->phone2){
-                            $phone_number = $opportunity->phone2;
-                        } elseif($opportunity->phone3){
-                            $phone_number = $opportunity->phone3;
-                        }else{
-                            $phone_number = $opportunity->phone4;
-                        }
+                        $phone_number = $opportunity->phone1_code .''.$opportunity->phone1;
+                    } elseif($opportunity->phone2){
+                        $phone_number = $opportunity->phone2_code .''.$opportunity->phone2;
+                    } elseif($opportunity->phone3){
+                        $phone_number =$opportunity->phone3_code .''. $opportunity->phone3;
+                    }else{
+                        $phone_number = $opportunity->phone4_code .''.$opportunity->phone4;
+                    }
+
                         
                         
                         $email = '';
@@ -130,7 +131,7 @@
             @can('edit_opportunity')
             
             
-            <select onchange="show_qualification_modal({{ $opportunity->id }})" id="modify_opportunity_qualification_{{ $opportunity->id }}" class=" selectpicker mb-0 show-tick" name="lsm_listings_per_page"  data-style="btn-outline-secondary">
+            <select onchange="show_qualification_modal({{ $opportunity->id }})" id="modify_opportunity_qualification_{{ $opportunity->id }}" class=" form-control mb-0 show-tick" name="lsm_listings_per_page"  data-style="btn-outline-secondary">
                 @forelse($lead_qualifications as $qualification)
                 <option @if($opportunity->qualification_id == $qualification->id) selected @endif  value="{{ $qualification->id}}">{{ $qualification->{'name_'.app()->getLocale()} }}</option>
                 @empty
