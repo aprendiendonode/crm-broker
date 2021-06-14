@@ -3,7 +3,7 @@
 
 
 return [
-
+    'listing_settings' => 'Listing Settings',
     'add_listing' => 'ADD Listing',
     'listing'            => 'Listing',
     'manage_listing'     => 'Manage Listing',
