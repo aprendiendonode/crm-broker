@@ -295,15 +295,15 @@
 
                         @if(owner())
                         <li>
-                            <a href="{{ url('agency/marketing_portals/'.request('agency')) }}">@lang('agency.marketing_portals')</a>
+                            <a href="">@lang('agency.marketing_portals')</a>
                         </li>
                          @elseif(moderator())
                          <li>
-                            <a href="{{ url('agency/marketing_portals/'.request('agency')) }}">@lang('agency.marketing_portals')</a>
+                            <a href="">@lang('agency.marketing_portals')</a>
                         </li>
                         @else
                         <li>
-                            <a href="{{ url('agency/marketing_portals/'.auth()->user()->agency_id) }}">@lang('agency.marketing_portals')</a>
+                            <a href="">@lang('agency.marketing_portals')</a>
                         </li>
                       
                         @endif
