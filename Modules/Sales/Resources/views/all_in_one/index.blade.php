@@ -42,27 +42,7 @@
         </h4>
         
         
-        <a href="#" class="list-link active">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.opportunity')</div>
-        </a>
-        @if(owner())
-        <a href="{{ url('sales/leads/'.request('agency')) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.leads')</div>
-        </a>
-        @elseif(moderator())
-        <a href="{{ url('sales/leads/'.request('agency')) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.leads')</div>
-        </a>
-        @else
-        <a href="{{ url('sales/leads/'.auth()->user()->agency_id) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.leads')</div>
-        </a>
-        @endif
-        
+  
 
     </div>
     

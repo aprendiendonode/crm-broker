@@ -93,14 +93,7 @@
             
         
 
-                
-                <div class="form-group">
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.email')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
-
-                    <input type="email" class="form-control" required name="hold_email1_{{ $opportunity->id }}"  value="{{ old("hold_email1_{$opportunity->id}",$opportunity->email1) }}" placeholder="@lang('sales.email')">
-                </div>
-
-
+         
                 
         
     
@@ -115,16 +108,50 @@
             <div class="col-md-6">
         
 
-        
 
-                        
-                <div class="form-group">       
-                    <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.phone1')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable> 
 
-                    <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.phone1')" type="text" class="form-control" name="hold_phone1_{{ $opportunity->id }}"   value="{{ old("hold_phone1_{$opportunity->id}",$opportunity->phone1) }}" placeholder="@lang('sales.phone1')" required>
-                    
+                
+          
+        <div class="form-group d-flex">
+
+            <div style="flex:2">
+                <div>
+                    <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
                 </div>
+                <select class="form-control select2" name="hold_phone1_code_{{ $opportunity->id }}" required>
+                    <option value=""></option>
+                    @foreach($countries as $code)
+                        <option 
+                        @if(old('hold_phone1_code_'.$opportunity->id,$opportunity->phone1_code) == $code->phone_code)
+                         selected
+                        @endif
+                                value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div style="flex:4">
+            <div>
+                <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
+            </div>
+            <div class="">
+                <input  pattern="/^([0-9\s\-\+\(\)]*)$/"
+                        type="text" class="form-control"
+                       name="hold_phone1_{{ $opportunity->id }}" value="{{ old("hold_phone1_{$opportunity->id}",$opportunity->phone1) }}"
+                       placeholder="@lang('sales.phone1')" required>
+            </div>
+        </div>
+        </div>
 
+               
+        <div class="form-group">
+            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.email')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
+
+            <input type="email" class="form-control" required name="hold_email1_{{ $opportunity->id }}"  value="{{ old("hold_email1_{$opportunity->id}",$opportunity->email1) }}" placeholder="@lang('sales.email')">
+        </div>
+
+
+
+       
 
 
                         

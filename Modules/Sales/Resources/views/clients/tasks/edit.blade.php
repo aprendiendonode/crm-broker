@@ -20,7 +20,7 @@
     
        
                 <label class="font-weight-medium text-muted" for="">@lang('activity.tasks.task_type')</label>
-                <select class="selectpicker mb-0 show-tick"  data-toggle="select2" name="edit_task_type_{{ $client->id }}" id="task_type_{{ $client->id }}" data-style="btn-outline-secondary" onchange="show_reference_div()"  required>
+                <select class="select2 mb-0 show-tick"  data-toggle="select2" name="edit_task_type_{{ $client->id }}" id="task_type_{{ $client->id }}" data-style="btn-outline-secondary" onchange="show_reference_div()"  required>
 
                     <option value="" > @lang('global.pleaseSelect')</option>
                    
@@ -40,7 +40,7 @@
 
             <div class="form-group col-md-6">
                 <label class="font-weight-medium text-muted" for="  ">@lang('activity.tasks.status')</label>
-                <select class="selectpicker mb-0 show-tick"  data-toggle="select2" name="edit_task_status_{{ $client->id }}" data-style="btn-outline-secondary" required>
+                <select class="select2 mb-0 show-tick"  data-toggle="select2" name="edit_task_status_{{ $client->id }}" data-style="btn-outline-secondary" required>
 
                     <option value=""  > @lang('global.pleaseSelect')</option>
             
@@ -166,7 +166,7 @@
                     <label class="mb-1 font-weight-medium text-muted">@lang('activity.tasks.custom_reminder')</label>
                     <div class="d-flex">
                         <div class="" style="flex:2">
-                            <select class="selectpicker mb-0 show-tick" data-style="btn-outline-secondary"  name="edit_task_period_reminder_{{ $client->id }}" id="edit_task_period_reminder_{{ $client->id }}">
+                            <select class="select2 mb-0 show-tick" data-style="btn-outline-secondary"  name="edit_task_period_reminder_{{ $client->id }}" id="edit_task_period_reminder_{{ $client->id }}">
         
                                     <option value="after" {{ old('edit_task_period_reminder_'.$client->id,$task->period_reminder) == 'after' ? 'selected' : '' }}>@lang('activity.after')</option>
                                     <option value="before" {{ old('edit_task_period_reminder_'.$client->id,$task->period_reminder) == 'before' ? 'selected' : '' }}>@lang('activity.before')</option>
@@ -174,7 +174,7 @@
                             </select>
                         </div>
                         <div class="px-2" style="flex:2">
-                            <select class="selectpicker mb-0 show-tick"  data-style="btn-outline-secondary" name="edit_task_type_reminder_{{ $client->id }}" id="edit_task_type_reminder_{{ $client->id }}">
+                            <select class="select2 mb-0 show-tick"  data-style="btn-outline-secondary" name="edit_task_type_reminder_{{ $client->id }}" id="edit_task_type_reminder_{{ $client->id }}">
         
                                 <option value="hours" {{ old('edit_task_type_reminder_'.$client->id,$task->type_reminder) == 'hours' ? 'selected' : '' }}>@lang('activity.hour')</option>
                                 <option value="days" {{ old('edit_task_type_reminder_'.$client->id,$task->type_reminder)  == 'days'  ? 'selected' : '' }}>@lang('activity.day')</option>

@@ -17,13 +17,13 @@
             
             
             @php
-            $phone_number = '';
-            if($client->phone1){
-                $phone_number = $client->phone1;
-            } else{
-                $phone_number = $client->phone2;
-            }
-            
+                    $phone_number = '';
+                    if($client->phone1){
+                        $phone_number = $client->phone1_code .''.$client->phone1;
+                    } else{
+                        $phone_number = $client->phone2_code .''.$client->phone2;
+                    }
+
             
             $email = '';
             if($client->email1){

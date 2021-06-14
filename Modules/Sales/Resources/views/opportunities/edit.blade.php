@@ -74,17 +74,134 @@
 
 
               
-       <div class="form-group">  
-        <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.phone1')</lable>
-     
-           <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.phone1')" type="text" class="form-control" name="edit_phone1_{{ $opportunity->id }}"   value="{{ old("edit_phone1_{$opportunity->id}",$opportunity->phone1) }}" placeholder="@lang('sales.phone1')" required>
+    
+        <div class="form-group d-flex">
+
+            <div style="flex:2">
+                <div>
+                    <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                </div>
+                <select class="form-control select2" name="edit_phone1_code_{{ $opportunity->id }}" required>
+                    <option value=""></option>
+                    @foreach($countries as $code)
+                        <option 
+                        @if(old('edit_phone1_code_'.$opportunity->id,$opportunity->phone1_code) == $code->phone_code)
+                         selected
+                        @endif
+                                value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div style="flex:4">
+            <div>
+                <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
+            </div>
+            <div class="">
+                <input  pattern="/^([0-9\s\-\+\(\)]*)$/"
+                        type="text" class="form-control"
+                       name="edit_phone1_{{ $opportunity->id }}" value="{{ old("edit_phone1_{$opportunity->id}",$opportunity->phone1) }}"
+                       placeholder="@lang('sales.phone1')" required>
+            </div>
+        </div>
         </div>
 
 
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.phone2')</lable>
+        <div class="form-group d-flex">
 
-            <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.phone2')" type="text" class="form-control" name="edit_phone2_{{ $opportunity->id }}"   value="{{ old("edit_phone2_{$opportunity->id}",$opportunity->phone2) }}" placeholder="@lang('sales.phone2')"  >
+            <div style="flex:2">
+                <div>
+                    <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                </div>
+                <select class="form-control select2" name="edit_phone2_code_{{ $opportunity->id }}" >
+                    <option value=""></option>
+                    @foreach($countries as $code)
+                        <option 
+                        @if(old('edit_phone2_code_'.$opportunity->id,$opportunity->phone2_code) == $code->phone_code)
+                         selected
+                        @endif
+                                value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div style="flex:4">
+            <div>
+                <label class="text-muted font-weight-medium" for="">@lang('sales.phone2')</label>
+            </div>
+
+            <div class="">
+                <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                        type="text" class="form-control"
+                       name="edit_phone2_{{ $opportunity->id }}" value="{{ old("edit_phone2_{$opportunity->id}",$opportunity->phone2) }}"
+                       placeholder="@lang('sales.phone2')">
+            </div>
+        </div>
+        </div>
+
+
+        <div class="form-group d-flex">
+
+
+            <div style="flex:2">
+                <div>
+                    <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                </div>
+                <select class="form-control select2" name="edit_phone3_code_{{ $opportunity->id }}" >
+                    <option value=""></option>
+                    @foreach($countries as $code)
+                        <option 
+                        @if(old('edit_phone3_code_'.$opportunity->id,$opportunity->phone3_code) == $code->phone_code)
+                         selected
+                        @endif
+                                value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div style="flex:4">
+            <div>
+                <label class="text-muted font-weight-medium" for="">@lang('sales.phone3')</label>
+            </div>
+
+
+            <div class="">
+                <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                        type="text" class="form-control"
+                       name="edit_phone3_{{ $opportunity->id }}" value="{{ old("edit_phone3_{$opportunity->id}",$opportunity->phone3) }}"
+                       placeholder="@lang('sales.phone3')">
+            </div>
+        </div>
+        </div>
+
+
+        <div class="form-group d-flex">
+
+                      <div style="flex:2">
+                <div>
+                    <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                </div>
+                <select class="form-control select2" name="edit_phone4_code_{{ $opportunity->id }}" >
+                    <option value=""> </option>
+                    @foreach($countries as $code)
+                        <option 
+                            @if(old('edit_phone4_code_'.$opportunity->id,$opportunity->phone4_code) == $code->phone_code)
+                            selected
+                            @endif
+                            value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}
+                       </option>
+                    @endforeach
+                </select>
+            </div>
+            <div style="flex:4">
+            <div>
+                <label class="text-muted font-weight-medium" for="">@lang('sales.phone4')</label>
+            </div>
+
+            <div class="">
+                <input  pattern="/^([0-9\s\-\+\(\)]*)$/" 
+                        type="text" class="form-control"
+                       name="edit_phone4_{{ $opportunity->id }}" value="{{ old("edit_phone4_{$opportunity->id}",$opportunity->phone4) }}"
+                       placeholder="@lang('sales.phone4')">
+            </div>
+        </div>
         </div>
 
 
@@ -786,23 +903,7 @@
   
     
     
-        
-        <div class="form-group">
-                 
-        <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.phone3')</lable>
-
-         <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.phone3')" type="text" class="form-control" name="edit_phone3_{{ $opportunity->id }}"    value="{{ old("edit_phone3_{$opportunity->id}",$opportunity->phone3) }}" placeholder="@lang('sales.phone3')" >
-        </div>
-    
-    
-    
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.phone4')</lable>
-            
-          <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.phone4')" type="text" class="form-control" name="edit_phone4_{{ $opportunity->id }}"   value="{{ old("edit_phone4_{$opportunity->id}",$opportunity->phone4) }}" placeholder="@lang('sales.phone4')"  >
-        </div>
-    
-    
+   
 
     
     </div>

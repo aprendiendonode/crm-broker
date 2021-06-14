@@ -33,29 +33,10 @@ class ClientRepo
         $pagination = true;
         $business  = auth()->user()->business_id;
         $per_page  = 15;
-
-        $agency = Agency::with([
+        $agency    = Agency::with([
             'lead_sources', 'lead_types', 'lead_properties', 'lead_communications',
             'task_status', 'task_types'
-        ])->where('id', $agency)->where('business_id', $business)->first();
-        abort_if(!$agency, Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $countries = DB::table('countries')->get();
-        $lead_sources               = $agency->lead_sources;
-        $lead_priorities            = $agency->lead_priorities;
-        $lead_types                 = $agency->lead_types;
-        $lead_properties            = $agency->lead_properties;
-        $lead_communications        = $agency->lead_communications;
-        $task_status                = $agency->task_status;
-        $task_types                 = $agency->task_types;
-        $call_status                 = $agency->call_status;
-        // $cities                     = City::all();
-        $cities                     = DB::table('cities')->get();
-        $languages                  = DB::table('languages')->get();
-        $currencies                 = DB::table('currencies')->get();
-
-
-
+        ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
         $clients = Client::with([
             'tasks', 'calls', 'convertedBy',
             'tasks.addBy',
@@ -64,11 +45,7 @@ class ClientRepo
             'questions',
             'questions.addedBy',
         ])->where('status', 'accepted')->where('agency_id', $agency->id)->where('business_id', $business);
-
-        $staffs = staff($agency->id);
-
         if (request('filter_phone') != null) {
-
             $clients->where(function ($query) {
                 $query->where('phone1', 'like', '%' . request('filter_phone') . '%')
                     ->orWhere('phone2', 'like', '%' . request('filter_phone') . '%')
@@ -76,28 +53,22 @@ class ClientRepo
                     ->orWhere('fax', 'like', '%' . request('filter_phone') . '%');
             });
         }
-
-
         if (request('filter_name') != null) {
             $clients->where(function ($query) {
                 $query->where('name', 'like', '%' . request('filter_name') . '%');
             });
         }
-
         if (request('filter_email') != null) {
             $clients->where(function ($query) {
                 $query->where('email1', 'like', '%' . request('filter_email') . '%')
                     ->orWhere('email2', 'like', '%' . request('filter_email') . '%');
             });
         }
-
-
         if (request('filter_source') != null) {
             $clients->where(function ($query) {
                 $query->where('source_id', request('filter_source'));
             });
         }
-
         if (request('filter_type') != null) {
             $clients->where(function ($query) {
                 $query->where('type_id', request('filter_type'));
@@ -113,48 +84,37 @@ class ClientRepo
                 $query->where('communication_id', request('filter_way_of_communications'));
             });
         }
-
         if (request('filter_priority') != null) {
             $clients->where(function ($query) {
                 $query->where('priority_id', request('filter_priority'));
             });
         }
-
         if (request('filter_property_purpose') != null) {
             $clients->where(function ($query) {
                 $query->where('property_purpose', request('filter_property_purpose'));
             });
         }
-
-
-
-            $clients = $clients->paginate($per_page);
-
-
-
-
-
-        $agency = $agency->id;
+        $clients = $clients->paginate($per_page);
         return view(
             'sales::clients.index',
-            compact(
-                'staffs',
-                'clients',
-                'pagination',
-                'cities',
-                'languages',
-                'currencies',
-                'countries',
-                'agency',
-                'business',
-                'lead_sources',
-                'lead_communications',
-                'lead_types',
-                'lead_properties',
-                'task_status',
-                'task_types',
-                'call_status',
-            )
+            [
+                'staffs'               => staff($agency->id),
+                'clients'              => $clients,
+                'pagination'           => $pagination,
+                'agency'               => $agency->id,
+                'business'             => $business,
+                'lead_sources'         => $agency->lead_sources,
+                'lead_communications'  => $agency->lead_communications,
+                'lead_types'           => $agency->lead_types,
+                'lead_properties'      => $agency->lead_properties,
+                'task_status'          => $agency->task_status,
+                'task_types'           => $agency->task_types,
+                'call_status'          => $agency->call_status,
+                'countries'              =>
+                cache()->remember('countries', 60 * 60 * 24, function () use ($agency) {
+                    return DB::table('countries')->get();
+                }),
+            ]
         );
     }
 
@@ -176,8 +136,6 @@ class ClientRepo
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-edit-tab', $id);
             }
 
-            $fullname = $request->{'edit_full_name_' . $id} != null ? $request->{'edit_full_name_' . $id} : ($request->{'edit_first_name_' . $id} . ' ' . $request->{'edit_sec_name_' . $id});
-
             $client->update([
 
                 "source_id"                    => $request->{'edit_source_id_' . $id},
@@ -197,8 +155,10 @@ class ClientRepo
                 "email2"                       => $request->{'edit_email2_' . $id},
                 "nationality_id"               => $request->{'edit_nationality_id_' . $id},
                 "country"                      => $request->{'edit_country_' . $id},
-//                "city_id"                      => $request->{'edit_city_id_' . $id},
+                //                "city_id"                      => $request->{'edit_city_id_' . $id},
                 "phone1"                       => $request->{'edit_phone1_' . $id},
+                "phone1_code"                  => $request->{'edit_phone1_code_' . $id},
+                "phone2_code"                  => $request->{'edit_phone2_code_' . $id},
                 "phone2"                       => $request->{'edit_phone2_' . $id},
                 "landline"                     => $request->{'edit_landline_' . $id},
                 "fax"                          => $request->{'edit_fax_' . $id},
@@ -430,10 +390,9 @@ class ClientRepo
                     event(new ClientTaskEvent($task, $send_to->id));
                 }
                 Notification::send($users, new ClientTaskNotification($task));
-
             }
 
-                return back()->with(flash(trans('sales.task_assigned'), 'success'))->with('open-task-tab',  $id);
+            return back()->with(flash(trans('sales.task_assigned'), 'success'))->with('open-task-tab',  $id);
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-task-tab',  $id);
@@ -533,8 +492,7 @@ class ClientRepo
                     event(new ClientTaskEvent($task, $send_to->id));
                 }
                 Notification::send($users, new ClientTaskNotification($task));
-            }
-            else {
+            } else {
                 $system_template = SystemTemplate::where('slug', 'client_task')->first();
                 $template = Template::create([
                     'title' => $system_template->title,
@@ -560,10 +518,9 @@ class ClientRepo
                     event(new ClientTaskEvent($task, $send_to->id));
                 }
                 Notification::send($users, new ClientTaskNotification($task));
-
             }
 
-                return back()->with(flash(trans('sales.task_updated'), 'success'))->with('open-task-tab',  $id);
+            return back()->with(flash(trans('sales.task_updated'), 'success'))->with('open-task-tab',  $id);
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-task-tab',  $id);
@@ -636,8 +593,7 @@ class ClientRepo
                 }
 
                 Notification::send($users, new ClientQuestionNotification($question));
-            }
-            else {
+            } else {
                 $system_template = SystemTemplate::where('slug', 'client_question')->first();
                 $template = Template::create([
                     'title' => $system_template->title,
@@ -674,7 +630,7 @@ class ClientRepo
                 Notification::send($users, new ClientQuestionNotification($question));
             }
 
-                return back()->with(flash(trans('sales.question_made'), 'success'))->with('open-question-tab', $id);
+            return back()->with(flash(trans('sales.question_made'), 'success'))->with('open-question-tab', $id);
         } catch (\Exception $e) {
 
             DB::rollback();
@@ -755,7 +711,7 @@ class ClientRepo
 
 
                 Notification::send(get_owner(), new ClientAnswerNotification($question));
-            }else {
+            } else {
                 $system_template = SystemTemplate::where('slug', 'client_answer')->first();
                 $template = Template::create([
                     'title' => $system_template->title,
@@ -800,7 +756,7 @@ class ClientRepo
             }
 
 
-                return back()->with(flash(trans('sales.answer_made'), 'success'))->with('open-question-tab', $request->client_id);
+            return back()->with(flash(trans('sales.answer_made'), 'success'))->with('open-question-tab', $request->client_id);
         } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-question-tab', $request->client_id);
