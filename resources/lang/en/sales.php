@@ -501,5 +501,8 @@ return [
     'database' => 'Database',
     'developers' => 'Developer',
     'all' => 'All',
+    'contacts_settings' => 'Contacts Settings',
+    "contacts" => 'Contacts',
+    "listing_settings" => 'Listing Settings',
 
 ];

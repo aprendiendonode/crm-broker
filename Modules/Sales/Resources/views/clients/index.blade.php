@@ -6,29 +6,12 @@
 
 
 <link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css">
-<link href="{{ asset('assets/libs/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" />
-
-<link href="{{asset('assets/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css">
-<link href="{{asset('assets/libs/dropify/css/dropify.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
-<link href="{{asset('assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
 
 
-<style>
-    
-    .toggle.android { border-radius: 0px;}
-    .toggle.android .toggle-handle { border-radius: 0px; }
-    
-    .custom-toggle .btn {
-        padding:0 !important;
-    }
-    .custom-toggle .toggle.btn {
-        min-height: 26px;                                
-        min-width: 46px;
-    }
-</style>
+
 
 @endsection
 @section('content')
@@ -41,42 +24,7 @@
             @lang('sales.manage_clients')
         </h4>
         
-        
-        <a href="#" class="list-link active">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.client')</div>
-        </a>
-        @if(owner())
-        <a href="{{ url('sales/leads/'.request('agency')) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.leads')</div>
-        </a>
-        <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.opportunities')</div>
-        </a>
-        @elseif(moderator())
-        <a href="{{ url('sales/leads/'.request('agency')) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.leads')</div>
-        </a>
-
-            <a href="{{ url('sales/opportunities/'.request('agency')) }}" class="list-link">
-                <i class="fas fa-save mr-1"></i>
-                <div>@lang('sales.opportunities')</div>
-            </a>
-        @else
-        <a href="{{ url('sales/leads/'.auth()->user()->agency_id) }}" class="list-link">
-            <i class="fas fa-save mr-1"></i>
-            <div>@lang('sales.leads')</div>
-        </a>
-
-            <a href="{{ url('sales/opportunities/'.auth()->user()->agency_id) }}" class="list-link">
-                <i class="fas fa-save mr-1"></i>
-                <div>@lang('sales.opportunities')</div>
-            </a>
-        @endif
-        
+    
         @can('add_client')
             <button onclick="show_check_div()" type="button" class="btn btn-info waves-effect waves-light">
                 <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('sales.add_clients')
@@ -129,26 +77,9 @@
 
 
 <script src="{{ asset('assets/libs/select2/js/select2.min.js') }}"></script>
-
-<script src="{{ asset('assets/libs/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
-
 <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
-
 <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
-<script src="{{asset('assets/libs/footable/footable.all.min.js')}}"></script>
-{{-- <script src="{{asset('assets/js/pages/foo-tables.init.js')}}"></script> --}}
-
-<script src="{{asset('assets/libs/dropzone/min/dropzone.min.js')}}"></script>
-<script src="{{asset('assets/libs/dropify/js/dropify.min.js')}}"></script>
-<script src="{{asset('assets/js/pages/form-fileuploads.init.js')}}"></script>
-
-<script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script>
-
-
-<script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
-
-
-
+{{-- <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script> --}}
 
 <script>
     $(document).ready(function() {
@@ -160,15 +91,6 @@
         });
 
     
-        $(".foo-filtering").footable()
-        $(".foo-task").footable()
-    
-        $(".foo-call").footable()
-        $(".foo-question").footable()
-       
-     
-        
-        
         
     })
 </script>

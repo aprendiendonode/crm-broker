@@ -1,5 +1,5 @@
 
-<form  action="{{ url('sales/manage_clients/'.$client->id) }}" data-parsley-validate="" method="POST" enctype="multipart/form-data">
+<form  action="{{ url('sales/manage_clients/'.$client->id) }}"  method="POST" enctype="multipart/form-data">
     <div class="row mb-2">
             @csrf
             @method('PATCH')
@@ -60,20 +60,81 @@
     
         </div>
 
+
+
+        
+        <div class="form-group d-flex">
+
+            <div style="flex:2">
+                <div>
+                    <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                </div>
+                <select class="form-control select2" name="edit_phone1_code_{{ $client->id }}" required>
+                    <option value=""></option>
+                    @foreach($countries as $code)
+                    <option 
+                    @if(old('edit_phone1_code_'.$client->id,$client->phone1_code) == $code->phone_code)
+                     selected
+                    @endif
+                            value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                @endforeach
+                </select>
+            </div>
+            <div style="flex:4">
+            <div>
+                <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
+            </div>
+            <div class="">
+                <input  
+                        type="text" class="form-control"
+                       name="edit_phone1_{{ $client->id }}" value="{{ old("edit_phone1_{$client->id}",$client->phone1) }}"
+                       placeholder="@lang('sales.phone1')" required>
+            </div>
+        </div>
+        </div>
+
               
-       <div class="form-group">  
-        <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.phone1')</lable>
-     
-           <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.phone1')" type="text" class="form-control" name="edit_phone1_{{ $client->id }}"   value="{{ old("edit_phone1_{$client->id}",$client->phone1) }}" placeholder="@lang('sales.phone1')" required>
+
+
+
+
+        
+        
+        <div class="form-group d-flex">
+
+            <div style="flex:2">
+                <div>
+                    <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
+                </div>
+                <select class="form-control select2" name="edit_phone2_code_{{ $client->id }}" required>
+                    <option value=""></option>
+                    @foreach($countries as $code)
+                    <option 
+                    @if(old('edit_phone2_code_'.$client->id,$client->phone2_code) == $code->phone_code)
+                     selected
+                    @endif
+                            value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                @endforeach
+                </select>
+            </div>
+            <div style="flex:4">
+            <div>
+                <label class="text-muted font-weight-medium" for="">@lang('sales.phone2')</label>
+            </div>
+            <div class="">
+                <input  
+                        type="text" class="form-control"
+                       name="edit_phone2_{{ $client->id }}" value="{{ old("edit_phone2_{$client->id}",$client->phone2) }}"
+                       placeholder="@lang('sales.phone2')" >
+            </div>
+        </div>
         </div>
 
+            
 
-        <div class="form-group">
-            <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.phone2')</lable>
 
-            <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.phone2')" type="text" class="form-control" name="edit_phone2_{{ $client->id }}"   value="{{ old("edit_phone2_{$client->id}",$client->phone2) }}" placeholder="@lang('sales.phone2')"  >
-        </div>
 
+    
 
     
 
@@ -82,7 +143,7 @@
               <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.landline')</lable>
       
                   
-              <input data-plugin="tippy" pattern="/^([0-9\s\-\+\(\)]*)$/" data-tippy-placement="top-start" title="@lang('sales.landline')" type="text" class="form-control" name="edit_landline_{{ $client->id }}"   value="{{ old("edit_landline_{$client->id}",$client->landline) }}" placeholder="@lang('sales.landline')">
+              <input  title="@lang('sales.landline')" type="text" class="form-control" name="edit_landline_{{ $client->id }}"   value="{{ old("edit_landline_{$client->id}",$client->landline) }}" placeholder="@lang('sales.landline')">
                
               
             </div>
@@ -157,7 +218,7 @@
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.national_id')</lable>
 
-            <input type="text" class="form-control" pattern="/^([0-9\s\-\+\(\)]*)$/"  name="edit_national_id_{{ $client->id }}"  value="{{ old("edit_national_id_{$client->id}",$client->national_id) }}" placeholder="@lang('sales.national_id')">
+            <input type="text" class="form-control"  name="edit_national_id_{{ $client->id }}"  value="{{ old("edit_national_id_{$client->id}",$client->national_id) }}" placeholder="@lang('sales.national_id')">
         </div>
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.passport')</lable>

@@ -79,6 +79,9 @@ class Client extends Model
             "edit_phone1_" . $id                        => "required|regex:/^([0-9\s\-\+\(\)]*)$/",
             "edit_phone2_" . $id                        => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
 
+            "edit_phone1_code_" . $id                        => "required",
+            "edit_phone2_code_" . $id                        => "sometimes|nullable",
+
             "edit_landline_" . $id                      => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
             "edit_fax_" . $id                           => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
             "edit_developer_" . $id                     => "sometimes|nullable|string",

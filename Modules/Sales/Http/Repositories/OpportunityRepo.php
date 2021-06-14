@@ -1084,6 +1084,7 @@ class OpportunityRepo
                 "passport_expiration_date"     =>    $request->{"client_passport_expiration_date_" . $request->opportunity_id},
                 "email1"       =>    $request->{"client_email1_" . $request->opportunity_id},
                 "phone1"     =>     $request->{"client_phone1_" . $request->opportunity_id},
+                "phone1_code"     =>     $request->{"client_phone1_code_" . $request->opportunity_id},
 
                 'converting_approval' => 'waiting_for_approve',
 
@@ -1621,6 +1622,7 @@ class OpportunityRepo
                 'sec_name' => $request->{"hold_sec_name_" . $request->opportunity_id},
                 'email1' => $request->{"hold_email1_" . $request->opportunity_id},
                 'phone1' => $request->{"hold_phone1_" . $request->opportunity_id},
+                'phone1_code' => $request->{"hold_phone1_code_" . $request->opportunity_id},
                 // 'country' => $request->{"hold_country_" . $request->opportunity_id},
 
                 // 'language' => $request->{"hold_language_" . $request->opportunity_id},
@@ -1884,6 +1886,8 @@ class OpportunityRepo
 
                 'phone1'  => $opportunity->phone1,
                 'phone2'  =>  $opportunity->phone2,
+                'phone1_code'  => $opportunity->phone1_code,
+                'phone2_code'  =>  $opportunity->phone2_code,
 
                 /*    'country' => $request->{"client_country_" . $request->opportunity_id},
                 'city'    => $request->{"client_city_" . $request->opportunity_id},

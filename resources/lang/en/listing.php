@@ -4,6 +4,7 @@
 
 return [
 
+    'add_listing' => 'ADD Listing',
     'listing'            => 'Listing',
     'manage_listing'     => 'Manage Listing',
     'manage_listing_views' => 'Manage Listing Views',

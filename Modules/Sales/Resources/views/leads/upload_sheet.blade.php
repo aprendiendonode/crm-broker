@@ -22,6 +22,29 @@
 
     <div class="content p-3">
 
+     
+  
+        @if(owner())
+
+        <a  href="{{ url('sales/failed_leads/'.request('agency')) }}" class="float-right btn btn-danger waves-effect waves-light">
+            <i class="fe-plus-square"></i>@lang('sales.manage_failed_leads')
+          </a>
+  
+
+        @elseif(moderator())
+          <a  href="{{ url('sales/failed_leads/'.request('agency')) }}" class="float-right btn btn-danger waves-effect waves-light">
+            <i class="fe-plus-square"></i>@lang('sales.manage_failed_leads')
+          </a>
+  
+        @else
+
+        <a  href="{{ url('sales/failed_leads/'.auth()->user()->agency_id) }}" class="float-right btn btn-danger waves-effect waves-light">
+            <i class="fe-plus-square"></i>@lang('sales.manage_failed_leads')
+          </a>
+
+        @endif
+
+
 
         <form action="{{route('smart_import_sheet')}}" data-parsley-validate="" method="post"
               enctype="multipart/form-data">
