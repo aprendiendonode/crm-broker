@@ -236,7 +236,7 @@
     $(function(){
         var listing_id = @json($listing->id);
 
-    $('#drag-and-drop-zone-'+listing_id).dmUploader({ /
+    $('#drag-and-drop-zone-'+listing_id).dmUploader({ 
         url: '{{ route("listing.temporary-photos") }}',
         headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
