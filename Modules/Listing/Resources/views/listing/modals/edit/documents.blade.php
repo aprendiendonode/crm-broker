@@ -193,7 +193,7 @@
     headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    maxFileSize: 3000000, // 3 Megs 
+    maxFileSize: 3000000, 
     allowedTypes: 'image/*',
     extFilter: ["jpg", "jpeg","png","gif",'pdf','txt'],
     onNewFile: function(id, file){
@@ -206,7 +206,6 @@
     }
     },
     onBeforeUpload: function(id){
-    // about tho start uploading a file
     edit_document_ui_multi_update_file_progress(id, 0, '', true,listing_id);
     edit_document_ui_multi_update_file_status(id, 'uploading', 'Uploading...',listing_id);
     },
