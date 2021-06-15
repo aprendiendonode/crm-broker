@@ -126,12 +126,12 @@ function  show_add_div(){
     var  div = document.querySelector('.add_lead');
     if(div.style.display === 'none'){
 
-
+         var region = @json($agency_region); 
         injectGoogleMapsApiScript({
                     key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
                     libraries: 'places',
                     language: 'ar',
-                    region: 'EG',
+                    region: region,
                     callback: 'initMap',
                 });
 
@@ -383,8 +383,9 @@ var  googleMapsScriptIsInjected = false;
             };
 
  var leads = @json($leads);
+ var region = @json($agency_region);
  function initMap() {
-
+    
 leads.data.forEach(function(value,key){
 
 
@@ -392,7 +393,7 @@ leads.data.forEach(function(value,key){
                  types: ["establishment"],
                  });
                  edit_autocompletelocation_input.setComponentRestrictions({
-                 country: ['EG'],
+                 country: [region],
              });
 
              google.maps.event.addListener(edit_autocompletelocation_input, 'place_changed', function () {
@@ -406,7 +407,7 @@ leads.data.forEach(function(value,key){
 
 
                  var editMap = new google.maps.Map(document.getElementById('map_'+value.id), {
-                         center: {lat: value.loc_lat ? parseInt(value.loc_lat) : 30.0444 , lng:  value.loc_lng ? parseInt(value.loc_lng ) : 31.2357  },
+                         center: {lat: value.lat_loc ? parseInt(value.lat_loc) : 30.0444 , lng:  value.lng_loc ? parseInt(value.lng_loc ) : 31.2357  },
                          zoom: 13,
                          
                          mapTypeId: 'roadmap'
@@ -423,7 +424,7 @@ leads.data.forEach(function(value,key){
                                      deleteMarkers();
                                      addMarkerRunTime(event.latLng);
                                      SelectedLocation = results[0].formatted_address;
-                                     console.log( results[0].formatted_address);
+                                 
                                      editSplitLatLng(String(event.latLng),value.id);
                                      $("#location_input_"+value.id).val(results[0].formatted_address);
                                  }
@@ -450,7 +451,7 @@ leads.data.forEach(function(value,key){
         types: ["establishment"],
         });
         autocompletelocation_input.setComponentRestrictions({
-        country: ['EG'],
+        country: [region],
         });
 
         google.maps.event.addListener(autocompletelocation_input, 'place_changed', function () {
@@ -480,7 +481,7 @@ leads.data.forEach(function(value,key){
                     deleteMarkers();
                     addMarkerRunTime(event.latLng);
                     SelectedLocation = results[0].formatted_address;
-                    console.log( results[0].formatted_address);
+             
                     splitLatLng(String(event.latLng));
                     $("#location_input").val(results[0].formatted_address);
                 }
@@ -545,36 +546,14 @@ leads.data.forEach(function(value,key){
 
 </script>
 
-
-<script>
-
-
-
-
-ClassicEditor
-    .create(document.querySelector('#note'))
-    .then()
-    .catch(error => {
-
-    });
-
-
-
-
-</script>
 <script>
 
         
     
     function  show_call_breif_div(call,id){
-    // hide_edit_div(id)
-    // hide_call_div(id)
-    // hide_task_div(id)
+
     var  div = document.querySelector('.call_breif_'+call+'_'+id);
         if(div.style.display === 'none'){
-
-
-
 
         div.style.display = '';
 

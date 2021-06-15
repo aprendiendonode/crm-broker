@@ -86,6 +86,8 @@ class Opportunity extends Model
 
 
             "edit_address_" . $id                       => "sometimes|nullable|string",
+            "edit_loc_lat_" . $id                       => "sometimes|nullable|string",
+            "edit_loc_lng_" . $id                       => "sometimes|nullable|string",
             "edit_company_" . $id                       => "sometimes|nullable|string",
             "edit_website_" . $id                       => "sometimes|nullable|string|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/",
             "edit_po_box_" . $id                        => "sometimes|nullable|string|min:1|max:30",

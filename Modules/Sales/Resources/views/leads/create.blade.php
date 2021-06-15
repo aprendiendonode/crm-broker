@@ -745,8 +745,8 @@
                 <div class="d-flex align-items-center" style="flex:2">
                     <input type="text" class="form-control" name="address"  id="location_input"  value="{{ old('address') }}" 
                      >
-                     <input type="hidden" name="loc_lat" id="latitude" value="{{ old('loc_lat') }}" >
-                     <input type="hidden" name="loc_lng" id="longitude" value="{{ old('loc_long') }}">
+                     <input type="hidden" name="lat_loc" id="latitude" value="{{ old('lat_loc') }}" >
+                     <input type="hidden" name="lng_loc" id="longitude" value="{{ old('lng_loc') }}">
                  
                     <div class="text-center pl-1">
                         {{-- <i class="fas fa-map-marker-alt" style="font-size:1.2rem"  onclick="initModal()"></i> --}}
