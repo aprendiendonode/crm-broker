@@ -4,11 +4,11 @@
 @section('css')
 
     <link href="{{ asset('assets/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link href="{{ asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
-    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <style>
         .toggle.android {
             border-radius: 0px;
@@ -19,14 +19,14 @@
         }
 
 
-        .description-profile-modal 
+        .description-profile-modal
         .ck-editor__editable_inline {
                 min-height: 350px;
         }
     </style>
 
     @endsection
- 
+
 
 @section('content')
     <div class="content p-3">
@@ -41,7 +41,7 @@
                     <i class="fas fa-info-circle mr-1"></i>
                     <div>@lang('listing.live')({{ $live_count }})</div>
                 </a>
-              
+
 
             @elseif(moderator())
 
@@ -49,13 +49,13 @@
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.live')({{ $live_count }})</div>
             </a>
-            
+
             @else
             <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.live')({{ $live_count }})</div>
             </a>
-   
+
             @endif
 
 
@@ -67,7 +67,7 @@
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.draft')({{ $draft_count }})</div>
             </a>
-    
+
 
             @elseif(moderator())
 
@@ -75,8 +75,8 @@
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.draft')({{ $draft_count }})</div>
             </a>
-            
-  
+
+
             @else
             <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
@@ -86,14 +86,14 @@
             @endif
 
 
-            
+
             @if(owner())
 
             <a href="{{ url('listing/controll/'.request('agency').'?status_main=review') }}" class="list-link @if(request('status_main') == 'review') active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.review')({{ $review_count }})</div>
             </a>
-    
+
 
             @elseif(moderator())
 
@@ -101,8 +101,8 @@
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.review')({{ $review_count }})</div>
             </a>
-            
-  
+
+
             @else
             <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=review') }}" class="list-link @if(request('status_main') == 'review') active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
@@ -112,15 +112,15 @@
             @endif
 
 
-            
-            
+
+
             @if(owner())
 
             <a href="{{ url('listing/controll/'.request('agency').'?status_main=archive') }}" class="list-link @if(request('status_main') == 'archive') active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.archive')({{ $archive_count }})</div>
             </a>
-    
+
 
             @elseif(moderator())
 
@@ -128,8 +128,8 @@
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.archive')({{ $archive_count }})</div>
             </a>
-            
-  
+
+
             @else
             <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=archive') }}" class="list-link @if(request('status_main') == 'archive') active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
@@ -139,15 +139,15 @@
             @endif
 
 
-            
-            
+
+
             @if(owner())
 
             <a href="{{ url('listing/controll/'.request('agency').'?status_main=all') }}" class="list-link @if(request('status_main') == 'all') active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.all')({{ $all_count }})</div>
             </a>
-    
+
 
             @elseif(moderator())
 
@@ -155,8 +155,8 @@
                 <i class="fas fa-info-circle mr-1"></i>
                 <div>@lang('listing.all')({{ $all_count }})</div>
             </a>
-            
-  
+
+
             @else
             <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=all') }}" class="list-link @if(request('status_main') == 'all') active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
@@ -164,9 +164,9 @@
             </a>
 
             @endif
-         
-   
-        
+
+
+
 
             </div>
 
@@ -197,21 +197,21 @@
                         <th> @lang('listing.type') </th>
                         <th> @lang('listing.location') </th>
                         <th> @lang('listing.area') </th>
-    
+
                         <th> @lang('listing.price') </th>
                         <th> @lang('listing.assigned') </th>
                         <th> @lang('listing.updated') </th>
                         <th> @lang('listing.status') </th>
                         <th> @lang('listing.advertise') </th>
                         <th> @lang('listing.controlls') </th>
-                      
-    
+
+
                     </tr>
                     </thead>
                     <tbody>
-                    @if($listings)    
+                    @if($listings)
                     @forelse($listings as $listing)
-      
+
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>
@@ -222,11 +222,11 @@
                             <td>{{ Str::ucfirst($listing->purpose) }}</td>
                             <td>{{ $listing->type ? $listing->type->{'name_'.app()->getLocale()} : '' }}</td>
                             <td>
-                            
+
                                   <span
                                   class="cursor-pointer"
-                                  data-plugin="tippy" 
-                                data-tippy-placement="top-start" 
+                                  data-plugin="tippy"
+                                data-tippy-placement="top-start"
                                 title="{{  $listing->city->{'name_'.app()->getLocale()} .' , '. $listing->community->{'name_'.app()->getLocale()} .' , '. $listing->subCommunity->{'name_'.app()->getLocale()} .' , '.$listing->location }}"
                                 >
                                  {{ Str::words($listing->location,3,'...') }}
@@ -238,40 +238,40 @@
                             <td>{{ $listing->updated_at->toFormattedDateString() }}</td>
                             <td>
                                 @can('edit_listing')
-                               
-                                    <select onchange="show_status_modal({{ $listing->id }},this)" id="modify_listing_status_{{ $listing->id }}"
+
+                                    <select onchange="show_status_modal('{{ $listing->id }}',this)" id="modify_listing_status_{{ $listing->id }}"
                                          class="form-control mb-0 show-tick"   data-style="btn-outline-secondary">
                                         <option value=""></option>
                                         <option  value="draft" @if($listing->status == 'draft') selected @endif >@lang('listing.draft')</option>
                                         <option  value="live"  @if($listing->status == 'live') selected @endif>@lang('listing.live')</option>
                                         <option  value="archive" @if($listing->status == 'archive') selected @endif>@lang('listing.archive')</option>
                                         <option  value="review" @if($listing->status == 'review') selected @endif>@lang('listing.review')</option>
-                                    
+
                                     </select>
-        
+
                                 @else
-                                
+
                                     {{ Str::ucfirst($listing->status) }}
                                 @endcan
-                                
-                                
-                                
+
+
+
                             </td>
                             <td>
                                 @include('listing::listing.advertise')
                             </td>
-                
+
                             <td>
                                 @include('listing::listing.controlls')
                             </td>
-                
 
 
-                     
+
+
 
                     </tr>
                     @can('edit_listing')
-                    
+
                         <tr class="table-row_{{ $listing->id }} edit_listing_{{ $listing->id }}
                             @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else d-none @endif
                             "
@@ -285,118 +285,118 @@
 
 
 
-                        <tr  class="table-row_{{ $listing->id }} portals_{{ $listing->id }}    
+                        <tr  class="table-row_{{ $listing->id }} portals_{{ $listing->id }}
                             @if( (session()->has('open-portals-tab') && session('open-portals-tab') ==  $listing->id ))
                               @else d-none @endif
                             "   >
                             <td colspan="14">
-                                
+
                                 @include('listing::listing.portals')
-                                
+
                             </td>
                         </tr>
 
-                        <tr  class="table-row_{{ $listing->id }} notes_{{ $listing->id }}    
+                        <tr  class="table-row_{{ $listing->id }} notes_{{ $listing->id }}
                             @if( (session()->has('open-notes-tab') && session('open-notes-tab') ==  $listing->id ))
                               @else d-none @endif
                             "   >
                             <td colspan="14">
-                                
+
                                 @include('listing::listing.notes')
-                                
+
                             </td>
                         </tr>
-                        <tr  class="table-row_{{ $listing->id }} borchures_{{ $listing->id }}    
+                        <tr  class="table-row_{{ $listing->id }} borchures_{{ $listing->id }}
                             @if( (session()->has('open-borchures-tab') && session('open-borchures-tab') ==  $listing->id ))
                               @else d-none @endif
                             "   >
                             <td colspan="14">
-                                
+
                                 @include('listing::listing.borchures')
-                                
+
                             </td>
                         </tr>
 
 
 
                         <tr  class="table-row_{{ $listing->id }} task_{{ $listing->id }}
-        
+
                             @if( (session()->has('open-task-tab') && session('open-task-tab') ==  $listing->id ))
                             @else d-none @endif
-                            
+
                             "  >
                             <td colspan="14">
-                                
+
                                 @include('listing::listing.tasks.tasks')
-                                
+
                             </td>
                         </tr>
 
                     @endcan
 
-                  
+
                     <tr  class=" more_info_{{ $listing->id }} d-none"  >
                         <td colspan="2"></td>
-                       
+
                         <td colspan="12">
-                            
+
                            <div class="d-flex justify-content-start">
                             <i
 
-                           
-                             data-plugin="tippy" 
-                             data-tippy-placement="top-start" 
+
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
                              title="@lang('listing.matching_lead')"
-                            
+
                              class="fas fa-flag cursor-pointer feather-16 px-1">
                              0
                           </i>
                             <i
 
-                             data-plugin="tippy" 
-                             data-tippy-placement="top-start" 
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
                              title="@lang('listing.beds')"
-                             
+
                              class="fas fa-bed cursor-pointer feather-16 px-1">
                              {{ $listing->beds ?? 0 }}
                           </i>
                             <i
 
-                             data-plugin="tippy" 
-                             data-tippy-placement="top-start" 
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
                              title="@lang('listing.parkings')"
-                             
+
                              class="fas fa-car cursor-pointer feather-16 px-1">
                              {{ $listing->parkings ?? 0 }}
                           </i>
                             <i
 
-                             data-plugin="tippy" 
-                             data-tippy-placement="top-start" 
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
                              title="@lang('listing.video')"
-                        
+
                              class="fas fa-video cursor-pointer feather-16 px-1">
                             {{ $listing->videos ? $listing->videos->count() : 0 }}
                           </i>
                             <i
 
-                             data-plugin="tippy" 
-                             data-tippy-placement="top-start" 
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
                              title="@lang('listing.added_by')"
-                         
+
                              class="far fa-user cursor-pointer feather-16 px-1">
                              {{ $listing->addedBy ? $listing->addedBy->{'name_'.app()->getLocale()} : '' }}
                           </i>
-                          
+
                            </div>
-                            
+
                         </td>
                     </tr>
-               
-                    
-              
-                
-                
+
+
+
+
+
                 @empty
                 @endforelse
                 @endif
@@ -405,11 +405,11 @@
             <div class="d-flex justify-content-between">
 
                 <div class="mt-2">
-                  
+
                     @if($pagination)
                     {{ $listings->links() }}
                     @endif
-                    
+
                 </div>
                 @can('can_generate_reports')
                     <a
@@ -434,12 +434,12 @@
 
     <script src="{{ asset('assets/libs/tippy.js/tippy.all.min.js') }}"></script>
 
-    
+
     <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
 
 
     <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
- 
+
 
     <script src="{{ asset('assets/libs/uploader-master/dist/js/jquery.dm-uploader.min.js') }}"></script>
     <script src="{{ asset('assets/libs/uploader-master/src/js/demo-ui.js') }}"></script>
@@ -449,8 +449,10 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
+     {{--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap"--}}
+     {{--async >--}}
+    {{--</script> --}}
 
-    
     <script>
         $(document).ready(function () {
 
@@ -469,7 +471,7 @@
                     .catch(error => {
 
                     });
-         
+
             $('.select2').select2();
             $('.select2-multiple').select2();
             $(".basic-datepicker").flatpickr();
@@ -494,9 +496,9 @@
 
 
 
-       
 
-     
+
+
         })
     </script>
 
@@ -508,7 +510,7 @@
                 return;
             }
 
-    
+
                 const optionsQuery = Object.keys(options)
                     .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(options[k])}`)
                     .join('&');
@@ -526,7 +528,7 @@
                 googleMapsScriptIsInjected = true;
             };
 
-     
+
 
 
 
@@ -679,7 +681,7 @@
                     city_id    : city_id,
                 },
                 success: function(data){
-                    
+
                     var option = '';
                     var locale = @json(app()->getLocale());
                     data.communities.forEach(function(value,key){
@@ -688,8 +690,8 @@
                         } else{
                             option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
                         }
-                       
-                 
+
+
                             if(locale == 'en'){
 
                                 option += value.name_en;
@@ -698,7 +700,7 @@
                             }
                         option += '</option>';
 
-                    })
+                    });
 
 
                     if(type == "create"){
@@ -714,18 +716,18 @@
 
                     }
 
-              
 
-                
+
+
                 },
                 error: function(error){
-                
+
                 },
                 })
 
 
         }
-    
+
         function getSubCommunities(type,id){
             var community_id ='';
             if(type == "create"){
@@ -735,7 +737,7 @@
                 community_id = $('.community-in-edit-'+id).val();
             }
 
-          
+
             $.ajax({
             url:'{{  route("listings.get-sub-communities") }}',
             type:'POST',
@@ -744,16 +746,17 @@
                 community_id    : community_id,
             },
             success: function(data){
-           
+
                 var option = '';
                 var locale = @json(app()->getLocale());
+
                 data.sub_communities.forEach(function(value,key){
                     if(type == 'create'){
                            option += '<option value="'+value.id+'" class="create-appended-sub-communities">';
                         } else{
                             option += '<option value="'+value.id+'" class="edit-appended-sub-communities-'+id+'">';
                         }
-                   
+
                         if(locale == 'en'){
 
                             option += value.name_en;
@@ -774,7 +777,7 @@
                     $('.sub-community-in-edit-'+id).append(option)
                 }
 
-           
+
 
 
 
@@ -793,10 +796,10 @@
 
 <script>
 
-    
 
 
- 
+
+
 
     function editSplitLatLng(latLng,id){
         var newString = latLng.substring(0, latLng.length-1);
@@ -810,7 +813,7 @@
 
 
 
-    
+
 function removePhoto(input,table){
     var id         = input.id
     var sliced_id  = id.slice(7);
@@ -823,15 +826,15 @@ function removePhoto(input,table){
             id    : photo_id,
             type  : 'photo',
             table : table
-         
+
         },
         success: function(data){
-            
+
             $('#'+sliced_id).remove();
-        
+
         },
         error: function(error){
-        
+
         },
     })
 
@@ -839,7 +842,7 @@ function removePhoto(input,table){
 
 
 function removeDocument(input,table){
-    
+
             var id         = input.id
             var sliced_id  = id.slice(7);
             var  document_id = $('#'+sliced_id+' .document-id').val();
@@ -851,15 +854,15 @@ function removeDocument(input,table){
                     id    : document_id,
                     type  : 'document',
                     table : table
-                
+
                 },
                 success: function(data){
-                    
+
                     $('#'+sliced_id).remove();
-                
+
                 },
                 error: function(error){
-                
+
                 },
             })
 
@@ -878,15 +881,15 @@ function removePlan(input,table){
                     id    : plan_id,
                     type : 'plan',
                     table : table
-                
+
                 },
                 success: function(data){
-                    
+
                     $('#'+sliced_id).remove();
-                
+
                 },
                 error: function(error){
-                
+
                 },
             })
 
@@ -921,7 +924,7 @@ function modifyName(id,table,type){
 
         },
         error: function(error){
-        
+
         },
     })
 }
@@ -940,32 +943,32 @@ function togglePlanWatermark(input,table){
             id    : plan_id,
             type : 'plan',
             table : table
-         
+
         },
         success: function(data){
-            
+
             $('#'+sliced_id+' .plan-with-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .plan-no-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .plan-with-enlarg-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .plan-no-enlarg-watermark').toggleClass('d-none')
-        
 
-        
+
+
         },
         error: function(error){
-        
+
         },
     })
 
 
 }
- 
+
 function toggleWatermark(input,table){
     var id         = input.id
     var sliced_id  = id.slice(10);
     var  photo_id = $('#'+sliced_id+' .photo-id').val();
 
-    
+
  $.ajax({
         url:'{{  route("listings.update-listing-temporary-active") }}',
         type:'POST',
@@ -974,20 +977,20 @@ function toggleWatermark(input,table){
             id    : photo_id,
             type:'photo',
             table:table
-         
+
         },
         success: function(data){
-            
+
             $('#'+sliced_id+' .with-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .no-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .with-enlarg-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .no-enlarg-watermark').toggleClass('d-none')
 
 
-        
+
         },
         error: function(error){
-        
+
         },
     })
 
@@ -1000,7 +1003,7 @@ function toggleWatermark(input,table){
     <script>
 
         function editshowCompanyProfile(inputSelf,type,id){
-          
+
                 if(type == 'ar'){
 
                     if( $('.agency-profile-ar-'+id).data('agencyprofile') === ''){
@@ -1008,7 +1011,7 @@ function toggleWatermark(input,table){
                     $('.agency-profile-message-ar-'+id).text(message)
                     return;
                     }
-                   
+
                     const domEditableElement = document.querySelector( '.description-profile-modal-'+id+' .edit_description_ar_'+id+' .ck-editor__editable' );
                     const editorInstance = domEditableElement.ckeditorInstance;
                     const htmlDP = editorInstance.data.processor;
@@ -1028,7 +1031,7 @@ function toggleWatermark(input,table){
                     const viewFragment = htmlDP.toView($('.agency-profile-en-'+id).data('agencyprofile'));
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                    editorInstance.model.insertContent(modelFragment, insertPosition); 
+                    editorInstance.model.insertContent(modelFragment, insertPosition);
                 }
 
         }
@@ -1061,22 +1064,22 @@ function toggleWatermark(input,table){
                     const viewFragment = htmlDP.toView($('.agent-profile-en-'+id).find(':selected').data('agentprofile'));
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                    editorInstance.model.insertContent(modelFragment, insertPosition); 
+                    editorInstance.model.insertContent(modelFragment, insertPosition);
                 }
         }
 
 
-    
+
         function editloadCheckedFeatures(type,id){
 
 
-            
+
             var  checkboxesFeature = $('.choosen-features-'+id+':checkbox:checked ').map(function() {
-                var name = this.name.replace('"',""); 
-                name = name .replace('edit_features_'+id,""); 
-                name = name .replace("[",""); 
-                name = name .replace("]",""); 
-                name = name .replace(/_/g," "); 
+                var name = this.name.replace('"',"");
+                name = name .replace('edit_features_'+id,"");
+                name = name .replace("[","");
+                name = name .replace("]","");
+                name = name .replace(/_/g," ");
 
                 const words = name.split(" ");
 
@@ -1085,18 +1088,18 @@ function toggleWatermark(input,table){
                 }
 
                   name = words.join(" ");
-               
+
                 return name;
             }).get();
            var  inputsFeature = $('.choosen-features-inputs-'+id).map(function() {
 
                         if(this.value != ''){
 
-                            var name = this.name.replace('"',""); 
-                            name = name .replace('edit_features_'+id,""); 
-                            name = name .replace("[",""); 
-                            name = name .replace("]",""); 
-                            name = name .replace(/_/g," "); 
+                            var name = this.name.replace('"',"");
+                            name = name .replace('edit_features_'+id,"");
+                            name = name .replace("[","");
+                            name = name .replace("]","");
+                            name = name .replace(/_/g," ");
 
                             const words = name.split(" ");
 
@@ -1105,20 +1108,20 @@ function toggleWatermark(input,table){
                             }
 
                             name = words.join(" ");
-                        
-                           
+
+
                             return name+' ( '+ this.value +')';
                         }
-                                          
+
                 }).get();
 
            var  selectsFeature = $('.choosen-features-select-'+id).map(function() {
             if(this.value != ''){
-                var name = this.name.replace('"',""); 
-                name = name .replace('edit_features_'+id,""); 
-                name = name .replace("[",""); 
-                name = name .replace("]",""); 
-                name = name .replace(/_/g," "); 
+                var name = this.name.replace('"',"");
+                name = name .replace('edit_features_'+id,"");
+                name = name .replace("[","");
+                name = name .replace("]","");
+                name = name .replace(/_/g," ");
 
                 const words = name.split(" ");
 
@@ -1127,26 +1130,26 @@ function toggleWatermark(input,table){
                 }
 
                   name = words.join(" ");
-               
+
                 return name+' ( '+ this.value +')';
             }
-                          
-             
-              }).get(); 
+
+
+              }).get();
 
              var merged =  inputsFeature.concat(checkboxesFeature);
              var all =  merged.concat(selectsFeature);
-           
+
               if(all.length > 0){
-                  
+
                   var ul_html = '';
                   ul_html+= '<ul>';
                         for (let index = 0; index < all.length; index++) {
-                           
-                            ul_html += '<li>' + all[index]+'</li>'; 
-                            
+
+                            ul_html += '<li>' + all[index]+'</li>';
+
                         }
-    
+
                   ul_html+= '</ul>';
                   const domEditableElement = document.querySelector( '.description-profile-modal-'+id+' .edit_description_'+type+'_'+id+' .ck-editor__editable' );
 
@@ -1155,13 +1158,13 @@ function toggleWatermark(input,table){
                     const viewFragment = htmlDP.toView(ul_html);
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                    editorInstance.model.insertContent(modelFragment, insertPosition); 
+                    editorInstance.model.insertContent(modelFragment, insertPosition);
               }else {
-                
+
                             var message = @json(trans('listing.choose_features_to_copy'));
                             $('.features_copy_message_'+type+'_'+id).text(message)
                             return;
-               
+
               }
         }
 
@@ -1169,7 +1172,7 @@ function toggleWatermark(input,table){
         function editshowTemplates(type,id){
             if(type == 'ar'){
                 if($('.load-templates-ar-'+id).find(':selected').data('desctemplate') == ''){
-              
+
                     return;
                     }
                     const domEditableElement = document.querySelector( '.description-profile-modal-'+id+' .edit_description_ar_'+id+' .ck-editor__editable' );
@@ -1182,7 +1185,7 @@ function toggleWatermark(input,table){
                 }else{
                     // typeof car.color === 'undefined'
                        if($('.load-templates-en-'+id).find(':selected').data('desctemplate') == ''){
-                          
+
                             return;
                     }
                     const domEditableElement = document.querySelector( '.description-profile-modal-'+id+'  .edit_description_en_'+id+' .ck-editor__editable' );
@@ -1191,7 +1194,7 @@ function toggleWatermark(input,table){
                     const viewFragment = htmlDP.toView($('.load-templates-en-'+id).find(':selected').data('desctemplate'));
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                    editorInstance.model.insertContent(modelFragment, insertPosition); 
+                    editorInstance.model.insertContent(modelFragment, insertPosition);
                 }
 
 
@@ -1212,7 +1215,7 @@ function toggleWatermark(input,table){
                         _token: '{{ csrf_token() }}',
                         id    : id,
                         note  : note,
-                    
+
                     },
                     success: function(data){
                         var locale = @json(app()->getLocale());
@@ -1221,21 +1224,21 @@ function toggleWatermark(input,table){
 
                         var htmlTr = '';
                          htmlTr += '<tr>';
-                          htmlTr += '<td>'  ; 
-                        
-                           htmlTr += data.added_by ;  
- 
-                          htmlTr += '</td>'  ; 
-                          htmlTr += '<td>'  ; 
-                            htmlTr += data.created_at ;  
-                          htmlTr += '</td>' ;  
-                          htmlTr += '<td>'  ; 
-                          htmlTr += data.note ;  
-                          htmlTr += '</td>' ;  
+                          htmlTr += '<td>'  ;
+
+                           htmlTr += data.added_by ;
+
+                          htmlTr += '</td>'  ;
+                          htmlTr += '<td>'  ;
+                            htmlTr += data.created_at ;
+                          htmlTr += '</td>' ;
+                          htmlTr += '<td>'  ;
+                          htmlTr += data.note ;
+                          htmlTr += '</td>' ;
                          htmlTr += '</tr>';
 
                         $('.note-list-'+id+' > tbody:last-child').append(htmlTr);
-            
+
                             toast(data.message,'success');
 
                     },

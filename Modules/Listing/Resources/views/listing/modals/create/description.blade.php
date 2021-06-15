@@ -212,13 +212,13 @@
         function loadCheckedFeatures(type){
 
 
-            
+
             var  checkboxesFeature = $('.choosen-features:checkbox:checked ').map(function() {
-                var name = this.name.replace('"',""); 
-                name = name .replace('features',""); 
-                name = name .replace("[",""); 
-                name = name .replace("]",""); 
-                name = name .replace(/_/g," "); 
+                var name = this.name.replace('"',"");
+                name = name .replace('features',"");
+                name = name .replace("[","");
+                name = name .replace("]","");
+                name = name .replace(/_/g," ");
 
                 const words = name.split(" ");
 
@@ -227,18 +227,18 @@
                 }
 
                   name = words.join(" ");
-               
+
                 return name;
             }).get();
            var  inputsFeature = $('.choosen-features-inputs').map(function() {
 
                         if(this.value != ''){
 
-                            var name = this.name.replace('"',""); 
-                            name = name .replace('features',""); 
-                            name = name .replace("[",""); 
-                            name = name .replace("]",""); 
-                            name = name .replace(/_/g," "); 
+                            var name = this.name.replace('"',"");
+                            name = name .replace('features',"");
+                            name = name .replace("[","");
+                            name = name .replace("]","");
+                            name = name .replace(/_/g," ");
 
                             const words = name.split(" ");
 
@@ -247,20 +247,20 @@
                             }
 
                             name = words.join(" ");
-                        
-                           
+
+
                             return name+' ( '+ this.value +')';
                         }
-                                          
+
                 }).get();
 
            var  selectsFeature = $('.choosen-features-select').map(function() {
             if(this.value != ''){
-                var name = this.name.replace('"',""); 
-                name = name .replace('features',""); 
-                name = name .replace("[",""); 
-                name = name .replace("]",""); 
-                name = name .replace(/_/g," "); 
+                var name = this.name.replace('"',"");
+                name = name .replace('features',"");
+                name = name .replace("[","");
+                name = name .replace("]","");
+                name = name .replace(/_/g," ");
 
                 const words = name.split(" ");
 
@@ -269,41 +269,41 @@
                 }
 
                   name = words.join(" ");
-               
+
                 return name+' ( '+ this.value +')';
             }
-                          
-             
-              }).get(); 
+
+
+              }).get();
 
              var merged =  inputsFeature.concat(checkboxesFeature);
              var all =  merged.concat(selectsFeature);
               console.log(all)
               if(all.length > 0){
-                  
+
                   var ul_html = '';
                   ul_html+= '<ul>';
                         for (let index = 0; index < all.length; index++) {
-                           
-                            ul_html += '<li>' + all[index]+'</li>'; 
-                            
+
+                            ul_html += '<li>' + all[index]+'</li>';
+
                         }
-    
+
                   ul_html+= '</ul>';
-                
+
                     const domEditableElement = document.querySelector( '.description-profile-modal .description_'+type+' .ck-editor__editable' );
                     const editorInstance = domEditableElement.ckeditorInstance;
                     const htmlDP = editorInstance.data.processor;
                     const viewFragment = htmlDP.toView(ul_html);
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                    editorInstance.model.insertContent(modelFragment, insertPosition); 
+                    editorInstance.model.insertContent(modelFragment, insertPosition);
               }else {
-                
+
                             var message = @json(trans('listing.choose_features_to_copy'));
                             $('.features_copy_message_'+type).text(message)
                             return;
-               
+
               }
         }
 

@@ -63,6 +63,18 @@ return [
             ]) : [],
         ],
 
+        'mysql2' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST2', '127.0.0.1'),
+            'database'  => env('DB_DATABASE2', 'lawkovmy_crm_pcasa'),
+            'port'      => env('DB_PORT2', '3306'),
+            'username'  => env('DB_USERNAME2', 'lawkovmy_moaaz'),
+            'password'  => env('DB_PASSWORD2', 'otgdatabase'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
