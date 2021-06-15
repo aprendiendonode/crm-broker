@@ -120,11 +120,11 @@
 
            
             autocompletelocation_input = new google.maps.places.Autocomplete((document.getElementById('location_input')), {
-        types: ["establishment"],
-        });
-        autocompletelocation_input.setComponentRestrictions({
-           country: ['EG'],
-       });
+                types: ["establishment"],
+                });
+                autocompletelocation_input.setComponentRestrictions({
+                country: ['EG'],
+            });
 
        google.maps.event.addListener(autocompletelocation_input, 'place_changed', function () {
             var place = autocompletelocation_input.getPlace();

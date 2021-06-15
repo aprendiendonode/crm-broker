@@ -1073,7 +1073,7 @@ function toggleWatermark(input,table){
 
 
     
-        function editloadCheckedFeatures(type,id){
+   /*      function editloadCheckedFeatures(type,id){
 
 
             
@@ -1170,7 +1170,7 @@ function toggleWatermark(input,table){
                
               }
         }
-
+ */
 
         function editshowTemplates(type,id){
             if(type == 'ar'){

@@ -742,8 +742,8 @@
                 <input type="text" class="form-control" name="edit_address_{{ $lead->id }}" id="location_input_{{ $lead->id }}"  
                 value="{{ old('edit_address_'.$lead->id,$lead->address) }}" 
                  placeholder="">
-                 <input type="hidden" name="edit_loc_lat_{{ $lead->id }}" id="latitude_{{ $lead->id }}" value="{{ old('edit_loc_lat_'.$lead->id,$lead->loc_lat) }}" >
-                 <input type="hidden" name="edit_loc_lng_{{ $lead->id }}" id="longitude_{{ $lead->id }}" value="{{ old('edit_loc_lng_'.$lead->id,$lead->loc_lng) }}">
+                 <input type="hidden" name="edit_lat_loc_{{ $lead->id }}" id="latitude_{{ $lead->id }}" value="{{ old('edit_lat_loc_'.$lead->id,$lead->lat_loc) }}" >
+                 <input type="hidden" name="edit_lng_loc_{{ $lead->id }}" id="longitude_{{ $lead->id }}" value="{{ old('edit_lng_loc_'.$lead->id,$lead->lng_loc) }}">
                 <div class="text-center pl-1">
                     <i class="fas fa-map-marker-alt" style="font-size:1.2rem"  data-toggle="modal" data-target="#map-modal-{{ $lead->id }}"></i>
                 </div>

@@ -57,7 +57,7 @@ class OpportunityRepo
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
-            'task_status', 'task_types', 'developers', 'opportunities'
+            'task_status', 'task_types', 'developers', 'opportunities', 'country'
         ])->where('id', $agency)->where('business_id', $business)->first();
         abort_if(!$agency, Response::HTTP_FORBIDDEN, '403 Forbidden');
 
@@ -173,6 +173,7 @@ class OpportunityRepo
                 'staffs'        =>  staff($agency->id),
                 'total_opportunities' => $agency->opportunities,
                 'agency'        => $agency->id,
+                'agency_region' => $agency->country ? $agency->country->iso2 : '',
                 'business'      => $business,
                 'opportunities' => $opportunities,
                 'countries'              =>
@@ -241,7 +242,7 @@ class OpportunityRepo
             DB::commit();
             return back()->with(flash(trans('sales.opportunity_updated'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
-            dd($e->getMessage());
+
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
@@ -1889,22 +1890,13 @@ class OpportunityRepo
                 'phone1_code'  => $opportunity->phone1_code,
                 'phone2_code'  =>  $opportunity->phone2_code,
 
-                /*    'country' => $request->{"client_country_" . $request->opportunity_id},
-                'city'    => $request->{"client_city_" . $request->opportunity_id},
- */
                 'skype' => $opportunity->skype,
                 'twitter' => $opportunity->twitter,
                 'facebook' => $opportunity->facebook,
                 'linkedin' => $opportunity->linkedin,
 
-                /*    'longitude' => $request->{"client_longitude_" . $request->opportunity_id},
-                'latitude' => $request->{"client_latitude_" . $request->opportunity_id},
- */
-
-                // 'language' => $request->{"client_language_" . $request->opportunity_id},
-                // 'currency' => $request->{"client_currency_" . $request->opportunity_id},
-
-
+                'longitude' =>  $opportunity->loc_lng,
+                'latitude' => $opportunity->loc_lat,
                 'company'     => $opportunity->company,
                 'passport'    => $opportunity->passport,
                 'national_id' => $opportunity->national_id,

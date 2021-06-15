@@ -76,7 +76,7 @@ class LeadsController extends Controller
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
-            'task_status', 'leads', 'task_types',  'developers'
+            'task_status', 'leads', 'task_types',  'developers', 'country'
         ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
 
@@ -158,8 +158,6 @@ class LeadsController extends Controller
                 'leads' => $leads->paginate($per_page),
                 'pagination' => $pagination,
                 'total_leads' => $agency->leads,
-
-
                 'staffs' => staff($agency->id),
                 'countries' =>
                 cache()->remember('countries', 60 * 60 * 24, function () use ($agency) {
@@ -178,7 +176,8 @@ class LeadsController extends Controller
                     return DB::table('sub_communities')->get();
                 }),
 
-                'agency' => $agency->id,
+                'agency'        => $agency->id,
+                'agency_region' => $agency->country ? $agency->country->iso2 : '',
                 'business' => $business,
                 'lead_sources' => $agency->lead_sources,
                 'lead_communications' => $agency->lead_communications,
@@ -282,6 +281,8 @@ class LeadsController extends Controller
                 "salutation" => "required|string|in:Mr,Mrs,Ms,Miss",
                 "skype" => "sometimes|nullable|email",
                 "other" => "sometimes|nullable|string",
+                "loc_lat"                                  => ['sometimes', 'nullable', 'string'],
+                "loc_lng"                                  => ['sometimes', 'nullable', 'string'],
                 // "assigned_to" => "sometimes|nullable|array",
                 // 'assigned' => 'required|in:all,custom'
             ]);
@@ -619,6 +620,8 @@ class LeadsController extends Controller
                 "property_no" => $request->property_no,
                 "property_id" => $request->property_id,
                 "address" => $request->address,
+                "lat_loc"  => $request->lat_loc,
+                "lng_loc"   => $request->lng_loc,
 
                 "property_reference" => $request->property_reference,
                 "size_sqft" => $request->size_sqft,
@@ -729,6 +732,9 @@ class LeadsController extends Controller
                 "edit_skype_" . $id => "sometimes|nullable|email",
                 // "edit_assigned_to_" . $id                   => "sometimes|nullable|array",
                 "edit_other_" . $id => "sometimes|nullable|string",
+                "edit_address_" . $id => "sometimes|nullable|string",
+                "edit_lat_loc_" . $id => "sometimes|nullable|string",
+                "edit_lng_loc_" . $id => "sometimes|nullable|string",
 
 
             ]);
@@ -1018,6 +1024,8 @@ class LeadsController extends Controller
 
                 "company" => $request->{'edit_company_' . $id},
                 "address" => $request->{'edit_address_' . $id},
+                "lat_loc" => $request->{'edit_lat_loc_' . $id},
+                "lng_loc" => $request->{'edit_lng_loc_' . $id},
                 "website" => $request->{'edit_website_' . $id},
                 "note" => $request->{'edit_note_' . $id},
                 "po_box" => $request->{'edit_po_box_' . $id},
@@ -2176,6 +2184,8 @@ class LeadsController extends Controller
                 "property_no" => $lead->property_no,
                 "property_id" => $lead->property_id,
                 "address" => $lead->address,
+                "loc_lat" => $lead->lat_loc,
+                "loc_lng" => $lead->lng_loc,
 
                 "property_reference" => $lead->property_reference,
                 "size_sqft" => $lead->size_sqft,
