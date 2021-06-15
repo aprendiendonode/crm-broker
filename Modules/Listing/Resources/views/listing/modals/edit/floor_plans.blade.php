@@ -260,7 +260,7 @@
 
 $(function(){
         var listing_id = @json($listing->id);
-        $('#plan-drag-and-drop-zone-'+listing_id).dmUploader({ //
+        $('#plan-drag-and-drop-zone-'+listing_id).dmUploader({ 
         url: '{{ route("listing.temporary-plans") }}',
         headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

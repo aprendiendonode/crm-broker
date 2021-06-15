@@ -11,6 +11,7 @@
    
 
 @endsection
+
 <form id="add-staff-form" action="{{ route('listing.store') }}" data-parsley-validate="" autocomplete="off" method="POST" enctype="multipart/form-data">
 <div class="row">
         @csrf

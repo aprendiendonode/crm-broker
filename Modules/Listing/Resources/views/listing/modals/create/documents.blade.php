@@ -76,7 +76,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 @push('js')
-    
+
 <script type="text/html" id="document-files-template">
     <li class="col-4 media">
     <div style="display: flex;
@@ -84,7 +84,7 @@
     flex-direction: column;
     height: 100%;">
  <input type="hidden" class="document-id" >
- <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this,'temporary') : false"></i> 
+ <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this,'temporary') : false"></i>
     <div class="document">
             <i class="fa fa-file-contract fa-4x "></i>
     </div>
@@ -93,31 +93,31 @@
 
         <div class="media-body mb-1">
         <div class="d-flex justify-content-between my-2">
-    
+
             <div>
             <div class="form-group mb-0 title">
             @lang('listing.no_title')
             </div>
             </div>
         </div>
-        
+
 
         <div class="progress mb-2">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
             role="progressbar"
-            style="width: 0%" 
+            style="width: 0%"
             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
             </div>
         </div>
         <div class="mb-2 d-flex justify-content-start">
             <input type="text" class="form-control document_rename_value"  placeholder="@lang('listing.enter_title')">
-            <i 
-            class="fa fa-check text-success mt-2 ml-2 cursor-pointer document_rename" 
-            
+            <i
+            class="fa fa-check text-success mt-2 ml-2 cursor-pointer document_rename"
+
             onclick="event.preventDefault();modifyName(this,'temporary_documents','document')"></i>
         </div>
         <div class="text-success save-title-success" > </div>
-        
+
         <hr class="mt-1 mb-1" />
         </div>
     </div>
@@ -128,16 +128,16 @@
   <script>
     $(function(){
 
-    $('#document-drag-and-drop-zone').dmUploader({ //
+    $('#document-drag-and-drop-zone').dmUploader({
     url: '{{ route("listing.temporary-documents") }}',
     headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    maxFileSize: 3000000, 
+    maxFileSize: 3000000,
     allowedTypes: 'image/*',
     extFilter: ["jpg", "jpeg","png","gif",'pdf','txt'],
     onDragEnter: function(){
-    
+
     this.addClass('active');
     },
     onDragLeave: function(){
@@ -174,13 +174,13 @@
     $('#documentUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.document.id)
     $('#documentUploaderFile' + id).find('.title').attr('id','title_'+data.document.id)
 
-    $('#documentUploaderFile' + id).find('.remove-document').attr('id','remove-documentUploaderFile' + id)
+    $('#documentUploaderFile' + id).find('.remove-document').attr('id','remove-documentUploaderFile' + id);
       $('#documentUploaderFile' + id).find('.document-id').val( data.document.id)
 
     },
     onUploadError: function(id, xhr, status, message){
         document_ui_multi_update_file_status(id, 'danger', message);
-        document_ui_multi_update_file_progress(id, 0, 'danger', false);  
+        document_ui_multi_update_file_progress(id, 0, 'danger', false);
     }
 
     });
