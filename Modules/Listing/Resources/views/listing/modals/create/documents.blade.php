@@ -133,20 +133,18 @@
     headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    maxFileSize: 3000000, // 3 Megs 
+    maxFileSize: 3000000, 
     allowedTypes: 'image/*',
     extFilter: ["jpg", "jpeg","png","gif",'pdf','txt'],
     onDragEnter: function(){
-    // Happens when dragging something over the DnD area
+    
     this.addClass('active');
     },
     onDragLeave: function(){
-    // Happens when dragging something OUT of the DnD area
     this.removeClass('active');
     },
 
     onNewFile: function(id, file){
-    // When a new file is added using the file selector or the DnD area
     document_ui_multi_add_file(id, file);
 
     if (typeof FileReader !== "undefined"){
@@ -156,12 +154,10 @@
     }
     },
     onBeforeUpload: function(id){
-    // about tho start uploading a file
     document_ui_multi_update_file_progress(id, 0, '', true);
     document_ui_multi_update_file_status(id, 'uploading', 'Uploading...');
     },
     onUploadProgress: function(id, percent){
-    // Updating file progress
     document_ui_multi_update_file_progress(id, percent);
     },
     onUploadSuccess: function(id, data){
