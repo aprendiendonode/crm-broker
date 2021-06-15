@@ -946,7 +946,6 @@ function togglePlanWatermark(input,table){
         },
         success: function(data){
             
-                //TODO request ajax to change which one of the should be on to use later
             $('#'+sliced_id+' .plan-with-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .plan-no-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .plan-with-enlarg-watermark').toggleClass('d-none')
@@ -981,8 +980,6 @@ function toggleWatermark(input,table){
         },
         success: function(data){
             
-           //TODO request ajax to change which one of the should be on to use later
-
             $('#'+sliced_id+' .with-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .no-watermark').toggleClass('d-none')
             $('#'+sliced_id+' .with-enlarg-watermark').toggleClass('d-none')
@@ -1055,7 +1052,6 @@ function toggleWatermark(input,table){
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
                 }else{
-                    // typeof car.color === 'undefined'
                        if($('.agent-profile-en').find(':selected').data('agentprofile') == ''){
                             var message = @json(trans('listing.no_english_profile_for_agent'));
                             $('.agent-profile-message-en-'+id).text(message)
