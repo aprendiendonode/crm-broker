@@ -165,20 +165,20 @@
 <script>
 $(function(){
  
-  $('#drag-and-drop-zone').dmUploader({ //
+  $('#drag-and-drop-zone').dmUploader({ 
     url: '{{ route("listing.temporary-photos") }}',
     headers: {
    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 },
-    maxFileSize: 3000000, // 3 Megs 
+    maxFileSize: 3000000, 
     allowedTypes: 'image/*',
     extFilter: ["jpg", "jpeg","png","gif"],
     onDragEnter: function(){
-      // Happens when dragging something over the DnD area
+      
       this.addClass('active');
     },
     onDragLeave: function(){
-      // Happens when dragging something OUT of the DnD area
+      
       this.removeClass('active');
     },
 
@@ -202,7 +202,7 @@ $(function(){
       ui_multi_update_file_status(id, 'uploading', 'Uploading...');
     },
     onUploadProgress: function(id, percent){
-      // Updating file progress
+      
       ui_multi_update_file_progress(id, percent);
     },
     onUploadSuccess: function(id, data){
