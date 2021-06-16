@@ -5,7 +5,7 @@
 
 
         <li>
-            <a href="{{ url('/') }}">
+            <a href="@if(auth()->user()->type == 'superadmin') {{ url('superadmin/home') }} @else {{ url('/') }} @endif">
                 <i class="fas fa-tachometer-alt"></i>
                 @lang('sales.dashboard')</a>
         </li>

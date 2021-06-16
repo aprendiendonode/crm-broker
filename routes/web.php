@@ -103,9 +103,11 @@ Route::feeds();
             if (count($agencies) > 0) {
                 return redirect('home/' . $agencies[0]);
             }
-        } else {
+        } elseif( auth()->user()->type == 'superadmin'){
+            return redirect('superadmin/home' );
+        }
+        else {
             if (auth()->user()->agency_id != null) {
-
                 return redirect('home/' . auth()->user()->agency_id);
             }
         }
@@ -125,7 +127,10 @@ Route::feeds();
             if (count($agencies) > 0) {
                 return redirect('home/' . $agencies[0]);
             }
-        } else {
+        }elseif( auth()->user()->type == 'superadmin'){
+            return redirect('superadmin/home' );
+
+        }  else {
             if (auth()->user()->agency_id != null) {
 
                 return redirect('home/' . auth()->user()->agency_id);
