@@ -35,7 +35,8 @@ class CompanyProfileController extends Controller
         $countries = Country::all();
         $cities    = City::all();
 
-        return view('agency::company_profile.index', compact('agency', 'business', 'countries', 'cities'));
+        return view('agency::company_profile.index',
+            compact('agency', 'business', 'countries', 'cities'));
     }
 
 
@@ -60,7 +61,7 @@ class CompanyProfileController extends Controller
                 'description_ar'   => 'nullable|sometimes|string',
 
                 'country_code'     => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
-                'city_code'        => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+//                'city_code'        => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
                 'phone'            => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
 
 
