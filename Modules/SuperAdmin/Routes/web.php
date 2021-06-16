@@ -15,6 +15,7 @@
 Route::middleware(['checkauth', 'lang'])->group(function () {
 
     Route::prefix('superadmin')->group(function () {
+        Route::get('home', 'SuperAdminController@home');
         Route::resource('countries', 'CountryController');
         Route::resource('cities', 'CityController');
         Route::resource('communities', 'CommunityController');

@@ -198,6 +198,9 @@
 
     $('#plan-drag-and-drop-zone').dmUploader({ //
     url: '{{ route("listing.temporary-plans") }}',
+    extraData: {
+   "agency": '{{ $agency }}'
+   },
     headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
