@@ -184,7 +184,7 @@ class ListingRepo
                 ]
             );
         } catch (\Exception $e) {
-            ray($e->getMessage());
+
             abort(404);
         }
     }
@@ -2113,5 +2113,12 @@ class ListingRepo
                 return response()->json(['message' => trans('agency.something_went_wrong')], 400);
             }
         }
+    }
+
+
+
+    public function show($listing_id, $listing_ref)
+    {
+        return view('listing::listing.front');
     }
 }

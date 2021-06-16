@@ -57,7 +57,7 @@ class OpportunityRepo
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
-            'task_status', 'task_types', 'developers', 'opportunities', 'country'
+            'task_status', 'task_types', 'developers',  'country'
         ])->where('id', $agency)->where('business_id', $business)->first();
         abort_if(!$agency, Response::HTTP_FORBIDDEN, '403 Forbidden');
 
@@ -171,7 +171,6 @@ class OpportunityRepo
             'sales::opportunities.index',
             [
                 'staffs'        =>  staff($agency->id),
-                'total_opportunities' => $agency->opportunities,
                 'agency'        => $agency->id,
                 'agency_region' => $agency->country ? $agency->country->iso2 : '',
                 'business'      => $business,
