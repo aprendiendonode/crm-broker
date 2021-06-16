@@ -175,7 +175,7 @@
                             @if(old('phone1_code') == $code->phone_code) 
                             selected
                             @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->value .' ) '   }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -204,7 +204,7 @@
                             @if(old('phone2_code') == $code->phone_code) 
                              selected
                             @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->value .' ) '   }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -235,7 +235,7 @@
                             @if(old('phone3_code') == $code->phone_code) 
                             selected
                             @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->value .' ) '   }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -258,7 +258,7 @@
 
             <div class="form-group d-flex">
 
-                <div style="flex:2">
+                <div style="flex:3">
                     <div>
                         <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
                     </div>
@@ -269,11 +269,11 @@
                             @if(old('phone4_code') == $code->phone_code) 
                             selected
                             @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
+                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->value .' ) '   }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div style="flex:4">
+                <div style="flex:3">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone4')</label>
                 </div>
