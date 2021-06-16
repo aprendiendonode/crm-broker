@@ -33,6 +33,7 @@ use Intervention\Image\Facades\Image;
 use Modules\Listing\Entities\Listing;
 use Modules\Sales\Entities\Developer;
 use Modules\SuperAdmin\Entities\City;
+use Modules\Agency\Entities\Watermark;
 use Modules\Activity\Entities\TaskNote;
 use Modules\Activity\Entities\TaskType;
 use Modules\Sales\Entities\Opportunity;
@@ -816,6 +817,7 @@ class ListingRepo
 
     public function temporary_photos($request)
     {
+
         if (request()->has('file')) {
 
             if (!file_exists(public_path("temporary"))) {
@@ -840,15 +842,18 @@ class ListingRepo
 
             $main_photo_path = public_path('temporary/listings/' . $main_tmp_folder . '/' . $photo_name);
 
-            $watermark = public_path('watermark.png');
-
+            $watermark = Watermark::where('agency_id', $request->agency)->where('active', 'yes')->first();
 
             // * image with full size and watermark
             $with_watermark_tmp_folder_path = public_path("temporary/listings/$main_tmp_folder/mainWatermark-$photo_name");
 
-            Image::make($main_photo_path)
-                ->insert($watermark, 'center', 10, 10)
-                ->save($with_watermark_tmp_folder_path);
+
+            if ($watermark) {
+                Image::make($main_photo_path)
+                    ->insert(public_path('upload/watermarks/' . $watermark->image), $watermark->position)
+                    ->save($with_watermark_tmp_folder_path);
+            }
+
 
             $temporary_photo = TemporaryListing::create([
                 'folder' => $main_tmp_folder,

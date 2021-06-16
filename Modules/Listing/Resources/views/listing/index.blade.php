@@ -438,7 +438,7 @@
     <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
 
 
-    <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script> --}}
 
 
     <script src="{{ asset('assets/libs/uploader-master/dist/js/jquery.dm-uploader.min.js') }}"></script>
