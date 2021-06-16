@@ -56,26 +56,50 @@
         //    var email = $('.email_check').val();
            var phone = $('.phone_check').val();
 
-            var total_leads = @json($total_leads);
-            var filtered_leads = total_leads.filter(function(lead){
-                return lead.phone1 == phone || lead.phone2 == phone || lead.phone3 == phone  || lead.phone4 == phone || lead.landline == phone;
-                    //  ||  lead.email1 == email ||  lead.email2 == email || lead.email3 == email
-            });
+            {{--var total_leads = @json($total_leads);--}}
+            var filtered_leads = [];
+          var agency   =  @json($agency);
+          var business =  @json($business);
 
-            console.log(filtered_leads.length);
+                // total_leads.filter(function(lead){
+                //     return lead.phone1 == phone || lead.phone2 == phone || lead.phone3 == phone  || lead.phone4 == phone || lead.landline == phone;
+                //     //  ||  lead.email1 == email ||  lead.email2 == email || lead.email3 == email
+                // });
+          $.ajax({
+              url:"{{ route('leads.check_before_create')  }}",
+              type:'POST',
+              data:{
+                  phone : phone,
+                  agency  : agency,
+                  business: business,
+                  _token  :'{{ csrf_token() }}'
+              },
+              success: function(data){
 
-            if(filtered_leads.length > 0){
-                 var result_words = @json(trans('sales.found_lead'));
-                 var url = @json(url('sales/leads/'.$agency));
-                 var link = '<a href="'+url+'?filter_phone='+phone+'"> Here </a>' 
-                $('.check-result').text(filtered_leads.length  +' '+result_words )
-                $('.check-result').append(link)
+                  filtered_leads = data.leads;
+                  console.log(filtered_leads.length);
 
-            } else {
 
-                var result_words = @json(trans('sales.not_found_lead'));
-               $('.check-result').text(result_words)
-            }
+                  if(filtered_leads.length > 0){
+                      var result_words = @json(trans('sales.found_lead'));
+                      var url = @json(url('sales/leads/'.$agency));
+                      var link = '<a href="'+url+'?filter_phone='+phone+'"> Here </a>'
+                      $('.check-result').text(filtered_leads.length  +' '+result_words )
+                      $('.check-result').append(link)
+
+                  } else {
+
+                      var result_words = @json(trans('sales.not_found_lead'));
+                      $('.check-result').text(result_words)
+                  }
+
+
+              },
+              error: function (error) {
+
+              }
+          });
+
 
 
 

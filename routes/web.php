@@ -20,7 +20,7 @@ use Spatie\ArrayToXml\ArrayToXml;
 |
 */
 
-Route::get('test','Controller@test');
+//Route::get('test','Controller@test');
 
 Route::middleware(['guest'])->group(function () {
 

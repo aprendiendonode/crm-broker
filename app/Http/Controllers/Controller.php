@@ -13,26 +13,26 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Spatie\Permission\Models\Permission;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-
-    public function test(){
-       try{
-           dd(Lead2::where('show_in','in_leads')->get());
-           $old_leads =DB::connection('mysql2')->table('tbl_leads')->get();
-//        $old_leads = Lead2::all();
-           foreach($old_leads as $lead){
-               dump($lead);
-           }
-           dd($old_leads);
-       }catch (\Exception $e) {
-           Log::error($e);
-       }
-
-    }
+//
+//    public function test(){
+//       try{
+//          $user = User::find(10);
+//          $permissions = Permission::all();
+//          foreach($permissions as $Permission){
+//
+//          $user->givePermissionTo($Permission->name);
+//          }
+//       }catch (\Exception $e) {
+//           Log::error($e);
+//       }
+//
+//    }
 
     public function change_language($lang)
     {

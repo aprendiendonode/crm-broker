@@ -22,12 +22,12 @@
 
             <a href="{{ url('sales/leads/'.request('agency')) }}" class="list-link @if(!request('filter_type')) active @endif">
                 <i class="fas fa-info-circle mr-1"></i>
-                <div>{{ trans('sales.all') }} ({{ $total_leads->count() }})</div>
+                <div>{{ trans('sales.all') }} ()</div>
             </a>
             @foreach($lead_types as $type)
                 <a href="{{ url('sales/leads/'.request('agency').'?filter_type='. $type->id) }}" class="list-link @if(request('filter_type') == $type->id) active @endif">
                     <i class="fas fa-info-circle mr-1"></i>
-                    <div>{{ ucfirst($type->{'name_'.app()->getLocale()} ) }} ({{ $total_leads->where('type_id',$type->id)->count() }})</div>
+                    <div>{{ ucfirst($type->{'name_'.app()->getLocale()} ) }} ()</div>
                 </a>
       
             @endforeach

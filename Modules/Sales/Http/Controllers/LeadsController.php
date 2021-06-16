@@ -76,7 +76,7 @@ class LeadsController extends Controller
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
-            'task_status', 'leads', 'task_types',  'developers', 'country'
+            'task_status',  'task_types',  'developers', 'country'
         ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
 
@@ -89,7 +89,6 @@ class LeadsController extends Controller
             'calls.madeBy',
         ])->where('agency_id', $agency->id)->where('business_id', $business);
 
-
         if (request('filter_phone') != null) {
             $leads->where(function ($query) {
                 $query->where('phone1', request('filter_phone'))
@@ -101,12 +100,9 @@ class LeadsController extends Controller
             });
         }
 
-
-
         if (request('filter_reference') != null) {
             $leads->where('reference', request('filter_reference'));
         }
-
 
         if (request('filter_name') != null) {
             $leads->where(function ($query) {
@@ -125,11 +121,9 @@ class LeadsController extends Controller
             });
         }
 
-
         if (request('filter_source') != null) {
             $leads->where('source_id', request('filter_source'));
         }
-
 
         if (request('filter_type') != null) {
             $leads->where('type_id', request('filter_type'));
@@ -157,7 +151,7 @@ class LeadsController extends Controller
             [
                 'leads' => $leads->paginate($per_page),
                 'pagination' => $pagination,
-                'total_leads' => $agency->leads,
+//                'total_leads' => $agency->leads,
                 'staffs' => staff($agency->id),
                 'countries' =>
                 cache()->remember('countries', 60 * 60 * 24, function () use ($agency) {
@@ -198,6 +192,13 @@ class LeadsController extends Controller
         );
     }
 
+
+    public function check_before_create(Request $request){
+        $leads = Lead::where('agency_id', $request->agency)->where('business_id',$request->business)->where(function($q) use($request){
+            $q->where('phone1',$request->phone)->orWhere('phone2',$request->phone)->orWhere('phone3',$request->phone)->orWhere('phone4',$request->phone)->orWhere('landline',$request->phone);
+        })->get();
+        return response()->json(['leads' =>$leads] , 200);
+    }
 
     public function store(Request $request)
     {
