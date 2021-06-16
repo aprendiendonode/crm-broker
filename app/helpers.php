@@ -1,5 +1,6 @@
 <?php
 
+use Intervention\Image\Facades\Image;
 use  Modules\Activity\Entities\ActivityLog;
 use Modules\Setting\Entities\EmailNotify;
 use Modules\Setting\Entities\EmailNotifyReminder;
@@ -20,12 +21,10 @@ if (!function_exists('owner')) {
 }
 
 
-
-
 if (!function_exists('get_owner')) {
     function get_owner()
     {
-        $owner  = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type',  'owner')->get();
+        $owner = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type', 'owner')->get();
 
         return $owner->first() ? $owner->first() : [];
     }
@@ -76,28 +75,49 @@ if (!function_exists('upload_agency_image')) {
     }
 }
 if (!function_exists('upload_image')) {
-    function upload_image($file, $path, $time = null)
+    function upload_image($file, $path, $time = null, $watermark = null)
     {
         if ($file != null) {
             if ($time) {
 
-                $fileName =  time() . '-' . $file->getClientOriginalName();
+                $fileName = time() . '-' . $file->getClientOriginalName();
             } else {
 
-                $fileName =  $file->getClientOriginalName();
+                $fileName = $file->getClientOriginalName();
             }
             if (!file_exists($path)) {
                 mkdir($path);
             }
+
+            if ($watermark) {
+
+                $img = Image::make($file->getRealPath());
+
+// perform some modifications
+                $img->resize(100, 100);
+//                $img->invert();
+//                $img->save('public/small.jpg');
+
+//                $img->resize(100, 100, function ($constraint) {
+//                    $constraint->aspectRatio();
+////                    $constraint->upsize();
+//                });
+//                $img->opacity(50);
+//                dd($file->getClientOriginalNameWi());
+                $img->save($path . '/' . $fileName);
+                return $fileName;
+
+//                $file = $img;
+            }
+
             $file->move($path, $fileName);
+
 
             return $fileName;
         }
         return null;
     }
 }
-
-
 
 
 if (!function_exists('upload_flag')) {
@@ -109,7 +129,7 @@ if (!function_exists('upload_flag')) {
                 if (file_exists(public_path($path . '/' . $country->flag)))
                     unlink(public_path($path . '/' . $country->flag));
             }
-            $fileName =  $name;
+            $fileName = $name;
             $file->move($path, $fileName);
 
             return $fileName;
@@ -117,7 +137,6 @@ if (!function_exists('upload_flag')) {
         return null;
     }
 }
-
 
 
 if (!function_exists('remove_image')) {
@@ -146,12 +165,10 @@ if (!function_exists('flash')) {
 }
 
 
-
-
 if (!function_exists('agency_settings')) {
     function agency_settings($setting = null)
     {
-        $agency_setting  = \App\Models\AgencySetting::where('agency_id', request('agency'))->first();
+        $agency_setting = \App\Models\AgencySetting::where('agency_id', request('agency'))->first();
         $agency_setting_data = [];
 
         if ($agency_setting != null) {
@@ -161,25 +178,25 @@ if (!function_exists('agency_settings')) {
 
             $agency_setting_data = (object)[
                 "quick_show_number_of_bedrooms" => "yes",
-                "quick_show_number_of_parkings" =>  "yes",
-                "quick_show_number_of_photos" =>  "yes",
-                "quick_show_number_of_videos" =>  "yes",
-                "listings_landlord_should_be_mandatory" =>  "yes",
-                "listings_source_should_be_mandatory" =>  "yes",
-                "listings_reference_should_contain_staff_initial" =>  "no",
-                "listings_show_building_name" =>  "no",
+                "quick_show_number_of_parkings" => "yes",
+                "quick_show_number_of_photos" => "yes",
+                "quick_show_number_of_videos" => "yes",
+                "listings_landlord_should_be_mandatory" => "yes",
+                "listings_source_should_be_mandatory" => "yes",
+                "listings_reference_should_contain_staff_initial" => "no",
+                "listings_show_building_name" => "no",
 
-                "leads_can_assign_multiple_agents" =>  "no",
-                "leads_source_should_be_mandatory" =>  "no",
-                "leads_contacts_should_be_mandatory" =>  "no",
-                "leads_area_min_should_be_mandatory" =>  "no",
-                "leads_budget_max_should_be_mandatory" =>  "no",
+                "leads_can_assign_multiple_agents" => "no",
+                "leads_source_should_be_mandatory" => "no",
+                "leads_contacts_should_be_mandatory" => "no",
+                "leads_area_min_should_be_mandatory" => "no",
+                "leads_budget_max_should_be_mandatory" => "no",
 
                 "contacts_per_page" => 20,
                 "company_profile_primary_number_should_be_mandatory" => "no",
-                "lsm_overall_status"     => "activated",
-                "lsm_share_status"       => "private",
-                "lsm_listings_per_page"  => 20,
+                "lsm_overall_status" => "activated",
+                "lsm_share_status" => "private",
+                "lsm_listings_per_page" => 20,
             ];
         }
         $filters = [
@@ -210,7 +227,7 @@ if (!function_exists('agency_settings')) {
             return $agency_setting_data;
         }
         if ($setting != null) {
-            return  $agency_setting_data->{$setting};
+            return $agency_setting_data->{$setting};
         } else {
             return $agency_setting_data;
         }
@@ -225,13 +242,12 @@ if (!function_exists('words')) {
 }
 
 
-
 if (!function_exists('staff')) {
 
     function staff($agency)
     {
-        $staff       = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type',  'staff')->where('agency_id', $agency)->get();
-        $moderators  = \App\Models\User::where('type', 'moderator')->get()->filter(function ($q) use ($agency) {
+        $staff = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type', 'staff')->where('agency_id', $agency)->get();
+        $moderators = \App\Models\User::where('type', 'moderator')->get()->filter(function ($q) use ($agency) {
             $can_access = explode(',', $q->can_access);
             return in_array($agency, $can_access);
         });
@@ -240,7 +256,7 @@ if (!function_exists('staff')) {
         $merged = $staff->merge($moderators);
 
 
-        $owner  = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type',  'owner')->get();
+        $owner = \App\Models\User::where('business_id', auth()->user()->business_id)->Where('type', 'owner')->get();
 
         $final = $merged->merge($owner);
 
@@ -248,8 +264,6 @@ if (!function_exists('staff')) {
         return $final;
     }
 }
-
-
 
 
 function array_replace_key($search, $replace, array $subject)
@@ -281,7 +295,7 @@ if (!function_exists('deleteDirectory')) {
             return unlink($dir);
         }
         $loop_dir = scandir($dir);
-        foreach ($loop_dir  as $item) {
+        foreach ($loop_dir as $item) {
             if ($item == '.' || $item == '..') {
                 continue;
             }
@@ -300,13 +314,13 @@ if (!function_exists('setActivity')) {
     function setActivity($group, $group_id, $agency_id, $business_id, $log_en, $log_ar)
     {
         $activityData = [
-            'add_by'            =>  auth()->user()->id,
-            'group'             =>  $group,
-            'group_id'          =>  $group_id,
-            'agency_id'         =>  $agency_id,
-            'business_id'       =>  $business_id,
-            'log_en'            =>  $log_en,
-            'log_ar'            =>  $log_ar,
+            'add_by' => auth()->user()->id,
+            'group' => $group,
+            'group_id' => $group_id,
+            'agency_id' => $agency_id,
+            'business_id' => $business_id,
+            'log_en' => $log_en,
+            'log_ar' => $log_ar,
         ];
 
         ActivityLog::create($activityData);
@@ -417,9 +431,9 @@ if (!function_exists('tasks_reminder')) {
 
             foreach ($tasks as $task) {
 
-                $type   = '';
-                $day    = 0;
-                $time   = $task->time;
+                $type = '';
+                $day = 0;
+                $time = $task->time;
 
                 if ($type == 'before') {
 
@@ -479,8 +493,7 @@ if (!function_exists('getClientUpcomingBirthdays')) {
         $date = now();
         $clients = Client::with('agency')->Where(function ($query) use ($date) {
 
-            $query->whereMonth('date_of_birth',  $date->month)
-
+            $query->whereMonth('date_of_birth', $date->month)
                 ->whereDay('date_of_birth', $date->day);
         })->get();
 
