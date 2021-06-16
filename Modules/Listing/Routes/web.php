@@ -13,6 +13,9 @@ use Modules\Listing\Entities\TemporaryListing;
 |
 */
 
+
+Route::get('listing-front/{listing}/{listing_ref}', 'ListingController@show')->name('listings.front');
+
 Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
     Route::prefix('listing')->group(function () {

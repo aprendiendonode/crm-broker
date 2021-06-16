@@ -218,7 +218,7 @@
                                 <i class="fas fa-plus-circle cursor-pointer show-hidden-data-{{ $listing->id }}" onclick="show_data({{ $listing->id }})"></i>
                                 <i class="fas fa-minus-circle cursor-pointer d-none hide-data-{{ $listing->id }}" onclick="hide_data({{ $listing->id }})"></i>
                             </td>
-                            <td>{{ $listing->listing_ref }}</td>
+                            <td><a target="_blank" href="{{ route('listings.front',[$listing->id,$listing->listing_ref]) }}">{{ $listing->listing_ref }}</a></td>
                             <td>{{ Str::ucfirst($listing->purpose) }}</td>
                             <td>{{ $listing->type ? $listing->type->{'name_'.app()->getLocale()} : '' }}</td>
                             <td>

@@ -29,6 +29,11 @@ class ListingController extends Controller
         return $this->repository->store($request);
     }
 
+    public function show($listing_id, $listing_ref)
+    {
+        return $this->repository->show($listing_id, $listing_ref);
+    }
+
 
 
 
