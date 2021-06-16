@@ -111,6 +111,7 @@ class SettingsController extends Controller
         }
         catch (\Exception $e) {
             DB::rollback();
+            throw $e;
             return back()->withInput()->with(flash(trans('agency.something_went_wrong'), 'error'));
         }
 

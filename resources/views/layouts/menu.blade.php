@@ -9,9 +9,10 @@
                     <i class="fas fa-tachometer-alt"></i>
                     @lang('sales.dashboard')</a>
             </li>
-         
-            
-      
+
+
+            @if(auth()->user()->type != 'superadmin')
+
             <li>
                 <a href="#sidebarIcons" data-toggle="collapse">
                     <i class="fas fa-address-book"></i>
@@ -717,7 +718,7 @@
                 </div>
             </li>
 
-
+@endif
 @if(auth()->user()->type == 'superadmin')
             <li>
                 <a href="#sidebarSuperadmin" data-toggle="collapse">
