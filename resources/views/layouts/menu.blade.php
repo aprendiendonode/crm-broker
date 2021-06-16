@@ -2,8 +2,16 @@
      <div id="sidebar-menu">
 
         <ul id="side-menu">
-
-
+       
+           
+            <li>
+                <a href="{{ url('/') }}">
+                    <i class="fas fa-tachometer-alt"></i>
+                    @lang('sales.dashboard')</a>
+            </li>
+         
+            
+      
             <li>
                 <a href="#sidebarIcons" data-toggle="collapse">
                     <i class="fas fa-address-book"></i>

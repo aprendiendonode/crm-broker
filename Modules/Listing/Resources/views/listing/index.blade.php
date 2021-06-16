@@ -535,12 +535,12 @@
         function show_add_div() {
             var div = document.querySelector('.add_listing');
             if (div.style.display === 'none') {
-
+             var region = @json($agency_region);
                 injectGoogleMapsApiScript({
                     key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
                     libraries: 'places',
                     language: 'ar',
-                    region: 'EG',
+                    region: region,
                     callback: 'initMap',
                 });
 

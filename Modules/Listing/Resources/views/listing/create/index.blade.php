@@ -55,6 +55,7 @@
    
 
     var listings = @json($listings);
+    var region = @json($agency_region);
         function initMap() {
 
 
@@ -66,7 +67,7 @@
                             types: ["establishment"],
                             });
                             edit_autocompletelocation_input.setComponentRestrictions({
-                            country: ['EG'],
+                            country: [region],
                         });
 
                         google.maps.event.addListener(edit_autocompletelocation_input, 'place_changed', function () {
@@ -124,7 +125,7 @@
                 types: ["establishment"],
                 });
                 autocompletelocation_input.setComponentRestrictions({
-                country: ['EG'],
+                country: [region],
             });
 
        google.maps.event.addListener(autocompletelocation_input, 'place_changed', function () {

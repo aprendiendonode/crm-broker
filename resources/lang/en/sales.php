@@ -504,5 +504,6 @@ return [
     'contacts_settings' => 'Contacts Settings',
     "contacts" => 'Contacts',
     "listing_settings" => 'Listing Settings',
+    "dashboard"  => "Dashboard",
 
 ];

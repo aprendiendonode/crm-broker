@@ -138,6 +138,8 @@ class ListingRepo
                 [
                     'agency_data'   => $agency,
                     'agency'        => $agency->id,
+                    'agency_region' => $agency->country ? $agency->country->iso2 : '',
+
                     'staffs'        => staff($agency->id),
                     'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
                         return DB::table('listing_types')->get();
