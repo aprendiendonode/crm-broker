@@ -11,6 +11,7 @@
         "php": "^7.2.5",
         "barryvdh/laravel-dompdf": "^0.9.0",
         "bmatovu/laravel-xml": "^3.0",
+        "dirape/token": "^2.3",
         "doctrine/dbal": "^2.12.1",
         "enlightn/enlightn": "^1.22",
         "fideloper/proxy": "^4.2",
