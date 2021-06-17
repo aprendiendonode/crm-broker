@@ -7,9 +7,10 @@ use App\Models\Business;
 use Illuminate\Http\Request;
 use Modules\Sales\Entities\Lead;
 use Illuminate\Support\Facades\Route;
+use Modules\SuperAdmin\Entities\City;
 use Modules\Sales\Entities\LeadSource;
 
-
+use LanguageDetection\Language;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,35 +24,23 @@ use Modules\Sales\Entities\LeadSource;
 */
 
 Route::put('campain-leads-facebook/{business_token}/{agency_token}', function (Request $request, $business_token, $agency_token) {
-
-    // $token_key = (new Token())->Unique('users', 'api_token', 60);
-    // dd('here', new Token()->Random(10));
-    // Business::create(
-    //     [
-
-    //         'business_token' => (new Token())->Unique('businesses', 'business_token', 60)
-    //     ]
-    // );
-
-    // Agency::create(
-    //     [
-    //         'comapny_name_en' => 'test_token',
-    //         'comapny_name_ar' => 'test_token',
-    //         'comapny_email'   => 'company@gmail.com',
-    //         'comapny_email'   => 'company@gmail.com',
-    //         'business_id' => 1,
-
-    //         'agency_token' => (new Token())->Unique('agencies', 'agency_token', 60)
-    //     ]
-    // );
-
-
-
+    dd($request->all());
     $business = Business::where('business_token', $business_token)->firstOrFail();
     $agency   = Agency::where('business_id', $business->id)->where('agency_token', $agency_token)->firstOrFail();
-    dd();
+    $ld = new Language(['en', 'ar']);
+    $deteced =   $ld->detect($request->city)->bestResults()->close();
+    $city = '';
 
 
+    if (array_key_exists('en', $deteced)) {
+        $city =  str_replace(' ', '_', strtolower($request->city));
+        $city =  City::where('slug', $city)->first();
+    } else {
+        $city =  City::where('name_ar', $request->city)->first();
+    }
+
+
+    list($firstName, $lastName) = array_pad(explode(' ', trim($request->full_name)), 2, null);
 
     $lead_source = LeadSource::where('slug', $request->platform == 'fb' ? 'facebook' : 'instagram')->where('agency_id', $agency->id)->first();
 
@@ -71,8 +60,8 @@ Route::put('campain-leads-facebook/{business_token}/{agency_token}', function (R
         } else {
             $lead_source =  LeadSource::create([
                 'name_en' => 'Instagram',
-                'name_ar' => 'فيسبوك',
-                'slug'    => 'facebook',
+                'name_ar' => 'انستجرام',
+                'slug'    => 'instagram',
 
             ]);
 
@@ -81,26 +70,25 @@ Route::put('campain-leads-facebook/{business_token}/{agency_token}', function (R
     }
 
     Lead::create([
-        'table_name'         => 'leads',
-        "source_id"          => $request->source_id,
+        'table_name'             => 'leads',
+        "source_id"              => $request->source_id,
+        "first_name"             => $firstName,
+        "sec_name"               => $lastName,
+        "full_name"              => $request->full_name,
+        "email1"                 => $request->email,
+        "phone1"                 => $request->phone_number,
+        "city_id"                => $city ? $city->id : '',
+        "agency_id"              => $agency->agency_id,
+        'business_id'            => $business->business_id,
+        'created_at'             => $request->created_time,
+        'campaign_id'            => $request->campaign_id,
+        'campaign_name'          => $request->campaign_name,
+        'campaign_lead_id'       => $request->id,
+        'campaign_form_id'       => $request->form_id,
+        'campaign_ad_id'         => $request->ad_id,
+        'campaign_ad_name'       => $request->ad_name,
+        'campaign_adset_name'    =>  $request->adset_name,
 
-        "type_id"            => $request->type_id,
-        "qualification_id"   => $request->qualification_id,
-        "communication_id"          => $request->communication_id,
-        "priority_id"               => $request->priority_id,
-
-        "first_name"     => $request->first_name,
-        "sec_name"       => $request->last_name,
-        "full_name"      => $request->full_name,
-
-        "email1"         => $request->email,
-        "phone1"         => $request->phone_number,
-        // "phone1_code"    => $request->phone1_code,
-        "country"        => $agency->country_id,
-        "city_id"        => $request->city_id,
-
-        "agency_id"      => $agency->agency_id,
-        'business_id'    => $business->business_id,
 
     ]);
 });

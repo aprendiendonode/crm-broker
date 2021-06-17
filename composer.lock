@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68c536a4b9e6c31a1f72d0ae7ecf63c0",
+    "content-hash": "e1afde87f1aabbd46b52c2b72f624b37",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3979,6 +3979,53 @@
                 "side-channel resistant"
             ],
             "time": "2021-05-25T12:58:14+00:00"
+        },
+        {
+            "name": "patrickschur/language-detection",
+            "version": "v5.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/patrickschur/language-detection.git",
+                "reference": "728f1434dcf126ce3ed7118567c014d80d7fdd9c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/patrickschur/language-detection/zipball/728f1434dcf126ce3ed7118567c014d80d7fdd9c",
+                "reference": "728f1434dcf126ce3ed7118567c014d80d7fdd9c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LanguageDetection\\": "src/LanguageDetection"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Patrick Schur",
+                    "email": "patrick_schur@outlook.de"
+                }
+            ],
+            "description": "A language detection library for PHP. Detects the language from a given text string.",
+            "homepage": "https://github.com/patrickschur/language-detection",
+            "keywords": [
+                "detect",
+                "detection",
+                "language"
+            ],
+            "time": "2021-03-05T22:18:57+00:00"
         },
         {
             "name": "phenx/php-font-lib",
