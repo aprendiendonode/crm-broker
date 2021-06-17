@@ -112,8 +112,12 @@
                      <div class="input-group mr-sm-2" >
                          <input 
                           name="deposite_percent"
+                          onkeyup="updatePrice()"
+                          onchange="updatePrice()"
                           value="{{ old('deposite_percent') }}"
-                          type="text" class="form-control" id="depost-percenatage"
+                          min="1"
+                          type="number" class="form-control" 
+                          id="deposit-percenatage"
                           >
                          <div class="input-group-prepend">
                              <div class="input-group-text">%</div>
@@ -125,7 +129,8 @@
                          name="deposite_value"
                          value="{{ old('deposite_value') }}"
                          type="text" 
-                         class="form-control" id="depost-cash" >
+                         readonly
+                         class="form-control" id="depositValue" >
                          <div class="input-group-prepend">
                              <div class="input-group-text">AED</div>
                          </div>

@@ -37,10 +37,12 @@
     
     <script>
         function editShowRentDiv(id) {
-            
+            console.log(id);
             if($('.rent-radio-'+id)[0].checked){
                 $('#rent_div_'+id)[0].style.display = "block";
+                document.getElementById(`rent-sale-label-${id}`).innerHTML = "Rent";
             }else {
+                document.getElementById(`rent-sale-label-${id}`).innerHTML = "Sale";
                 $('#rent_div_'+id)[0].style.display = "none";
             }
         }

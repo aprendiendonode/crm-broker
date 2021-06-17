@@ -213,13 +213,40 @@
 
 
 <script>
+
+// Create our number formatter.
+var formatter = new Intl.NumberFormat('en-EG', {
+//   style: 'currency',
+//   currency: 'EGP',
+
+  // These options are needed to round to whole numbers if that's what you want.
+  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
+
+formatter.format(2500); /* $2,500.00 */
+
+function updatePrice() {
+    let price = +document.getElementById('rent-sale-create').value;
+    let annualCommissionPercentage = +(document.getElementById('annaul-commission').value) / 100;
+    let depositPercenatage = +(document.getElementById('deposit-percenatage').value) / 100;
+    // let commissionValue = document.getElementById('commissionValue');
+    
+    console.log(annualCommissionPercentage);
+    console.log(price);
+    console.log(annualCommissionPercentage * price);
+    document.getElementById('commissionValue').value = formatter.format(annualCommissionPercentage * price);
+    document.getElementById('depositValue').value = formatter.format(depositPercenatage * price);
+}
+
 function showRentDiv() {
-    // console.log('showRentDiv');
-    // console.log($('#rent_div'));
     if($('.rent-radio')[0].checked){
         $('#rent_div')[0].style.display = "block";
+        document.getElementById('rent-sale-label-create').innerHTML = "Rent";
     }else {
         $('#rent_div')[0].style.display = "none";
+        document.getElementById('rent-sale-label-create').innerHTML = "Sale";
+
     }
 }
 function showSubRentDiv() {

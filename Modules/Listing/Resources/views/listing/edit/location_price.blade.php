@@ -171,7 +171,11 @@
         </div>
 
         <div class="form-group">
-            <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.rent')<span class="text-danger"> *</span></label>
+            <label class="font-weight-medium text-muted" style="flex:1">
+            <span id="rent-sale-label-{{ $listing->id }}">
+                @lang('listing.rent')
+            </span>
+            <span class="text-danger"> *</span></label>
             <div class="input-group mb-2" >
                 <input type="text"  value="{{ old('edit_price_'.$listing->id,$listing->price) }}" class="form-control decimal_convert" 
                        name="edit_price_{{ $listing->id }}" id="rent_{{ $listing->id }}" required>
