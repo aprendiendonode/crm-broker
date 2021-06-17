@@ -89,12 +89,25 @@ if (!function_exists('upload_image')) {
                 mkdir($path);
             }
 
+
+            $file->move($path, $fileName);
+
+
+
             if ($watermark) {
 
-                $img = Image::make($file->getRealPath());
+                
+
+                dd();
+//                $img =  (string) Image::make($file)->encode('png', 75);
+
+                $filename = imagepng(imagecreatefromstring($path .$fileName));
+                dd($filename);
+
+//                $img = Image::make($file);
 
 // perform some modifications
-                $img->resize(100, 100);
+//                $img->resize(100, 100);
 //                $img->invert();
 //                $img->save('public/small.jpg');
 
@@ -102,15 +115,15 @@ if (!function_exists('upload_image')) {
 //                    $constraint->aspectRatio();
 ////                    $constraint->upsize();
 //                });
-//                $img->opacity(50);
+//                $img->opacity(20);
 //                dd($file->getClientOriginalNameWi());
-                $img->save($path . '/' . $fileName);
-                return $fileName;
+//                $img->save($path . '/' . $fileName);
+//
+//                return $fileName;
 
 //                $file = $img;
             }
 
-            $file->move($path, $fileName);
 
 
             return $fileName;

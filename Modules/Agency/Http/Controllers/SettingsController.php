@@ -85,7 +85,7 @@ class SettingsController extends Controller
             }
 
             if($request->image){
-               $image =  upload_image($request->image,public_path('upload/watermarks'),true);
+               $image =  upload_image($request->image,public_path('upload/watermarks'),true,true);
             }
 
             $watermark = Watermark::firstOrCreate([
