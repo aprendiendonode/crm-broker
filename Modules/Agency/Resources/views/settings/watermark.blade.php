@@ -160,6 +160,32 @@
 
                         <div class="row  m-3">
                             <div class="col-md-2">
+                                @lang('agency.resize') :
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="mb-1 font-weight-medium text-muted">@lang('agency.width')</label>
+                                        <input type="width" class="form-control" name="width" id="width"
+                                               value="{{ old('width',$watermark->width) }}" required
+                                               placeholder="@lang('agency.width')">
+                                    </div>
+
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="mb-1 font-weight-medium text-muted">@lang('agency.height')</label>
+                                        <input type="height" class="form-control" name="height" id="height"
+                                               value="{{ old('height',$watermark->height) }}" required
+                                               placeholder="@lang('agency.height')">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row  m-3">
+                            <div class="col-md-2">
                                 @lang('agency.transparency') :
                             </div>
                             <div class="col-sm-6">

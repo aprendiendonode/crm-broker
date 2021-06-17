@@ -75,8 +75,30 @@ if (!function_exists('upload_agency_image')) {
     }
 }
 if (!function_exists('upload_image')) {
-    function upload_image($file, $path, $time = null, $watermark = null)
+    function upload_image($file, $path, $time = null, $watermark = [])
     {
+        if (count($watermark) > 0) {
+
+            if ($watermark[0]) {
+
+                $image = $path . '/main/' . $watermark[0];
+                $fileName = time() . '-' . uniqid() . '-' . 'watermark.png';
+
+                Image::make($image)->resize($watermark[2], $watermark[3])->opacity($watermark[1])->save($path . '/' . $fileName);
+
+            } else {
+
+                $main =  time() . '-' . uniqid() ;
+                $fileName = $main. '-' . 'watermark.png';
+                Image::make($file->getRealPath())->save(public_path("upload/watermarks/main/".$fileName));
+                $image = public_path("upload/watermarks/main/".$fileName);
+
+                Image::make($image)->resize($watermark[2], $watermark[3])->opacity($watermark[1])->save($path . '/' . $fileName);
+            }
+
+            return $fileName;
+        }
+
         if ($file != null) {
             if ($time) {
 
@@ -89,29 +111,7 @@ if (!function_exists('upload_image')) {
                 mkdir($path);
             }
 
-            if ($watermark) {
-
-                $img = Image::make($file->getRealPath());
-
-// perform some modifications
-                $img->resize(100, 100);
-//                $img->invert();
-//                $img->save('public/small.jpg');
-
-//                $img->resize(100, 100, function ($constraint) {
-//                    $constraint->aspectRatio();
-////                    $constraint->upsize();
-//                });
-//                $img->opacity(50);
-//                dd($file->getClientOriginalNameWi());
-                $img->save($path . '/' . $fileName);
-                return $fileName;
-
-//                $file = $img;
-            }
-
             $file->move($path, $fileName);
-
 
             return $fileName;
         }
