@@ -88,26 +88,14 @@ if (!function_exists('upload_image')) {
             if (!file_exists($path)) {
                 mkdir($path);
             }
-
             if ($watermark) {
+                Image::make($file->getRealPath())->save(public_path('watertest.png'));
+                $image = public_path("watertest.png");
+                $fileName = time() . '-' . uniqid() . '-' . 'watermark.png';
 
-                $img = Image::make($file->getRealPath());
+                Image::make($image)->resize(100, 100)->opacity(50)->save($path . '/' . $fileName);
 
-// perform some modifications
-                $img->resize(100, 100);
-//                $img->invert();
-//                $img->save('public/small.jpg');
-
-//                $img->resize(100, 100, function ($constraint) {
-//                    $constraint->aspectRatio();
-////                    $constraint->upsize();
-//                });
-//                $img->opacity(50);
-//                dd($file->getClientOriginalNameWi());
-                $img->save($path . '/' . $fileName);
                 return $fileName;
-
-//                $file = $img;
             }
 
             $file->move($path, $fileName);
