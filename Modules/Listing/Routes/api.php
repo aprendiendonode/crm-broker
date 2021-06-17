@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Agency;
+use App\Models\Business;
 use Illuminate\Http\Request;
 
 /*
@@ -14,5 +16,5 @@ use Illuminate\Http\Request;
 */
 
 Route::prefix('listing')->group(function () {
-    Route::get('Listing/{agency}', 'Api\ListingController@index');
+    Route::get('Listing', 'Api\ListingController@index');
 });
