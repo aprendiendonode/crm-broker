@@ -44,6 +44,9 @@ class LoginController extends Controller
                 $agencies = explode(',', auth()->user()->can_access);
                 $agency_id = count($agencies) > 0 ? $agencies[0] : auth()->user()->agency_id;
                 return redirect('home/' . $agency_id);
+            }elseif( auth()->user()->type == 'superadmin'){
+                return redirect('superadmin/home' );
+
             } else {
                 return redirect('home/' . auth()->user()->agency_id);
             }

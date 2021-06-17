@@ -167,6 +167,9 @@ $(function(){
  
   $('#drag-and-drop-zone').dmUploader({ 
     url: '{{ route("listing.temporary-photos") }}',
+    extraData: {
+   "agency": '{{ $agency }}'
+   },
     headers: {
    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 },

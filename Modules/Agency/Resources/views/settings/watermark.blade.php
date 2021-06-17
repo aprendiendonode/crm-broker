@@ -49,6 +49,10 @@
                                                 <input data-plugin="tippy" data-tippy-placement="top-start" type="radio"
                                                        name="position" class="custom-control-input"
                                                        id="top-left"
+                                                       data-right=""
+                                                       data-left="0"
+                                                       data-top="0"
+                                                       data-bottom=""
                                                        value="top-left" {{$watermark->position == 'top-left' ? 'checked' : ''}}>
                                                 <label class="custom-control-label"
                                                        for="top-left">@lang('agency.top_left')</label>
@@ -61,6 +65,10 @@
                                                 <input data-plugin="tippy" data-tippy-placement="top-start" type="radio"
                                                        name="position" class="custom-control-input"
                                                        id="top"
+                                                       data-right="50%"
+                                                       data-left=""
+                                                       data-top="0"
+                                                       data-bottom=""
                                                        value="top" {{$watermark->position == 'top' ? 'checked' : ''}}>
                                                 <label class="custom-control-label"
                                                        for="top">@lang('agency.top_center')</label>
@@ -73,6 +81,10 @@
                                                 <input data-plugin="tippy" data-tippy-placement="top-start" type="radio"
                                                        name="position" class="custom-control-input"
                                                        id="top-right"
+                                                       data-right="0"
+                                                       data-left=""
+                                                       data-top="0"
+                                                       data-bottom=""
                                                        value="top-right" {{$watermark->position == 'top-right' ? 'checked' : ''}}>
                                                 <label class="custom-control-label"
                                                        for="top-right">@lang('agency.top_right')</label>
@@ -86,6 +98,10 @@
                                                 <input data-plugin="tippy" data-tippy-placement="top-start" type="radio"
                                                        name="position" class="custom-control-input"
                                                        id="left"
+                                                       data-right=""
+                                                       data-left="0"
+                                                       data-top="50%"
+                                                       data-bottom=""
                                                        value="left" {{$watermark->position == 'left' ? 'checked' : ''}}>
                                                 <label class="custom-control-label"
                                                        for="left">@lang('agency.left_center')</label>
@@ -98,6 +114,10 @@
                                                 <input data-plugin="tippy" data-tippy-placement="top-start" type="radio"
                                                        name="position" class="custom-control-input"
                                                        id="center"
+                                                       data-right="50%"
+                                                       data-left=""
+                                                       data-top="50%"
+                                                       data-bottom=""
                                                        value="center" {{$watermark->position == 'center' ? 'checked' : ''}}>
                                                 <label class="custom-control-label"
                                                        for="center">@lang('agency.mid_center')</label>
@@ -109,6 +129,10 @@
                                             <div class="checkbox checkbox-danger checkbox-circle">
                                                 <input data-plugin="tippy" data-tippy-placement="top-start" type="radio"
                                                        name="position" class="custom-control-input"
+                                                       data-right="0"
+                                                       data-left=""
+                                                       data-top="50%"
+                                                       data-bottom=""
                                                        id="right"
                                                        value="right" {{$watermark->position == 'right' ? 'checked' : ''}}>
                                                 <label class="custom-control-label"
@@ -123,6 +147,10 @@
                                                 <input data-plugin="tippy" data-tippy-placement="top-start" type="radio"
                                                        name="position" class="custom-control-input"
                                                        id="bottom-left"
+                                                       data-right=""
+                                                       data-left="0"
+                                                       data-top=""
+                                                       data-bottom="0"
                                                        value="bottom-left" {{$watermark->position == 'bottom-left' ? 'checked' : ''}}>
                                                 <label class="custom-control-label"
                                                        for="bottom-left">@lang('agency.left_bottom')</label>
@@ -135,6 +163,10 @@
                                                 <input data-plugin="tippy" data-tippy-placement="top-start" type="radio"
                                                        name="position" class="custom-control-input"
                                                        id="bottom"
+                                                       data-right=""
+                                                       data-left="50%"
+                                                       data-top=""
+                                                       data-bottom="0"
                                                        value="bottom" {{$watermark->position == 'bottom' ? 'checked' : ''}}>
                                                 <label class="custom-control-label"
                                                        for="bottom">@lang('agency.mid_bottom')</label>
@@ -147,6 +179,10 @@
                                                 <input data-plugin="tippy" data-tippy-placement="top-start" type="radio"
                                                        name="position" class="custom-control-input"
                                                        id="bottom-right"
+                                                       data-right="0"
+                                                       data-left=""
+                                                       data-top=""
+                                                       data-bottom="0"
                                                        value="bottom-right" {{$watermark->position == 'bottom-right' ? 'checked' : ''}}>
                                                 <label class="custom-control-label"
                                                        for="bottom-right">@lang('agency.right_bottom')</label>
@@ -156,6 +192,32 @@
                                 </div>
                             </div>
 
+                        </div>
+
+                        <div class="row  m-3">
+                            <div class="col-md-2">
+                                @lang('agency.resize') :
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="mb-1 font-weight-medium text-muted">@lang('agency.width')</label>
+                                        <input type="width" class="form-control" name="width" id="width"
+                                               value="{{ old('width',$watermark->width) }}" required
+                                               placeholder="@lang('agency.width')">
+                                    </div>
+
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="mb-1 font-weight-medium text-muted">@lang('agency.height')</label>
+                                        <input type="height" class="form-control" name="height" id="height"
+                                               value="{{ old('height',$watermark->height) }}" required
+                                               placeholder="@lang('agency.height')">
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row  m-3">
@@ -180,6 +242,7 @@
 
                                 <input type="file" name="image" data-plugins="dropify" id="image"
                                        data-default-file="{{$watermark->image != null ? asset('upload/watermarks/'.$watermark->image) : ''}}"/>
+                                <input type="hidden" id="old_image" data-default-file="{{$watermark->main_image != null ? asset('upload/watermarks/main/'.$watermark->main_image) : ''}}"/>
 
 
                             </div>
@@ -196,7 +259,10 @@
                     </div>
                 </div>
                 <div class="col-md-3 ">
-                    <div class="test_image w-100 ">
+                    <div class="test_image w-100 position-relative overflow-hidden">
+                        <div id="uploaded-image-wrapper" style="position: absolute; height:100%; width: 100%; display: flex;">
+                            <div id="uploaded_image" ></div>
+                        </div>
 
                     </div>
                 </div>
@@ -269,6 +335,109 @@
                 // fired on changing slider with Update method
             }
         });
+
+        $(document).ready(function(){
+            changeImageDisplay(true);
+        });
+
+
+        $('#width , #height ,#image,#range, .checkbox-circle').on('change',function(){
+            changeImageDisplay();
+        });
+
+
+
+        function changeImageDisplay(imageExiest = null){
+            var newImage = $('#uploaded-image-wrapper');
+            var watermark = $('#uploaded_image');
+            var width = $('#width');
+            var height = $('#height');
+            var opacityRange = $('#range');
+
+            var selectedPosition = $('input[name="position"]:checked');
+            if(imageExiest){
+                var image = $('#old_image');
+                var defaultImage = image.data('default-file');
+                watermark.css({'background-image': `url(${defaultImage})` ,
+                    'background-size' : '100% 100%',
+                    'width':`${(width.val())}px`,
+                    'height':`${(height.val())}px` ,
+                    'opacity' : `${(opacityRange.val()) / 100}`
+                });
+
+            }else{
+                var image = $('#image');
+                var defaultImage = image.data('default-file');
+                watermark.css({'background-image': `url(${defaultImage})` ,
+                    'background-size' : '100% 100%',
+                    'width':`${(width.val())}px`,
+                    'height':`${(height.val())}px` ,
+                    'opacity' : `${(opacityRange.val()) / 100}`
+                });
+                console.log(image.val());
+
+            }
+            switch ( selectedPosition.attr('value')) {
+                case 'right':
+                    newImage.css({
+                        'align-items' : 'center',
+                        'justify-content': 'flex-end'
+                    });
+                    break;
+                case 'top-right':
+                    newImage.css({
+                        'align-items' : 'flex-start',
+                        'justify-content': 'flex-end'
+                    });
+                    break;
+                case 'bottom-right':
+                    newImage.css({
+                        'align-items' : 'flex-end',
+                        'justify-content': 'flex-end'
+                    });
+                    break;
+                case 'bottom':
+                    newImage.css({
+                        'align-items' : 'flex-end',
+                        'justify-content': 'center'
+                    });
+                    break;
+                case 'top':
+                    newImage.css({
+                        'align-items' : 'flex-start',
+                        'justify-content': 'center'
+                    });
+                    break;
+                case 'center':
+                    newImage.css({
+                        'align-items' : 'center',
+                        'justify-content': 'center'
+                    });
+                    break;
+                case 'top-left':
+                    newImage.css({
+                        'align-items' : 'flex-start',
+                        'justify-content': 'flex-start'
+                    });
+                    break;
+                case 'left':
+                    newImage.css({
+                        'align-items' : 'center',
+                        'justify-content': 'start'
+                    });
+                    break;
+                case 'bottom-left':
+                    newImage.css({
+                        'align-items' : 'flex-end',
+                        'justify-content': 'flex-start'
+                    });
+                    break;
+
+                default :
+                    break;
+
+            }
+        }
 
 
     </script>

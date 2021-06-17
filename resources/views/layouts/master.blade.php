@@ -26,10 +26,11 @@
     <link href="{{asset('assets/css/app-modern.min.css')}}" rel="stylesheet" type="text/css"
           id="app-default-stylesheet"/>
 
-    {{-- <link href="{{asset('assets/css/bootstrap-modern-dark.min.css')}}" rel="stylesheet" type="text/css"
+
+    <link href="{{asset('assets/css/bootstrap-modern-dark.min.css')}}" rel="stylesheet" type="text/css"
           id="bs-dark-stylesheet" disabled/>
     <link href="{{asset('assets/css/app-modern-dark.min.css')}}" rel="stylesheet" type="text/css"
-          id="app-dark-stylesheet" disabled/> --}}
+          id="app-dark-stylesheet" disabled/>
 
     <!-- icons -->
     <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
@@ -65,7 +66,7 @@
         }
 
         .ck-editor__editable_inline {
-                min-height: 300px;
+            min-height: 300px;
         }
     </style>
 </head>
@@ -84,14 +85,14 @@
                 <li class="d-none d-lg-block">
                     <form class="app-search">
                         <div class="app-search-box dropdown">
-                   {{--          <div class="input-group">
-                                <input type="search" class="form-control" placeholder="Search..." id="top-search">
-                                <div class="input-group-append">
-                                    <button class="btn" type="submit">
-                                        <i class="fe-search"></i>
-                                    </button>
-                                </div>
-                            </div> --}}
+                            {{--          <div class="input-group">
+                                         <input type="search" class="form-control" placeholder="Search..." id="top-search">
+                                         <div class="input-group-append">
+                                             <button class="btn" type="submit">
+                                                 <i class="fe-search"></i>
+                                             </button>
+                                         </div>
+                                     </div> --}}
                             <div class="dropdown-menu dropdown-lg" id="search-dropdown">
                                 <!-- item-->
                                 <div class="dropdown-header noti-title">
@@ -134,7 +135,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                  
+
                                     <!-- item-->
                                     <a href="javascript:void(0);" class="dropdown-item notify-item">
                                         <div class="media">
@@ -147,10 +148,8 @@
                                             </div>
                                         </div>
                                     </a>
-                                  </div>
-                                  
-                                  
-                                  
+                                </div>
+
 
                             </div>
                         </div>
@@ -162,12 +161,12 @@
                        href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <i class="fe-search noti-icon"></i>
                     </a>
-          {{--           <div class="dropdown-menu dropdown-lg dropdown-menu-right p-0">
-                        <form class="p-3">
-                            <input type="text" class="form-control" placeholder="Search ..."
-                                   aria-label="Recipient's username">
-                        </form>
-                    </div> --}}
+                    {{--           <div class="dropdown-menu dropdown-lg dropdown-menu-right p-0">
+                                  <form class="p-3">
+                                      <input type="text" class="form-control" placeholder="Search ..."
+                                             aria-label="Recipient's username">
+                                  </form>
+                              </div> --}}
                 </li>
 
                 <li class="dropdown d-none d-lg-inline-block">
@@ -233,7 +232,7 @@
                 </li>
 
                 <li class="dropdown d-none d-lg-inline-block topbar-dropdown">
-                   @if(auth()->user()->language == 'en' || auth()->user()->language == null)
+                    @if(auth()->user()->language == 'en' || auth()->user()->language == null)
 
                         <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown"
                            href="#" role="button" aria-haspopup="false" aria-expanded="false">
@@ -248,7 +247,7 @@
 
                         </div>
 
-                       @elseif(auth()->user()->language == 'ar')
+                    @elseif(auth()->user()->language == 'ar')
                         <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown"
                            href="#" role="button" aria-haspopup="false" aria-expanded="false">
                             <img src="{{asset('images/flags/egypt.png')}}" alt="user-image" height="16">
@@ -269,7 +268,8 @@
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown"
                        href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <img src="{{ auth()->user()->image != null ? asset('profile_images/'.auth()->user()->image) : ''  }}" alt="user-image" class="rounded-circle">
+                        <img src="{{ auth()->user()->image != null ? asset('profile_images/'.auth()->user()->image) : ''  }}"
+                             alt="user-image" class="rounded-circle">
                         <span class="pro-user-name ml-1">
                                     {{ auth()->user() ? auth()->user()->name_en : '' }} <i
                                     class="mdi mdi-chevron-down"></i>
@@ -282,18 +282,20 @@
                         </div>
 
                         @if(!owner())
-                            <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agency_id]) }}" class="dropdown-item notify-item">
+                            <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agency_id]) }}"
+                               class="dropdown-item notify-item">
                                 <i class="fe-user"></i>
                                 <span>My Account</span>
                             </a>
                         @else
-                            <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agencies->first()->id]) }}" class="dropdown-item notify-item">
+                            <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agencies->first()->id]) }}"
+                               class="dropdown-item notify-item">
                                 <i class="fe-user"></i>
                                 <span>My Account</span>
                             </a>
                         @endif
-                        <!-- item-->
-                       
+                    <!-- item-->
+
 
                         {{-- <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
@@ -376,150 +378,150 @@
                 </li>
 
                 {{--<li class="dropdown d-none d-xl-block">--}}
-                    {{--<a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"--}}
-                       {{--role="button" aria-haspopup="false" aria-expanded="false">--}}
-                        {{--Create New--}}
-                        {{--<i class="mdi mdi-chevron-down"></i>--}}
-                    {{--</a>--}}
-                    {{--<div class="dropdown-menu">--}}
-                        {{--<!-- item-->--}}
-                        {{--<a href="javascript:void(0);" class="dropdown-item">--}}
-                            {{--<i class="fe-briefcase mr-1"></i>--}}
-                            {{--<span>New Projects</span>--}}
-                        {{--</a>--}}
+                {{--<a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"--}}
+                {{--role="button" aria-haspopup="false" aria-expanded="false">--}}
+                {{--Create New--}}
+                {{--<i class="mdi mdi-chevron-down"></i>--}}
+                {{--</a>--}}
+                {{--<div class="dropdown-menu">--}}
+                {{--<!-- item-->--}}
+                {{--<a href="javascript:void(0);" class="dropdown-item">--}}
+                {{--<i class="fe-briefcase mr-1"></i>--}}
+                {{--<span>New Projects</span>--}}
+                {{--</a>--}}
 
-                        {{--<!-- item-->--}}
-                        {{--<a href="javascript:void(0);" class="dropdown-item">--}}
-                            {{--<i class="fe-user mr-1"></i>--}}
-                            {{--<span>Create Users</span>--}}
-                        {{--</a>--}}
+                {{--<!-- item-->--}}
+                {{--<a href="javascript:void(0);" class="dropdown-item">--}}
+                {{--<i class="fe-user mr-1"></i>--}}
+                {{--<span>Create Users</span>--}}
+                {{--</a>--}}
 
-                        {{--<!-- item-->--}}
-                        {{--<a href="javascript:void(0);" class="dropdown-item">--}}
-                            {{--<i class="fe-bar-chart-line- mr-1"></i>--}}
-                            {{--<span>Revenue Report</span>--}}
-                        {{--</a>--}}
+                {{--<!-- item-->--}}
+                {{--<a href="javascript:void(0);" class="dropdown-item">--}}
+                {{--<i class="fe-bar-chart-line- mr-1"></i>--}}
+                {{--<span>Revenue Report</span>--}}
+                {{--</a>--}}
 
-                        {{--<!-- item-->--}}
-                        {{--<a href="javascript:void(0);" class="dropdown-item">--}}
-                            {{--<i class="fe-settings mr-1"></i>--}}
-                            {{--<span>Settings</span>--}}
-                        {{--</a>--}}
+                {{--<!-- item-->--}}
+                {{--<a href="javascript:void(0);" class="dropdown-item">--}}
+                {{--<i class="fe-settings mr-1"></i>--}}
+                {{--<span>Settings</span>--}}
+                {{--</a>--}}
 
-                        {{--<div class="dropdown-divider"></div>--}}
+                {{--<div class="dropdown-divider"></div>--}}
 
-                        {{--<!-- item-->--}}
-                        {{--<a href="javascript:void(0);" class="dropdown-item">--}}
-                            {{--<i class="fe-headphones mr-1"></i>--}}
-                            {{--<span>Help & Support</span>--}}
-                        {{--</a>--}}
+                {{--<!-- item-->--}}
+                {{--<a href="javascript:void(0);" class="dropdown-item">--}}
+                {{--<i class="fe-headphones mr-1"></i>--}}
+                {{--<span>Help & Support</span>--}}
+                {{--</a>--}}
 
-                    {{--</div>--}}
+                {{--</div>--}}
                 {{--</li>--}}
 
                 {{--<li class="dropdown dropdown-mega d-none d-xl-block">--}}
-                    {{--<a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"--}}
-                       {{--role="button" aria-haspopup="false" aria-expanded="false">--}}
-                        {{--Mega Menu--}}
-                        {{--<i class="mdi mdi-chevron-down"></i>--}}
-                    {{--</a>--}}
-                    {{--<div class="dropdown-menu dropdown-megamenu">--}}
-                        {{--<div class="row">--}}
-                            {{--<div class="col-sm-8">--}}
+                {{--<a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"--}}
+                {{--role="button" aria-haspopup="false" aria-expanded="false">--}}
+                {{--Mega Menu--}}
+                {{--<i class="mdi mdi-chevron-down"></i>--}}
+                {{--</a>--}}
+                {{--<div class="dropdown-menu dropdown-megamenu">--}}
+                {{--<div class="row">--}}
+                {{--<div class="col-sm-8">--}}
 
-                                {{--<div class="row">--}}
-                                    {{--<div class="col-md-4">--}}
-                                        {{--<h5 class="text-dark mt-0 font-weight-normal">UI Components</h5>--}}
-                                        {{--<ul class="list-unstyled megamenu-list">--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Widgets</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Nestable List</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Range Sliders</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Masonry Items</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Sweet Alerts</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Treeview Page</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Tour Page</a>--}}
-                                            {{--</li>--}}
-                                        {{--</ul>--}}
-                                    {{--</div>--}}
+                {{--<div class="row">--}}
+                {{--<div class="col-md-4">--}}
+                {{--<h5 class="text-dark mt-0 font-weight-normal">UI Components</h5>--}}
+                {{--<ul class="list-unstyled megamenu-list">--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Widgets</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Nestable List</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Range Sliders</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Masonry Items</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Sweet Alerts</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Treeview Page</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Tour Page</a>--}}
+                {{--</li>--}}
+                {{--</ul>--}}
+                {{--</div>--}}
 
-                                    {{--<div class="col-md-4">--}}
-                                        {{--<h5 class="text-dark mt-0 font-weight-normal">Applications</h5>--}}
-                                        {{--<ul class="list-unstyled megamenu-list">--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">eCommerce Pages</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">CRM Pages</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Email</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Calendar</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Team Contacts</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Task Board</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Email Templates</a>--}}
-                                            {{--</li>--}}
-                                        {{--</ul>--}}
-                                    {{--</div>--}}
+                {{--<div class="col-md-4">--}}
+                {{--<h5 class="text-dark mt-0 font-weight-normal">Applications</h5>--}}
+                {{--<ul class="list-unstyled megamenu-list">--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">eCommerce Pages</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">CRM Pages</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Email</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Calendar</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Team Contacts</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Task Board</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Email Templates</a>--}}
+                {{--</li>--}}
+                {{--</ul>--}}
+                {{--</div>--}}
 
-                                    {{--<div class="col-md-4">--}}
-                                        {{--<h5 class="text-dark mt-0 font-weight-normal">Extra Pages</h5>--}}
-                                        {{--<ul class="list-unstyled megamenu-list">--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Left Sidebar with User</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Menu Collapsed</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Small Left Sidebar</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">New Header Style</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Search Result</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Gallery Pages</a>--}}
-                                            {{--</li>--}}
-                                            {{--<li>--}}
-                                                {{--<a href="javascript:void(0);">Maintenance & Coming Soon</a>--}}
-                                            {{--</li>--}}
-                                        {{--</ul>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                            {{--<div class="col-sm-4">--}}
-                                {{--<div class="text-center mt-3">--}}
-                                    {{--<h3 class="text-dark">Special Discount Sale!</h3>--}}
-                                    {{--<h4>Save up to 70% off.</h4>--}}
-                                    {{--<button class="btn btn-primary btn-rounded mt-3">Download Now</button>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
+                {{--<div class="col-md-4">--}}
+                {{--<h5 class="text-dark mt-0 font-weight-normal">Extra Pages</h5>--}}
+                {{--<ul class="list-unstyled megamenu-list">--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Left Sidebar with User</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Menu Collapsed</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Small Left Sidebar</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">New Header Style</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Search Result</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Gallery Pages</a>--}}
+                {{--</li>--}}
+                {{--<li>--}}
+                {{--<a href="javascript:void(0);">Maintenance & Coming Soon</a>--}}
+                {{--</li>--}}
+                {{--</ul>--}}
+                {{--</div>--}}
+                {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="col-sm-4">--}}
+                {{--<div class="text-center mt-3">--}}
+                {{--<h3 class="text-dark">Special Discount Sale!</h3>--}}
+                {{--<h4>Save up to 70% off.</h4>--}}
+                {{--<button class="btn btn-primary btn-rounded mt-3">Download Now</button>--}}
+                {{--</div>--}}
+                {{--</div>--}}
+                {{--</div>--}}
 
-                    {{--</div>--}}
+                {{--</div>--}}
                 {{--</li>--}}
             </ul>
             <div class="clearfix"></div>
@@ -534,7 +536,8 @@
 
             <!-- User box -->
             <div class="user-box text-center">
-                <img src="{{auth()->user()->image != null ? asset('profile_images/'.auth()->user()->image) : ''}}" alt="user-img" title="Mat Helme"
+                <img src="{{auth()->user()->image != null ? asset('profile_images/'.auth()->user()->image) : ''}}"
+                     alt="user-img" title="Mat Helme"
                      class="rounded-circle avatar-md">
                 <div class="dropdown">
                     <a href="javascript: void(0);"
@@ -544,36 +547,38 @@
 
                         <!-- item-->
                         @if(!owner())
-                        <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agency_id]) }}" class="dropdown-item notify-item">
-                            <i class="fe-user"></i>
-                            <span>My Account</span>
-                        </a>
-                            @else
-                        <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agencies->first()->id]) }}" class="dropdown-item notify-item">
-                            <i class="fe-user"></i>
-                            <span>My Account</span>
-                        </a>
-                        @endif
+                            <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agency_id]) }}"
+                               class="dropdown-item notify-item">
+                                <i class="fe-user"></i>
+                                <span>My Account</span>
+                            </a>
+                        @else
+                            <a href="{{ route('setting.profiles.edit',[auth()->user()->id,auth()->user()->agencies->first()->id]) }}"
+                               class="dropdown-item notify-item">
+                                <i class="fe-user"></i>
+                                <span>My Account</span>
+                            </a>
+                    @endif
 
-                        {{-- <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <i class="fe-settings mr-1"></i>
-                            <span>Settings</span>
-                        </a>
+                    {{-- <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <i class="fe-settings mr-1"></i>
+                        <span>Settings</span>
+                    </a>
 
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <i class="fe-lock mr-1"></i>
-                            <span>Lock Screen</span>
-                        </a> --}}
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <i class="fe-lock mr-1"></i>
+                        <span>Lock Screen</span>
+                    </a> --}}
 
-                        <!-- item-->
+                    <!-- item-->
                         <a href="javascript:void(0);"
-                        onclick="event.preventDefault();document.getElementById('logout-form').submit();"
-                        class="dropdown-item notify-item">
-                         <i class="fe-log-out"></i>
-                         <span>Logout</span>
-                     </a>
+                           onclick="event.preventDefault();document.getElementById('logout-form').submit();"
+                           class="dropdown-item notify-item">
+                            <i class="fe-log-out"></i>
+                            <span>Logout</span>
+                        </a>
 
 
                     </div>
@@ -582,10 +587,8 @@
             </div>
 
 
-       
-
-            @include('layouts.menu')
-            <!-- End Sidebar -->
+        @include('layouts.menu')
+        <!-- End Sidebar -->
 
             <div class="clearfix"></div>
 
@@ -663,13 +666,13 @@ justify-content: space-between; min-height: 92vh;">
         <div class="tab-content pt-0">
             <div class="tab-pane" id="chat-tab" role="tabpanel">
 
-           {{--      <form class="search-bar p-3">
-                    <div class="position-relative">
-                        <input type="text" class="form-control" placeholder="Search...">
-                        <span class="mdi mdi-magnify"></span>
-                    </div>
-                </form>
- --}}
+                {{--      <form class="search-bar p-3">
+                         <div class="position-relative">
+                             <input type="text" class="form-control" placeholder="Search...">
+                             <span class="mdi mdi-magnify"></span>
+                         </div>
+                     </form>
+      --}}
                 <h6 class="font-weight-medium px-3 mt-2 text-uppercase">Group Chats</h6>
 
                 <div class="p-2">
@@ -1054,7 +1057,6 @@ justify-content: space-between; min-height: 92vh;">
 
                     <button class="btn btn-primary btn-block mt-4" id="resetBtn">Reset to Default</button>
 
-           
 
                 </div>
 
@@ -1073,7 +1075,7 @@ justify-content: space-between; min-height: 92vh;">
 <!-- Plugins js-->
 <script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
 <script>
-    $( document ).ready(function() {
+    $(document).ready(function () {
         flatpickr(".flatpicker-range", {
             mode: "range"
         });
