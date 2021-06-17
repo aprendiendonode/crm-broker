@@ -12,3 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::prefix('listing')->group(function () {
+    Route::get('Listing/{agency}', 'Api\ListingController@index');
+});
