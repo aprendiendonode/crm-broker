@@ -1,9 +1,31 @@
-@extends('superadmin::layouts.master')
+@extends('layouts.master')
 
-@section('content')
-    <h1>Hello World</h1>
+@section('title',trans('superadmin.superadmin'))
+@section('css')
 
-    <p>
-        This view is loaded from module: {!! config('superadmin.name') !!}
-    </p>
+
 @endsection
+@section('content')
+<div class="content p-3">
+
+
+
+            <div class="d-flex justify-content-between mb-3">
+               <h4>
+                   @lang('superadmin.superadmin')
+               </h4>
+
+              
+        
+                
+            </div>
+
+            
+       
+            
+        </div>
+
+       
+@endsection
+
+

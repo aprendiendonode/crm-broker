@@ -190,6 +190,9 @@
         var listing_id = @json($listing->id);
     $('#document-drag-and-drop-zone-'+listing_id).dmUploader({ //
     url: '{{ route("listing.temporary-documents") }}',
+    extraData: {
+   "agency": '{{ $agency }}'
+   },
     headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },

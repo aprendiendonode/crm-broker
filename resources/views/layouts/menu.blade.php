@@ -1,123 +1,121 @@
-     <!--- Sidemenu -->
-     <div id="sidebar-menu">
+<!--- Sidemenu -->
+<div id="sidebar-menu">
 
-        <ul id="side-menu">
-       
-           
-            <li>
-                <a href="{{ url('/') }}">
-                    <i class="fas fa-tachometer-alt"></i>
-                    @lang('sales.dashboard')</a>
-            </li>
+    <ul id="side-menu">
 
 
-            @if(auth()->user()->type != 'superadmin')
+        <li>
+            <a href="@if(auth()->user()->type == 'superadmin') {{ url('superadmin/home') }} @else {{ url('/') }} @endif">
+                <i class="fas fa-tachometer-alt"></i>
+                @lang('sales.dashboard')</a>
+        </li>
+
+
+        @if(auth()->user()->type != 'superadmin')
 
             <li>
                 <a href="#sidebarIcons" data-toggle="collapse">
                     <i class="fas fa-address-book"></i>
-                  
+
                     <span> @lang('sales.contacts') </span>
                     <span class="menu-arrow"></span>
                 </a>
                 <div class="collapse" id="sidebarIcons">
                     <ul class="nav-second-level">
-            
-
-                    @if(owner())
-                        <li>
-                            <a href="{{ url('sales/leads/'.request('agency')) }}">@lang('sales.database')</a>
-                        </li>
-                     
-                        @elseif(moderator())
-                        <li>
-                            <a href="{{ url('sales/leads/'.request('agency')) }}">@lang('sales.database')</a>
-                        </li>
-                        @else
-                        <li>
-                            <a href="{{ url('sales/leads/'.auth()->user()->agency_id) }}">@lang('sales.database')</a>
-                        </li>
-                        @endif
-
-                        @if(owner())
-                        <li>
-                            <a href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.opportunities')</a>
-                        </li>
-                     
-                        @elseif(moderator())
-                        <li>
-                            <a href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.opportunities')</a>
-                        </li>
-                        @else
-                        <li>
-                            <a href="{{ url('sales/opportunities/'.auth()->user()->agency_id) }}">@lang('sales.opportunities')</a>
-                        </li>
-                        @endif
 
 
                         @if(owner())
-                        <li>
-                            <a href="{{ url('sales/clients/'.request('agency')) }}">@lang('sales.clients')</a>
-                        </li>
-                     
+                            <li>
+                                <a href="{{ url('sales/leads/'.request('agency')) }}">@lang('sales.database')</a>
+                            </li>
+
                         @elseif(moderator())
-                        <li>
-                            <a href="{{ url('sales/clients/'.request('agency')) }}">@lang('sales.clients')</a>
-                        </li>
+                            <li>
+                                <a href="{{ url('sales/leads/'.request('agency')) }}">@lang('sales.database')</a>
+                            </li>
                         @else
-                        <li>
-                            <a href="{{ url('sales/clients/'.auth()->user()->agency_id) }}">@lang('sales.clients')</a>
-                        </li>
+                            <li>
+                                <a href="{{ url('sales/leads/'.auth()->user()->agency_id) }}">@lang('sales.database')</a>
+                            </li>
+                        @endif
+
+                        @if(owner())
+                            <li>
+                                <a href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.opportunities')</a>
+                            </li>
+
+                        @elseif(moderator())
+                            <li>
+                                <a href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.opportunities')</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ url('sales/opportunities/'.auth()->user()->agency_id) }}">@lang('sales.opportunities')</a>
+                            </li>
+                        @endif
+
+
+                        @if(owner())
+                            <li>
+                                <a href="{{ url('sales/clients/'.request('agency')) }}">@lang('sales.clients')</a>
+                            </li>
+
+                        @elseif(moderator())
+                            <li>
+                                <a href="{{ url('sales/clients/'.request('agency')) }}">@lang('sales.clients')</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ url('sales/clients/'.auth()->user()->agency_id) }}">@lang('sales.clients')</a>
+                            </li>
                         @endif
 
 
 
-             
-                    
+
+
 
 
                         @if(owner())
+                            <li>
+                                <a href="{{ url('sales/leads/bulk_uploads/'.request('agency')) }}">@lang('sales.smart_bulk_import')</a>
+                            </li>
+
+                        @elseif(moderator())
+                            <li>
+                                <a href="{{ url('sales/leads/bulk_uploads/'.request('agency')) }}">@lang('sales.smart_bulk_import')</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ url('sales/leads/bulk_uploads/'.auth()->user()->agency_id) }}">@lang('sales.smart_bulk_import')</a>
+                            </li>
+                        @endif
+
+
+
+
+                        @if(owner())
+                            <li>
+                                <a href="{{ url('sales/all_in_one/'.request('agency')) }}">@lang('sales.search_center')</a>
+                            </li>
+
+                        @elseif(moderator())
+                            <li>
+                                <a href="{{ url('sales/all_in_one/'.request('agency')) }}">@lang('sales.search_center')</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ url('sales/all_in_one/'.auth()->user()->agency_id) }}">@lang('sales.search_center')</a>
+                            </li>
+                        @endif
+
+
                         <li>
-                            <a href="{{ url('sales/leads/bulk_uploads/'.request('agency')) }}">@lang('sales.smart_bulk_import')</a>
+
+
                         </li>
 
-                    @elseif(moderator())
-                        <li>
-                            <a href="{{ url('sales/leads/bulk_uploads/'.request('agency')) }}">@lang('sales.smart_bulk_import')</a>
-                        </li>
-                    @else
-                        <li>
-                            <a href="{{ url('sales/leads/bulk_uploads/'.auth()->user()->agency_id) }}">@lang('sales.smart_bulk_import')</a>
-                        </li>
-                    @endif
-    
-                     
-                    
 
-                    @if(owner())
-                    <li>
-                        <a href="{{ url('sales/all_in_one/'.request('agency')) }}">@lang('sales.search_center')</a>
-                    </li>
-                 
-                    @elseif(moderator())
-                    <li>
-                        <a href="{{ url('sales/all_in_one/'.request('agency')) }}">@lang('sales.search_center')</a>
-                    </li>
-                    @else
-                    <li>
-                        <a href="{{ url('sales/all_in_one/'.auth()->user()->agency_id) }}">@lang('sales.search_center')</a>
-                    </li>
-                    @endif
-
-
-
-                        <li>
-                        
-                
-
-                    </li>
-                   
-                   
                     </ul>
                 </div>
             </li>
@@ -138,21 +136,17 @@
                             <li>
                                 <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}">@lang('listing.listings')</a>
                             </li>
-                        
-                            @elseif(moderator())
+
+                        @elseif(moderator())
                             <li>
                                 <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}">@lang('listing.listings')</a>
                             </li>
-                            @else
+                        @else
                             <li>
                                 <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=live') }}">@lang('listing.listings')</a>
                             </li>
-                            @endif
+                        @endif
 
-
-
-                      
-    
 
                     </ul>
                 </div>
@@ -243,9 +237,9 @@
 
                         @if(owner())
                             {{--<li>--}}
-                                {{--<a href="{{ url('activity/activity_logs/'.auth()->user()->agency_id) }}">@lang('activity.activity_log')</a>--}}
+                            {{--<a href="{{ url('activity/activity_logs/'.auth()->user()->agency_id) }}">@lang('activity.activity_log')</a>--}}
                             {{--</li>--}}
-                        {{--@else--}}
+                            {{--@else--}}
                             <li>
                                 <a href="{{ url('activity/activity_logs/'.auth()->user()->agencies->first()->id) }}">@lang('activity.activity_log')</a>
                             </li>
@@ -266,88 +260,88 @@
                     <ul class="nav-second-level">
 
                         @if(owner())
-                        <li>
-                            <a href="{{ url('agency/staff/'.request('agency')) }}">@lang('agency.manage_staff')</a>
-                        </li>
-                     
-                        @elseif(moderator())
-                        <li>
-                            <a href="{{ url('agency/staff/'.request('agency')) }}">@lang('agency.manage_staff')</a>
-                        </li>
-                        @else
-                        <li>
-                            <a href="{{ url('agency/staff/'.auth()->user()->agency_id) }}">@lang('agency.manage_staff')</a>
-                        </li>
-                        @endif
-
-
-                        
-
-                        @if(owner())
-                      
-                        <li>
-                            <a href="{{ url('agency/teams/'.request('agency')) }}">@lang('agency.manage_teams')</a>
-                        </li>
-                       @elseif(moderator())
-
-                       <li>
-                        <a href="{{ url('agency/teams/'.request('agency')) }}">@lang('agency.manage_teams')</a>
-                    </li>
-
-                        @else
-                        <li>
-                            <a href="{{ url('agency/teams/'.auth()->user()->agency_id) }}">@lang('agency.manage_teams')</a>
-                        </li>
-                          
-                        @endif
-
-
-                        @if(owner())
-                        <li>
-                            <a href="">@lang('agency.marketing_portals')</a>
-                        </li>
-                         @elseif(moderator())
-                         <li>
-                            <a href="">@lang('agency.marketing_portals')</a>
-                        </li>
-                        @else
-                        <li>
-                            <a href="">@lang('agency.marketing_portals')</a>
-                        </li>
-                      
-                        @endif
-
-
-                        @if(owner())
-                        <li>
-                            <a href="{{ url('agency/profile/'.request('agency')) }}">@lang('agency.company_profile')</a>
-                        </li>
+                            <li>
+                                <a href="{{ url('agency/staff/'.request('agency')) }}">@lang('agency.manage_staff')</a>
+                            </li>
 
                         @elseif(moderator())
-                        <li>
-                            <a href="{{ url('agency/profile/'.request('agency')) }}">@lang('agency.company_profile')</a>
-                        </li>
+                            <li>
+                                <a href="{{ url('agency/staff/'.request('agency')) }}">@lang('agency.manage_staff')</a>
+                            </li>
                         @else
-                        <li>
-                            <a href="{{ url('agency/profile/'.auth()->user()->agency_id) }}">@lang('agency.company_profile')</a>
-                        </li>
-                       
+                            <li>
+                                <a href="{{ url('agency/staff/'.auth()->user()->agency_id) }}">@lang('agency.manage_staff')</a>
+                            </li>
+                        @endif
+
+
+
+
+                        @if(owner())
+
+                            <li>
+                                <a href="{{ url('agency/teams/'.request('agency')) }}">@lang('agency.manage_teams')</a>
+                            </li>
+                        @elseif(moderator())
+
+                            <li>
+                                <a href="{{ url('agency/teams/'.request('agency')) }}">@lang('agency.manage_teams')</a>
+                            </li>
+
+                        @else
+                            <li>
+                                <a href="{{ url('agency/teams/'.auth()->user()->agency_id) }}">@lang('agency.manage_teams')</a>
+                            </li>
+
+                        @endif
+
+
+                        @if(owner())
+                            <li>
+                                <a href="">@lang('agency.marketing_portals')</a>
+                            </li>
+                        @elseif(moderator())
+                            <li>
+                                <a href="">@lang('agency.marketing_portals')</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="">@lang('agency.marketing_portals')</a>
+                            </li>
+
+                        @endif
+
+
+                        @if(owner())
+                            <li>
+                                <a href="{{ url('agency/profile/'.request('agency')) }}">@lang('agency.company_profile')</a>
+                            </li>
+
+                        @elseif(moderator())
+                            <li>
+                                <a href="{{ url('agency/profile/'.request('agency')) }}">@lang('agency.company_profile')</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ url('agency/profile/'.auth()->user()->agency_id) }}">@lang('agency.company_profile')</a>
+                            </li>
+
                         @endif
 
 
 
                         @if(owner())
-                           
+
 
                             <li>
                                 <a href="{{ url('agency/settings/'.request('agency')) }}">@lang('agency.agency_settings')</a>
                             </li>
 
                         @elseif(moderator())
-     
-                        <li>
-                            <a href="{{ url('agency/settings/'.request('agency')) }}">@lang('agency.agency_settings')</a>
-                        </li>
+
+                            <li>
+                                <a href="{{ url('agency/settings/'.request('agency')) }}">@lang('agency.agency_settings')</a>
+                            </li>
                         @else
                             <li>
                                 <a href="{{ url('agency/settings/'.auth()->user()->agency_id) }}">@lang('agency.agency_settings')</a>
@@ -355,11 +349,11 @@
                         @endif
 
 
-                            @if(owner())
-                                <li>
-                                    <a href="{{ url('agency/watermark/'.request('agency')) }}">@lang('agency.watermark')</a>
-                                </li>
-                            @endif
+                        @if(owner())
+                            <li>
+                                <a href="{{ url('agency/watermark/'.request('agency')) }}">@lang('agency.watermark')</a>
+                            </li>
+                        @endif
 
                     </ul>
                 </div>
@@ -451,8 +445,6 @@
                         </li>
 
 
-
-                        
                         <li>
 
 
@@ -460,11 +452,10 @@
                                 {{-- <i data-feather="settings"></i> --}}
                                 <span>@lang('sales.contacts_settings') </span>
                                 <span class="menu-arrow"></span>
-                            </a>    
+                            </a>
 
                             <div class="collapse" id="sidebarsettings">
                                 <ul class="nav-second-level">
-
 
 
                                     <a href="#sidebarLeadSetting" data-toggle="collapse">
@@ -472,171 +463,151 @@
                                         <span>@lang('sales.leads') </span>
                                         <span class="menu-arrow"></span>
                                     </a>
-            
-            
+
+
                                     <div class="collapse" id="sidebarLeadSetting">
                                         <ul class="nav-second-level">
                                             @if(owner())
-                                            <li>
-                                                <a href="{{ url('sales/lead-sources/'.request('agency')) }}">@lang('sales.lead_source')</a>
-                                            </li>
-                                         
+                                                <li>
+                                                    <a href="{{ url('sales/lead-sources/'.request('agency')) }}">@lang('sales.lead_source')</a>
+                                                </li>
+
                                             @elseif(moderator())
-                                            <li>
-                                                <a href="{{ url('sales/lead-sources/'.request('agency')) }}">@lang('sales.lead_source')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-sources/'.request('agency')) }}">@lang('sales.lead_source')</a>
+                                                </li>
                                             @else
-                                            <li>
-                                                <a href="{{ url('sales/lead-sources/'.auth()->user()->agency_id) }}">@lang('sales.lead_source')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-sources/'.auth()->user()->agency_id) }}">@lang('sales.lead_source')</a>
+                                                </li>
                                             @endif
-            
-            
-            
-            
-            
+
+
+
+
+
                                             @if(owner())
-                                            <li>
-                                                <a href="{{ url('sales/lead-qualifications/'.request('agency')) }}">@lang('sales.lead_qualifications')</a>
-                                            </li>
-                                         
+                                                <li>
+                                                    <a href="{{ url('sales/lead-qualifications/'.request('agency')) }}">@lang('sales.lead_qualifications')</a>
+                                                </li>
+
                                             @elseif(moderator())
-                                            <li>
-                                                <a href="{{ url('sales/lead-qualifications/'.request('agency')) }}">@lang('sales.lead_qualifications')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-qualifications/'.request('agency')) }}">@lang('sales.lead_qualifications')</a>
+                                                </li>
                                             @else
-                                            <li>
-                                                <a href="{{ url('sales/lead-qualifications/'.auth()->user()->agency_id) }}">@lang('sales.lead_qualifications')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-qualifications/'.auth()->user()->agency_id) }}">@lang('sales.lead_qualifications')</a>
+                                                </li>
                                             @endif
-            
-            
-            
+
+
+
                                             @if(owner())
-                                            <li>
-                                                <a href="{{ url('sales/lead-types/'.request('agency')) }}">@lang('sales.lead_types')</a>
-                                            </li>
-                                         
+                                                <li>
+                                                    <a href="{{ url('sales/lead-types/'.request('agency')) }}">@lang('sales.lead_types')</a>
+                                                </li>
+
                                             @elseif(moderator())
-                                            <li>
-                                                <a href="{{ url('sales/lead-types/'.request('agency')) }}">@lang('sales.lead_types')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-types/'.request('agency')) }}">@lang('sales.lead_types')</a>
+                                                </li>
                                             @else
-                                            <li>
-                                                <a href="{{ url('sales/lead-types/'.auth()->user()->agency_id) }}">@lang('sales.lead_types')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-types/'.auth()->user()->agency_id) }}">@lang('sales.lead_types')</a>
+                                                </li>
                                             @endif
-            
-            
-            
+
+
+
                                             @if(owner())
-                                            <li>
-                                                <a href="{{ url('sales/lead-priorities/'.request('agency')) }}">@lang('sales.lead_priorities')</a>
-                                            </li>
-                                         
+                                                <li>
+                                                    <a href="{{ url('sales/lead-priorities/'.request('agency')) }}">@lang('sales.lead_priorities')</a>
+                                                </li>
+
                                             @elseif(moderator())
-                                            <li>
-                                                <a href="{{ url('sales/lead-priorities/'.request('agency')) }}">@lang('sales.lead_priorities')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-priorities/'.request('agency')) }}">@lang('sales.lead_priorities')</a>
+                                                </li>
                                             @else
-                                            <li>
-                                                <a href="{{ url('sales/lead-priorities/'.auth()->user()->agency_id) }}">@lang('sales.lead_priorities')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-priorities/'.auth()->user()->agency_id) }}">@lang('sales.lead_priorities')</a>
+                                                </li>
                                             @endif
-            
-            
+
+
                                             @if(owner())
-                                            <li>
-                                                <a href="{{ url('sales/lead-communications/'.request('agency')) }}">@lang('sales.lead_communications')</a>
-                                            </li>
-                                         
+                                                <li>
+                                                    <a href="{{ url('sales/lead-communications/'.request('agency')) }}">@lang('sales.lead_communications')</a>
+                                                </li>
+
                                             @elseif(moderator())
-                                            <li>
-                                                <a href="{{ url('sales/lead-communications/'.request('agency')) }}">@lang('sales.lead_communications')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-communications/'.request('agency')) }}">@lang('sales.lead_communications')</a>
+                                                </li>
                                             @else
-                                            <li>
-                                                <a href="{{ url('sales/lead-communications/'.auth()->user()->agency_id) }}">@lang('sales.lead_communications')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-communications/'.auth()->user()->agency_id) }}">@lang('sales.lead_communications')</a>
+                                                </li>
                                             @endif
-            
-            
+
+
                                             @if(owner())
-                                            <li>
-                                                <a href="{{ url('sales/lead-property/'.request('agency')) }}">@lang('sales.lead_property')</a>
-                                            </li>
-                                         
+                                                <li>
+                                                    <a href="{{ url('sales/lead-property/'.request('agency')) }}">@lang('sales.lead_property')</a>
+                                                </li>
+
                                             @elseif(moderator())
-                                            <li>
-                                                <a href="{{ url('sales/lead-property/'.request('agency')) }}">@lang('sales.lead_property')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-property/'.request('agency')) }}">@lang('sales.lead_property')</a>
+                                                </li>
                                             @else
-                                            <li>
-                                                <a href="{{ url('sales/lead-property/'.auth()->user()->agency_id) }}">@lang('sales.lead_property')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/lead-property/'.auth()->user()->agency_id) }}">@lang('sales.lead_property')</a>
+                                                </li>
                                             @endif
 
                                             @if(owner())
-                                            <li>
-                                                <a href="{{ url('sales/developers/'.request('agency')) }}">@lang('sales.developers')</a>
-                                            </li>
-                                             
+                                                <li>
+                                                    <a href="{{ url('sales/developers/'.request('agency')) }}">@lang('sales.developers')</a>
+                                                </li>
+
                                             @elseif(moderator())
-                                            <li>
-                                                <a href="{{ url('sales/developers/'.request('agency')) }}">@lang('sales.developers')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/developers/'.request('agency')) }}">@lang('sales.developers')</a>
+                                                </li>
                                             @else
-                                            <li>
-                                                <a href="{{ url('sales/developers/'.auth()->user()->agency_id) }}">@lang('sales.developers')</a>
-                                            </li>
+                                                <li>
+                                                    <a href="{{ url('sales/developers/'.auth()->user()->agency_id) }}">@lang('sales.developers')</a>
+                                                </li>
                                             @endif
-                    
-                                      
+
+
                                         </ul>
                                     </div>
 
 
-
-
-
-
                                     @if(owner())
-                                    <li>
-                                        <a href="{{ url('sales/call-status/'.request('agency')) }}">@lang('sales.call_status')</a>
-                                    </li>
-                                 
+                                        <li>
+                                            <a href="{{ url('sales/call-status/'.request('agency')) }}">@lang('sales.call_status')</a>
+                                        </li>
+
                                     @elseif(moderator())
-                                    <li>
-                                        <a href="{{ url('sales/call-status/'.request('agency')) }}">@lang('sales.call_status')</a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ url('sales/call-status/'.request('agency')) }}">@lang('sales.call_status')</a>
+                                        </li>
                                     @else
-                                    <li>
-                                        <a href="{{ url('sales/call-status/'.auth()->user()->agency_id) }}">@lang('sales.call_status')</a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ url('sales/call-status/'.auth()->user()->agency_id) }}">@lang('sales.call_status')</a>
+                                        </li>
                                     @endif
-    
-    
-    
-    
-    
-                             
-    
-                              
-    
-                               
-                            
-            
-                              
+
+
                                 </ul>
                             </div>
 
 
-
-                   
-
                         </li>
-
-
 
 
                         <li>
@@ -646,80 +617,71 @@
                                 <span>@lang('listing.listing_settings') </span>
                                 <span class="menu-arrow"></span>
                             </a>
-    
-    
+
+
                             <div class="collapse" id="sidebarlistingSetting">
                                 <ul class="nav-second-level">
                                     @if(owner())
-                                    <li>
-                                        <a href="{{ url('listing/listing-view/'.request('agency')) }}">@lang('listing.listing_view')</a>
-                                    </li>
-                                 
+                                        <li>
+                                            <a href="{{ url('listing/listing-view/'.request('agency')) }}">@lang('listing.listing_view')</a>
+                                        </li>
+
                                     @elseif(moderator())
-                                    <li>
-                                        <a href="{{ url('listing/listing-view/'.request('agency')) }}">@lang('listing.listing_view')</a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ url('listing/listing-view/'.request('agency')) }}">@lang('listing.listing_view')</a>
+                                        </li>
                                     @else
-                                    <li>
-                                        <a href="{{ url('listing/listing-view/'.auth()->user()->agency_id) }}">@lang('listing.listing_view')</a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ url('listing/listing-view/'.auth()->user()->agency_id) }}">@lang('listing.listing_view')</a>
+                                        </li>
                                     @endif
-    
-    
+
+
                                     @if(owner())
-                                    <li>
-                                        <a href="{{ url('listing/listing-cheque/'.request('agency')) }}">@lang('listing.listing_cheque')</a>
-                                    </li>
-                                 
+                                        <li>
+                                            <a href="{{ url('listing/listing-cheque/'.request('agency')) }}">@lang('listing.listing_cheque')</a>
+                                        </li>
+
                                     @elseif(moderator())
-                                    <li>
-                                        <a href="{{ url('listing/listing-cheque/'.request('agency')) }}">@lang('listing.listing_cheque')</a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ url('listing/listing-cheque/'.request('agency')) }}">@lang('listing.listing_cheque')</a>
+                                        </li>
                                     @else
-                                    <li>
-                                        <a href="{{ url('listing/listing-cheque/'.auth()->user()->agency_id) }}">@lang('listing.listing_cheque')</a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ url('listing/listing-cheque/'.auth()->user()->agency_id) }}">@lang('listing.listing_cheque')</a>
+                                        </li>
                                     @endif
-    
-    
+
+
                                     @if(owner())
-                                    <li>
-                                        <a href="{{ url('listing/listing-type/'.request('agency')) }}">@lang('listing.listing_type')</a>
-                                    </li>
-                                 
+                                        <li>
+                                            <a href="{{ url('listing/listing-type/'.request('agency')) }}">@lang('listing.listing_type')</a>
+                                        </li>
+
                                     @elseif(moderator())
-                                    <li>
-                                        <a href="{{ url('listing/listing-type/'.request('agency')) }}">@lang('listing.listing_type')</a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ url('listing/listing-type/'.request('agency')) }}">@lang('listing.listing_type')</a>
+                                        </li>
                                     @else
-                                    <li>
-                                        <a href="{{ url('listing/listing-type/'.auth()->user()->agency_id) }}">@lang('listing.listing_type')</a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ url('listing/listing-type/'.auth()->user()->agency_id) }}">@lang('listing.listing_type')</a>
+                                        </li>
                                     @endif
-    
-    
-    
-    
-    
-    
-                              
+
+
                                 </ul>
                             </div>
 
 
-
-                   
-
                         </li>
-
 
 
                     </ul>
                 </div>
             </li>
 
-@endif
-@if(auth()->user()->type == 'superadmin')
+        @endif
+        @if(auth()->user()->type == 'superadmin')
             <li>
                 <a href="#sidebarSuperadmin" data-toggle="collapse">
                     <i class="fe-star"></i>
@@ -730,78 +692,67 @@
                 @if(
                     in_array( request()->segment(2) , ['countries','cities','communities','sub-communities'])
                 ) show @endif
-                " id="sidebarSuperadmin">
+                        " id="sidebarSuperadmin">
                     <ul class="nav-second-level">
 
-         
-                                    <a href="#sidebargeoLocations" data-toggle="collapse">
-                                        <i class="fe-map-pin"></i>
-                                        <span>@lang('superadmin.geolocations') </span>
-                                        <span class="menu-arrow"></span>
-                                    </a>
-            
-            
-                                    <div class="collapse 
+
+                        <a href="#sidebargeoLocations" data-toggle="collapse">
+                            <i class="fe-map-pin"></i>
+                            <span>@lang('superadmin.geolocations') </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+
+
+                        <div class="collapse
                                     @if(
                                         in_array( request()->segment(2) , ['countries','cities','communities','sub-communities'])
                                     ) show @endif
-                                    " id="sidebargeoLocations">
-                                        <ul class="nav-second-level">
-                                      
-                                            <li>
-                                                <a href="{{ route('countries.index') }}">@lang('superadmin.countries.countries')</a>
-                                            </li>
-                                         
-                                      
-                                            <li>
-                                                <a href="{{ route('cities.index') }}">@lang('superadmin.cities.cities')</a>
-                                            </li>
-                                         
-                                            <li>
-                                                <a href="{{ route('communities.index') }}">@lang('superadmin.communities.communities')</a>
-                                            </li>
-                                         
-                                            <li>
-                                                <a href="{{ route('sub-communities.index') }}">@lang('superadmin.sub_communities.sub_communities')</a>
-                                            </li>
-                                         
-                                      
-                                        </ul>
-                                    </div>
+                                " id="sidebargeoLocations">
+                            <ul class="nav-second-level">
+
+                                <li>
+                                    <a href="{{ route('countries.index') }}">@lang('superadmin.countries.countries')</a>
+                                </li>
 
 
+                                <li>
+                                    <a href="{{ route('cities.index') }}">@lang('superadmin.cities.cities')</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('communities.index') }}">@lang('superadmin.communities.communities')</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('sub-communities.index') }}">@lang('superadmin.sub_communities.sub_communities')</a>
+                                </li>
 
 
-                   
-
-                   
-
-
-          
-                
+                            </ul>
+                        </div>
 
 
                     </ul>
                 </div>
             </li>
-@endif
-            <li>
+        @endif
+        <li>
 
 
-                {{-- <a href="{{ url('logout') }}"
-                   onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                    <i class="fe-log-out"></i>
-                    <span> @lang('dashboard.logout') </span>
-                    <span class="menu-arrow"></span>
-                </a>
+            {{-- <a href="{{ url('logout') }}"
+               onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                <i class="fe-log-out"></i>
+                <span> @lang('dashboard.logout') </span>
+                <span class="menu-arrow"></span>
+            </a>
 
-                <form id="logout-form" action="{{ url('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form> --}}
+            <form id="logout-form" action="{{ url('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form> --}}
 
-            </li>
+        </li>
 
 
-        </ul>
+    </ul>
 
-    </div>
+</div>

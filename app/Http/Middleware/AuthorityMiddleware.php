@@ -18,6 +18,7 @@ class AuthorityMiddleware
 
         $agency_id   = request('agency');
 
+
         if (request('agency')) {
             $agency_id  = request('agency');
         } elseif (owner()) {
