@@ -41,25 +41,22 @@ class SettingsController extends Controller
 
         abort_if(Gate::denies('manage_agency_settings'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         DB::beginTransaction();
-        try{
+        try {
 
 
             $watermark = Watermark::firstOrCreate([
-                    'agency_id' => $agency,
-                    'current' => 'yes',
-                    'business_id' => auth()->user()->business_id,
-                ]);
+                'agency_id' => $agency,
+                'current' => 'yes',
+                'business_id' => auth()->user()->business_id,
+            ]);
 
 
             DB::commit();
             return view('agency::settings.watermark', compact('watermark', 'agency'));
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('agency.something_went_wrong'), 'error'));
         }
-
-
     }
 
 
@@ -69,32 +66,32 @@ class SettingsController extends Controller
         abort_if(Gate::denies('manage_agency_settings'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         DB::beginTransaction();
-        try{
+        try {
 
             $validator = Validator::make($request->all(), [
-                    'agency_id'     =>  'required|exists:agencies,id',
-                    'watermark_id'  =>  'required|exists:watermarks,id',
-                    'active'        =>  'required|in:yes,no',
-                    'position'      =>  'required|in:top-left,top,top-right,left,center,right,bottom-left,bottom,bottom-right',
-                    'transparent'   =>  'required|max:100|min:0',
-                    'image'         =>  'sometimes|nullable|mimes:jpeg,jpg,png,gif',
+                'agency_id'     =>  'required|exists:agencies,id',
+                'watermark_id'  =>  'required|exists:watermarks,id',
+                'active'        =>  'required|in:yes,no',
+                'position'      =>  'required|in:top-left,top,top-right,left,center,right,bottom-left,bottom,bottom-right',
+                'transparent'   =>  'required|max:100|min:0',
+                'image'         =>  'sometimes|nullable|mimes:jpeg,jpg,png,gif',
             ]);
 
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'));
             }
 
-            if($request->image){
-               $image =  upload_image($request->image,public_path('upload/watermarks'),true,true);
+            if ($request->image) {
+                $image =  upload_image($request->image, public_path('upload/watermarks'), true, true);
             }
 
             $watermark = Watermark::firstOrCreate([
-                    'agency_id' => $request->agency_id,
-                    'current' => 'yes',
-                    'business_id' => auth()->user()->business_id,
-                ]);
-            if($watermark->image && $request->image){
-                remove_image($watermark->image,'upload/watermarks');
+                'agency_id' => $request->agency_id,
+                'current' => 'yes',
+                'business_id' => auth()->user()->business_id,
+            ]);
+            if ($watermark->image && $request->image) {
+                remove_image($watermark->image, 'upload/watermarks');
             }
 
             $watermark->update([
@@ -108,14 +105,11 @@ class SettingsController extends Controller
 
             DB::commit();
             return back()->with(flash(trans('agency.watermark_updated'), 'success'));
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             throw $e;
             return back()->withInput()->with(flash(trans('agency.something_went_wrong'), 'error'));
         }
-
-
     }
 
 
@@ -213,9 +207,6 @@ class SettingsController extends Controller
 
         $notifications = auth()->user()->notifications;
 
-        return view('notifications',compact('notifications'));
-
+        return view('notifications', compact('notifications'));
     }
-
-
 }
