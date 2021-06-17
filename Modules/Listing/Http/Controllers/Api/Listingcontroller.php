@@ -2,9 +2,11 @@
 
 namespace Modules\Listing\Http\Controllers\Api;
 
-use Illuminate\Contracts\Support\Renderable;
+use App\Models\Agency;
+use App\Models\Business;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
 
 class Listingcontroller extends Controller
 {
@@ -12,9 +14,21 @@ class Listingcontroller extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('listing::index');
+      try {
+          //code...
+          $business = Business::where('business_token', '1CecqRpAW2Yi2yttT0esqpKSHKbzrzFw7AeYq31rlYdZaRWhuJQsnj79H8Zf')->firstOrFail();
+          $agency   = Agency::where('business_id', $business->id)->where('agency_token', 'hLrmNWDmtEfLQjDNB9dNpwHFyQHFPliIgB9mHq4ZC1bV5FOedghrLT6GQmaG')->firstOrFail();
+          $agency->listingsAll;
+          return response()->json(array(
+            'status' => 'success',
+            'listing' => $agency->listingsAll),
+            200);
+        } catch (\Throwable $th) {
+            return response()->json(array(
+                'status' => 'Error'),401);
+        }
     }
 
     /**
