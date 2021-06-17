@@ -71,6 +71,8 @@ class SettingsController extends Controller
                 'agency_id' => 'required|exists:agencies,id',
                 'watermark_id' => 'required|exists:watermarks,id',
                 'active' => 'required|in:yes,no',
+                'width' => 'required|numeric',
+                'height' => 'required|numeric',
                 'position' => 'required|in:top-left,top,top-right,left,center,right,bottom-left,bottom,bottom-right',
                 'transparent' => 'required|max:100|min:0',
                 'image' => 'sometimes|nullable|mimes:jpeg,jpg,png,gif',
@@ -87,13 +89,19 @@ class SettingsController extends Controller
                 'business_id' => auth()->user()->business_id,
             ]);
             if ($request->image) {
-                $image = upload_image($request->image, public_path('upload/watermarks'), true, [false, $request->transparent]);
+                $image = upload_image($request->image, public_path('upload/watermarks'), true, [false, $request->transparent,$request->width,$request->height]);
                 $main_image = $image;
             } elseif ($request->transparent != $watermark->transparent) {
-                $image = upload_image($watermark->image, public_path('upload/watermarks'), true, [$watermark->main_image, $request->transparent]);
+                $image = upload_image($watermark->image, public_path('upload/watermarks'), true, [$watermark->main_image, $request->transparent,$request->width,$request->height]);
                 $main_image = $watermark->main_image;
                 remove_image($watermark->image, 'upload/watermarks');
-            } else {
+            }
+             elseif (($request->width != $watermark->width) || ($request->height != $watermark->height) ) {
+                $image = upload_image($watermark->image, public_path('upload/watermarks'), true, [$watermark->main_image, $request->transparent,$request->width,$request->height]);
+                $main_image = $watermark->main_image;
+                remove_image($watermark->image, 'upload/watermarks');
+            }
+            else {
                 $image = $watermark->image;
                 $main_image = $watermark->main_image;
             }
@@ -106,6 +114,8 @@ class SettingsController extends Controller
                 'transparent' => $request->transparent,
                 'position' => $request->position,
                 'active' => $request->active,
+                'width' => $request->width,
+                'height' => $request->height,
                 'update_listing' => $request->update_listing,
                 'image' => $image,
                 'main_image' => $main_image,
