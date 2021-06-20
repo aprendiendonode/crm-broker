@@ -30,20 +30,14 @@ Route::put('campain-leads-facebook/{business_token}/{agency_token}', function (R
     $ld = new Language(['en', 'ar']);
     $deteced =   $ld->detect($request->city)->bestResults()->close();
     $city = '';
-
-
     if (array_key_exists('en', $deteced)) {
         $city =  str_replace(' ', '_', strtolower($request->city));
         $city =  City::where('slug', $city)->first();
     } else {
         $city =  City::where('name_ar', $request->city)->first();
     }
-
-
     list($firstName, $lastName) = array_pad(explode(' ', trim($request->full_name)), 2, null);
-
     $lead_source = LeadSource::where('slug', $request->platform == 'fb' ? 'facebook' : 'instagram')->where('agency_id', $agency->id)->first();
-
     $lead_source_id = '';
     if ($lead_source) {
         $lead_source_id = $lead_source->id;
