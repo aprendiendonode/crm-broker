@@ -246,6 +246,12 @@ return [
     'watermark'                        => 'WaterMark',
     'enlarg'                           => 'Enlarg',
 
+    'listing_modified'                  => 'Listing Modified',
+    'furnished'                         => 'Furnished',
+    'unfurnished'                       => 'UnFurnished',
+    'video'                             => 'Video',
+    'matching_lead'                       => 'Matching Lead',
+
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',
     'title'                     =>  'Title',

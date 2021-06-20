@@ -3,13 +3,12 @@
 <head>
 
     <meta charset="utf-8"/>
-    <title> OTG | @yield('title')</title>
+    <title> {{ env('APP_NAME') }} | {{ $listing->title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description"/>
     <meta content="Coderthemes" name="author"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <!-- App favicon -->
-    @include('feed::links')
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -53,22 +52,32 @@
 
 <div class="container">
     <div class="header mt-3">
-        <h2>Furnitured Bed | Partial Marina View</h2>
+        <h2>{{ $listing->title }}</h2>
         <button class="btn btn-sm pdf-btn">Generate PDF</button>
     </div>    
     <div class="row">
         <div class="col-md-8">
             <div id="carouselExampleControls" class="carousel mb-3 slide" data-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img class="d-block w-100" src="{{ asset('assets/images/bayute-image.jpg') }}" alt="First slide">
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="{{ asset('assets/images/bayute-image.jpg') }}" alt="Second slide">
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="{{ asset('assets/images/bayute-image.jpg') }}" alt="Third slide">
-                    </div>
+
+                    @if($listing->photos)
+                       @foreach($listing->photos as $photo)
+                            <div class="carousel-item active">
+                                <img class="d-block w-100" 
+                                @if($photo->active == 'main')
+                                src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main) }}"
+                                @else
+                                src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark) }}"
+                                @endif
+                                >
+                            </div>
+                        @endforeach
+                    @endif
+
+                    
+
+
+
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -83,27 +92,27 @@
                 <tbody>
                     <tr>
                         <th>Ref No.</th>
-                        <td>12-Apr-R-1133</td>
+                        <td>{{ $listing->listing_ref }}</td>
                         <th>Area</th>
-                        <td>828 sqft</td>
+                        <td>{{ $listing->area }} sqft</td>
                     </tr>
                     <tr>
                         <th>Permit No.</th>
-                        <td>-</td>
+                        <td> {{ $listing->permit_no }}</td>
                         <th>Beds</th>
-                        <td>1</td>
+                        <td>{{ $listing->beds }}</td>
                     </tr>
                     <tr>
                         <th>Price</th>
-                        <td>AED 142,555</td>
+                        <td>AED {{ $listing->price }}</td>
                         <th>Baths</th>
-                        <td>1</td>
+                        <td>{{ $listing->baths }}</td>
                     </tr>
                     <tr>
                         <th>Location</th>
-                        <td>Marina Gate 121, Dubai</td>
+                        <td>{{ $listing->location }}</td>
                         <th>Parking</th>
-                        <td>1</td>
+                        <td>{{ $listing->parking }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -111,35 +120,37 @@
         <div class="col-md-4">
             <div class="text-center mb-4">
                 <div>
-                    <img class="w-100 mb-2" style="background: #000; ; max-width: 160px;" src="{{ asset('assets/images/perfecta-logo.svg') }}" alt="">
+                    <img class="w-100 mb-2" style="background: #000; ; max-width: 160px;"
+                     src="{{ $listing->agency && $listing->agency->image != null ? asset('company_profile_images/'.$listing->agency->image) : '' }}" alt="">
                 </div>
-                <div>Perfecta Casa Real Estate</div>
-                <div>Agent: Shqfique UL-Hassan</div>
+                <div>{{ $listing->agency ? $listing->agency->{'company_name_'.app()->getLocale()} : '' }}</div>
+                <div>Agent: {{ $listing->agent ? $listing->agent->{'name_'.app()->getLocale()} : '' }}</div>
             </div>
             <div>
                 <table class="table">
                     <tbody>
                         <tr>
                             <th>Email</th>
-                            <td>ex@perfectacas.com</td>
+                            <td>{{ $listing->agent ? $listing->agent->email : '' }}</td>
                         </tr>
                         <tr>
                             <th>Primary</th>
-                            <td>+20109933443</td>
+                            <td>{{ $listing->agent ? $listing->agent->phone : '' }}</td>
                         </tr>
                         <tr>
                             <th>Work</th>
-                            <td>+20100331243</td>
+                            <td>{{ $listing->agency ? $listing->agency->country_code .'-'.$listing->agency->phone : '' }}</td>
                         </tr>
                         <tr>
                             <th>Address</th>
-                            <td>Marina Gate 121, Dubai</td>
+                            <td>{{ $listing->agency ? $listing->agency->address : '' }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14610049.559018193!2d21.856659345987513!3d26.61943941976208!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14368976c35c36e9%3A0x2c45a00925c4c444!2sEgypt!5e0!3m2!1sen!2seg!4v1623933156580!5m2!1sen!2seg" style="width: 100%;" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <div id="map" style="width:400px;height:300px;"></div>
+
             </div>
         </div>
        
@@ -149,79 +160,73 @@
 <!-- Vendor js -->
 <script src="{{asset('assets/js/vendor.min.js')}}"></script>
 
-<!-- Plugins js-->
-<script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
 <script>
-    $( document ).ready(function() {
-        flatpickr(".flatpicker-range", {
-            mode: "range"
-        });
-        flatpickr(".flatpicker");
+  $(document).ready(function () {
+    var region = @json($listing->agency && $listing->agency->country ? $listing->agency->country->iso2 : '');
+
+    injectGoogleMapsApiScript({
+        key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
+        libraries: 'places',
+        language: 'ar',
+        region: region,
+        callback: 'initMap',
     });
-</script>
-{{-- <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script> --}}
 
-{{-- <script src="{{asset('assets/libs/selectize/js/standalone/selectize.min.js')}}"></script> --}}
+  })
 
-<!-- Dashboar 1 init js-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+     
+    var  googleMapsScriptIsInjected = false;
+  function injectGoogleMapsApiScript(options){
+
+          if(googleMapsScriptIsInjected){
+              return;
+          }
+
+
+              const optionsQuery = Object.keys(options)
+                  .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(options[k])}`)
+                  .join('&');
+
+              const url = `https://maps.googleapis.com/maps/api/js?${optionsQuery}`;
+
+              const script = document.createElement('script');
+
+              script.setAttribute('src', url);
+              script.setAttribute('async', '');
+              script.setAttribute('defer', '');
+
+              document.head.appendChild(script);
+
+              googleMapsScriptIsInjected = true;
+          };
+
+
+
+
+   
+
+  </script>
+
 <script>
-    toastr.options = {
-        "closeButton": false,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": false,
-        "positionClass": "toast-bottom-right",
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "600",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut",
-        "progressBar": true,
 
-    }
-
-    function toast(message, type) {
-        if (type == "success") {
-            toastr.success(message)
-        } else if (type == "error") {
-            toastr.error(message)
-
-        }
-        else if (type == "danger") {
-            toastr.error(message)
-
-        }
-        else if (type == "warning") {
-            toastr.warning(message)
-
-        }
-        else if (type == "info") {
-            toastr.info(message)
-
-        }
-
+    function initMap(){
+        var lat = @json($listing->loc_lat);
+    var lng = @json($listing->loc_lng);
+        var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat:parseInt( lat), lng: parseInt(lng) },
+                zoom: 13,
+                
+                mapTypeId: 'roadmap'
+            });
+            
+            
+    
+    
     }
 
 </script>
-
-
-@if(Session::has('message'))
-    <script>
-
-        var type = "{{ Session::get('alert-type', 'info') }}";
-
-        toast('{{ session('message') }}', type)
-
-    </script>
-@endif
-<!-- App js-->
-@stack('js')
 <script src="{{asset('assets/js/app.min.js')}}"></script>
 
 
