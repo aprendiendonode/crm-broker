@@ -34,12 +34,7 @@ onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_task_{{ $
 
     class="fe-phone cursor-pointer feather-16 px-1">
   </i>
-@endcan   
 
-
-
-
-@can('edit_lead')
   <i
   onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_opportunity_{{ $lead->id }}')"
 
@@ -49,10 +44,10 @@ onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_task_{{ $
 
     class="fe-award cursor-pointer feather-16">
   </i>
-@endcan  
 
 
 
+{{-- 
 @can('delete_lead')
   <i
       data-plugin="tippy" 
@@ -62,6 +57,26 @@ onclick="event.preventDefault();  table_row_show({{ $lead->id }},'lead_task_{{ $
   
       class="fe-trash cursor-pointer feather-16">
   </i>
+@endcan --}}
+@if($lead->status == 'active')
+  <i
+      data-plugin="tippy" 
+      data-tippy-placement="top-start" 
+      title="@lang('sales.archive_lead')"
+      data-toggle="modal" data-target="#archive-alert-modal_{{ $lead->id }}"
+  
+      class="fas fa-archive cursor-pointer feather-16">
+  </i>
+  @else
+  
+    <i
+      data-plugin="tippy" 
+      data-tippy-placement="top-start" 
+      title="@lang('sales.active_lead')"
+      data-toggle="modal" data-target="#active-alert-modal_{{ $lead->id }}"
+      class="fab fa-autoprefixer cursor-pointer feather-16"
+    >
+  @endif
 @endcan
 
 

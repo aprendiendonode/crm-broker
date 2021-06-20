@@ -53,6 +53,7 @@ class Agency extends Model
         'created_at',
         'updated_at',
         'business_id',
+        'agency_token',
     ];
 
 

@@ -3,7 +3,6 @@
 namespace Modules\Sales\Http\Controllers;
 
 use App\FaildLead;
-use App\Imports\LeadsImport;
 use App\Jobs\ExportFailedLeadsFile;
 use App\Jobs\ImportLeadsSheet;
 use App\Jobs\SendFailedLeadsMail;
@@ -11,21 +10,12 @@ use App\Jobs\SendFailedLeadsMailClient;
 use App\Jobs\StartLeadsInsertJobs;
 use App\Models\SystemTemplate;
 use Gate;
-
-use App\Models\City;
-
-use App\Models\Team;
-use App\Models\User;
 use App\Models\Agency;
 use App\Jobs\SendEmail;
-use App\Models\Country;
-use App\Mail\EmailGeneral;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use App\Exports\UsersExport;
 use Illuminate\Http\Request;
 use App\Events\LeadTaskEvent;
-use App\Models\PermissionGroup;
 use Illuminate\Validation\Rule;
 use App\Events\OpportunityEvent;
 use Modules\Sales\Entities\Call;
@@ -33,8 +23,6 @@ use Modules\Sales\Entities\Lead;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Activity\Entities\Task;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Sales\Entities\LeadType;
 use Modules\Sales\Entities\CallStatus;
@@ -45,13 +33,10 @@ use Modules\Activity\Entities\TaskType;
 use Modules\Sales\Entities\Opportunity;
 use Modules\Sales\Entities\LeadPriority;
 use Modules\Sales\Entities\LeadProperty;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\TaskStatus;
 use App\Notifications\LeadTaskNotification;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Notification;
-use Modules\Sales\Entities\OpportunityStage;
 use Modules\Sales\Entities\LeadCommunication;
 use Modules\Sales\Entities\OpportunityResult;
 use App\Notifications\OpportunityNotification;
@@ -73,6 +58,7 @@ class LeadsController extends Controller
 
         $business = auth()->user()->business_id;
         $per_page = 15;
+        $status = request('status') ? request('status') : 'active';
 
         $agency = Agency::with([
             'lead_sources', 'lead_qualifications', 'lead_types', 'lead_properties', 'lead_priorities', 'lead_communications',
@@ -81,13 +67,15 @@ class LeadsController extends Controller
 
 
         // $currencies  = DB::table('currencies')->get();
+
         $leads = Lead::with([
             'calls',
             'tasks',
             'tasks.addBy',
             'tasks.staff',
             'calls.madeBy',
-        ])->where('agency_id', $agency->id)->where('business_id', $business);
+        ])->where('agency_id', $agency->id)->where('business_id', $business)
+            ->where('status', $status);
 
         if (request('filter_phone') != null) {
             $leads->where(function ($query) {
@@ -151,7 +139,7 @@ class LeadsController extends Controller
             [
                 'leads' => $leads->paginate($per_page),
                 'pagination' => $pagination,
-//                'total_leads' => $agency->leads,
+                //                'total_leads' => $agency->leads,
                 'staffs' => staff($agency->id),
                 'countries' =>
                 cache()->remember('countries', 60 * 60 * 24, function () use ($agency) {
@@ -193,11 +181,12 @@ class LeadsController extends Controller
     }
 
 
-    public function check_before_create(Request $request){
-        $leads = Lead::where('agency_id', $request->agency)->where('business_id',$request->business)->where(function($q) use($request){
-            $q->where('phone1',$request->phone)->orWhere('phone2',$request->phone)->orWhere('phone3',$request->phone)->orWhere('phone4',$request->phone)->orWhere('landline',$request->phone);
+    public function check_before_create(Request $request)
+    {
+        $leads = Lead::where('agency_id', $request->agency)->where('business_id', $request->business)->where(function ($q) use ($request) {
+            $q->where('phone1', $request->phone)->orWhere('phone2', $request->phone)->orWhere('phone3', $request->phone)->orWhere('phone4', $request->phone)->orWhere('landline', $request->phone);
         })->get();
-        return response()->json(['leads' =>$leads] , 200);
+        return response()->json(['leads' => $leads], 200);
     }
 
     public function store(Request $request)
@@ -636,6 +625,7 @@ class LeadsController extends Controller
                 // "assigned_to" => serialize($staff_assigned),
                 "agency_id" => $request->agency_id,
                 'business_id' => $request->business_id,
+                'status'       => 'active',
 
             ]);
 
@@ -1104,6 +1094,22 @@ class LeadsController extends Controller
         Lead::findorfail(request('lead_id'))->delete();
 
         return back()->withInput()->with(flash(trans('sales.lead_deleted'), 'success'));
+    }
+    public function archive()
+    {
+        abort_if(Gate::denies('edit_lead'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        Lead::findorfail(request('lead_id'))->update(['status' => 'archive']);
+
+        return back()->withInput()->with(flash(trans('sales.modified_successfully'), 'success'));
+    }
+    public function active()
+    {
+        abort_if(Gate::denies('edit_lead'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        Lead::findorfail(request('lead_id'))->update(['status' => 'active']);
+
+        return back()->withInput()->with(flash(trans('sales.modified_successfully'), 'success'));
     }
 
 

@@ -31,6 +31,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Modules\Sales\Entities\LeadType;
 use Intervention\Image\Facades\Image;
 use Modules\Listing\Entities\Listing;
+use Modules\Listing\Entities\PortalListing;
 use Modules\Sales\Entities\Developer;
 use Modules\SuperAdmin\Entities\City;
 use Modules\Agency\Entities\Watermark;
@@ -895,15 +896,18 @@ class ListingRepo
 
             $main_plan_path = public_path('temporary/plans/' . $main_tmp_folder . '/' . $plan_name);
 
-            $watermark = public_path('watermark.png');
-
-
             // * image with full size and watermark
             $with_watermark_tmp_folder_path = public_path("temporary/plans/$main_tmp_folder/mainWatermark-$plan_name");
 
-            Image::make($main_plan_path)
-                ->insert($watermark, 'center', 10, 10)
-                ->save($with_watermark_tmp_folder_path);
+
+
+            $watermark = Watermark::where('agency_id', $request->agency)->where('active', 'yes')->first();
+            if ($watermark) {
+                Image::make($main_plan_path)
+                    ->insert(public_path('upload/watermarks/' . $watermark->image), $watermark->position)
+                    ->save($with_watermark_tmp_folder_path);
+            }
+
 
             $temporary_plan = TemporaryPlan::create([
                 'folder' => $main_tmp_folder,
@@ -1679,11 +1683,19 @@ class ListingRepo
 
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'error'))->with('open-portals-tab', $id);
             }
-
+         
             $listing->update([
                 'portals' => $request->{'portals_' . $id} ? $request->{'portals_' . $id} : []
             ]);
-
+            if(!empty($request->{'portals_' . $id})){
+            $listing->portalsList->isEmpty() != true ? $listing->portalsList->each->delete(): '' ;
+                foreach($request->{'portals_' . $id } as $item ){
+                    PortalListing::create([
+                        'listing_id' =>$listing->id,
+                        'portal_id' =>$item
+                    ]);
+                }
+            }
 
             DB::commit();
             return back()->with(flash(trans('listing.portals_modified'), 'success'))->with('open-portals-tab', $id);
@@ -2124,6 +2136,7 @@ class ListingRepo
 
     public function show($listing_id, $listing_ref)
     {
-        return view('listing::listing.front');
+        $listing = Listing::findorfail($listing_id);
+        return view('listing::listing.front', $listing);
     }
 }

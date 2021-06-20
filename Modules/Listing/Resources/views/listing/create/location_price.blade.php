@@ -175,9 +175,13 @@
             </div>
    
             <div class="form-group">
-                <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.rent')<span class="text-danger"> *</span></label>
+                <label class="font-weight-medium text-muted" style="flex:1">
+                <span id="rent-sale-label-create">
+                    @lang('listing.price')
+                </span>
+                <span class="text-danger"> *</span></label>
                 <div class="input-group mb-2" >
-                    <input onkeyup="float_numbers()" type="text"  value="{{ old('price') }}" class="form-control decimal_convert" 
+                    <input onkeyup="updatePrice()" onchange="updatePrice()" id="rent-sale-create" type="number" min="1" value="{{ old('price') }}" class="form-control decimal_convert" 
                            name="price" id="rent" required>
                     {{-- <div class="input-group-prepend">
                         <div class="input-group-text">AED</div>
@@ -214,9 +218,12 @@
                         <div class="input-group mb-2 mr-sm-2" >
                             <input
                             name ="comission_percent"
+                            onchange="updatePrice()"
+                            onkeyup="updatePrice()"
                             value="{{ old('comission_percent') }}"
-                             type="text" class="form-control" 
-                             id="inlineFormInputGroupUsername1"
+                             type="number" class="form-control"
+                             min="1"
+                             id="annaul-commission"
                              data-tippy-placement="top-start" title=""
                              >
                             <div class="input-group-prepend">
@@ -228,9 +235,10 @@
                             name="comission_value"
                             value="{{ old('comission_value') }}"
                              type="text" class="form-control"
-                              id="inlineFormInputGroupUsername2"
+                              id="commissionValue"
                                data-tippy-placement="top-start"
                                 title=""
+                                readonly
                                 >
                             <div class="input-group-prepend">
                                 <div class="input-group-text">AED</div>

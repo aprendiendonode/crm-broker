@@ -1,6 +1,7 @@
 <?php
 
 use Pusher\Pusher;
+use Modules\Sales\Entities\Lead;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,9 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
             }
         });
         Route::get('leads/{agency}', 'LeadsController@index')->name('sales.leads');
+        Route::get('leads/update-all-leads/{agency}', function () {
+            Lead::query()->update(['status' => 'active']);
+        });
         Route::get('failed_leads/{agency}', 'FailedLeadsController@index');
         Route::get('leads/bulk_uploads/{agency}', 'LeadsController@bulk_uploads');
         Route::post('leads/smart_import_sheet', 'LeadsController@bulk_uploads_process')->name('smart_import_sheet');
@@ -121,6 +125,8 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
         Route::post('manage_leads', 'LeadsController@store');
         Route::post('manage_leads/{id}', 'LeadsController@update');
         Route::post('delete-manage_leads', 'LeadsController@destroy');
+        Route::post('archive-manage-leads', 'LeadsController@archive');
+        Route::post('active-manage-leads', 'LeadsController@active');
 
 
 

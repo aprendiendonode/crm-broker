@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Agency;
+use App\Models\Business;
 use Illuminate\Http\Request;
 
 /*
@@ -12,3 +14,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::prefix('listing')->group(function () {
+    Route::get('Listing', 'Api\ListingController@index');
+});
