@@ -243,6 +243,8 @@ return [
     'choose_community_first'        => 'Choose Community First',
     'sub_community'                 => 'Sub Community',
     'success'                        => 'Success',
+    'watermark'                        => 'WaterMark',
+    'enlarg'                           => 'Enlarg',
 
 
 

@@ -26,16 +26,16 @@
 
                         @if(owner())
                             <li>
-                                <a href="{{ url('sales/leads/'.request('agency')) }}">@lang('sales.database')</a>
+                                <a href="{{ url('sales/leads/'.request('agency').'?status=active') }}">@lang('sales.database')</a>
                             </li>
 
                         @elseif(moderator())
                             <li>
-                                <a href="{{ url('sales/leads/'.request('agency')) }}">@lang('sales.database')</a>
+                                <a href="{{ url('sales/leads/'.request('agency').'?status=active') }}">@lang('sales.database')</a>
                             </li>
                         @else
                             <li>
-                                <a href="{{ url('sales/leads/'.auth()->user()->agency_id) }}">@lang('sales.database')</a>
+                                <a href="{{ url('sales/leads/'.auth()->user()->agency_id.'?status=active') }}">@lang('sales.database')</a>
                             </li>
                         @endif
 
