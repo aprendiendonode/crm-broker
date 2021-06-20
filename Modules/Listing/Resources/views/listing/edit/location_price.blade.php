@@ -173,7 +173,11 @@
         <div class="form-group">
             <label class="font-weight-medium text-muted" style="flex:1">
             <span id="rent-sale-label-{{ $listing->id }}">
-                @lang('listing.rent')
+                @if($listing->purpose == 'rent')
+                 @lang('listing.rent')
+                @else
+                 @lang('listing.price')
+                @endif
             </span>
             <span class="text-danger"> *</span></label>
             <div class="input-group mb-2" >

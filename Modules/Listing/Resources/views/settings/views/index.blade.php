@@ -73,8 +73,9 @@
                    
            
                             <td>
-                                @include('listing::settings.views.controlls')
-                               
+                                @can('manage_listing_setting')
+                                    @include('listing::settings.views.controlls')
+                                @endcan
                             </td>
 
                         

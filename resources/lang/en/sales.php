@@ -505,5 +505,14 @@ return [
     "contacts" => 'Contacts',
     "listing_settings" => 'Listing Settings',
     "dashboard"  => "Dashboard",
+    'archive_lead' => 'Archive Lead',
+    'archive' => 'Archive',
+    'archive_warning' => 'Archive Warning',
+    'active_warning' => 'Active Warning',
+    'confirm_archive' => 'Confirm Archive',
+    'modified_successfully' => 'Modified Successfully',
+    'active' => 'Active',
+    'active_lead' => 'Active Lead',
+    'confirm_active' => 'Confirm Active'
 
 ];
