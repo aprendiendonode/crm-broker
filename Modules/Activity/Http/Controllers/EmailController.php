@@ -27,6 +27,8 @@ class EmailController extends Controller
      */
     public function index($agency)
     {
+        abort_if(Gate::denies('view_emails'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $per_page   = 10;
         $mail_lists = MailList::where('agency_id', $agency)->get();
 
@@ -83,7 +85,8 @@ class EmailController extends Controller
      */
     public function create()
     {
-        return view('activity::create');
+        return redirect()->back();
+//        return view('activity::create');
     }
 
     /**
@@ -94,26 +97,15 @@ class EmailController extends Controller
     public function store(Request $request)
     {
 
+        abort_if(Gate::denies('add_emails'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $email_address_array = [];
         if ($request->email_address){
 
             $email_address_array = explode(',',$request->email_address);
         }
         try {
-            //        $explode = explode(',',$request->email_address);
-            //        $pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
-            //
-            //        for ($i=0 ;$i<sizeof($explode);$i++)
-            //        {
-            //            $emailaddress = $explode[$i];
-            //
-            //            if (preg_match($pattern, $emailaddress) === 1) {
-            //                dd('true');
-            //            }else{
-            //                dd('false');
-            //            }
-            //        }
-            //        dd($request->all());
+
             // validate data
             $validator = Validator::make($request->all(), [
 
@@ -234,7 +226,8 @@ class EmailController extends Controller
      */
     public function show($id)
     {
-        return view('activity::show');
+        return redirect()->back();
+//        return view('activity::show');
     }
 
     /**
@@ -244,7 +237,8 @@ class EmailController extends Controller
      */
     public function edit($id)
     {
-        return view('activity::edit');
+        return redirect()->back();
+//        return view('activity::edit');
     }
 
     /**
@@ -255,7 +249,7 @@ class EmailController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return redirect()->back();
     }
 
     /**
@@ -265,6 +259,6 @@ class EmailController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return redirect()->back();
     }
 }

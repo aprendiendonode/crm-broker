@@ -4,7 +4,7 @@
 
 
 
-
+{{-- 
 
                             @can('delete_lead')
                                 <!-- Info Alert Modal -->
@@ -29,7 +29,7 @@
                                 </div><!-- /.modal -->
                             @endcan 
 
-
+ --}}
 
                             
                             @can('edit_lead')
@@ -43,19 +43,14 @@
                                                     <h4 class="mt-2">@lang('agency.head_up')</h4>
                                                     <p class="mt-3">@lang('sales.source_warning') </p>
                                                       <p>   {{ $lead->full_name }} / {{ $phone_number }}</p>
-                                                    <button  onclick="event.preventDefault();change_lead_source({{ $lead->id }})" class="btn btn-success my-2">@lang('agency.confirm_delete')</button>
+                                                    <button  onclick="event.preventDefault();change_lead_source({{ $lead->id }})" class="btn btn-success my-2">@lang('agency.confirm')</button>
                                                     <button type="button" class="btn btn-info my-2" data-dismiss="modal">@lang('agency.cancel')</button>
                                                 </div>
                                             </div>
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal-dialog -->
                                 </div><!-- /.modal -->
-                            @endcan 
-
-
-
-                                     
-                            @can('edit_lead')
+                
                                 <!-- Info Alert Modal -->
                                 <div id="type-alert-modal_{{ $lead->id }}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
                                     <div class="modal-dialog modal-sm">
@@ -66,19 +61,14 @@
                                                     <h4 class="mt-2">@lang('agency.head_up')</h4>
                                                     <p class="mt-3">@lang('sales.type_warning') </p>
                                                       <p>   {{ $lead->full_name }} / {{ $phone_number }}</p>
-                                                    <button  onclick="event.preventDefault();change_lead_type({{ $lead->id }})" class="btn btn-success my-2">@lang('agency.confirm_delete')</button>
+                                                    <button  onclick="event.preventDefault();change_lead_type({{ $lead->id }})" class="btn btn-success my-2">@lang('agency.confirm')</button>
                                                     <button type="button" class="btn btn-info my-2" data-dismiss="modal">@lang('agency.cancel')</button>
                                                 </div>
                                             </div>
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal-dialog -->
                                 </div><!-- /.modal -->
-                            @endcan 
-
-
-
-                                              
-                            @can('edit_lead')
+                          
                                 <!-- Info Alert Modal -->
                                 <div id="qualification-alert-modal_{{ $lead->id }}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
                                     <div class="modal-dialog modal-sm">
@@ -89,8 +79,53 @@
                                                     <h4 class="mt-2">@lang('agency.head_up')</h4>
                                                     <p class="mt-3">@lang('sales.qualification_warning') </p>
                                                       <p>   {{ $lead->full_name }} / {{ $phone_number }}</p>
-                                                    <button  onclick="event.preventDefault();change_lead_qualification({{ $lead->id }})" class="btn btn-success my-2">@lang('agency.confirm_delete')</button>
+                                                    <button  onclick="event.preventDefault();change_lead_qualification({{ $lead->id }})" class="btn btn-success my-2">@lang('agency.confirm')</button>
                                                     <button type="button" class="btn btn-info my-2" data-dismiss="modal">@lang('agency.cancel')</button>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+
+
+
+                                <!-- Info Alert Modal -->
+                                <div id="archive-alert-modal_{{ $lead->id }}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-body p-4">
+                                            <div class="text-center">
+                                                <i class="dripicons-information h1 text-primary"></i>
+                                                <h4 class="mt-2">@lang('agency.head_up')</h4>
+                                                <p class="mt-3">@lang('sales.archive_warning') </p>
+                                                <form action="{{ url('sales/archive-manage-leads') }}" method="post">
+                                                    @csrf
+                                                    <input  type="hidden" name="lead_id" value="{{ $lead->id }}">
+                                                    <button type="submit" class="btn btn-primary my-2">@lang('sales.confirm_archive')</button>
+                                                    <button type="button" class="btn btn-success my-2" data-dismiss="modal">@lang('agency.cancel')</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+
+
+                                <!-- Info Alert Modal -->
+                                <div id="active-alert-modal_{{ $lead->id }}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-body p-4">
+                                                <div class="text-center">
+                                                    <i class="dripicons-information h1 text-primary"></i>
+                                                    <h4 class="mt-2">@lang('agency.head_up')</h4>
+                                                    <p class="mt-3">@lang('sales.active_warning') </p>
+                                                    <form action="{{ url('sales/active-manage-leads') }}" method="post">
+                                                        @csrf
+                                                        <input  type="hidden" name="lead_id" value="{{ $lead->id }}">
+                                                        <button type="submit" class="btn btn-primary my-2">@lang('sales.confirm_active')</button>
+                                                        <button type="button" class="btn btn-success my-2" data-dismiss="modal">@lang('agency.cancel')</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div><!-- /.modal-content -->
