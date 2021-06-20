@@ -132,6 +132,11 @@ class Listing extends Model implements Feedable
         return $this->belongsTo(Developer::class);
     }
 
+    public function portalsList()
+    {
+        return $this->hasMany(PortalListing::class,'listing_id');
+    }
+
 
 
 

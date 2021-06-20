@@ -20,7 +20,8 @@ class Listingcontroller extends Controller
           //code...
           $business = Business::where('business_token', '1CecqRpAW2Yi2yttT0esqpKSHKbzrzFw7AeYq31rlYdZaRWhuJQsnj79H8Zf')->firstOrFail();
           $agency   = Agency::where('business_id', $business->id)->where('agency_token', 'hLrmNWDmtEfLQjDNB9dNpwHFyQHFPliIgB9mHq4ZC1bV5FOedghrLT6GQmaG')->firstOrFail();
-          $agency->listingsAll;
+          //   $agency->listingsAll->Where('portals','like', '%' .'2'.'%');
+        //   dd($agency->listingsAll);
           return response()->json(array(
             'status' => 'success',
             'listing' => $agency->listingsAll),
