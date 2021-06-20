@@ -13,6 +13,8 @@ return [
             'manage_listing_setting',
             'assign_listing_to_staff',
             'assign_task_on_listing',
+            'share_listing',
+            'listing_requests',
         ],
 
         'teams' => [
@@ -34,7 +36,22 @@ return [
             'assign_lead_to_staff',
             'assign_task_on_lead',
             'convert_lead_to_opportunity',
+            'manage_call_status'
 
+
+        ],
+
+        'bulk_uploads' => [
+
+            'view_bulk_upload',
+            'add_bulk_upload'
+
+        ],
+
+        'search_center' => [
+
+            'view_search_center',
+            'add_search_center'
 
         ],
 
@@ -95,23 +112,52 @@ return [
             'manage_all_users_deals',
         ],
 
-        'notes' => [
-            'can_delete_notes',
-            'manage_own_notes',
-            'manage_all_notes',
-        ],
 
         'tasks' => [
 
-            'can_delete_tasks',
-            'manage_own_tasks',
-            'manage_team_users_tasks',
-            'manage_all_users_tasks',
+            'view_tasks',
+            'add_tasks',
+            'edit_tasks',
+            'delete_tasks',
+            'update_task_status',
+//            'manage_own_tasks',
+//            'manage_team_users_tasks',
+//            'manage_all_users_tasks',
+        ],
+
+        'notes' => [
+
+            'view_notes',
+            'add_notes',
+            'edit_notes',
+            'delete_notes',
+
+        ],
+
+        'emails' => [
+
+            'view_emails',
+            'add_emails',
+        ],
+
+        'logs' => [
+
+            'view_logs',
+
         ],
 
         'settings' => [
             'manage_own_settings',
             'manage_all_user_settings',
+            'can_view_setting',
+            'manage_templates',
+            'manage_mailing_list',
+            'manage_email_notifications',
+            'manage_floor_plans',
+            'manage_image_banks',
+            'manage_contacts_settings',
+            'manage_listing_settings',
+            'manage_task_types'
         ],
 
         'reports' => [
@@ -123,13 +169,6 @@ return [
         [
             'make_as_public',
         ],
-
-        'email_management' =>
-        [
-            'manage_own_email',
-            'manage_team_email',
-            'manage_all_user_email',
-        ]
 
 
 

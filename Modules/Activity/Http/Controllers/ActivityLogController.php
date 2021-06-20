@@ -18,6 +18,8 @@ class ActivityLogController extends Controller
      */
     public function index($agency)
     {
+        abort_if(Gate::denies('view_logs'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         if(!owner()){
 
             return abort(Response::HTTP_FORBIDDEN, trans('global.forbidden_page_not_allow_to_you'));
@@ -64,7 +66,8 @@ class ActivityLogController extends Controller
      */
     public function create()
     {
-        return view('activity::create');
+        return redirect()->back();
+//        return view('activity::create');
     }
 
     /**
@@ -74,7 +77,7 @@ class ActivityLogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return redirect()->back();
     }
 
     /**
@@ -84,7 +87,8 @@ class ActivityLogController extends Controller
      */
     public function show($id)
     {
-        return view('activity::show');
+        return redirect()->back();
+//        return view('activity::show');
     }
 
     /**
@@ -94,7 +98,8 @@ class ActivityLogController extends Controller
      */
     public function edit($id)
     {
-        return view('activity::edit');
+        return redirect()->back();
+//        return view('activity::edit');
     }
 
     /**
@@ -105,7 +110,7 @@ class ActivityLogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return redirect()->back();
     }
 
     /**
@@ -115,6 +120,6 @@ class ActivityLogController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return redirect()->back();
     }
 }

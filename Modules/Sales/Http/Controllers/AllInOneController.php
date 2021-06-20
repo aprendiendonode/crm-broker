@@ -19,6 +19,7 @@ class AllInOneController extends Controller
     }
     public function index($agency)
     {
+        abort_if(Gate::denies('view_search_center'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->repository->index($agency);
     }
 }

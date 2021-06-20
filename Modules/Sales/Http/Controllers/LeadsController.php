@@ -2296,6 +2296,8 @@ class LeadsController extends Controller
     public function bulk_uploads($agency)
     {
 
+        abort_if(Gate::denies('view_bulk_upload'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $business = auth()->user()->business_id;
         $agency = Agency::with([
             'lead_sources', 'lead_types', 'lead_properties', 'lead_communications',
