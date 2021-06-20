@@ -78,8 +78,9 @@
                             </td>
 
                         
-                            @include('listing::settings.cheques.modals')
-  
+                            @can('manage_listing_seeting')
+                                @include('listing::settings.cheques.modals')
+                            @endcan
                         </tr>
                     
 

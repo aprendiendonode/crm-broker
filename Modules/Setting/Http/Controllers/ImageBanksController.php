@@ -2,6 +2,7 @@
 
 namespace Modules\Setting\Http\Controllers;
 
+use Gate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -16,6 +17,8 @@ class ImageBanksController extends Controller
 
     public function index($agency)
     {
+        abort_if(Gate::denies('manage_image_banks'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         try {
 
 

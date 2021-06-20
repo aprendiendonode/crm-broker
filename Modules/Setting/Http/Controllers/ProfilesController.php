@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Modules\SuperAdmin\Entities\Country;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Renderable;
+use Symfony\Component\HttpFoundation\Response;
 use Modules\Setting\Http\Requests\UpdateProfile;
 
 class ProfilesController extends Controller
@@ -60,6 +61,8 @@ class ProfilesController extends Controller
      */
     public function edit($id, $agency)
     {
+        abort_if(Gate::denies('manage_own_profile'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $user = User::findorfail($id);
         $countries = Country::all();
 //        dd($user);

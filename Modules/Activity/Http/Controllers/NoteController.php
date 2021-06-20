@@ -20,6 +20,7 @@ class NoteController extends Controller
      */
     public function index($agency)
     {
+        abort_if(Gate::denies('view_notes'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $per_page       = 10;
         $notes = [];
         if (request()->segment(count(request()->segments())) == 'tasks'){
@@ -105,7 +106,8 @@ class NoteController extends Controller
      */
     public function create()
     {
-        return view('activity::create');
+        return redirect()->back();
+//        return view('activity::create');
     }
 
     /**
@@ -115,7 +117,7 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return redirect()->back();
     }
 
     /**
@@ -125,7 +127,8 @@ class NoteController extends Controller
      */
     public function show($id)
     {
-        return view('activity::show');
+        return redirect()->back();
+//        return view('activity::show');
     }
 
     /**
@@ -135,7 +138,8 @@ class NoteController extends Controller
      */
     public function edit($id)
     {
-        return view('activity::edit');
+        return redirect()->back();
+//        return view('activity::edit');
     }
 
     /**
@@ -146,7 +150,7 @@ class NoteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return redirect()->back();
     }
 
     /**
@@ -156,6 +160,6 @@ class NoteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return redirect()->back();
     }
 }

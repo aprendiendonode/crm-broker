@@ -221,13 +221,14 @@
                             <td><a target="_blank" href="{{ route('listings.front',[$listing->id,$listing->listing_ref]) }}">{{ $listing->listing_ref }}</a></td>
                             <td>{{ Str::ucfirst($listing->purpose) }}</td>
                             <td>{{ $listing->type ? $listing->type->{'name_'.app()->getLocale()} : '' }}</td>
+                            {{--@dd($listing)--}}
                             <td>
 
                                   <span
                                   class="cursor-pointer"
                                   data-plugin="tippy"
                                 data-tippy-placement="top-start"
-                                title="{{  $listing->city->{'name_'.app()->getLocale()} .' , '. $listing->community->{'name_'.app()->getLocale()} .' , '. $listing->subCommunity->{'name_'.app()->getLocale()} .' , '.$listing->location }}"
+{{--                                title="{{  ($listing->city && $listing->city->{'name_'.app()->getLocale()} ? $listing->city->{'name_'.app()->getLocale()} : '') .' , '. ($listing->community && $listing->community->{'name_'.app()->getLocale()} ? $listing->community->{'name_'.app()->getLocale()} : '' ).' , '. ($listing->subCommunity && $listing->subCommunity->{'name_'.app()->getLocale()} ? $listing->subCommunity->{'name_'.app()->getLocale()} : '' ).' , '.$listing->location ?? '' }}"--}}
                                 >
                                  {{ Str::words($listing->location,3,'...') }}
                                 </span>

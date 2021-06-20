@@ -2,6 +2,7 @@
 
 namespace Modules\Setting\Http\Controllers;
 
+use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\File;
@@ -14,6 +15,7 @@ class FloorplansController extends Controller
 
     public function index($agency)
     {
+        abort_if(Gate::denies('manage_floor_plans'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return view('setting::floor_plan.index', compact('agency'));
         } catch (\Exception $e) {

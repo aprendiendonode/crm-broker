@@ -20,7 +20,22 @@ use Spatie\ArrayToXml\ArrayToXml;
 |
 */
 
-//Route::get('test','Controller@test');
+//php artisan cache:forget spatie.permission.cache
+//php artisan cache:clear
+
+
+Route::get('assign-permissions', function() {
+    // $user = auth()->user();
+    $users = User::where('type', 'owner')->get();
+    $permissions = Permission::all();
+    foreach($users as $user) {
+        foreach($permissions as $permission) {
+            $user->givePermissionTo($permission->name);
+        }
+    }
+});
+
+
 
 Route::middleware(['guest'])->group(function () {
     Route::get('login', 'Auth\LoginController@login_view');
