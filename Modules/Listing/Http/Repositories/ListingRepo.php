@@ -2127,6 +2127,7 @@ class ListingRepo
 
     public function show($listing_id, $listing_ref)
     {
-        return view('listing::listing.front');
+        $listing = Listing::findorfail($listing_id);
+        return view('listing::listing.front', $listing);
     }
 }

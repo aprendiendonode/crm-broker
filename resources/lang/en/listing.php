@@ -246,10 +246,6 @@ return [
     'watermark'                        => 'WaterMark',
     'enlarg'                           => 'Enlarg',
 
-
-
-
-
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',
     'title'                     =>  'Title',

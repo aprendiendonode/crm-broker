@@ -67,6 +67,7 @@ class LeadsController extends Controller
 
 
         // $currencies  = DB::table('currencies')->get();
+
         $leads = Lead::with([
             'calls',
             'tasks',
