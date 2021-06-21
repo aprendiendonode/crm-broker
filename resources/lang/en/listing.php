@@ -251,6 +251,12 @@ return [
     'unfurnished'                       => 'UnFurnished',
     'video'                             => 'Video',
     'matching_lead'                       => 'Matching Lead',
+    'yearly'                            => 'Yearly',
+    'monthly'                            => 'Monthly',
+    'weekly'                            => 'Weekly',
+    'daily'                            => 'Daily',
+    'rented'                            => 'Rented',
+    'listing_created' => 'Listing Created',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',

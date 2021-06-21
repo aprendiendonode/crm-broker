@@ -1198,14 +1198,19 @@ class ListingRepo
     }
 
 
-    public function brochure($request, $type)
+    public function brochure($request, $type, $listing)
     {
+        $listing = Listing::findorfail($listing);
+
         if ($type == 'single') {
-            $pdf = PDF::loadView('listing::listing.brochure_single');
-            return $pdf->download('single.pdf');
+
+
+
+            $pdf = PDF::loadView('listing::listing.brochure_single', ['listing' => $listing]);
+            return $pdf->stream('single.pdf');
         } else {
-            $pdf = PDF::loadView('listing::listing.brochure_multi');
-            return $pdf->download('multi.pdf');
+            $pdf = PDF::loadView('listing::listing.brochure_multi', ['listing' => $listing]);
+            return $pdf->stream('multi.pdf');
         }
     }
 

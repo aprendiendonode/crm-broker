@@ -62,7 +62,7 @@
 
                     @if($listing->photos)
                        @foreach($listing->photos as $photo)
-                            <div class="carousel-item active">
+                            <div class="carousel-item @if($loop->iteration == 1) active @endif">
                                 <img class="d-block w-100" 
                                 @if($photo->active == 'main')
                                 src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main) }}"

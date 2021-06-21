@@ -5,49 +5,66 @@
 </style>
 
 <div>
-  <h2>3 BR TOWNHOUSE | SERENA CASA DORA</h2>
-  <img
-    style="width: 100%; height: 250px; margin-bottom: 1rem"
-    src="{{ asset('assets/images/bayute-image.jpg') }}"
-    alt=""
-  />
+  <h2>
+    {{ $listing->title }}
+  </h2>
+  
+  @if($listing->photos)
+  @php $photo = $listing->photos->where('main_photo','yes')->first(); @endphp
+    @if($photo)
+      <img style="width: 100%; margin-bottom: 1rem"
+      @if($photo->active == 'main')
+      src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main) }}"
+      @else
+      src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark) }}"
+      @endif
+      >
+    @endif
+  @endif
   <div>
     <table style="table-layout: fixed; width: 100%">
       <tbody>
         <tr>
           <td style="vertical-align: top">
-          <div>
-            <img
-              style="width: 100%; margin-bottom: 1rem"
-              src="{{ asset('assets/images/bayute-image.jpg') }}"
-              alt=""
-            />
-          </div>
-          <div>
-            <img
-              style="width: 100%; margin-bottom: 1rem"
-              src="{{ asset('assets/images/bayute-image.jpg') }}"
-              alt=""
-            />
-          </div>
+
+            @if($listing->photos)
+            @foreach($listing->photos->where('main_photo','no')->take(2) as $photo)
+
+
+            <div>
+              <img
+                style="width: 100%; margin-bottom: 1rem"
+                @if($photo->active == 'main')
+                src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main) }}"
+                @else
+                src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark) }}"
+                @endif
+                alt=""
+              />
+            </div>
+           
+             @endforeach
+         @endif
+  
+     
           <div style="margin-top: 1rem">
             <div style="display: inline-block">
-                <img style="width: 87px; height: 87px; margin-top: 1rem" src="{{ asset('assets/images/bayute-image.jpg') }}" alt="">
+                <img style="width: 87px; height: 87px; margin-top: 1rem" src="{{$listing->agent &&  $listing->agent->image != null ? asset('profile_images/'.$listing->agent->image) : '' }}" alt="">
             </div>
             <div style="display: inline-block; padding: 0 0.4rem; vertical-align: top;">
-                <h4 style="margin: 0 0 0.4rem;">Leasing Department</h4>
-                <div>+971-56-6829204</div>
-                <div>+971-4-4217902</div>
-                <div>communicate@pcasa.ae</div>
-                <div>Perfecta Casa Real Estate</div>
+                <h4 style="margin: 0 0 0.4rem;">{{ $listing->agent ? $listing->agent->{'name_'.app()->getLocale()} : '' }}</h4>
+                <div>{{ $listing->agent ? $listing->agent->phone : '' }}</div>
+                <div>{{ $listing->agency ? $listing->agency->country_code .'-'.$listing->agency->phone : '' }}</div>
+                <div>{{ $listing->agent ? $listing->agent->email : ''  }}</div>
+                <div>{{ $listing->agency ? $listing->agency->{'company_name_'.app()->getLocale()} : '' }}</div>
             </div>
           </div>
           </td>
           <td style="vertical-align: top">
           <div style="padding: 1rem">
             <p>
-              <div>AED 1,760,000</div>
-              <div>AED 1,760,000</div>
+              <div>{{ $listing->price }}</div>
+              <div>{{ $listing->price }}</div>
               <div>AED 1,760,000</div>
             </p>
             <p>
