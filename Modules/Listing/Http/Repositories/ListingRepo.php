@@ -895,15 +895,18 @@ class ListingRepo
 
             $main_plan_path = public_path('temporary/plans/' . $main_tmp_folder . '/' . $plan_name);
 
-            $watermark = public_path('watermark.png');
-
-
             // * image with full size and watermark
             $with_watermark_tmp_folder_path = public_path("temporary/plans/$main_tmp_folder/mainWatermark-$plan_name");
 
-            Image::make($main_plan_path)
-                ->insert($watermark, 'center', 10, 10)
-                ->save($with_watermark_tmp_folder_path);
+
+
+            $watermark = Watermark::where('agency_id', $request->agency)->where('active', 'yes')->first();
+            if ($watermark) {
+                Image::make($main_plan_path)
+                    ->insert(public_path('upload/watermarks/' . $watermark->image), $watermark->position)
+                    ->save($with_watermark_tmp_folder_path);
+            }
+
 
             $temporary_plan = TemporaryPlan::create([
                 'folder' => $main_tmp_folder,
