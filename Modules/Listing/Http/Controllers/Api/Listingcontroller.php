@@ -94,15 +94,75 @@ class Listingcontroller extends Controller
               if ($validator->fails()) {
                   return response()->json(array('status' => 'Error','message' =>$validator->errors()->all()[0]),401);
               }
+
               $business = Business::where('business_token', $request->business_token)->firstOrFail();
-              $agency   = Agency::where('business_id', $business->id)->where('agency_token',$request->agency_token)->firstOrFail();
-              $listing=Listing::where('agency_id',$agency->id)->with('photos')->first();
-                return response()->json(array(
+              $agency   = Agency::where('business_id', $business->id)->where('agency_token',$request->agency_token)->with('country')->firstOrFail();
+              $listing=Listing::where([['agency_id',$agency->id],['id',$request->listing_id]])->with('videos','photos','documents','plans','addedBy')->first();
+             //  image 
+              $image=[];
+              if($listing->photos->isEmpty() != true){
+                  foreach ($listing->photos as $photos){
+                    $img=$photos->active == 'main' ? asset('listings/photos/agency_'.$agency->id.'/listing_'.$listing->id.'/photo_'.$photos->id.'/'.$photos->main) : asset('listings/photos/agency_'.$agency->id.'/listing_'.$listing->id.'/photo_'.$photos->id.'/'.$photos->watermark);
+                    array_push($image,$img);
+                  }
+               }
+            //   plans
+              $plans=[];
+              if($listing->plans->isEmpty() != true){
+                  foreach ($listing->plans as $photos){
+                    $img=$photos->active == 'main' ? asset('listings/plans/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/plan_'.$photos->id.'/'.$photos->main) : asset('listings/plans/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/plan_'.$photos->id.'/'.$photos->watermark);
+                    array_push($plans,$img);
+                  }
+               }
+            //  fueture filter 
+                $filtered =$listing->features ? collect($listing->features) : collect();
+                $features = $filtered->filter(function ($value, $key) {
+                    return $value == 'yes';
+                });
+           //simiral properties 
+           $listingsAll=Listing::whereHas('portalsList', function($q){
+             $q->where('portal_id',2);
+              })->where([['agency_id',$agency->id],['id','!=',$request->listing_id]])->with('photos')->take(4)->get(); 
+
+              $data=[];
+              foreach($listingsAll as $item){
+               
+                  if($item->photos->isEmpty() != true){
+                      $imagelisting=$item->photos->first()->active == 'main' ? asset('listings/photos/agency_'.$agency->id.'/listing_'.$item->id.'/photo_'.$item->photos->first()->id.'/'.$item->photos->first()->main) : asset('listings/photos/agency_'.$agency->id.'/listing_'.$item->id.'/photo_'.$item->photos->first()->id.'/'.$item->photos->first()->watermark);
+                  }else{
+                      $imagelisting=null;
+                  }
+                  
+                 $id=array(
+                      'id' => $item->id,
+                      'purpose' => $item->purpose ?? '',
+                      'beds' => $item->beds ?? 0,
+                      'parkings' => $item->parkings ??0,
+                      'baths' => $item->baths ??0,
+                      'area' => $item->area ?? '',
+                      'furnished' => $item->furnished ?? 'no',
+                      'title' => $item->title ?? '',
+                      'location' => $item->location ?? '',
+                      'price' => $item->price ?? '',
+                      'rent_frequency' => $item->rent_frequency ?? '',
+                      'image' =>$imagelisting,
+                      );
+                      array_push($data,$id);      
+              }
+
+
+          return response()->json(array(
                 'status' => 'success',
-                'listing' => $listing),
+                'listing' => $listing,
+                'plans' => $plans,
+                'agency' => $agency,
+                'images' => $image,
+                'features' => $features,
+                'similiar_properties' =>$data,
+                ),
                 200);
              } catch (\Throwable $e) {
-                
+                dd($e);
               return response()->json(array(
                   'status' => 'Error','message' =>$e->getMessage()),401);
           }

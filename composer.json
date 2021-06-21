@@ -18,7 +18,6 @@
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "intervention/image": "^2.5",
-        "joedixon/laravel-translation": "^1.1",
         "laravel-notification-channels/facebook": "^0.2.1",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
