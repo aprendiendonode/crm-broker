@@ -1204,8 +1204,6 @@ class ListingRepo
 
         if ($type == 'single') {
 
-
-
             $pdf = PDF::loadView('listing::listing.brochure_single', ['listing' => $listing]);
             return $pdf->stream($listing->title . '.pdf');
         } else {
