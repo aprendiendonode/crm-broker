@@ -14,7 +14,7 @@
 //Route::middleware(['checkauth'])->group(function () {
 //});
     Route::group(['as' => 'activity.', 'prefix' => 'activity', 'middleware' => ['checkauth','lang']],function() {
-        Route::get('/', 'ActivityController@index');
+//        Route::get('/', 'ActivityController@index');
 
 
         Route::middleware(['authority'])->group(function () {

@@ -213,13 +213,34 @@
 
 
 <script>
+
+var formatter = new Intl.NumberFormat('en-EG', {
+//   style: 'currency',
+//   currency: 'EGP',
+});
+
+
+function updatePrice() {
+    let price = +document.getElementById('rent-sale-create').value;
+    let annualCommissionPercentage = +(document.getElementById('annaul-commission').value) / 100;
+    let depositPercenatage = +(document.getElementById('deposit-percenatage').value) / 100;
+    // let commissionValue = document.getElementById('commissionValue');
+    
+    console.log(annualCommissionPercentage);
+    console.log(price);
+    console.log(annualCommissionPercentage * price);
+    document.getElementById('commissionValue').value = formatter.format(annualCommissionPercentage * price);
+    document.getElementById('depositValue').value = formatter.format(depositPercenatage * price);
+}
+
 function showRentDiv() {
-    // console.log('showRentDiv');
-    // console.log($('#rent_div'));
     if($('.rent-radio')[0].checked){
         $('#rent_div')[0].style.display = "block";
+        document.getElementById('rent-sale-label-create').innerHTML = "Rent";
     }else {
         $('#rent_div')[0].style.display = "none";
+        document.getElementById('rent-sale-label-create').innerHTML = "Sale";
+
     }
 }
 function showSubRentDiv() {

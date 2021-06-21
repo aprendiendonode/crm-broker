@@ -31,6 +31,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Modules\Sales\Entities\LeadType;
 use Intervention\Image\Facades\Image;
 use Modules\Listing\Entities\Listing;
+use Modules\Listing\Entities\PortalListing;
 use Modules\Sales\Entities\Developer;
 use Modules\SuperAdmin\Entities\City;
 use Modules\Agency\Entities\Watermark;
@@ -1197,14 +1198,19 @@ class ListingRepo
     }
 
 
-    public function brochure($request, $type)
+    public function brochure($request, $type, $listing)
     {
+        $listing = Listing::findorfail($listing);
+
         if ($type == 'single') {
-            $pdf = PDF::loadView('listing::listing.brochure_single');
-            return $pdf->download('single.pdf');
+
+
+
+            $pdf = PDF::loadView('listing::listing.brochure_single', ['listing' => $listing]);
+            return $pdf->stream($listing->title . '.pdf');
         } else {
-            $pdf = PDF::loadView('listing::listing.brochure_multi');
-            return $pdf->download('multi.pdf');
+            $pdf = PDF::loadView('listing::listing.brochure_multi', ['listing' => $listing]);
+            return $pdf->stream($listing->title . '.pdf');
         }
     }
 
@@ -1686,7 +1692,15 @@ class ListingRepo
             $listing->update([
                 'portals' => $request->{'portals_' . $id} ? $request->{'portals_' . $id} : []
             ]);
-
+            if (!empty($request->{'portals_' . $id})) {
+                $listing->portalsList->isEmpty() != true ? $listing->portalsList->each->delete() : '';
+                foreach ($request->{'portals_' . $id} as $item) {
+                    PortalListing::create([
+                        'listing_id' => $listing->id,
+                        'portal_id' => $item
+                    ]);
+                }
+            }
 
             DB::commit();
             return back()->with(flash(trans('listing.portals_modified'), 'success'))->with('open-portals-tab', $id);
@@ -2127,6 +2141,7 @@ class ListingRepo
 
     public function show($listing_id, $listing_ref)
     {
-        return view('listing::listing.front');
+        $listing = Listing::with(['agency', 'agent'])->where('id', $listing_id)->firstOrFail();
+        return view('listing::listing.front', ['listing' => $listing]);
     }
 }

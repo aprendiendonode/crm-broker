@@ -105,6 +105,17 @@
                     </select>
                 </div>
             </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                    <label for="country" class="font-weight-medium text-muted">@lang('sales.status')</label>
+                    <select class="form-control select2" name="status" data-toggle="select2">
+                        <option value="active">@lang('sales.active')</option>
+                        <option value="archive">@lang('sales.archive')</option>
+                    
+
+                    </select>
+                </div>
+            </div>
 
 
             <div class="col-md-6 col-lg-4">
@@ -144,7 +155,7 @@
         <div>
             <button class="btn btn-primary" type="submit">@lang('agency.filter_submit')</button>
             <a class="btn btn-outline-primary "
-               href="{{ url('sales/leads/'.request('agency')) }}">@lang('sales.reset_filters')</a>
+               href="{{ url('sales/leads/'.request('agency').'?status=active') }}">@lang('sales.reset_filters')</a>
         </div>
 
 

@@ -1,4 +1,4 @@
-
+@can('edit_listing')
 <i
   onclick="event.preventDefault();show_edit_div({{ $view->id }})"
    data-plugin="tippy" 
@@ -7,8 +7,9 @@
 
    class="fe-edit cursor-pointer feather-16">
 </i>
-   
+@endcan 
 
+@can('delete_listing')
   <i
       data-plugin="tippy" 
       data-tippy-placement="top-start" 
@@ -17,4 +18,4 @@
   
       class="fe-trash cursor-pointer feather-16">
   </i>
-
+@endcan

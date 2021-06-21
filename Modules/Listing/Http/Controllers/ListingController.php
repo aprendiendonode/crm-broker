@@ -31,6 +31,7 @@ class ListingController extends Controller
 
     public function show($listing_id, $listing_ref)
     {
+        abort_if(Gate::denies('view_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->repository->show($listing_id, $listing_ref);
     }
 
@@ -120,10 +121,12 @@ class ListingController extends Controller
     }
     public function share_listing($agency, ListingRepo $repository)
     {
+        abort_if(Gate::denies('share_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $repository->share_listing($agency);
     }
     public function requests($agency, ListingRepo $repository)
     {
+        abort_if(Gate::denies('listing_requests'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $repository->requests($agency);
     }
     public function send_request(Request $request, ListingRepo $repository)
