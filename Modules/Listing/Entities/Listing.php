@@ -134,7 +134,7 @@ class Listing extends Model implements Feedable
 
     public function portalsList()
     {
-        return $this->hasMany(PortalListing::class,'listing_id');
+        return $this->hasMany(PortalListing::class, 'listing_id');
     }
 
 
@@ -172,7 +172,7 @@ class Listing extends Model implements Feedable
             "price"                                    => ['required', 'string'],
             "rent_frequency"                           => ['sometimes', 'nullable', 'string', 'in:yearly,monthly,weekly,daily'],
             "comission_percent"                        => ['sometimes', 'nullable', 'numeric'],
-            "comission_value"                          => ['sometimes', 'nullable', 'numeric'],
+            "comission_value"                          => ['sometimes', 'nullable', 'string'],
             "never_lived_in"                           => ['sometimes', 'nullable', 'in:yes,no'],
             "featured_on_company_website"              => ['sometimes', 'nullable', 'in:yes,no'],
             "exclusive_rights"                         => ['sometimes', 'nullable', 'in:yes,no'],
@@ -272,7 +272,7 @@ class Listing extends Model implements Feedable
             "edit_price_" . $id                                    => ['required', 'string'],
             "edit_rent_frequency_" . $id                           => ['sometimes', 'nullable', 'string', 'in:yearly,monthly,weekly,daily'],
             "edit_comission_percent_" . $id                        => ['sometimes', 'nullable', 'numeric'],
-            "edit_comission_value_" . $id                          => ['sometimes', 'nullable', 'numeric'],
+            "edit_comission_value_" . $id                          => ['sometimes', 'nullable', 'string'],
             "edit_never_lived_in_" . $id                           => ['sometimes', 'nullable', 'in:yes,no'],
             "edit_featured_on_company_website_" . $id              => ['sometimes', 'nullable', 'in:yes,no'],
             "edit_exclusive_rights_" . $id                         => ['sometimes', 'nullable', 'in:yes,no'],
