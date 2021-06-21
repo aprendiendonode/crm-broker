@@ -1683,16 +1683,16 @@ class ListingRepo
 
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'error'))->with('open-portals-tab', $id);
             }
-         
+
             $listing->update([
                 'portals' => $request->{'portals_' . $id} ? $request->{'portals_' . $id} : []
             ]);
-            if(!empty($request->{'portals_' . $id})){
-            $listing->portalsList->isEmpty() != true ? $listing->portalsList->each->delete(): '' ;
-                foreach($request->{'portals_' . $id } as $item ){
+            if (!empty($request->{'portals_' . $id})) {
+                $listing->portalsList->isEmpty() != true ? $listing->portalsList->each->delete() : '';
+                foreach ($request->{'portals_' . $id} as $item) {
                     PortalListing::create([
-                        'listing_id' =>$listing->id,
-                        'portal_id' =>$item
+                        'listing_id' => $listing->id,
+                        'portal_id' => $item
                     ]);
                 }
             }
@@ -2136,7 +2136,7 @@ class ListingRepo
 
     public function show($listing_id, $listing_ref)
     {
-        $listing = Listing::findorfail($listing_id);
-        return view('listing::listing.front', $listing);
+        $listing = Listing::with(['agency', 'agent'])->where('id', $listing_id)->firstOrFail();
+        return view('listing::listing.front', ['listing' => $listing]);
     }
 }

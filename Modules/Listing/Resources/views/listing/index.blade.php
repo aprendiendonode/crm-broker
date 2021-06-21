@@ -235,7 +235,7 @@
                          </td>
                             <td>{{ number_format($listing->area)  }}</td>
                             <td>{{ number_format($listing->price) }}</td>
-                            <td>{{ $listing->agent->{'name_'.app()->getLocale()} }}</td>
+                            <td>{{ ucfirst( $listing->agent->{'name_'.app()->getLocale()} ) }}</td>
                             <td>{{ $listing->updated_at->toFormattedDateString() }}</td>
                             <td>
                                 @can('edit_listing')
@@ -271,6 +271,65 @@
 
 
                     </tr>
+
+                    <tr  class=" more_info_{{ $listing->id }} d-none"  >
+                        <td colspan="2"></td>
+
+                        <td colspan="12">
+
+                           <div class="d-flex justify-content-start">
+                            <i
+
+
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
+                             title="@lang('listing.matching_lead')"
+
+                             class="fas fa-flag cursor-pointer feather-16 px-1">
+                             0
+                          </i>
+                            <i
+
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
+                             title="@lang('listing.beds')"
+
+                             class="fas fa-bed cursor-pointer feather-16 px-1">
+                             {{ $listing->beds ?? 0 }}
+                          </i>
+                            <i
+
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
+                             title="@lang('listing.parkings')"
+
+                             class="fas fa-car cursor-pointer feather-16 px-1">
+                             {{ $listing->parkings ?? 0 }}
+                          </i>
+                            <i
+
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
+                             title="@lang('listing.video')"
+
+                             class="fas fa-video cursor-pointer feather-16 px-1">
+                            {{ $listing->videos ? $listing->videos->count() : 0 }}
+                          </i>
+                            <i
+
+                             data-plugin="tippy"
+                             data-tippy-placement="top-start"
+                             title="@lang('listing.added_by')"
+
+                             class="far fa-user cursor-pointer feather-16 px-1">
+                             {{ $listing->addedBy ? Str::ucfirst( $listing->addedBy->{'name_'.app()->getLocale()} ) : '' }}
+                          </i>
+
+                           </div>
+
+                        </td>
+                    </tr>
+
                     @can('edit_listing')
 
                         <tr class="table-row_{{ $listing->id }} edit_listing_{{ $listing->id }}
@@ -336,64 +395,7 @@
                     @endcan
 
 
-                    <tr  class=" more_info_{{ $listing->id }} d-none"  >
-                        <td colspan="2"></td>
-
-                        <td colspan="12">
-
-                           <div class="d-flex justify-content-start">
-                            <i
-
-
-                             data-plugin="tippy"
-                             data-tippy-placement="top-start"
-                             title="@lang('listing.matching_lead')"
-
-                             class="fas fa-flag cursor-pointer feather-16 px-1">
-                             0
-                          </i>
-                            <i
-
-                             data-plugin="tippy"
-                             data-tippy-placement="top-start"
-                             title="@lang('listing.beds')"
-
-                             class="fas fa-bed cursor-pointer feather-16 px-1">
-                             {{ $listing->beds ?? 0 }}
-                          </i>
-                            <i
-
-                             data-plugin="tippy"
-                             data-tippy-placement="top-start"
-                             title="@lang('listing.parkings')"
-
-                             class="fas fa-car cursor-pointer feather-16 px-1">
-                             {{ $listing->parkings ?? 0 }}
-                          </i>
-                            <i
-
-                             data-plugin="tippy"
-                             data-tippy-placement="top-start"
-                             title="@lang('listing.video')"
-
-                             class="fas fa-video cursor-pointer feather-16 px-1">
-                            {{ $listing->videos ? $listing->videos->count() : 0 }}
-                          </i>
-                            <i
-
-                             data-plugin="tippy"
-                             data-tippy-placement="top-start"
-                             title="@lang('listing.added_by')"
-
-                             class="far fa-user cursor-pointer feather-16 px-1">
-                             {{ $listing->addedBy ? $listing->addedBy->{'name_'.app()->getLocale()} : '' }}
-                          </i>
-
-                           </div>
-
-                        </td>
-                    </tr>
-
+               
 
 
 
@@ -412,14 +414,14 @@
                     @endif
 
                 </div>
-                @can('can_generate_reports')
+                {{-- @can('can_generate_reports')
                     <a
                             data-plugin="tippy"
                             data-tippy-placement="bottom-start"
                             title="@lang('listing.export_help')" href="{{ url('listing/export_all/'.request('agency')) }}"
                             class="mt-2">@lang('listing.generate_report')
                     </a>
-                @endcan
+                @endcan --}}
             </div>
         </div>
 
