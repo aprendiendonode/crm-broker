@@ -1204,13 +1204,11 @@ class ListingRepo
 
         if ($type == 'single') {
 
-
-
             $pdf = PDF::loadView('listing::listing.brochure_single', ['listing' => $listing]);
-            return $pdf->stream('single.pdf');
+            return $pdf->stream($listing->title . '.pdf');
         } else {
             $pdf = PDF::loadView('listing::listing.brochure_multi', ['listing' => $listing]);
-            return $pdf->stream('multi.pdf');
+            return $pdf->stream($listing->title . '.pdf');
         }
     }
 

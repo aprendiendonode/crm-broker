@@ -542,7 +542,7 @@
                 injectGoogleMapsApiScript({
                     key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
                     libraries: 'places',
-                    language: 'ar',
+                    language: 'en',
                     region: region,
                     callback: 'initMap',
                 });

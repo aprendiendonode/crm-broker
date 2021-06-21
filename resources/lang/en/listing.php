@@ -256,7 +256,8 @@ return [
     'weekly'                            => 'Weekly',
     'daily'                            => 'Daily',
     'rented'                            => 'Rented',
-    'listing_created' => 'Listing Created',
+    'listing_created'                => 'Listing Created',
+    'select'                         => 'Select',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',
