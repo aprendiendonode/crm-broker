@@ -173,7 +173,7 @@ return [
     'nationality' => 'Nationality',
     'new_lead_source' => 'New lead Source',
     'confirm'         => 'Confirm',
-    'name_ar'         => 'Arabic Name',
+    'name_ar'         => 'Localized Name',
     'name_en'         => 'English Name',
     'new_lead_type'   => 'New lead Type',
     'new_lead_qualification' => 'New lead Qualification',

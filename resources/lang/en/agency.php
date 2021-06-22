@@ -16,7 +16,7 @@ return [
     'submit'        => 'Add',
     'cancel'        => 'Cancel',
     'name'          => 'Name',
-    'name_ar'       => 'Arabic Name',
+    'name_ar'       => 'Localized Name',
     'brn'           => 'BRN',
     'email'         => 'Email',
     'password'      => 'Password',
