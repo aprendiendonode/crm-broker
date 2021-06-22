@@ -247,9 +247,7 @@ class Listing extends Model implements Feedable
         return [
 
             "edit_type_id_" . $id => [
-                'required', 'integer', Rule::exists('listing_types', 'id')->where(function ($q) use ($request) {
-                    $q->where('agency_id', $request->agency_id);
-                })
+                'required', 'integer', Rule::exists('listing_types', 'id')
             ],
 
 
