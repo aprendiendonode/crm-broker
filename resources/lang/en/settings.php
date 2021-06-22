@@ -79,7 +79,7 @@ return [
     'delete_template' => 'Delete Template',
     'filter_submit' => 'Filter Submit',
     'name_en' => 'Name',
-    'name_ar' => 'Name In Arabic',
+    'name_ar' => 'Localized Name',
     'select' => 'Select',
     'new_folder' => 'New Folder',
     'upload_image' => 'Upload Image',
@@ -106,7 +106,7 @@ return [
 
     'name_en_required' => 'Name is required',
     'name_en_string' => 'Name must be a string',
-    'edit_name_ar_' => 'Arabic Name must be a string',
+    'edit_name_ar_' => 'Localized Name must be a string',
 
 
     ///////////////////////// Tasks //////////////////////////////////////

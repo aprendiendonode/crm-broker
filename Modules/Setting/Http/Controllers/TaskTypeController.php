@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\TaskType;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class TaskTypeController extends Controller
@@ -15,7 +16,7 @@ class TaskTypeController extends Controller
 
     public function index($agency)
     {
-//        abort_if(Gate::denies('manage_task_types'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('manage_task_types'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $per_page       = 2;
         $task_types = TaskType::where('agency_id',$agency)->orderBy('id', 'desc')->paginate($per_page);
         $business  = auth()->user()->business_id;

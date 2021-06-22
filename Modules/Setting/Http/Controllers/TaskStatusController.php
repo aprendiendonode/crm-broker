@@ -2,11 +2,13 @@
 
 namespace Modules\Setting\Http\Controllers;
 
+use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Activity\Entities\TaskStatus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class TaskStatusController extends Controller
@@ -14,6 +16,7 @@ class TaskStatusController extends Controller
 
     public function index($agency)
     {
+        abort_if(Gate::denies('manage_task_status'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $per_page       = 2;
         $task_status = TaskStatus::where('agency_id',$agency)->orderBy('id', 'desc')->paginate($per_page);
         $business  = auth()->user()->business_id;
