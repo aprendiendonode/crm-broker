@@ -505,6 +505,9 @@
                                 <span class="menu-arrow"></span>
                             </a>
 
+
+
+
                             <div class="collapse" id="sidebarsettings">
                                 <ul class="nav-second-level">
 
@@ -638,7 +641,7 @@
                                         </ul>
                                     </div>
 
-                            {{-- @endcan --}}
+
 
                             {{-- @can('manage_lead_setting') --}}
                                 @if(owner())
@@ -746,6 +749,17 @@
                         <li>
                             <a href="{{ url('superadmin/listing-type') }}">@lang('listing.listing_type')</a>
                         </li>
+                        {{-- @can('manage group permissions') --}}
+                        <li>
+                            <a href="{{ url('superadmin/permissions-group') }}">@lang('superadmin.permissions_group')</a>
+                        </li>
+                        {{-- @endcan --}}
+
+                        {{-- @can('manage permissions') --}}
+                        <li>
+                            <a href="{{ url('superadmin/permissions') }}">@lang('superadmin.permissions')</a>
+                        </li>
+                        {{-- @endcan --}}
 
 
 
