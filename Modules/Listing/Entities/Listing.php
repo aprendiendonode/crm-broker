@@ -13,6 +13,7 @@ use Modules\SuperAdmin\Entities\City;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Activity\Entities\ListingNote;
 use Modules\SuperAdmin\Entities\Community;
+use Modules\SuperAdmin\Entities\ListingType;
 use Modules\SuperAdmin\Entities\SubCommunity;
 
 class Listing extends Model implements Feedable
