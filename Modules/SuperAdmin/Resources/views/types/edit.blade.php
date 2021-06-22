@@ -1,4 +1,4 @@
-<form action="{{ url('listing/manage-listing-type/'.$type->id) }}" data-parsley-validate="" method="POST" >
+<form action="{{ url('superadmin/manage-listing-type/'.$type->id) }}" data-parsley-validate="" method="POST" >
     <div class="row">
             @csrf
             @method('PATCH')

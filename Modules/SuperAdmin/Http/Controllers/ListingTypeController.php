@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Listing\Http\Controllers;
+namespace Modules\SuperAdmin\Http\Controllers;
 
 use Gate;
 use App\Models\Team;
@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use Modules\Listing\Entities\ListingType;
+use Modules\SuperAdmin\Entities\ListingType;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,26 +20,24 @@ class ListingTypeController extends Controller
 {
 
 
-    public function index($agency)
+    public function index()
     {
 
-        abort_if(Gate::denies('manage_listing_setting'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
 
         $business  = auth()->user()->business_id;
         $per_page  = 100;
 
-        $listing_types = ListingType::where('agency_id', $agency)->where('business_id', auth()->user()->business_id)->paginate($per_page);
+        $listing_types = ListingType::latest()->paginate($per_page);
 
 
-        return view('listing::settings.types.index', compact('agency', 'listing_types', 'business'));
+        return view('superadmin::types.index', compact('listing_types'));
     }
 
 
 
     public function store(Request $request)
     {
-
-        abort_if(Gate::denies('manage_listing_setting'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
 
         DB::beginTransaction();
@@ -49,8 +47,6 @@ class ListingTypeController extends Controller
 
                 'name_en'            =>  'required|string',
                 'name_ar'            =>  'sometimes|nullable|string',
-                'agency_id'          =>  'required|integer|exists:agencies,id',
-                'business_id'        =>  'required|integer|exists:businesses,id',
                 'type'               =>  'required|in:commercial,residential',
                 'furnished_question' =>  'required|in:yes,no',
                 'reference'          =>  'required|string'
@@ -66,8 +62,6 @@ class ListingTypeController extends Controller
                 'name_en'            => $request->name_en,
                 'slug'               => Str::slug($request->name_en, '-'),
                 'name_ar'            => $request->name_ar,
-                "business_id"        => $request->business_id,
-                "agency_id"          => $request->agency_id,
                 "type"               => $request->type,
                 "furnished_question"               => $request->furnished_question,
                 "reference"          => $request->reference,
@@ -88,8 +82,6 @@ class ListingTypeController extends Controller
 
     public function update($id, Request $request)
     {
-
-        abort_if(Gate::denies('manage_listing_setting'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $listing_type = ListingType::findorfail($id);
         DB::beginTransaction();
@@ -147,7 +139,6 @@ class ListingTypeController extends Controller
 
     public function destroy()
     {
-        abort_if(Gate::denies('manage_listing_setting'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         ListingType::findorfail(request('type_id'))->delete();
 

@@ -1,13 +1,7 @@
-<form id="add-team-form" action="{{ url('listing/manage-listing-type') }}" data-parsley-validate="" method="POST" >
+<form id="add-team-form" action="{{ url('superadmin/manage-listing-type') }}" data-parsley-validate="" method="POST" >
 <div class="row">
         @csrf
 
-        @if($agency)
-        <input type="hidden" name="agency_id" value="{{ $agency }}">
-        @endif
-        @if($business)
-        <input type="hidden" name="business_id" value="{{ $business }}">
-        @endif
     <div class="col-md-6">
 
 

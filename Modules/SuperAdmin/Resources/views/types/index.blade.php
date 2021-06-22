@@ -48,7 +48,7 @@
 
             
             <div class="mb-2 add_type " @if(!session()->has('open-tab')) style="display: none;opacity:0;transition:0.7s" @endif>
-                @include('listing::settings.types.create')
+                @include('superadmin::types.create')
             </div>
         
 
@@ -77,13 +77,13 @@
                    
            
                             <td>
-                                @can('manage_listing_setting')
-                                 @include('listing::settings.types.controlls')
-                                @endcan
+                               
+                                 @include('superadmin::types.controlls')
+                              
                             </td>
 
                         
-                            @include('listing::settings.types.modals')
+                            @include('superadmin::types.modals')
   
                         </tr>
                     
@@ -91,7 +91,7 @@
                             <tr  class="edit_team_{{ $type->id }}"  @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $type->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
                                 <td colspan="8">
 
-                                    @include('listing::settings.types.edit')
+                                    @include('superadmin::types.edit')
 
                                 </td>
                             </tr>

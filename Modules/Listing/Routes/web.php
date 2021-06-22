@@ -24,7 +24,6 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
         Route::get('listing-view/{agency}', 'ListingViewController@index');
 
         Route::get('listing-cheque/{agency}', 'ListingChequeController@index');
-        Route::get('listing-type/{agency}', 'ListingTypeController@index');
         Route::get('listing-map/{agency}', function () {
 
 
@@ -136,10 +135,6 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
         Route::post('delete-listing-cheque', 'ListingChequeController@destroy');
 
 
-        Route::post('manage-listing-type', 'ListingTypeController@store');
-        // Route::post('lead_source_from_leads', 'ListingTypeController@add_lead_source');
-        Route::patch('manage-listing-type/{type_id}', 'ListingTypeController@update');
-        Route::post('delete-listing-type', 'ListingTypeController@destroy');
 
 
         Route::post('listing/store', 'ListingController@store')->name('listing.store');
