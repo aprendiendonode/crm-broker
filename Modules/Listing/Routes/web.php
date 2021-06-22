@@ -1,5 +1,6 @@
 <?php
 
+use Modules\SuperAdmin\Entities\SubCommunity;
 use Modules\Listing\Entities\TemporaryListing;
 
 /*
@@ -24,6 +25,93 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
         Route::get('listing-cheque/{agency}', 'ListingChequeController@index');
         Route::get('listing-type/{agency}', 'ListingTypeController@index');
+        Route::get('listing-map/{agency}', function () {
+
+
+
+            $sub =
+                [
+                    'China Cluster',
+                    'England Cluster',
+                    'France Cluster',
+                    'Greece Cluster',
+                    'Italy Cluster',
+                    'Morocco Cluster',
+                    'Persia Cluster',
+                    'Russia Cluster',
+                    'Spain Cluster',
+                    'Lake District',
+                    'Forbidden City',
+                    '
+              The Residences International City
+            ',
+                    '
+              Manchester Crescent
+            ',
+                    'Persia N 11',
+                    '
+              Kaya Residence
+            ',
+                    '
+              Tulip Residence
+            ',
+                    'Phase 3',
+                    '
+              Emirates Cluster
+            ',
+                    'Textile City',
+                    'Indigo Optima',
+                    '
+              Trafalgar Central
+            ',
+                    'Warsan Village',
+                    'Phase 2',
+                    'CBD 6 Best Homes',
+                    '
+              Indigo Spectrum 1
+            ',
+                    '
+              Indigo Spectrum 2
+            ',
+                    '
+              Central Business District
+            ',
+                    '
+              Dragon View Building
+            ',
+                    '
+              lawnz by Danube
+            ',
+                    '
+              Olivz Residence
+            ',
+                    '77 B Building',
+                    'Golden Homes 2',
+                    '
+              Dragon Mart
+            ',
+                    '
+              Dragon Mart 2
+            ',
+                    '
+              X-15
+            '
+                ];
+
+
+
+            foreach ($sub as $s) {
+
+                /*           SubCommunity::create([
+                    'name_en'    => trim($s),
+                    'name_ar'    => trim($s),
+                    'country_id' => 234,
+                    'community_id' => 29
+                ]); */
+            }
+
+            /*  return view('listing::listing.listing_map'); */
+        });
 
 
         Route::get('locations/{agency}', 'ListingController@locations');
