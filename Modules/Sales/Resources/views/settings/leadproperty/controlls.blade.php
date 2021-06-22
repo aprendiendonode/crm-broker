@@ -1,4 +1,4 @@
-
+@can('edit_lead')
 <i
   onclick="event.preventDefault();show_edit_div({{ $property->id }})"
    data-plugin="tippy" 
@@ -6,9 +6,10 @@
    title="@lang('agency.edit')"
 
    class="fe-edit cursor-pointer feather-16">
-</i>
-   
+</i>   
+@endcan
 
+@can('delete_lead')
   <i
       data-plugin="tippy" 
       data-tippy-placement="top-start" 
@@ -17,4 +18,4 @@
   
       class="fe-trash cursor-pointer feather-16">
   </i>
-
+@endcan

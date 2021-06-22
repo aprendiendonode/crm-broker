@@ -716,6 +716,9 @@
                     </div>
                 </div>
             </div>
+            <div class="modal-footer px-3">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+            </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

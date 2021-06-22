@@ -2,6 +2,7 @@
 
 namespace Modules\Setting\Http\Controllers;
 
+use Gate;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Setting\Entities\Template;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Renderable;
+use Symfony\Component\HttpFoundation\Response;
 
 class TemplatesController extends Controller
 {
@@ -18,6 +20,7 @@ class TemplatesController extends Controller
      */
     public function index($agency)
     {
+        abort_if(Gate::denies('manage_templates'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $per_page  = 3;
         $business  = auth()->user()->business_id;
         $type = 'all';

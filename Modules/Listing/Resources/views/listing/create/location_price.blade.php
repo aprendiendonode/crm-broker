@@ -177,7 +177,7 @@
             <div class="form-group">
                 <label class="font-weight-medium text-muted" style="flex:1">
                 <span id="rent-sale-label-create">
-                    @lang('listing.rent')
+                    @lang('listing.price')
                 </span>
                 <span class="text-danger"> *</span></label>
                 <div class="input-group mb-2" >

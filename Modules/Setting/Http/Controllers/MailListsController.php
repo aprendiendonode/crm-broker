@@ -2,6 +2,7 @@
 
 namespace Modules\Setting\Http\Controllers;
 
+use Gate;
 use App\Models\Contact;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Lead;
 use Modules\Sales\Entities\Opportunity;
 use Modules\Setting\Entities\MailList;
+use Symfony\Component\HttpFoundation\Response;
 
 class MailListsController extends Controller
 {
@@ -21,7 +23,7 @@ class MailListsController extends Controller
      */
     public function index($agency)
     {
-
+        abort_if(Gate::denies('manage_mailing_list'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $per_page = 3;
         $business = auth()->user()->business_id;
 

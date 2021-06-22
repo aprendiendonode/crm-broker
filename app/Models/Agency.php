@@ -54,6 +54,7 @@ class Agency extends Model
         'updated_at',
         'business_id',
         'agency_token',
+        'currency',
     ];
 
 

@@ -2,6 +2,7 @@
 
 namespace Modules\Setting\Http\Controllers;
 
+use Gate;
 use App\Models\Country;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
@@ -14,6 +15,7 @@ use Modules\Setting\Entities\EmailNotify;
 use Modules\Setting\Entities\EmailNotifyReminder;
 use Modules\Setting\Entities\EmailNotifyTenancy;
 use Modules\Setting\Http\Requests\UpdateProfile;
+use Symfony\Component\HttpFoundation\Response;
 
 class EmailNotifiesController extends Controller
 {
@@ -56,6 +58,7 @@ class EmailNotifiesController extends Controller
      */
     public function edit($id, $agency)
     {
+        abort_if(Gate::denies('manage_email_notifications'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $email_notify = EmailNotify::firstOrCreate([
             'agency_id' => $agency,
             'business_id'   =>  auth()->user()->business_id

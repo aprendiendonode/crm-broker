@@ -243,10 +243,21 @@ return [
     'choose_community_first'        => 'Choose Community First',
     'sub_community'                 => 'Sub Community',
     'success'                        => 'Success',
+    'watermark'                        => 'WaterMark',
+    'enlarg'                           => 'Enlarg',
 
-
-
-
+    'listing_modified'                  => 'Listing Modified',
+    'furnished'                         => 'Furnished',
+    'unfurnished'                       => 'UnFurnished',
+    'video'                             => 'Video',
+    'matching_lead'                       => 'Matching Lead',
+    'yearly'                            => 'Yearly',
+    'monthly'                            => 'Monthly',
+    'weekly'                            => 'Weekly',
+    'daily'                            => 'Daily',
+    'rented'                            => 'Rented',
+    'listing_created'                => 'Listing Created',
+    'select'                         => 'Select',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',

@@ -2,6 +2,7 @@
 
 namespace Modules\Activity\Http\Controllers;
 
+use Gate;
 use App\Jobs\SendEmail;
 use App\Jobs\TaskReminder;
 use App\Mail\EmailGeneral;
@@ -33,6 +34,7 @@ class TaskController extends Controller
      */
     public function index($agency)
     {
+        abort_if(Gate::denies('view_tasks'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $per_page       = 10;
         $tasks          = auth()->user()->getTasksByUserId($agency);
@@ -121,6 +123,7 @@ class TaskController extends Controller
      */
     public function create()
     {
+        abort_if(Gate::denies('add_tasks'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('activity::create');
     }
 
@@ -132,6 +135,7 @@ class TaskController extends Controller
     public function store(Request $request)
     {
 
+        abort_if(Gate::denies('add_tasks'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             // Begin a transaction
             DB::beginTransaction();
@@ -246,7 +250,8 @@ class TaskController extends Controller
      */
     public function show($agency,$id)
     {
-//        dd($agency,$id);
+        abort_if(Gate::denies('view_tasks'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $task = Task::findorfail($id);
         if (owner()){
 
@@ -271,6 +276,7 @@ class TaskController extends Controller
      */
     public function edit($id)
     {
+        abort_if(Gate::denies('edit_tasks'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('activity::edit');
     }
 
@@ -282,6 +288,8 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        abort_if(Gate::denies('edit_tasks'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         try {
 
@@ -416,6 +424,8 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
+        abort_if(Gate::denies('delete_tasks'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $task = Task::findorfail($id);
 
         if ($task->delete()) {
@@ -475,6 +485,7 @@ class TaskController extends Controller
     // update dynamic status
     public function update_status(Request $request)
     {
+        abort_if(Gate::denies('update_task_status'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         try {
             $task = Task::findorfail($request->id);
@@ -513,6 +524,7 @@ class TaskController extends Controller
     public function add_note(Request $request)
     {
 
+        abort_if(Gate::denies('add_notes'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
 
             // validation data

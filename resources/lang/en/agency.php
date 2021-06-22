@@ -253,6 +253,7 @@ return [
     'watermark_image'                 => 'Watermark Image',
     'update_all_listing'              => 'Update watermark for all the listings',
     'watermark_updated'               => 'watermark updated successfully',
+    'profile'          =>      'Profile',
 
 
 
