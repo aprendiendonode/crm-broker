@@ -20,7 +20,6 @@ use Spatie\ArrayToXml\ArrayToXml;
 |
 */
 
-<<<<<<< HEAD
 $id =  32;
 $communities = [
     'Al Raha Golf Gardens',
@@ -158,7 +157,6 @@ Route::get('test',function() use ($communities,$id){
 //    }
 });
 //Route::get('test','Controller@test');
-=======
 //php artisan cache:forget spatie.permission.cache
 //php artisan cache:clear
 
@@ -175,7 +173,6 @@ Route::get('assign-permissions', function () {
 });
 
 
->>>>>>> a8082a1ed1d8f2c1cb71bca4a09fa9023757d924
 
 Route::middleware(['guest'])->group(function () {
     Route::get('login', 'Auth\LoginController@login_view');
