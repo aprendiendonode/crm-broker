@@ -3,6 +3,17 @@ return [
 
     'superadmin'    => 'SuperAdmin',
     'geolocations'  => 'Geolocations',
+    'permissions_group' => 'Permissions Group',
+    'permissions' => 'Permissions',
+
+    'permissionsGroup' => [
+        'name' => 'Name',
+        'controlls' => 'Constrolls',
+        'manage' => 'Manage Permissions Group',
+        'edit' => 'Edit Permission Group',
+        'delete' => 'Delete Permission Group',
+        'add' => 'Add Permissions Group',
+    ],
     'countries' => [
         'countries'                   => 'Countries',
         'manage_countries'            => 'Manage Countries',
