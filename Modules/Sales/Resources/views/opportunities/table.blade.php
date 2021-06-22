@@ -144,7 +144,7 @@
             
             @else
             
-            {{ $opportunity->qualification->{'name_'.app()->getLocale()} }} 
+            {{ $opportunity->qualification ? $opportunity->qualification->{'name_'.app()->getLocale()} : '' }} 
             @endcan
             
             

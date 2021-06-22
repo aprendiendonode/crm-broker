@@ -186,7 +186,6 @@ class ListingRepo
                 ]
             );
         } catch (\Exception $e) {
-
             abort(404);
         }
     }
