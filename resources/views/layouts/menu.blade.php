@@ -711,21 +711,7 @@
                                     @endif
 
 
-                                    @if(owner())
-                                        <li>
-                                            <a href="{{ url('listing/listing-type/'.request('agency')) }}">@lang('listing.listing_type')</a>
-                                        </li>
-
-                                    @elseif(moderator())
-                                        <li>
-                                            <a href="{{ url('listing/listing-type/'.request('agency')) }}">@lang('listing.listing_type')</a>
-                                        </li>
-                                    @else
-                                        <li>
-                                            <a href="{{ url('listing/listing-type/'.auth()->user()->agency_id) }}">@lang('listing.listing_type')</a>
-                                        </li>
-                                    @endif
-
+               
 
                                 </ul>
                             </div>
@@ -750,10 +736,18 @@
                 </a>
                 <div class="collapse
                 @if(
-                    in_array( request()->segment(2) , ['countries','cities','communities','sub-communities'])
+                    in_array( request()->segment(2) , ['countries','cities','communities','sub-communities','listing-type'])
                 ) show @endif
                         " id="sidebarSuperadmin">
                     <ul class="nav-second-level">
+
+
+                        
+                        <li>
+                            <a href="{{ url('listing/listing-type') }}">@lang('listing.listing_type')</a>
+                        </li>
+
+
 
 
                         <a href="#sidebargeoLocations" data-toggle="collapse">
@@ -786,6 +780,11 @@
                                 <li>
                                     <a href="{{ route('sub-communities.index') }}">@lang('superadmin.sub_communities.sub_communities')</a>
                                 </li>
+
+
+
+
+
 
 
                             </ul>
