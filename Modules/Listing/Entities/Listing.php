@@ -187,7 +187,7 @@ class Listing extends Model implements Feedable
             "area"                                     => ['required', 'numeric'],
 
             "deposite_percent"                         => ['sometimes', 'nullable', 'numeric'],
-            "deposite_value"                           => ['sometimes', 'nullable', 'numeric'],
+            "deposite_value"                           => ['sometimes', 'nullable', 'string'],
             "listing_rent_cheque_id"                   => ['sometimes', 'nullable', Rule::exists('listing_rent_cheques', 'id')->where(function ($q) use ($request) {
                 $q->where('agency_id', $request->agency_id);
             })],
@@ -287,7 +287,7 @@ class Listing extends Model implements Feedable
             "edit_area_" . $id                                     => ['required', 'numeric'],
 
             "edit_deposite_percent_" . $id                         => ['sometimes', 'nullable', 'numeric'],
-            "edit_deposite_value_" . $id                           => ['sometimes', 'nullable', 'numeric'],
+            "edit_deposite_value_" . $id                           => ['sometimes', 'nullable', 'string'],
             "edit_listing_rent_cheque_id_" . $id                   => ['sometimes', 'nullable', Rule::exists('listing_rent_cheques', 'id')->where(function ($q) use ($request) {
                 $q->where('agency_id', $request->agency_id);
             })],
