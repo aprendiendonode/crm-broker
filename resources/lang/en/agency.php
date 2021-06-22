@@ -43,7 +43,7 @@ return [
     'staff_updated'          => 'Staff UPDATED Successfully',
     'staff_creating_failed'  => 'Staff Creation Failed',
     'english_name'           => 'English Name',
-    'arabic_name'            => 'Arabic Name',
+    'arabic_name'            => 'Localized Name',
     'country_code'           => 'Country Code',
     'city_code'              => 'City Code',
     'phone'                  => 'Phone',
