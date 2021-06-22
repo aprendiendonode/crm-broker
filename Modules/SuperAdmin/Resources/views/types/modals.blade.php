@@ -13,7 +13,7 @@
                             <i class="dripicons-information h1 text-danger"></i>
                             <h4 class="mt-2">@lang('listing.head_up')</h4>
                             <p class="mt-3">@lang('agency.delete_warning')</p>
-                            <form action="{{ url('listing/delete-listing-type') }}" method="post">
+                            <form action="{{ url('superadmin/delete-listing-type') }}" method="post">
                                 @csrf
                                 <input  type="hidden" name="type_id" value="{{ $type->id }}">
                                 <button type="submit" class="btn btn-danger my-2">@lang('listing.confirm_delete')</button>

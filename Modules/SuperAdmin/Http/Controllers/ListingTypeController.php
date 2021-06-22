@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Listing\Http\Controllers;
+namespace Modules\SuperAdmin\Http\Controllers;
 
 use Gate;
 use App\Models\Team;
@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use Modules\Listing\Entities\ListingType;
+use Modules\SuperAdmin\Entities\ListingType;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,7 +20,7 @@ class ListingTypeController extends Controller
 {
 
 
-    public function index($agency)
+    public function index()
     {
 
 
@@ -31,7 +31,7 @@ class ListingTypeController extends Controller
         $listing_types = ListingType::latest()->paginate($per_page);
 
 
-        return view('listing::settings.types.index', compact('listing_types'));
+        return view('superadmin::types.index', compact('listing_types'));
     }
 
 

@@ -744,7 +744,7 @@
 
                         
                         <li>
-                            <a href="{{ url('listing/listing-type') }}">@lang('listing.listing_type')</a>
+                            <a href="{{ url('superadmin/listing-type') }}">@lang('listing.listing_type')</a>
                         </li>
 
 
