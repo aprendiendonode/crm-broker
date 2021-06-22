@@ -147,9 +147,8 @@ class Listing extends Model implements Feedable
         return [
 
             "type_id" => [
-                'required', 'integer', Rule::exists('listing_types', 'id')->where(function ($q) use ($request) {
-                    $q->where('agency_id', $request->agency_id);
-                })
+                'required', 'integer', Rule::exists('listing_types', 'id')
+
             ],
 
             "loc_lat"                                  => ['sometimes', 'nullable', 'string'],
