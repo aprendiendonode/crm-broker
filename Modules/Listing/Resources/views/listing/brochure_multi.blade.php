@@ -122,7 +122,7 @@
         <h2>Main features:</h2>
         <ul>
             @foreach($listing->features as $key => $feature)
-                @if($feature != null || $feature != null)
+                @if($feature != 'no' && $feature != null)
                     <li>{{ Str::ucfirst($key) }}</li>
                 @endif
             @endforeach

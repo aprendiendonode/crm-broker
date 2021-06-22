@@ -87,7 +87,7 @@
                      data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
                             <option value=""></option>
                         
-                            @if(old('city_id'))
+                      @if(old('city_id'))
                         @if(old('community_id'))
                             @foreach($communities->where('city_id',old('city_id')) as $community)
                                 <option class="create-appended-communities"

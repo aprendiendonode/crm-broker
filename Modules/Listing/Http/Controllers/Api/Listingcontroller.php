@@ -16,8 +16,9 @@ class Listingcontroller extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index(Request $request)
+    public function index(Request $request,$type=null)
     {
+       
       try {
           
           $validator = Validator::make($request->all(), [
@@ -34,9 +35,17 @@ class Listingcontroller extends Controller
             }
           $business = Business::where('business_token', $request->business_token)->firstOrFail();
           $agency   = Agency::where('business_id', $business->id)->where('agency_token',$request->agency_token)->firstOrFail();
-          $listingsAll=Listing::whereHas('portalsList', function($q){
+          if($type != null){
+            $listingsAll=Listing::whereHas('portalsList', function($q){
                 $q->where('portal_id',2);
-              })->where('agency_id',$agency->id)->with('photos')->get();
+            })->where([['agency_id',$agency->id],['purpose',$type]])->with('photos')->get();
+
+          }else{
+
+              $listingsAll=Listing::whereHas('portalsList', function($q){
+                    $q->where('portal_id',2);
+                  })->where('agency_id',$agency->id)->with('photos')->get();
+          }
 
             $data=[];
             foreach($listingsAll as $item){
@@ -173,7 +182,7 @@ class Listingcontroller extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function rented_list(Request $request)
     {
         //
     }
@@ -183,7 +192,7 @@ class Listingcontroller extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function buyed_listing($id)
     {
         return view('listing::show');
     }

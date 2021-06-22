@@ -843,7 +843,13 @@ class ListingRepo
 
             $main_photo_path = public_path('temporary/listings/' . $main_tmp_folder . '/' . $photo_name);
 
+
+
+
             $watermark = Watermark::where('agency_id', $request->agency)->where('active', 'yes')->first();
+
+
+
 
             // * image with full size and watermark
             $with_watermark_tmp_folder_path = public_path("temporary/listings/$main_tmp_folder/mainWatermark-$photo_name");
@@ -860,6 +866,7 @@ class ListingRepo
                 'folder' => $main_tmp_folder,
                 'main' => $photo_name,
                 'watermark' => 'mainWatermark-' . $photo_name,
+                // 'borchure' => 'mainborchure-' . $photo_name,
                 'active' => 'watermark',
             ]);
             return [
@@ -1203,8 +1210,6 @@ class ListingRepo
         $listing = Listing::findorfail($listing);
 
         if ($type == 'single') {
-
-
 
             $pdf = PDF::loadView('listing::listing.brochure_single', ['listing' => $listing]);
             return $pdf->stream($listing->title . '.pdf');
