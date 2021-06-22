@@ -121,6 +121,12 @@ return [
     'on' => 'On',
     'off' => 'Off',
     'task_types' => 'Task Types',
+    'manage_task_type' => 'Manage Task Types',
+    'add_task_type' => 'Task Type',
+    'type' => 'Type',
+    'type_en' => 'Arabic Type',
+    'type_ar' => 'English Type',
+    'delete_type' => 'Delete Type',
 
     ///////////////////////// MAIL NOTIFICATIONS //////////////////////////////////////
 

@@ -1380,7 +1380,7 @@ class ListingRepo
         $listings = Listing::whereIn('agency_id', $shared_agencies)->where('lsm', 'shared');
         $locations = $listings->pluck('location')->unique();
         array_push($shared_agencies, $agency);
-        $types = ListingType::whereIn('agency_id', $shared_agencies)->get();
+        $types = ListingType::all();
 
 
         if (request('purpose')) {
