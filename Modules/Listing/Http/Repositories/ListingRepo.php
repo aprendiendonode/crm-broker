@@ -41,7 +41,7 @@ use Modules\Sales\Entities\Opportunity;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\TaskStatus;
 use Modules\Listing\Entities\ListingPlan;
-use Modules\Listing\Entities\ListingType;
+use Modules\SuperAdmin\Entities\ListingType;
 use Modules\Activity\Entities\ListingNote;
 use Modules\Listing\Entities\ListingPhoto;
 use Modules\Listing\Entities\ListingVideo;
