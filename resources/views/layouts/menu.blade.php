@@ -757,7 +757,7 @@
 
                         {{-- @can('manage permissions') --}}
                         <li>
-                            <a href="{{ url('superadmin/permissions') }}">@lang('superadmin.permissions')</a>
+                            <a href="{{ url('superadmin/permissions') }}">@lang('superadmin.permissions_items')</a>
                         </li>
                         {{-- @endcan --}}
 

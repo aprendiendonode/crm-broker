@@ -2,6 +2,7 @@
 
 namespace Modules\SuperAdmin\Http\Controllers;
 
+use App\Models\Permission;
 use App\Models\PermissionGroup;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class PermissionsGroupController extends Controller
+class PermissionsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +18,10 @@ class PermissionsGroupController extends Controller
      */
     public function index()
     {
-        $permissions_groups = PermissionGroup::paginate(10);
+        $permissions = Permission::paginate(10);
+        $permissions_groups = PermissionGroup::all();
         $paginate = true;
-        return view('superadmin::permissionsGroups.index', compact('permissions_groups', 'paginate'));
+        return view('superadmin::permissions.index', compact('permissions', 'paginate', 'permissions_groups'));
     }
 
     /**
@@ -43,6 +45,8 @@ class PermissionsGroupController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|unique:permission_groups,name',
+                'guard_name' => 'string',
+                'permission_group_id' => 'required'
             
             ]);
 
@@ -50,8 +54,10 @@ class PermissionsGroupController extends Controller
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-tab', 'yes');
             }
 
-            PermissionGroup::create([
-                'name' => $request->name
+            Permission::create([
+                'name' => $request->name,
+                'guard_name' => $request->guard_name,
+                'permission_group_id' => $request->permission_group_id
             ]);
 
             DB::commit();
@@ -98,6 +104,8 @@ class PermissionsGroupController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|unique:permission_groups,name,' . $id,
+                'guard_name' => 'string',
+                'permission_group_id' => 'required'
             
             ]);
 
@@ -105,17 +113,20 @@ class PermissionsGroupController extends Controller
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-tab', 'yes');
             }
 
-            $permissionsGroup = PermissionGroup::findOrFail($id);
-            $permissionsGroup->update([
-                'name' => $request->name
+            $permission = Permission::findOrFail($id);
+
+            $permission->update([
+                'name' => $request->name,
+                'guard_name' => $request->guard_name,
+                'permission_group_id' => $request->permission_group_id
             ]);
 
             DB::commit();
-            return back()->with(flash(trans('superadmin.permissionsGroup.updated'), 'success'));
+            return back()->with(flash(trans('superadmin.permissions.created'), 'success'));
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return back()->withInput()->with(flash(trans('superadmin.permissionsGroup.something_went_wrong'), 'error'))->with('open-tab', 'yes');
+            return back()->withInput()->with(flash(trans('superadmin.permissions.something_went_wrong'), 'error'))->with('open-tab', 'yes');
 
         }
     }
@@ -127,8 +138,8 @@ class PermissionsGroupController extends Controller
      */
     public function destroy($id)
     {
-        PermissionGroup::findorfail(request('permissions_group_id'))->delete();
+        Permission::findorfail(request('permission_id'))->delete();
 
-        return back()->withInput()->with(flash(trans('superadmin.permissionsGroup.deleted'), 'success'));
+        return back()->withInput()->with(flash(trans('superadmin.permissions.deleted'), 'success'));
     }
 }
