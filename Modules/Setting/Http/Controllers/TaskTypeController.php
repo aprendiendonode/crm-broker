@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\TaskType;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class TaskTypeController extends Controller

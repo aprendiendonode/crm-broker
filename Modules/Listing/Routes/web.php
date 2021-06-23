@@ -29,84 +29,59 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
 
             $sub =
+
                 [
-                    'China Cluster',
-                    'England Cluster',
-                    'France Cluster',
-                    'Greece Cluster',
-                    'Italy Cluster',
-                    'Morocco Cluster',
-                    'Persia Cluster',
-                    'Russia Cluster',
-                    'Spain Cluster',
-                    'Lake District',
-                    'Forbidden City',
+
+
+
+
                     '
-              The Residences International City
-            ',
+  Al Diyafah Road
+',
+                    'Satwa Road',
                     '
-              Manchester Crescent
-            ',
-                    'Persia N 11',
+  Makeen Residence Al Satwa
+',
+                    'The Flagship One',
+                    'Square 334',
                     '
-              Kaya Residence
-            ',
+  Eden House
+',
                     '
-              Tulip Residence
-            ',
-                    'Phase 3',
+  Bin Dhaen Holding Building Satwa
+',
                     '
-              Emirates Cluster
-            ',
-                    'Textile City',
-                    'Indigo Optima',
+  Al Zomoroda Building
+',
                     '
-              Trafalgar Central
-            ',
-                    'Warsan Village',
-                    'Phase 2',
-                    'CBD 6 Best Homes',
+  Adaire 1
+',
                     '
-              Indigo Spectrum 1
-            ',
+  Cloud 88
+',
                     '
-              Indigo Spectrum 2
-            ',
+  Al Khair 5
+',
                     '
-              Central Business District
-            ',
+  Al Khair Building 1
+',
                     '
-              Dragon View Building
-            ',
-                    '
-              lawnz by Danube
-            ',
-                    '
-              Olivz Residence
-            ',
-                    '77 B Building',
-                    'Golden Homes 2',
-                    '
-              Dragon Mart
-            ',
-                    '
-              Dragon Mart 2
-            ',
-                    '
-              X-15
-            '
+  Al Badaa Residences
+'
+
+
                 ];
 
 
 
             foreach ($sub as $s) {
 
-                /*           SubCommunity::create([
+                SubCommunity::create([
                     'name_en'    => trim($s),
                     'name_ar'    => trim($s),
                     'country_id' => 234,
-                    'community_id' => 29
-                ]); */
+                    'community_id' => 120
+                ]);
             }
 
             /*  return view('listing::listing.listing_map'); */

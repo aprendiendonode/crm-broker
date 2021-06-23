@@ -20,6 +20,9 @@ use Spatie\ArrayToXml\ArrayToXml;
 |
 */
 
+
+
+//Route::get('test','Controller@test');
 //php artisan cache:forget spatie.permission.cache
 //php artisan cache:clear
 

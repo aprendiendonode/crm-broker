@@ -405,7 +405,7 @@
                             @endif
                         @endcan
 
-                        @can('view_tasks')
+                        @can('manage_task_status')
                             @if(!owner())
                                 <li>
                                     <a href="{{ route('setting.task_status.index',auth()->user()->agency_id) }}">@lang('settings.task_status')</a>
@@ -495,6 +495,7 @@
 
 
                         {{-- @can('manage_contacts_settings') --}}
+                         @can('manage_lead_setting')
                         <li>
 
 
@@ -504,7 +505,9 @@
                                 <span class="menu-arrow"></span>
                             </a>
 
-                            @can('manage_lead_setting')
+
+
+
                             <div class="collapse" id="sidebarsettings">
                                 <ul class="nav-second-level">
 
@@ -638,7 +641,7 @@
                                         </ul>
                                     </div>
 
-                            @endcan
+
 
                             {{-- @can('manage_lead_setting') --}}
                                 @if(owner())
@@ -662,7 +665,7 @@
 
 
                         </li>
-                        {{-- @endcan --}}
+                        @endcan
 
 
                         @can('manage_listing_settings')
@@ -677,7 +680,7 @@
 
                             <div class="collapse" id="sidebarlistingSetting">
                                 <ul class="nav-second-level">
-                                    {{--@can('view_listing')--}}
+                                    @can('view_listing')
                                         @if(owner())
                                             <li>
                                                 <a href="{{ url('listing/listing-view/'.request('agency')) }}">@lang('listing.listing_view')</a>
@@ -692,7 +695,7 @@
                                                 <a href="{{ url('listing/listing-view/'.auth()->user()->agency_id) }}">@lang('listing.listing_view')</a>
                                             </li>
                                         @endif
-                                    {{--@endcan--}}
+                                    @endcan
 
 
                                     @if(owner())
