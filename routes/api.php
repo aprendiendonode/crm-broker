@@ -3,14 +3,15 @@
 use App\Models\Agency;
 use Dirape\Token\Token;
 use App\Models\Business;
-
+use Illuminate\Cache\Lock;
 use Illuminate\Http\Request;
+use LanguageDetection\Language;
 use Modules\Sales\Entities\Lead;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+
 use Modules\SuperAdmin\Entities\City;
 use Modules\Sales\Entities\LeadSource;
-
-use LanguageDetection\Language;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,8 @@ use LanguageDetection\Language;
 
 Route::put('campain-leads-facebook/{business_token}/{agency_token}', function (Request $request, $business_token, $agency_token) {
     // dd($request->all());
+
+    Log::error($request);
     $business = Business::where('business_token', $business_token)->firstOrFail();
     $agency   = Agency::where('business_id', $business->id)->where('agency_token', $agency_token)->firstOrFail();
     $ld = new Language(['en', 'ar']);
