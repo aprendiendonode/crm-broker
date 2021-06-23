@@ -51,7 +51,7 @@ class PermissionsGroupController extends Controller
             }
 
             PermissionGroup::create([
-                'name' => $request->name
+                'name' => str_replace(' ', '_', $request->name),
             ]);
 
             DB::commit();
@@ -107,7 +107,7 @@ class PermissionsGroupController extends Controller
 
             $permissionsGroup = PermissionGroup::findOrFail($id);
             $permissionsGroup->update([
-                'name' => $request->name
+                'name' => str_replace(' ', '_', $request->name),
             ]);
 
             DB::commit();

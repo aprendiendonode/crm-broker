@@ -45,7 +45,6 @@ class PermissionsController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|unique:permission_groups,name',
-                'guard_name' => 'string',
                 'permission_group_id' => 'required'
             
             ]);
@@ -55,8 +54,8 @@ class PermissionsController extends Controller
             }
 
             Permission::create([
-                'name' => $request->name,
-                'guard_name' => $request->guard_name,
+                'name' => str_replace(' ', '_', $request->name),
+                'guard_name' => 'web',
                 'permission_group_id' => $request->permission_group_id
             ]);
 
@@ -104,7 +103,6 @@ class PermissionsController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|unique:permission_groups,name,' . $id,
-                'guard_name' => 'string',
                 'permission_group_id' => 'required'
             
             ]);
@@ -116,8 +114,8 @@ class PermissionsController extends Controller
             $permission = Permission::findOrFail($id);
 
             $permission->update([
-                'name' => $request->name,
-                'guard_name' => $request->guard_name,
+                'name' => str_replace(' ', '_', $request->name),
+                'guard_name' => 'web',
                 'permission_group_id' => $request->permission_group_id
             ]);
 

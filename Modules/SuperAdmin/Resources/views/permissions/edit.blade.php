@@ -11,11 +11,6 @@
                 </div>
 
                 <div class="col-md-4 form-group">
-                    <label class="mb-1 font-weight-medium text-muted">@lang('superadmin.permissions.guard_name')</label>
-                    <input type="text" class="form-control"  name="guard_name" id="name" value="{{ $permission->guard_name }}" placeholder="@lang('superadmin.permissions.guard_name')" required>
-                </div>
-
-                <div class="col-md-4 form-group">
                     <label class="mb-1 font-weight-medium text-muted">@lang('superadmin.permissions.group_name')</label>
                     <select name="permission_group_id" class="form-control" id="">
                         @foreach ($permissions_groups as $group)
