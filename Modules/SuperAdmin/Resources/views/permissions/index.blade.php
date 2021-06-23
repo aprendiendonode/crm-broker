@@ -70,7 +70,7 @@
 
                         @forelse($permissions as $permission)
                         <tr>
-                            <td>{{ $permission->name }}</td>
+                            <td>{{ str_replace('_', ' ', $permission->name) }}</td>
                             <td>{{ $permission->group->name }}</td>
                               
                             <td>

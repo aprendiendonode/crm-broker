@@ -228,7 +228,7 @@
                                   class="cursor-pointer"
                                   data-plugin="tippy"
                                 data-tippy-placement="top-start"
-{{--                                title="{{  ($listing->city && $listing->city->{'name_'.app()->getLocale()} ? $listing->city->{'name_'.app()->getLocale()} : '') .' , '. ($listing->community && $listing->community->{'name_'.app()->getLocale()} ? $listing->community->{'name_'.app()->getLocale()} : '' ).' , '. ($listing->subCommunity && $listing->subCommunity->{'name_'.app()->getLocale()} ? $listing->subCommunity->{'name_'.app()->getLocale()} : '' ).' , '.$listing->location ?? '' }}"--}}
+                               title="{{  ($listing->city && $listing->city->{'name_'.app()->getLocale()} ? $listing->city->{'name_'.app()->getLocale()} : '') .' , '. ($listing->community && $listing->community->{'name_'.app()->getLocale()} ? $listing->community->{'name_'.app()->getLocale()} : '' ).' , '. ($listing->subCommunity && $listing->subCommunity->{'name_'.app()->getLocale()} ? $listing->subCommunity->{'name_'.app()->getLocale()} : '' ).' , '.$listing->location ?? '' }}"
                                 >
                                  {{ Str::words($listing->location,3,'...') }}
                                 </span>
