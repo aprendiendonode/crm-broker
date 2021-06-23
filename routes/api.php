@@ -24,7 +24,7 @@ use LanguageDetection\Language;
 */
 
 Route::put('campain-leads-facebook/{business_token}/{agency_token}', function (Request $request, $business_token, $agency_token) {
-    dd($request->all());
+    // dd($request->all());
     $business = Business::where('business_token', $business_token)->firstOrFail();
     $agency   = Agency::where('business_id', $business->id)->where('agency_token', $agency_token)->firstOrFail();
     $ld = new Language(['en', 'ar']);
