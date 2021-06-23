@@ -49,6 +49,48 @@ Route::middleware(['guest'])->group(function () {
 
 
 Route::get('change_language/{lang}', 'Controller@change_language')->name('change_language')->middleware('checkauth');
+
+
+
+Route::middleware(['checkauth',  'lang'])->group(function () {
+    Route::post('change-mode', function () {
+        User::findorfail(auth()->user()->id)->update(['default_mode' => request('mode')]);
+        return response()->json(['status' => 'success'], 200);
+    });
+    Route::post('change-width', function () {
+        User::findorfail(auth()->user()->id)->update(['default_width' => request('width')]);
+        return response()->json(['status' => 'success'], 200);
+    });
+
+    Route::post('change-position', function () {
+        User::findorfail(auth()->user()->id)->update(['default_position' => request('position')]);
+        return response()->json(['status' => 'success'], 200);
+    });
+    Route::post('change-sidebar-color', function () {
+        User::findorfail(auth()->user()->id)->update(['default_sidebar_color' => request('sidebar_color')]);
+        return response()->json(['status' => 'success'], 200);
+    });
+    Route::post('change-sidebar-size', function () {
+
+
+        User::findorfail(auth()->user()->id)->update(['default_sidebar_size' => request('sidebar_size')]);
+        return response()->json(['status' => 'success'], 200);
+    });
+    Route::post('reset-to-default', function () {
+
+
+        User::findorfail(auth()->user()->id)->update([
+
+            'default_sidebar_size'  => 'default',
+            'default_mode'          => 'light',
+            'default_width'         => 'fluid',
+            'default_position'      => 'fixed',
+            'default_sidebar_color' => 'light',
+
+        ]);
+        return response()->json(['status' => 'success'], 200);
+    });
+});
 Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
 

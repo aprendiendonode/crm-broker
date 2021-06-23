@@ -19,38 +19,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-
-        'email',
-        'password',
-        'name_en',
-        'name_ar',
-        'brn',
-        'description_en',
-        'description_ar',
-        'zip',
-        'whatsapp',
-        'skype',
-        'active',
-        'country_code',
-        'city_code',
-        'phone',
-        'cell_code',
-        'cell',
-        'fax_country_code',
-        'fax_city_code',
-        'staff_fax',
-        'address',
-        'agency_id',
-        'business_id',
-        'image',
-        'nationality_id',
-        'team_id',
-        'type',
-        'can_access',
-        'language',
-
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -111,16 +80,14 @@ class User extends Authenticatable
 
         //if user is owner of business show tasks related by this business and agency
 
-        if (owner()){
+        if (owner()) {
 
-            $tasks = Task::where('business_id',$this->business_id)->where('agency_id',$agency_id);
-
-        }else{
+            $tasks = Task::where('business_id', $this->business_id)->where('agency_id', $agency_id);
+        } else {
 
             //if user is stuff show tasks related to you only
-//            $tasks = Task::where('agency_id',$this->agency_id)->where('business_id',$this->business_id);
-            $tasks = $this->tasks()->where('agency_id',$agency_id);
-
+            //            $tasks = Task::where('agency_id',$this->agency_id)->where('business_id',$this->business_id);
+            $tasks = $this->tasks()->where('agency_id', $agency_id);
         }
 
         return $tasks;
