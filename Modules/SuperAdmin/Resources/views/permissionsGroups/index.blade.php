@@ -69,7 +69,7 @@
 
                         @forelse($permissions_groups as $group)
                         <tr>
-                            <td>{{ $group->name }}</td>
+                            <td>{{ str_replace('_', ' ', $group->name) }}</td>
                               
                             <td>
                                 @include('superadmin::permissionsGroups.controlls')
