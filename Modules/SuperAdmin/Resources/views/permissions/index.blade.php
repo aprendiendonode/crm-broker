@@ -37,19 +37,19 @@
 
             <div class="d-flex justify-content-between mb-3">
                <h4>
-                   @lang('superadmin.permissionsGroup.manage')
+                   @lang('superadmin.permissions.manage')
                </h4>
 
               
                 <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
-                    <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('superadmin.permissionsGroup.add')
+                    <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('superadmin.permissions.add')
                 </button>
                 
             </div>
 
             
             <div class="mb-2 add_type " @if(!session()->has('open-tab')) style="display: none;opacommunity:0;transition:0.7s" @endif>
-                @include('superadmin::permissionsGroups.create')
+                @include('superadmin::permissions.create')
             </div>
         
 
@@ -59,31 +59,33 @@
                 <table  class="table table-bordered toggle-circle mb-0">
                     <thead>
                     <tr>
-                        <th>@lang('superadmin.permissionsGroup.name') </th>
-                        <th >@lang('superadmin.permissionsGroup.controlls') </th>
+                        <th>@lang('superadmin.permissions.name') </th>
+                        <th>@lang('superadmin.permissions.group_name') </th>
+                        <th >@lang('superadmin.permissions.controlls') </th>
 
                       
                     </tr>
                     </thead>
                     <tbody>
 
-                        @forelse($permissions_groups as $group)
+                        @forelse($permissions as $permission)
                         <tr>
-                            <td>{{ $group->name }}</td>
+                            <td>{{ $permission->name }}</td>
+                            <td>{{ $permission->group->name }}</td>
                               
                             <td>
-                                @include('superadmin::permissionsGroups.controlls')
+                                @include('superadmin::permissions.controlls')
                                
                             </td>
 
                         
-                                @include('superadmin::permissionsGroups.modals')
+                                @include('superadmin::permissions.modals')
   
                         </tr>
 
-                        <tr  class="edit_team_{{ $group->id }}"  @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $group->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
+                        <tr  class="edit_team_{{ $permission->id }}"  @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $permission->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
                             <td colspan="8">
-                                @include('superadmin::permissionsGroups.edit')
+                                @include('superadmin::permissions.edit')
                             </td>
                         </tr>
                     
@@ -95,7 +97,7 @@
                 <div class="d-flex justify-content-between">
 @if($paginate)
                     <div class="mt-2">
-                        {{ $permissions_groups->links() }}
+                        {{ $permissions->links() }}
                     </div>
 @endif   
                 </div>
@@ -160,14 +162,14 @@ function  show_add_div(){
 
         setTimeout(function(){
 
-            div.style.opacommunity = 1;
+            div.style.opacity = 1;
      
         },10);
     } else {
         div.style.display = 'none';
         setTimeout(function(){
 
-        div.style.opacommunity = 0;
+        div.style.opacity = 0;
    
 
         },10);
@@ -184,7 +186,7 @@ function  show_add_div(){
         div.style.display = 'none';
         setTimeout(function(){
 
-        div.style.opacommunity = 0;
+        div.style.opacity = 0;
    
 
         },10);
@@ -227,7 +229,7 @@ function  show_add_div(){
         div.style.display = 'none';
         setTimeout(function(){
 
-        div.style.opacommunity = 0;
+        div.style.opacity = 0;
    
 
         },10);
