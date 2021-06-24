@@ -256,15 +256,16 @@ class ListingRepo
                     mkdir(public_path("listings/photos"));
                 }
 
-                foreach ($photos as $folder) {
+                foreach ($photos as $key =>  $folder) {
                     $photo = TemporaryListing::where('folder', $folder)->first();
                     if ($photo) {
                         $moved = ListingPhoto::create(
                             [
                                 'listing_id' => $listing->id,
-                                'main' => $photo->main,
-                                'watermark' => $photo->watermark,
-                                'active' => $photo->active,
+                                'main'       => $photo->main,
+                                'watermark'  => $photo->watermark,
+                                'active'     => $photo->active,
+                                'photo_main' => $request->checked_main_hidden[$key],
                             ]
                         );
 
@@ -861,11 +862,13 @@ class ListingRepo
             }
 
 
+
             $temporary_photo = TemporaryListing::create([
                 'folder' => $main_tmp_folder,
                 'main' => $photo_name,
                 'watermark' => 'mainWatermark-' . $photo_name,
                 // 'borchure' => 'mainborchure-' . $photo_name,
+
                 'active' => 'watermark',
             ]);
             return [
@@ -983,12 +986,13 @@ class ListingRepo
             $documents = $request->{'edit_documents_' . $id};
             $floor_plans = $request->{'edit_floor_plans_' . $id};
             $photos = $request->{'edit_photos_' . $id};
+            $check_hidden_photos = $request->{'edit_checked_main_hidden_' . $id};
 
             $validator = Validator::make($request->all(), Listing::update_validation($request, $id));
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-edit-tab', $id);
             }
-
+            // dd('here');
             if (count($cheque_date) != count($cheque_amount) || count($cheque_date) != count($cheque_percentage)) {
                 return back()->withInput()->with(flash(trans('listing.cheque_inputs_invalid'), 'danger'))
                     ->with('open-edit-tab', $id);
@@ -1008,13 +1012,14 @@ class ListingRepo
             unset($inputs['edit_photos_' . $id]);
             unset($inputs['edit_floor_plans_' . $id]);
             unset($inputs['edit_documents_' . $id]);
+            unset($inputs['edit_checked_main_hidden_' . $id]);
             /*   dd('here', $inputs); */
 
             $fixed_array_keys = [];
             foreach ($inputs as $key => $input) {
                 $fixed_array_keys[str_replace(['edit_', '_' . $id], '', $key)] = $input;
             }
-            // dd($fixed_array_keys);
+
             if (!array_key_exists('view_ids', $fixed_array_keys)) {
                 $fixed_array_keys['view_ids'] = [];
             }
@@ -1032,15 +1037,21 @@ class ListingRepo
                     mkdir(public_path("listings/photos"));
                 }
 
-                foreach ($photos as $folder) {
+                foreach ($photos as $key => $folder) {
                     $photo = TemporaryListing::where('folder', $folder)->first();
                     if ($photo) {
+                        if (in_array('yes', $check_hidden_photos)) {
+                            ListingPhoto::where('listing_id', $listing->id)->update(['photo_main' => 'no']);
+                        }
+
+                        // dd($fixed_array_keys, $request->all());
                         $moved = ListingPhoto::create(
                             [
                                 'listing_id' => $listing->id,
                                 'main' => $photo->main,
                                 'watermark' => $photo->watermark,
                                 'active' => $photo->active,
+                                'photo_main' => $check_hidden_photos[$key],
                             ]
                         );
 
@@ -1199,11 +1210,34 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_modified'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e);
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }
 
 
+    public function update_listing_main_photo($request)
+    {
+        if ($request->ajax()) {
+
+            try {
+                DB::beginTransaction();
+
+
+
+                ListingPhoto::where('listing_id', $request->listing_id)->update(['photo_main' => 'no']);
+
+                ListingPhoto::findOrFail($request->id)->update(['photo_main' => 'yes']);
+
+                DB::commit();
+
+                return response()->json(['message' => trans('listing.updated')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
     public function brochure($request, $type, $listing)
     {
         $listing = Listing::findorfail($listing);

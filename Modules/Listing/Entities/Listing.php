@@ -330,6 +330,7 @@ class Listing extends Model implements Feedable
             "edit_cheque_amount_" . $id                            => ['required', 'array'],
             "edit_cheque_percentage_" . $id                        => ['required', 'array'],
             "edit_photos_" . $id                                   => ['sometimes', 'nullable', 'array'],
+            "edit_checked_main_hidden_" . $id                      => ['sometimes', 'nullable', 'array'],
 
             // |regex:/^([0-9\s\-\+\(\)]*)$/
 
