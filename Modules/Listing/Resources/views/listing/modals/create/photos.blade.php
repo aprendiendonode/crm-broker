@@ -141,7 +141,7 @@
             <div>
             <div class="form-group">
             <label for="">Select a Gategory</label>
-              <select class="form-control listing-category" >
+              <select class="form-control listing-category" onchange="updateListingCategory(this,'temp')" >
                 <option value="">@lang('listing.select_category')</option>
                 @foreach($listing_categories as $category)
                   <option value="{{ $category->id }}">

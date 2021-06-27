@@ -130,6 +130,9 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
 
         Route::post('update-listing-main-photo', 'ListingController@update_listing_main_photo')
             ->name('listings.update-listing-main-photo');
+
+        Route::post('update-listing-temporary-category', 'ListingController@update_listing_temporary_category')
+            ->name('listings.update-listing-temporary-category');
         Route::patch('update-listing-portals/{listing}', 'ListingController@update_listing_portals')
             ->name('listings.portals');
         Route::post('listing/delete', 'ListingController@destroy')->name('listings.delete');

@@ -123,6 +123,10 @@ class ListingController extends Controller
     {
         return $this->repository->update_listing_main_photo($request);
     }
+    public function update_listing_temporary_category(Request $request)
+    {
+        return $this->repository->update_listing_temporary_category($request);
+    }
     public function share_listing($agency, ListingRepo $repository)
     {
         abort_if(Gate::denies('share_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');

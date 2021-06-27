@@ -32,9 +32,10 @@
                                     height: 100%;">
 
 
-<i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" id="remove-uploaderFile{{  $uniq_id }}" onclick="return confirm('are you sure ?') ? removePhoto(this,'main') : false"></i> 
+                            <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" 
+                            id="remove-uploaderFile{{  $uniq_id }}" onclick="return confirm('are you sure ?') ? removePhoto(this,'main') : false"></i> 
 
-<input type="hidden" class="photo-id" value={{ $photo->id }}>
+                                    <input type="hidden" class="photo-id" value={{ $photo->id }}>
                                     <div class="with-watermark">
                                         <img class=" preview-img w-50 m-auto @if($photo->active != 'watermark') d-none @endif" 
                                         src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark)  }}"
@@ -52,6 +53,8 @@
                                     {{-- <input type="hidden" name="edit_photos_{{ $listing->id }}[]" class="listing_photos"> --}}
                                     <div class="media-body mb-1">
                                             <div class="d-flex justify-content-between my-2">
+
+                                           <div>     
                                             <div class="@if($photo->active != 'watermark') d-none @endif with-enlarg-watermark">
                                                 
                                                 <a target="_blank" href="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark)  }}">@lang('listing.enlarg')</a>
@@ -59,6 +62,28 @@
                                             </div>
                                             <div class="@if($photo->active != 'main') d-none @endif no-enlarg-watermark">
                                                 <a target="_blank" href="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main)  }}">@lang('listing.enlarg')</a>
+                                            </div>
+
+                                            <div>
+                                                <div class="form-group">
+                                                <label for="">Select a Gategory</label>
+                                                  <select
+                                                  id="listing-category-{{ $uniq_id }}"
+                                                   class="form-control listing-category-{{ $listing->id }}" onchange="updateListingCategory(this,'main')" >
+                                                    <option value="">@lang('listing.select_category')</option>
+                                                    @foreach($listing_categories as $category)
+                                                      <option
+                                                       value="{{ $category->id }}"
+                                                        @if($photo->listing_category_id == $category->id) selected @endif
+                                                        >
+                                                       
+                                                        {{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}
+                                                      </option>
+                                                    @endforeach
+                                                  </select>
+                                                </div>
+                                              </div>
+
                                             </div>
                                             <div>
                                                 <div class="form-group mb-0">
@@ -136,7 +161,7 @@
             </div>
             
             <div class="modal-footer">  
-                <button type="button" class="btn btn-primary" onclick="handleCloseModal()" aria-hidden="true">
+                <button type="button"  class="btn btn-primary" onclick="handleCloseModal('{{ $listing->id }}')" aria-hidden="true">
                     @lang('listing.done')
                 </button>
             </div>
@@ -216,15 +241,19 @@
                 <a target="_blank" href="">@lang('listing.enlarg')</a>
             </div>
 
-            <div class="form-group">
+            <div>
+                <div class="form-group">
                 <label for="">Select a Gategory</label>
-                <select class="form-control listing-category__{{ $listing->id }}">
+                  <select class="form-control listing-category-{{ $listing->id }}" onchange="updateListingCategory(this,'temp')" >
                     <option value="">@lang('listing.select_category')</option>
                     @foreach($listing_categories as $category)
-                    <option value="{{ $category->id }}">{{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}</option>
+                      <option value="{{ $category->id }}">
+                        {{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}
+                      </option>
                     @endforeach
-                </select>
-            </div>
+                  </select>
+                </div>
+              </div>
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">@lang('listing.watermark')</label>
@@ -256,21 +285,6 @@
   </script>
   
 <script>
-// $('#photos-modal_{{ $listing->id }}').modal({
-//   show: false,
-//   backdrop: 'static'
-// })
-
-// function handleCloseModal() {
-//   let isAllSelected = ![...document.querySelectorAll('.listing-category__{{ $listing->id }}')].some(el => el.value == '' );
-
-//   if(isAllSelected) {
-//     $('#photos-modal_{{ $listing->id }}').modal('toggle');
-//   }else {
-//     toast('please select all categories','error');
-//   }
-  
-// }
 
     $(function(){
         var listing_id = @json($listing->id);
@@ -330,7 +344,8 @@
                 $('#uploaderFile' + id).find('.photo-id').val( data.photo.id)
                 $('#uploaderFile' + id).find('.checked_main').attr('id','checked-main-uploaderFile' + id)
                 $('#uploaderFile' + id).find('.checked_main_hidden').attr('id','checked-main-uploaderFile' + id+'-hidden')
-
+               
+                $('#uploaderFile' + id).find('.listing-category-'+listing_id).attr('id','listing-category-' + id)
 
             },
             onUploadError: function(id, xhr, status, message){

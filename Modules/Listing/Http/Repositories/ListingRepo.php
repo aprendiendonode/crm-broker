@@ -265,12 +265,13 @@ class ListingRepo
                     if ($photo) {
                         $moved = ListingPhoto::create(
                             [
-                                'listing_id' => $listing->id,
-                                'main'       => $photo->main,
-                                'watermark'  => $photo->watermark,
-                                'active'     => $photo->active,
-                                'photo_main' => $request->checked_main_hidden[$key],
-                                'icon'       =>  $photo->icon,
+                                'listing_id'               => $listing->id,
+                                'main'                      => $photo->main,
+                                'watermark'                 => $photo->watermark,
+                                'active'                    => $photo->active,
+                                'photo_main'                => $request->checked_main_hidden[$key],
+                                'icon'                      =>  $photo->icon,
+                                'listing_category_id'       =>  $photo->listing_category_id,
                             ]
                         );
 
@@ -1242,6 +1243,46 @@ class ListingRepo
                 ListingPhoto::where('listing_id', $request->listing_id)->update(['photo_main' => 'no']);
 
                 ListingPhoto::findOrFail($request->id)->update(['photo_main' => 'yes']);
+
+                DB::commit();
+
+                return response()->json(['message' => trans('listing.updated')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+    public function update_listing_temporary_category($request)
+    {
+        if ($request->ajax()) {
+
+            try {
+                DB::beginTransaction();
+
+                $validator = '';
+                if ($request->table == 'temp') {
+                    $validator = Validator::make($request->all(), [
+                        'category_id' => ['required', 'exists:listing_categories,id'],
+                        'id'          => ['required', 'exists:temporary_listings_photos,id'],
+                    ]);
+                } else {
+                    $validator = Validator::make($request->all(), [
+                        'category_id' => ['required', 'exists:listing_categories,id'],
+                        'id'          => ['required', 'exists:listing_photos,id'],
+                    ]);
+                }
+
+                if ($validator->fails()) {
+
+                    return response()->json(['status' => 'failed', 'error' => $validator->errors()->all()[0]], 400);
+                }
+
+                if ($request->table == 'temp') {
+                    TemporaryListing::findOrFail($request->id)->update(['listing_category_id' => $request->category_id]);
+                } else {
+                    ListingPhoto::findOrFail($request->id)->update(['listing_category_id' => $request->category_id]);
+                }
 
                 DB::commit();
 
