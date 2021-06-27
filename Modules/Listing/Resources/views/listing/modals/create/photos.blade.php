@@ -3,7 +3,6 @@
     <div class="modal-dialog modal-full-width">
         <div class="modal-content">
             <div class="modal-header py-2">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
                 <div class="text-center mb-3">
@@ -63,8 +62,7 @@
             </div>
             
             <div class="modal-footer">  
-                <button type="button" class="btn btn-light" data-dismiss="modal">@lang('listing.close')</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                <button type="button" onclick="handleCloseModal()" class="btn btn-primary" aria-hidden="true">
                     @lang('listing.done')
                 </button>
             </div>
@@ -141,14 +139,17 @@
                 <a target="_blank" href="">enlarg</a>
             </div>
             <div>
+            <div class="form-group">
+            <label for="">Select a Gategory</label>
               <select class="form-control listing-category" >
-                <option>@lang('listing.select_category')</option>
+                <option value="">@lang('listing.select_category')</option>
                 @foreach($listing_categories as $category)
                   <option value="{{ $category->id }}">
                     {{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}
                   </option>
                 @endforeach
-            </select>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -184,8 +185,24 @@
   </script>
   
 <script>
+$('#photos-modal').modal({
+  show: false,
+  backdrop: 'static'
+})
+
+function handleCloseModal() {
+  let isAllSelected = ![...document.querySelectorAll('.listing-category')].some(el => el.value == '' );
+
+  if(isAllSelected) {
+    $('#photos-modal').modal('toggle');
+  }else {
+    toast('please select all categories','error');
+  }
+  
+}
+
+
 $(function(){
- 
   $('#drag-and-drop-zone').dmUploader({ 
     url: '{{ route("listing.temporary-photos") }}',
     extraData: {

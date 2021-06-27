@@ -2,7 +2,6 @@
     <div class="modal-dialog modal-full-width">
         <div class="modal-content">
             <div class="modal-header py-2">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
                 <div class="text-center mb-3">
@@ -137,8 +136,7 @@
             </div>
             
             <div class="modal-footer">  
-                <button type="button" class="btn btn-light" data-dismiss="modal">@lang('listing.close')</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                <button type="button" class="btn btn-primary" onclick="handleCloseModal()" aria-hidden="true">
                     @lang('listing.done')
                 </button>
             </div>
@@ -218,12 +216,15 @@
                 <a target="_blank" href="">@lang('listing.enlarg')</a>
             </div>
 
-
-            <select class="select2">
-                @foreach($listing_categories as $category)
-                   <option value="{{ $category->id }}">{{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}</option>
-                @endforeach
-            </select>
+            <div class="form-group">
+                <label for="">Select a Gategory</label>
+                <select class="form-control listing-category__{{ $listing->id }}">
+                    <option value="">@lang('listing.select_category')</option>
+                    @foreach($listing_categories as $category)
+                    <option value="{{ $category->id }}">{{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">@lang('listing.watermark')</label>
@@ -255,6 +256,22 @@
   </script>
   
 <script>
+// $('#photos-modal_{{ $listing->id }}').modal({
+//   show: false,
+//   backdrop: 'static'
+// })
+
+// function handleCloseModal() {
+//   let isAllSelected = ![...document.querySelectorAll('.listing-category__{{ $listing->id }}')].some(el => el.value == '' );
+
+//   if(isAllSelected) {
+//     $('#photos-modal_{{ $listing->id }}').modal('toggle');
+//   }else {
+//     toast('please select all categories','error');
+//   }
+  
+// }
+
     $(function(){
         var listing_id = @json($listing->id);
 
