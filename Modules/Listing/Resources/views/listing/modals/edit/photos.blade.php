@@ -50,8 +50,8 @@
 
                                     </div>
                                 
-                                    <input type="hidden" name="edit_photos_{{ $listing->id }}[]" class="listing_photos">
-                          <div class="media-body mb-1">
+                                    {{-- <input type="hidden" name="edit_photos_{{ $listing->id }}[]" class="listing_photos"> --}}
+                                    <div class="media-body mb-1">
                                             <div class="d-flex justify-content-between my-2">
                                             <div class="@if($photo->active != 'watermark') d-none @endif with-enlarg-watermark">
                                                 
@@ -76,10 +76,10 @@
                                                     <label for="waterMark" class="mb-0">@lang('listing.main')</label>
                                                 <input type="checkbox" 
                                                 id="checked-main-uploaderFile{{ $uniq_id }}"
-                                                 name="checked_main" class="checked_main" @if($photo->photo_main == 'yes') checked @endif onchange="updateMain(this,'main')">
+                                                 name="checked_main" class="checked_main" @if($photo->photo_main == 'yes') checked @endif onchange="updateMain(this,'main','{{ $listing->id }}')">
 
 
-                                                <input type="hidden"   id="checked-main-uploaderFile{{ $uniq_id }}-hidden" name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden" value="{{ $photo->photo_main }} ">
+                                                {{-- <input type="hidden"   id="checked-main-uploaderFile{{ $uniq_id }}-hidden" name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden" value="{{ $photo->photo_main }} "> --}}
                                                  
                                             </div>
                                             </div>

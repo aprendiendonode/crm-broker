@@ -1030,7 +1030,7 @@ function toggleWatermark(input,table){
 
 
     
-function updateMain(input,table){
+function updateMain(input,table,listing_id){
     var id         = input.id
     var sliced_id  = id.slice(13);
   
@@ -1052,7 +1052,7 @@ function updateMain(input,table){
         data:{
             _token: '{{ csrf_token() }}',
             id    : photo_id,
-            listing_id :'{{ $listing->id }}'
+            listing_id :listing_id
        
 
         },
