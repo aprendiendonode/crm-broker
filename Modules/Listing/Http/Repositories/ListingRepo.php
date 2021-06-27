@@ -266,6 +266,7 @@ class ListingRepo
                                 'watermark'  => $photo->watermark,
                                 'active'     => $photo->active,
                                 'photo_main' => $request->checked_main_hidden[$key],
+                                'icon'       =>  $photo->icon,
                             ]
                         );
 
@@ -282,6 +283,8 @@ class ListingRepo
                             }
                             $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
                             foreach ($files as $file) {
+
+
                                 File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
                             }
                             $removed_dir = public_path("temporary/listings/$photo->folder");
@@ -418,6 +421,7 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_created'), 'success'));
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e->getMessage());
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
         }
     }
@@ -844,16 +848,21 @@ class ListingRepo
             $main_photo_path = public_path('temporary/listings/' . $main_tmp_folder . '/' . $photo_name);
 
 
+            $icon_tmp_folder_path = public_path("temporary/listings/$main_tmp_folder/icon-$photo_name");
+
+
+            Image::make($main_photo_path)
+                ->resize(100, 100, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->save($icon_tmp_folder_path);
 
 
             $watermark = Watermark::where('agency_id', $request->agency)->where('active', 'yes')->first();
-
-
-
-
             // * image with full size and watermark
-            $with_watermark_tmp_folder_path = public_path("temporary/listings/$main_tmp_folder/mainWatermark-$photo_name");
 
+            $with_watermark_tmp_folder_path = public_path("temporary/listings/$main_tmp_folder/mainWatermark-$photo_name");
 
             if ($watermark) {
                 Image::make($main_photo_path)
@@ -868,7 +877,7 @@ class ListingRepo
                 'main' => $photo_name,
                 'watermark' => 'mainWatermark-' . $photo_name,
                 // 'borchure' => 'mainborchure-' . $photo_name,
-
+                'icon'      => 'icon-' . $photo_name,
                 'active' => 'watermark',
             ]);
             return [
@@ -1048,10 +1057,11 @@ class ListingRepo
                         $moved = ListingPhoto::create(
                             [
                                 'listing_id' => $listing->id,
-                                'main' => $photo->main,
-                                'watermark' => $photo->watermark,
-                                'active' => $photo->active,
+                                'main'       => $photo->main,
+                                'watermark'  => $photo->watermark,
+                                'active'     => $photo->active,
                                 'photo_main' => $check_hidden_photos[$key],
+                                'icon'       =>  $photo->icon,
                             ]
                         );
 
@@ -1210,7 +1220,7 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_modified'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }

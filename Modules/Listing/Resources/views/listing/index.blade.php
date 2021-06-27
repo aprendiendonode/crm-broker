@@ -187,7 +187,7 @@
         @include('listing::listing.filter')
 
         <div class="table-responsive">
-            <table class="table table-bordered toggle-circle mb-0">
+            <table class="table table-bordered toggle-circle mb-0" style="table-layout: fixed;">
                 <thead>
                     <tr>
                         <th># </th>
@@ -223,13 +223,24 @@
 
                                 @if($photo_table)
                                     @if($photo_table->main == 'main')
+                                    <a target="_blank" href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->main) }}">
+
+
+                             
                                     <img 
-                                    class="w-25"
-                                     src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->main) }}" alt="">
+                                    class="w-100"
+                                     src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
+
+                                    </a>
                                     @else
-                                    <img
-                                    class="w-25"
-                                     src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->watermark) }}" alt="">
+                                    <a
+                                    target="_blank"
+                                     href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->watermark) }}">
+                                     <img
+                                     class="w-100"
+                                      src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
+                                    </a>
+                                 
 
                                     @endif
                                 @endif
