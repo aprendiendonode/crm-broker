@@ -71,7 +71,7 @@
                         @forelse($permissions as $permission)
                         <tr>
                             <td>{{ str_replace('_', ' ', $permission->name) }}</td>
-                            <td>{{ $permission->group->name }}</td>
+                            <td>{{ str_replace('_', ' ', $permission->group->name) }}</td>
                               
                             <td>
                                 @include('superadmin::permissions.controlls')
