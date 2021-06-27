@@ -51,8 +51,7 @@
                                     </div>
                                 
                                     <input type="hidden" name="edit_photos_{{ $listing->id }}[]" class="listing_photos">
-                                
-                                        <div class="media-body mb-1">
+                          <div class="media-body mb-1">
                                             <div class="d-flex justify-content-between my-2">
                                             <div class="@if($photo->active != 'watermark') d-none @endif with-enlarg-watermark">
                                                 
@@ -73,6 +72,16 @@
                                                  id="watermark-uploaderFile{{ $uniq_id }}"
                                                  class="watermark" onchange="toggleWatermark(this,'main')">
                                                 </div>
+                                                <div class="form-group mb-0">
+                                                    <label for="waterMark" class="mb-0">@lang('listing.main')</label>
+                                                <input type="checkbox" 
+                                                id="checked-main-uploaderFile{{ $uniq_id }}"
+                                                 name="checked_main" class="checked_main" @if($photo->photo_main == 'yes') checked @endif onchange="updateMain(this,'main')">
+
+
+                                                <input type="hidden"   id="checked-main-uploaderFile{{ $uniq_id }}-hidden" name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden" value="{{ $photo->photo_main }} ">
+                                                 
+                                            </div>
                                             </div>
                                             </div>
                                             
@@ -213,6 +222,12 @@
                 <label for="waterMark" class="mb-0">@lang('listing.watermark')</label>
                 <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this,'temporary')">
               </div>
+
+              <div class="form-group mb-0">
+                <label for="waterMark" class="mb-0">@lang('listing.main')</label>
+                <input type="checkbox"  name="checked_main" class="checked_main" onchange="updateMain(this,'temporary')">
+                <input type="hidden"  name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden" value="no">
+              </div>
             </div>
           </div>
           
@@ -289,6 +304,8 @@
 
                 $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)
                 $('#uploaderFile' + id).find('.photo-id').val( data.photo.id)
+                $('#uploaderFile' + id).find('.checked_main').attr('id','checked-main-uploaderFile' + id)
+                $('#uploaderFile' + id).find('.checked_main_hidden').attr('id','checked-main-uploaderFile' + id+'-hidden')
 
 
             },

@@ -143,6 +143,11 @@
                 <label for="waterMark" class="mb-0">WaterMark</label>
                 <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this,'temporary')">
               </div>
+              <div class="form-group mb-0">
+                <label for="waterMark" class="mb-0">@lang('listing.main')</label>
+                <input type="checkbox"  name="checked_main" class="checked_main" onchange="updateMain(this,'temporary')">
+                <input type="hidden"  name="checked_main_hidden[]" class="checked_main_hidden" value="no">
+              </div>
             </div>
           </div>
           
@@ -219,6 +224,8 @@ $(function(){
       img.attr('src',path);
       link.attr('href',path);
       $('#uploaderFile' + id).find('.watermark').attr('id','watermark-uploaderFile' + id)
+      $('#uploaderFile' + id).find('.checked_main').attr('id','checked-main-uploaderFile' + id)
+      $('#uploaderFile' + id).find('.checked_main_hidden').attr('id','checked-main-uploaderFile' + id+'-hidden')
 
 
       $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)

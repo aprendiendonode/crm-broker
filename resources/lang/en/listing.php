@@ -258,6 +258,8 @@ return [
     'rented'                            => 'Rented',
     'listing_created'                => 'Listing Created',
     'select'                         => 'Select',
+    'status_updated' => 'Status Updated',
+    'main' => 'Main',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',

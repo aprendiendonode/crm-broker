@@ -16,8 +16,22 @@ use Modules\SuperAdmin\Entities\Community;
 use Modules\SuperAdmin\Entities\ListingType;
 use Modules\SuperAdmin\Entities\SubCommunity;
 
-class Listing extends Model implements Feedable
+use Spatie\MediaLibrary\Models\Media;
+
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+
+class Listing extends Model implements Feedable, HasMedia
 {
+    use HasMediaTrait;
+
+    public function registerMediaConversions(Media $media = null)
+    {
+        $this->addMediaConversion('thumb')
+            ->width(368)
+            ->height(232)
+            ->sharpen(10);
+    }
 
     public function toFeedItem(): FeedItem
     {
@@ -330,6 +344,7 @@ class Listing extends Model implements Feedable
             "edit_cheque_amount_" . $id                            => ['required', 'array'],
             "edit_cheque_percentage_" . $id                        => ['required', 'array'],
             "edit_photos_" . $id                                   => ['sometimes', 'nullable', 'array'],
+            "edit_checked_main_hidden_" . $id                      => ['sometimes', 'nullable', 'array'],
 
             // |regex:/^([0-9\s\-\+\(\)]*)$/
 

@@ -187,7 +187,7 @@
         @include('listing::listing.filter')
 
         <div class="table-responsive">
-            <table class="table table-bordered toggle-circle mb-0">
+            <table class="table table-bordered toggle-circle mb-0" style="table-layout: fixed;">
                 <thead>
                     <tr>
                         <th># </th>
@@ -217,6 +217,33 @@
                             <td>
                                 <i class="fas fa-plus-circle cursor-pointer show-hidden-data-{{ $listing->id }}" onclick="show_data({{ $listing->id }})"></i>
                                 <i class="fas fa-minus-circle cursor-pointer d-none hide-data-{{ $listing->id }}" onclick="hide_data({{ $listing->id }})"></i>
+                                @php 
+                                $photo_table = $listing->photos->where('photo_main','yes')->first();
+                                @endphp
+
+                                @if($photo_table)
+                                    @if($photo_table->main == 'main')
+                                    <a target="_blank" href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->main) }}">
+
+
+                             
+                                    <img 
+                                    class="w-100"
+                                     src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
+
+                                    </a>
+                                    @else
+                                    <a
+                                    target="_blank"
+                                     href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->watermark) }}">
+                                     <img
+                                     class="w-100"
+                                      src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
+                                    </a>
+                                 
+
+                                    @endif
+                                @endif
                             </td>
                             <td><a target="_blank" href="{{ route('listings.front',[$listing->id,$listing->listing_ref]) }}">{{ $listing->listing_ref }}</a></td>
                             <td>{{ Str::ucfirst($listing->purpose) }}</td>
@@ -967,6 +994,7 @@ function togglePlanWatermark(input,table){
 }
 
 function toggleWatermark(input,table){
+
     var id         = input.id
     var sliced_id  = id.slice(10);
     var  photo_id = $('#'+sliced_id+' .photo-id').val();
@@ -996,6 +1024,53 @@ function toggleWatermark(input,table){
 
         },
     })
+
+    }
+
+
+
+    
+function updateMain(input,table){
+    var id         = input.id
+    var sliced_id  = id.slice(13);
+  
+     $(' .checked_main').prop('checked',false);
+
+     $('.checked_main_hidden').val('no');
+
+     $('#'+input.id).prop('checked',true);
+
+     $('#'+input.id+'-hidden').val('yes');
+
+     var  photo_id = $('#'+sliced_id+' .photo-id').val();
+     if(table == 'main'){
+         console.log('main')
+
+         $.ajax({
+        url:'{{  route("listings.update-listing-main-photo") }}',
+        type:'POST',
+        data:{
+            _token: '{{ csrf_token() }}',
+            id    : photo_id,
+            listing_id :'{{ $listing->id }}'
+       
+
+        },
+        success: function(data){
+
+            $('#'+sliced_id+' .with-watermark').toggleClass('d-none')
+            $('#'+sliced_id+' .no-watermark').toggleClass('d-none')
+            $('#'+sliced_id+' .with-enlarg-watermark').toggleClass('d-none')
+            $('#'+sliced_id+' .no-enlarg-watermark').toggleClass('d-none')
+
+
+
+        },
+        error: function(error){
+
+        },
+    })
+     }
 
     }
 </script>
