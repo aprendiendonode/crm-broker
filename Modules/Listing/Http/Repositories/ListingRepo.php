@@ -1068,6 +1068,7 @@ class ListingRepo
                                 'active'     => $photo->active,
                                 'photo_main' => $check_hidden_photos[$key],
                                 'icon'       =>  $photo->icon,
+                                'listing_category_id'       =>  $photo->listing_category_id,
                             ]
                         );
 
