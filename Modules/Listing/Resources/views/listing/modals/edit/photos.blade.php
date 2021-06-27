@@ -217,6 +217,13 @@
             <div class="d-none no-enlarg-watermark">
                 <a target="_blank" href="">@lang('listing.enlarg')</a>
             </div>
+
+
+            <select class="select2">
+                @foreach($listing_categories as $category)
+                   <option value="{{ $category->id }}">{{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}</option>
+                @endforeach
+            </select>
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">@lang('listing.watermark')</label>

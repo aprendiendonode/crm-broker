@@ -260,6 +260,7 @@ return [
     'select'                         => 'Select',
     'status_updated' => 'Status Updated',
     'main' => 'Main',
+    'select_category' => 'Select A Category',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',

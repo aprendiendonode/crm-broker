@@ -130,6 +130,8 @@
 
         <div class="media-body mb-1">
           <div class="d-flex justify-content-between my-2">
+
+            <div>
             <div class="with-enlarg-watermark">
                 
                 <a target="_blank" href="">enlarg</a>
@@ -138,6 +140,20 @@
             <div class="d-none no-enlarg-watermark">
                 <a target="_blank" href="">enlarg</a>
             </div>
+            <div>
+              <select class="form-control listing-category" >
+                <option>@lang('listing.select_category')</option>
+                @foreach($listing_categories as $category)
+                  <option value="{{ $category->id }}">
+                    {{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}
+                  </option>
+                @endforeach
+            </select>
+          </div>
+        </div>
+
+
+
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">WaterMark</label>
@@ -226,6 +242,9 @@ $(function(){
       $('#uploaderFile' + id).find('.watermark').attr('id','watermark-uploaderFile' + id)
       $('#uploaderFile' + id).find('.checked_main').attr('id','checked-main-uploaderFile' + id)
       $('#uploaderFile' + id).find('.checked_main_hidden').attr('id','checked-main-uploaderFile' + id+'-hidden')
+
+
+      $('#uploaderFile' + id).find('.listing-category').attr('id','listing-category-' + id)
 
 
       $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)

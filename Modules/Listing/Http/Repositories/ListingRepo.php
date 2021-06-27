@@ -175,6 +175,10 @@ class ListingRepo
                     cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
                         return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
                     }),
+                    'listing_categories'        =>
+                    cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('listing_categories')->get();
+                    }),
 
 
                     'all_count'     => $agency->listings_all_count,
