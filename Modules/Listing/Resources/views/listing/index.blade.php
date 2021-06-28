@@ -1031,8 +1031,26 @@ function toggleWatermark(input,table){
 
     
 function updateMain(input,table,listing_id){
+ 
+    // checked-main-uploaderFile89ljjtz9nx check box
+    // 89ljjtz9nx  select
+
     var id         = input.id
     var sliced_id  = id.slice(13);
+
+    var slicedForListingCategory = sliced_id.slice(12);
+
+    if($('#listing-category-'+slicedForListingCategory).val() == ''){
+        toast("Please Select a Category First",'error')
+        $('#'+input.id).prop('checked',false);
+        return false; 
+    }
+    if($('#listing-category-'+slicedForListingCategory).find(':selected').data('allowed') == 'no'){
+        toast("This Category Not Allowed To be Main Photo",'error')
+        $('#'+input.id).prop('checked',false);
+        return false;
+    }
+
   
      $(' .checked_main').prop('checked',false);
 
@@ -1041,10 +1059,9 @@ function updateMain(input,table,listing_id){
      $('#'+input.id).prop('checked',true);
 
      $('#'+input.id+'-hidden').val('yes');
-
      var  photo_id = $('#'+sliced_id+' .photo-id').val();
      if(table == 'main'){
-         console.log('main')
+        
 
          $.ajax({
         url:'{{  route("listings.update-listing-main-photo") }}',
@@ -1058,13 +1075,6 @@ function updateMain(input,table,listing_id){
         },
         success: function(data){
 
-            $('#'+sliced_id+' .with-watermark').toggleClass('d-none')
-            $('#'+sliced_id+' .no-watermark').toggleClass('d-none')
-            $('#'+sliced_id+' .with-enlarg-watermark').toggleClass('d-none')
-            $('#'+sliced_id+' .no-enlarg-watermark').toggleClass('d-none')
-
-
-
         },
         error: function(error){
 
@@ -1073,6 +1083,54 @@ function updateMain(input,table,listing_id){
      }
 
     }
+
+
+   function updateListingCategory(input,table){
+
+    var id         = input.id
+    var sliced_id  = id.slice(17);
+    var  photo_id = $('#uploaderFile'+sliced_id+' .photo-id').val();
+
+
+    var category_id = $('#'+input.id).val()
+
+ 
+
+        $.ajax({
+        url:'{{  route("listings.update-listing-temporary-category") }}',
+        type:'POST',
+        data:{
+            _token: '{{ csrf_token() }}',
+            id          : photo_id,
+            category_id : category_id,
+            table : table
+       
+        },
+        success: function(data){
+
+            toast(data.message,'success')
+        },
+        error: function(error){
+
+        },
+    })
+
+        
+    }
+
+    function handleCloseModal(listing) {
+      
+
+  let isAllSelected = ![...document.querySelectorAll('.listing-category-'+listing)].some(el => el.value == '' );
+
+  if(isAllSelected) {
+    $('#photos-modal_'+listing).modal('toggle');
+  }else {
+    toast('please select all categories','error');
+  }
+  
+}
+
 </script>
 @endpush
 

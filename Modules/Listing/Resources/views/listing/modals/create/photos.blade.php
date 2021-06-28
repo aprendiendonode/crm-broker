@@ -3,7 +3,6 @@
     <div class="modal-dialog modal-full-width">
         <div class="modal-content">
             <div class="modal-header py-2">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
                 <div class="text-center mb-3">
@@ -63,8 +62,7 @@
             </div>
             
             <div class="modal-footer">  
-                <button type="button" class="btn btn-light" data-dismiss="modal">@lang('listing.close')</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                <button type="button" onclick="handleCreateCloseModal()" class="btn btn-primary" aria-hidden="true">
                     @lang('listing.done')
                 </button>
             </div>
@@ -130,6 +128,8 @@
 
         <div class="media-body mb-1">
           <div class="d-flex justify-content-between my-2">
+
+            <div>
             <div class="with-enlarg-watermark">
                 
                 <a target="_blank" href="">enlarg</a>
@@ -138,6 +138,25 @@
             <div class="d-none no-enlarg-watermark">
                 <a target="_blank" href="">enlarg</a>
             </div>
+            <div>
+            <div class="form-group">
+            <label for="">Select a Gategory</label>
+              <select class="form-control listing-category" onchange="updateListingCategory(this,'temp')" >
+                <option value="">@lang('listing.select_category')</option>
+                @foreach($listing_categories as $category)
+                  <option 
+                  data-allowed="{{ $category->allowed }}"
+                  value="{{ $category->id }}">
+                    {{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+        </div>
+
+
+
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">WaterMark</label>
@@ -168,8 +187,26 @@
   </script>
   
 <script>
+$('#photos-modal').modal({
+  show: false,
+  backdrop: 'static'
+})
+
+function handleCreateCloseModal() {
+  let isAllSelected = ![...document.querySelectorAll('.listing-category')].some(el => el.value == '' );
+
+  console.log('here')
+  if(isAllSelected) {
+    console.log('off')
+    $('#photos-modal').modal('toggle');
+  }else {
+    toast('please select all categories','error');
+  }
+  
+}
+
+
 $(function(){
- 
   $('#drag-and-drop-zone').dmUploader({ 
     url: '{{ route("listing.temporary-photos") }}',
     extraData: {
@@ -226,6 +263,9 @@ $(function(){
       $('#uploaderFile' + id).find('.watermark').attr('id','watermark-uploaderFile' + id)
       $('#uploaderFile' + id).find('.checked_main').attr('id','checked-main-uploaderFile' + id)
       $('#uploaderFile' + id).find('.checked_main_hidden').attr('id','checked-main-uploaderFile' + id+'-hidden')
+
+
+      $('#uploaderFile' + id).find('.listing-category').attr('id','listing-category-' + id)
 
 
       $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)

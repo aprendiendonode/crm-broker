@@ -89,6 +89,10 @@
                     callback: 'initMap',
                 });
 
+                $('#photos-modal_'+row_id).modal({
+                    show: false,
+                    backdrop: 'static'
+                    })
                 ClassicEditor
                     .create(document.querySelector('#edit_description_en_' + row_id))
                     .then()

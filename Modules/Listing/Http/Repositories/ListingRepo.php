@@ -60,6 +60,8 @@ class ListingRepo
     public function index($agency)
     {
 
+
+        cache()->forget('listing_categories');
         try {
             $pagination = true;
             $business = auth()->user()->business_id;
@@ -75,8 +77,6 @@ class ListingRepo
 
             ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
-
-
             $listings_query = Listing::with([
                 'tasks', 'agent',
                 'tasks.addBy',
@@ -90,14 +90,10 @@ class ListingRepo
 
             ])->where('agency_id', $agency->id)->where('business_id', $business);
 
-
-
             if (request()->has('status_main')) {
                 $listings_query->where('status', request()->status_main);
             }
 
-
-            //filter
             if (request('purpose')) {
                 $listings_query->where('purpose', request('purpose'));
             }
@@ -119,7 +115,6 @@ class ListingRepo
                     $q->where('id', $type);
                 });
             }
-
 
             if (request('min_bed')) {
                 if (request('min_bed') == 'studio') {
@@ -174,6 +169,10 @@ class ListingRepo
                     'sub_communities'        =>
                     cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
                         return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
+                    }),
+                    'listing_categories'        =>
+                    cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('listing_categories')->get();
                     }),
 
 
@@ -261,12 +260,13 @@ class ListingRepo
                     if ($photo) {
                         $moved = ListingPhoto::create(
                             [
-                                'listing_id' => $listing->id,
-                                'main'       => $photo->main,
-                                'watermark'  => $photo->watermark,
-                                'active'     => $photo->active,
-                                'photo_main' => $request->checked_main_hidden[$key],
-                                'icon'       =>  $photo->icon,
+                                'listing_id'               => $listing->id,
+                                'main'                      => $photo->main,
+                                'watermark'                 => $photo->watermark,
+                                'active'                    => $photo->active,
+                                'photo_main'                => $request->checked_main_hidden[$key],
+                                'icon'                      =>  $photo->icon,
+                                'listing_category_id'       =>  $photo->listing_category_id,
                             ]
                         );
 
@@ -1062,7 +1062,8 @@ class ListingRepo
                                 'watermark'  => $photo->watermark,
                                 'active'     => $photo->active,
                                 'photo_main' => $check_hidden_photos[$key],
-                                'icon'       =>  $photo->icon,
+                                'icon'       => $photo->icon,
+                                'listing_category_id'       =>  $photo->listing_category_id,
                             ]
                         );
 
@@ -1238,6 +1239,46 @@ class ListingRepo
                 ListingPhoto::where('listing_id', $request->listing_id)->update(['photo_main' => 'no']);
 
                 ListingPhoto::findOrFail($request->id)->update(['photo_main' => 'yes']);
+
+                DB::commit();
+
+                return response()->json(['message' => trans('listing.updated')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+    public function update_listing_temporary_category($request)
+    {
+        if ($request->ajax()) {
+
+            try {
+                DB::beginTransaction();
+
+                $validator = '';
+                if ($request->table == 'temp') {
+                    $validator = Validator::make($request->all(), [
+                        'category_id' => ['required', 'exists:listing_categories,id'],
+                        'id'          => ['required', 'exists:temporary_listings_photos,id'],
+                    ]);
+                } else {
+                    $validator = Validator::make($request->all(), [
+                        'category_id' => ['required', 'exists:listing_categories,id'],
+                        'id'          => ['required', 'exists:listing_photos,id'],
+                    ]);
+                }
+
+                if ($validator->fails()) {
+
+                    return response()->json(['status' => 'failed', 'error' => $validator->errors()->all()[0]], 400);
+                }
+
+                if ($request->table == 'temp') {
+                    TemporaryListing::findOrFail($request->id)->update(['listing_category_id' => $request->category_id]);
+                } else {
+                    ListingPhoto::findOrFail($request->id)->update(['listing_category_id' => $request->category_id]);
+                }
 
                 DB::commit();
 
