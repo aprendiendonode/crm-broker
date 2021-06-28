@@ -195,7 +195,6 @@ $('#photos-modal').modal({
 function handleCreateCloseModal() {
   let isAllSelected = ![...document.querySelectorAll('.listing-category')].some(el => el.value == '' );
 
-  console.log('here')
   if(isAllSelected) {
     console.log('off')
     $('#photos-modal').modal('toggle');
