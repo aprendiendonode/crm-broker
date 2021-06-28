@@ -1031,8 +1031,26 @@ function toggleWatermark(input,table){
 
     
 function updateMain(input,table,listing_id){
+ 
+    // checked-main-uploaderFile89ljjtz9nx check box
+    // 89ljjtz9nx  select
+
     var id         = input.id
     var sliced_id  = id.slice(13);
+
+    var slicedForListingCategory = sliced_id.slice(12);
+
+    if($('#listing-category-'+slicedForListingCategory).val() == ''){
+        toast("Please Select a Category First",'error')
+        $('#'+input.id).prop('checked',false);
+        return false; 
+    }
+    if($('#listing-category-'+slicedForListingCategory).find(':selected').data('allowed') == 'no'){
+        toast("This Category Not Allowed To be Main Photo",'error')
+        $('#'+input.id).prop('checked',false);
+        return false;
+    }
+
   
      $(' .checked_main').prop('checked',false);
 

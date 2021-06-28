@@ -73,6 +73,7 @@
                                                     <option value="">@lang('listing.select_category')</option>
                                                     @foreach($listing_categories as $category)
                                                       <option
+                                                      data-allowed="{{ $category->allowed }}"
                                                        value="{{ $category->id }}"
                                                         @if($photo->listing_category_id == $category->id) selected @endif
                                                         >
