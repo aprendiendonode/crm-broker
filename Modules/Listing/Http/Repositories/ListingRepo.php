@@ -421,7 +421,7 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_created'), 'success'));
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
         }
     }
@@ -873,8 +873,8 @@ class ListingRepo
 
 
             $temporary_photo = TemporaryListing::create([
-                'folder' => $main_tmp_folder,
-                'main' => $photo_name,
+                'folder'    => $main_tmp_folder,
+                'main'      => $photo_name,
                 'watermark' => 'mainWatermark-' . $photo_name,
                 // 'borchure' => 'mainborchure-' . $photo_name,
                 'icon'      => 'icon-' . $photo_name,
@@ -1049,6 +1049,7 @@ class ListingRepo
                 foreach ($photos as $key => $folder) {
                     $photo = TemporaryListing::where('folder', $folder)->first();
                     if ($photo) {
+
                         if (in_array('yes', $check_hidden_photos)) {
                             ListingPhoto::where('listing_id', $listing->id)->update(['photo_main' => 'no']);
                         }
@@ -1220,7 +1221,7 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_modified'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             DB::rollBack();
-
+            dd($e->getMessage());
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }
@@ -1232,7 +1233,6 @@ class ListingRepo
 
             try {
                 DB::beginTransaction();
-
 
 
                 ListingPhoto::where('listing_id', $request->listing_id)->update(['photo_main' => 'no']);
