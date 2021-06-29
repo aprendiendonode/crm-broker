@@ -209,4 +209,12 @@ class ListingController extends Controller
     {
         return $this->repository->get_sub_communities($request);
     }
+    public function statistics($agency)
+    {
+        return $this->repository->statistics($agency);
+    }
+    public function statistics_process(Request $request)
+    {
+        return $this->repository->statistics_process($request);
+    }
 }

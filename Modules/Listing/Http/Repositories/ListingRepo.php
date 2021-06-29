@@ -2,6 +2,9 @@
 
 namespace Modules\Listing\Http\Repositories;
 
+use App\Imports\StatisticsImport;
+use App\Jobs\ImportStatisticsSheet;
+use App\Jobs\StartLeadsInsertJobs;
 use PDF;
 use File;
 use Gate;
@@ -76,7 +79,6 @@ class ListingRepo
             ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
 
-
             $listings_query = Listing::with([
                 'tasks', 'agent',
                 'tasks.addBy',
@@ -87,9 +89,7 @@ class ListingRepo
                 'city', 'community', 'subCommunity',
 
 
-
             ])->where('agency_id', $agency->id)->where('business_id', $business);
-
 
 
             if (request()->has('status_main')) {
@@ -138,54 +138,54 @@ class ListingRepo
             return view(
                 'listing::listing.index',
                 [
-                    'agency_data'   => $agency,
-                    'agency'        => $agency->id,
+                    'agency_data' => $agency,
+                    'agency' => $agency->id,
                     'agency_region' => $agency->country ? $agency->country->iso2 : '',
 
-                    'staffs'        => staff($agency->id),
+                    'staffs' => staff($agency->id),
                     'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
                         return DB::table('listing_types')->get();
                     }),
                     'listing_views' => $agency->listing_views,
-                    'listings'      => $listings_query->paginate($per_page),
-                    'ref_ids'       => $listings_query->pluck('listing_ref')->unique(),
-                    'pagination'    => $pagination,
-                    'locations'     => $listings_query->pluck('location')->unique(),
-                    'business'      => $business,
-                    'lead_sources'  => $agency->lead_sources,
-                    'task_status'   => $agency->task_status,
-                    'task_types'    => $agency->task_types,
-                    'developers'    => $agency->developers,
-                    'cheques'       => $agency->cheques,
-                    'landlords'     => $agency->landlords,
-                    'tenants'       => $agency->tenants,
-                    'portals'       =>
-                    cache()->remember('portals', 60 * 60 * 24, function () {
-                        return DB::table('portals')->get();
-                    }),
-                    'cities'        =>
-                    cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
-                        return DB::table('cities')->where('country_id', $agency->country_id)->get();
-                    }),
-                    'communities'        =>
-                    cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
-                        return DB::table('communities')->where('country_id', $agency->country_id)->get();
-                    }),
-                    'sub_communities'        =>
-                    cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
-                        return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
-                    }),
-                    'listing_categories'        =>
-                    cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
-                        return DB::table('listing_categories')->get();
-                    }),
+                    'listings' => $listings_query->paginate($per_page),
+                    'ref_ids' => $listings_query->pluck('listing_ref')->unique(),
+                    'pagination' => $pagination,
+                    'locations' => $listings_query->pluck('location')->unique(),
+                    'business' => $business,
+                    'lead_sources' => $agency->lead_sources,
+                    'task_status' => $agency->task_status,
+                    'task_types' => $agency->task_types,
+                    'developers' => $agency->developers,
+                    'cheques' => $agency->cheques,
+                    'landlords' => $agency->landlords,
+                    'tenants' => $agency->tenants,
+                    'portals' =>
+                        cache()->remember('portals', 60 * 60 * 24, function () {
+                            return DB::table('portals')->get();
+                        }),
+                    'cities' =>
+                        cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                            return DB::table('cities')->where('country_id', $agency->country_id)->get();
+                        }),
+                    'communities' =>
+                        cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
+                            return DB::table('communities')->where('country_id', $agency->country_id)->get();
+                        }),
+                    'sub_communities' =>
+                        cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
+                            return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
+                        }),
+                    'listing_categories' =>
+                        cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
+                            return DB::table('listing_categories')->get();
+                        }),
 
 
-                    'all_count'     => $agency->listings_all_count,
+                    'all_count' => $agency->listings_all_count,
                     'archive_count' => $agency->listings_archive_count,
-                    'review_count'  => $agency->listings_review_count,
-                    'draft_count'   => $agency->listings_draft_count,
-                    'live_count'    => $agency->listings_live_count,
+                    'review_count' => $agency->listings_review_count,
+                    'draft_count' => $agency->listings_draft_count,
+                    'live_count' => $agency->listings_live_count,
                     'descriptionTemplates' => $agency->descriptionTemplates
                 ]
             );
@@ -260,18 +260,18 @@ class ListingRepo
                     mkdir(public_path("listings/photos"));
                 }
 
-                foreach ($photos as $key =>  $folder) {
+                foreach ($photos as $key => $folder) {
                     $photo = TemporaryListing::where('folder', $folder)->first();
                     if ($photo) {
                         $moved = ListingPhoto::create(
                             [
-                                'listing_id'               => $listing->id,
-                                'main'                      => $photo->main,
-                                'watermark'                 => $photo->watermark,
-                                'active'                    => $photo->active,
-                                'photo_main'                => $request->checked_main_hidden[$key],
-                                'icon'                      =>  $photo->icon,
-                                'listing_category_id'       =>  $photo->listing_category_id,
+                                'listing_id' => $listing->id,
+                                'main' => $photo->main,
+                                'watermark' => $photo->watermark,
+                                'active' => $photo->active,
+                                'photo_main' => $request->checked_main_hidden[$key],
+                                'icon' => $photo->icon,
+                                'listing_category_id' => $photo->listing_category_id,
                             ]
                         );
 
@@ -444,7 +444,7 @@ class ListingRepo
                     'name' => ['required', 'string', 'max:225'],
                     'email' => [
                         'sometimes', 'nullable', 'email', 'string', 'max:225',
-                        Rule::unique('clients', 'email1'),  Rule::unique('clients', 'email2'),
+                        Rule::unique('clients', 'email1'), Rule::unique('clients', 'email2'),
 
                     ],
                     'phone' => [
@@ -456,11 +456,6 @@ class ListingRepo
                     'agency' => ['required', 'integer', 'exists:agencies,id'],
                     'business' => ['required', 'integer', 'exists:businesses,id']
                 ]);
-
-
-
-
-
 
 
                 if ($validator->fails()) {
@@ -518,7 +513,6 @@ class ListingRepo
                 }
 
 
-
                 $check_unique_emails = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
 
                     $query->where([
@@ -570,11 +564,6 @@ class ListingRepo
 
                     return response()->json(['message' => trans('sales.existing_phone_in_opportunities') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
                 }
-
-
-
-
-
 
 
                 $tenant_type = LeadType::firstOrCreate(
@@ -622,7 +611,7 @@ class ListingRepo
                     'name' => ['required', 'string', 'max:225'],
                     'email' => [
                         'sometimes', 'nullable', 'email', 'string', 'max:225',
-                        Rule::unique('clients', 'email1'),  Rule::unique('clients', 'email2'),
+                        Rule::unique('clients', 'email1'), Rule::unique('clients', 'email2'),
 
                     ],
                     'phone' => [
@@ -690,7 +679,6 @@ class ListingRepo
                 }
 
 
-
                 $check_unique_emails = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
 
                     $query->where([
@@ -742,9 +730,6 @@ class ListingRepo
 
                     return response()->json(['message' => trans('sales.existing_phone_in_opportunities') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
                 }
-
-
-
 
 
                 $landlord_type = LeadType::firstOrCreate(
@@ -876,13 +861,12 @@ class ListingRepo
             }
 
 
-
             $temporary_photo = TemporaryListing::create([
-                'folder'    => $main_tmp_folder,
-                'main'      => $photo_name,
+                'folder' => $main_tmp_folder,
+                'main' => $photo_name,
                 'watermark' => 'mainWatermark-' . $photo_name,
                 // 'borchure' => 'mainborchure-' . $photo_name,
-                'icon'      => 'icon-' . $photo_name,
+                'icon' => 'icon-' . $photo_name,
                 'active' => 'watermark',
             ]);
             return [
@@ -921,7 +905,6 @@ class ListingRepo
 
             // * image with full size and watermark
             $with_watermark_tmp_folder_path = public_path("temporary/plans/$main_tmp_folder/mainWatermark-$plan_name");
-
 
 
             $watermark = Watermark::where('agency_id', $request->agency)->where('active', 'yes')->first();
@@ -1063,12 +1046,12 @@ class ListingRepo
                         $moved = ListingPhoto::create(
                             [
                                 'listing_id' => $listing->id,
-                                'main'       => $photo->main,
-                                'watermark'  => $photo->watermark,
-                                'active'     => $photo->active,
+                                'main' => $photo->main,
+                                'watermark' => $photo->watermark,
+                                'active' => $photo->active,
                                 'photo_main' => $check_hidden_photos[$key],
-                                'icon'       =>  $photo->icon,
-                                'listing_category_id'       =>  $photo->listing_category_id,
+                                'icon' => $photo->icon,
+                                'listing_category_id' => $photo->listing_category_id,
                             ]
                         );
 
@@ -1254,6 +1237,7 @@ class ListingRepo
             }
         }
     }
+
     public function update_listing_temporary_category($request)
     {
         if ($request->ajax()) {
@@ -1265,12 +1249,12 @@ class ListingRepo
                 if ($request->table == 'temp') {
                     $validator = Validator::make($request->all(), [
                         'category_id' => ['required', 'exists:listing_categories,id'],
-                        'id'          => ['required', 'exists:temporary_listings_photos,id'],
+                        'id' => ['required', 'exists:temporary_listings_photos,id'],
                     ]);
                 } else {
                     $validator = Validator::make($request->all(), [
                         'category_id' => ['required', 'exists:listing_categories,id'],
-                        'id'          => ['required', 'exists:listing_photos,id'],
+                        'id' => ['required', 'exists:listing_photos,id'],
                     ]);
                 }
 
@@ -1294,6 +1278,7 @@ class ListingRepo
             }
         }
     }
+
     public function brochure($request, $type, $listing)
     {
         $listing = Listing::findorfail($listing);
@@ -2197,6 +2182,7 @@ class ListingRepo
 
         return Excel::download(new ListingsExport($agency), 'listings-list.xlsx');
     }
+
     public function get_communities($request)
     {
 
@@ -2215,6 +2201,7 @@ class ListingRepo
             }
         }
     }
+
     public function get_sub_communities($request)
     {
 
@@ -2232,10 +2219,41 @@ class ListingRepo
     }
 
 
-
     public function show($listing_id, $listing_ref)
     {
         $listing = Listing::with(['agency', 'agent'])->where('id', $listing_id)->firstOrFail();
         return view('listing::listing.front', ['listing' => $listing]);
+    }
+
+    public function statistics($agency)
+    {
+        return view('listing::listing.upload_statistics_sheet', compact('agency'));
+    }
+
+    public function statistics_process($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|file|mimes:xlsx,csv,xls'
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'));
+            }
+
+            $business = auth()->user()->business_id;
+            $agency = request('agency');
+            $statistics_file = time() . $request->file->getClientOriginalName();
+
+            $request->file->move(public_path('statistics_sheets'), $statistics_file);
+            StartLeadsInsertJobs::withChain([
+                new ImportStatisticsSheet($business,$agency,$statistics_file)
+            ])->dispatch();
+
+            return back()->with(flash(trans('listing.sheet_import_process_start'), 'success'));
+        } catch (\Exception $e) {
+            throw $e;
+            return back()->with(flash(trans('agency.something_went_wrong'), 'error'));
+        }
     }
 }
