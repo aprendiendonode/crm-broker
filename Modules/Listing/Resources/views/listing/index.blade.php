@@ -363,7 +363,7 @@
                             @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else d-none @endif
                             "
                              >
-                            <td colspan="14">
+                            <td colspan="13">
 
                                 @include('listing::listing.edit.index')
 
@@ -376,7 +376,7 @@
                             @if( (session()->has('open-portals-tab') && session('open-portals-tab') ==  $listing->id ))
                               @else d-none @endif
                             "   >
-                            <td colspan="14">
+                            <td colspan="13">
 
                                 @include('listing::listing.portals')
 
@@ -387,7 +387,7 @@
                             @if( (session()->has('open-notes-tab') && session('open-notes-tab') ==  $listing->id ))
                               @else d-none @endif
                             "   >
-                            <td colspan="14">
+                            <td colspan="13">
 
                                 @include('listing::listing.notes')
 
@@ -397,7 +397,7 @@
                             @if( (session()->has('open-borchures-tab') && session('open-borchures-tab') ==  $listing->id ))
                               @else d-none @endif
                             "   >
-                            <td colspan="14">
+                            <td colspan="13">
 
                                 @include('listing::listing.borchures')
 
@@ -412,7 +412,7 @@
                             @else d-none @endif
 
                             "  >
-                            <td colspan="14">
+                            <td colspan="13">
 
                                 @include('listing::listing.tasks.tasks')
 
@@ -1031,8 +1031,26 @@ function toggleWatermark(input,table){
 
     
 function updateMain(input,table,listing_id){
+ 
+    // checked-main-uploaderFile89ljjtz9nx check box
+    // 89ljjtz9nx  select
+
     var id         = input.id
     var sliced_id  = id.slice(13);
+
+    var slicedForListingCategory = sliced_id.slice(12);
+
+    if($('#listing-category-'+slicedForListingCategory).val() == ''){
+        toast("Please Select a Category First",'error')
+        $('#'+input.id).prop('checked',false);
+        return false; 
+    }
+    if($('#listing-category-'+slicedForListingCategory).find(':selected').data('allowed') == 'no'){
+        toast("This Category Not Allowed To be Main Photo",'error')
+        $('#'+input.id).prop('checked',false);
+        return false;
+    }
+
   
      $(' .checked_main').prop('checked',false);
 

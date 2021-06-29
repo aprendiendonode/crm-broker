@@ -63,6 +63,8 @@ class ListingRepo
     public function index($agency)
     {
 
+
+        cache()->forget('listing_categories');
         try {
             $pagination = true;
             $business = auth()->user()->business_id;
@@ -77,7 +79,6 @@ class ListingRepo
                 'descriptionTemplates'
 
             ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
-
 
             $listings_query = Listing::with([
                 'tasks', 'agent',
@@ -96,8 +97,6 @@ class ListingRepo
                 $listings_query->where('status', request()->status_main);
             }
 
-
-            //filter
             if (request('purpose')) {
                 $listings_query->where('purpose', request('purpose'));
             }
@@ -119,7 +118,6 @@ class ListingRepo
                     $q->where('id', $type);
                 });
             }
-
 
             if (request('min_bed')) {
                 if (request('min_bed') == 'studio') {
@@ -1050,8 +1048,8 @@ class ListingRepo
                                 'watermark' => $photo->watermark,
                                 'active' => $photo->active,
                                 'photo_main' => $check_hidden_photos[$key],
-                                'icon' => $photo->icon,
-                                'listing_category_id' => $photo->listing_category_id,
+                                'icon'       => $photo->icon,
+                                'listing_category_id'       =>  $photo->listing_category_id
                             ]
                         );
 
@@ -2252,7 +2250,7 @@ class ListingRepo
 
             return back()->with(flash(trans('listing.sheet_import_process_start'), 'success'));
         } catch (\Exception $e) {
-            throw $e;
+//            throw $e;
             return back()->with(flash(trans('agency.something_went_wrong'), 'error'));
         }
     }

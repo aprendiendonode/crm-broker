@@ -62,7 +62,7 @@
             </div>
             
             <div class="modal-footer">  
-                <button type="button" onclick="handleCloseModal()" class="btn btn-primary" aria-hidden="true">
+                <button type="button" onclick="handleCreateCloseModal()" class="btn btn-primary" aria-hidden="true">
                     @lang('listing.done')
                 </button>
             </div>
@@ -144,7 +144,9 @@
               <select class="form-control listing-category" onchange="updateListingCategory(this,'temp')" >
                 <option value="">@lang('listing.select_category')</option>
                 @foreach($listing_categories as $category)
-                  <option value="{{ $category->id }}">
+                  <option 
+                  data-allowed="{{ $category->allowed }}"
+                  value="{{ $category->id }}">
                     {{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}
                   </option>
                 @endforeach
@@ -190,10 +192,11 @@ $('#photos-modal').modal({
   backdrop: 'static'
 })
 
-function handleCloseModal() {
+function handleCreateCloseModal() {
   let isAllSelected = ![...document.querySelectorAll('.listing-category')].some(el => el.value == '' );
 
   if(isAllSelected) {
+    console.log('off')
     $('#photos-modal').modal('toggle');
   }else {
     toast('please select all categories','error');

@@ -28,31 +28,31 @@ use Illuminate\Support\Facades\Validator;
 Route::put('campain-leads-facebook/{business_token}/{agency_token}', function (Request $request, $business_token, $agency_token) {
     try {
 
-        $validator = Validator::make($request->all(), [
-            "platform"               => ['required'],
-
-            "full_name"              => ['required', 'string', 'max:255'],
-            "email"                  =>  ['required', 'email', 'string'],
-            "phone_number"                 => ['required'],
-            //             "city"                => => ['required'] ,
-
-            'created_time'             =>  ['required'],
-            'campaign_id'            => ['required', 'string'],
-            'campaign_name'          => ['required', 'string'],
-            'id'                   => ['required', 'string'],
-            'form_id'               =>  ['required', 'string'],
-            'ad_id'                => ['required', 'string'],
-            'ad_name'              => ['required', 'string'],
-            'adset_name'   => ['required', 'string'],
-
-
-
-        ]);
-
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()->all()[0]], 400);
-        }
+//        $validator = Validator::make($request->all(), [
+//            "platform"               => ['required'],
+//
+//            "full_name"              => ['required', 'string', 'max:255'],
+//            "email"                  =>  ['required', 'email', 'string'],
+//            "phone_number"                 => ['required'],
+//            //             "city"                => => ['required'] ,
+//
+//            'created_time'             =>  ['required'],
+//            'campaign_id'            => ['required', 'string'],
+//            'campaign_name'          => ['required', 'string'],
+//            'id'                   => ['required', 'string'],
+//            'form_id'               =>  ['required', 'string'],
+//            'ad_id'                => ['required', 'string'],
+//            'ad_name'              => ['required', 'string'],
+//            'adset_name'   => ['required', 'string'],
+//
+//
+//
+//        ]);
+//
+//
+//        if ($validator->fails()) {
+//            return response()->json(['error' => $validator->errors()->all()], 400);
+//        }
 
         $business = Business::where('business_token', $business_token)->firstOrFail();
         $agency   = Agency::where('business_id', $business->id)->where('agency_token', $agency_token)->firstOrFail();

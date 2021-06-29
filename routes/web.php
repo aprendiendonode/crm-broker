@@ -26,6 +26,8 @@ use Spatie\ArrayToXml\ArrayToXml;
 //php artisan cache:forget spatie.permission.cache
 //php artisan cache:clear
 
+Route::get('manage-language/{lang}', 'LanguageController@manageLanguage')->name('manage.language');
+Route::post('store-language-data/{lang}', 'LanguageController@storeLanguageData')->name('store.language.data');
 
 Route::get('assign-permissions', function () {
     // $user = auth()->user();
