@@ -61,11 +61,11 @@ class ProfilesController extends Controller
      */
     public function edit($id, $agency)
     {
-        abort_if(Gate::denies('manage_own_profile'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(\Gate::denies('manage_own_profile'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $user = User::findorfail($id);
         $countries = Country::all();
-//        dd($user);
+        //        dd($user);
         return view('setting::profile.edit', compact('user', 'countries'));
     }
 
