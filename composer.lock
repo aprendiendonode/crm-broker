@@ -899,6 +899,13 @@
                 "redis",
                 "xcache"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/doctrine/cache/issues",
+                "source": "https://github.com/doctrine/cache/tree/2.0.3"
+            },
+=======
+>>>>>>> a35155a38c4a9e3f08e7c2256446e6f09e6fd006
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -1003,6 +1010,13 @@
                 "sqlserver",
                 "sqlsrv"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/doctrine/dbal/issues",
+                "source": "https://github.com/doctrine/dbal/tree/2.13.2"
+            },
+=======
+>>>>>>> a35155a38c4a9e3f08e7c2256446e6f09e6fd006
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -2795,6 +2809,13 @@
                 "sftp",
                 "storage"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/thephpleague/flysystem/issues",
+                "source": "https://github.com/thephpleague/flysystem/tree/1.1.4"
+            },
+=======
+>>>>>>> a35155a38c4a9e3f08e7c2256446e6f09e6fd006
             "funding": [
                 {
                     "url": "https://offset.earth/frankdejonge",
@@ -3931,6 +3952,48 @@
                 "serialize"
             ],
             "time": "2021-04-09T13:42:10+00:00"
+        },
+        {
+            "name": "org_heigl/ghostscript",
+            "version": "2.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heiglandreas/Org_Heigl_Ghostscript.git",
+                "reference": "fd73693a3f213427b585b45fa744c9cc60679f25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heiglandreas/Org_Heigl_Ghostscript/zipball/fd73693a3f213427b585b45fa744c9cc60679f25",
+                "reference": "fd73693a3f213427b585b45fa744c9cc60679f25",
+                "shasum": ""
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "phpdocumentor/phpdocumentor": "^2.9",
+                "phpunit/phpunit": "^5.5||^6.0||^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Org_Heigl\\Ghostscript\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Heigl",
+                    "email": "andreas@heigl.org"
+                }
+            ],
+            "description": "A PHP-Wrapper around the Ghostscript-CLI",
+            "support": {
+                "issues": "https://github.com/heiglandreas/Org_Heigl_Ghostscript/issues",
+                "source": "https://github.com/heiglandreas/Org_Heigl_Ghostscript/tree/2.3.2"
+            },
+            "time": "2020-09-23T05:00:00+00:00"
         },
         {
             "name": "org_heigl/ghostscript",
@@ -5881,6 +5944,13 @@
                 "laravel-ray",
                 "spatie"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/spatie/laravel-ray/issues",
+                "source": "https://github.com/spatie/laravel-ray/tree/1.23.0"
+            },
+=======
+>>>>>>> a35155a38c4a9e3f08e7c2256446e6f09e6fd006
             "funding": [
                 {
                     "url": "https://github.com/sponsors/spatie",
@@ -6053,6 +6123,13 @@
                 "ray",
                 "spatie"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/spatie/ray/issues",
+                "source": "https://github.com/spatie/ray/tree/1.27.1"
+            },
+=======
+>>>>>>> a35155a38c4a9e3f08e7c2256446e6f09e6fd006
             "funding": [
                 {
                     "url": "https://github.com/sponsors/spatie",
@@ -10411,6 +10488,13 @@
                 "testing",
                 "xunit"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/sebastianbergmann/phpunit/issues",
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.17"
+            },
+=======
+>>>>>>> a35155a38c4a9e3f08e7c2256446e6f09e6fd006
             "funding": [
                 {
                     "url": "https://phpunit.de/donate.html",

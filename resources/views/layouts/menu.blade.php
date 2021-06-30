@@ -162,6 +162,29 @@
 
                         </ul>
                     </div>
+                    <div class="collapse" id="sidebarListing">
+                        <ul class="nav-second-level">
+
+                            {{--@can('view_statistics')--}}
+                                @if(owner())
+                                    <li>
+                                        <a href="{{ url('listing/statistics/'.request('agency')) }}">@lang('listing.statistics')</a>
+                                    </li>
+
+                                @elseif(moderator())
+                                    <li>
+                                        <a href="{{ url('listing/statistics/'.request('agency')) }}">@lang('listing.statistics')</a>
+                                    </li>
+                                @else
+                                    <li>
+                                        <a href="{{ url('listing/statistics/'.auth()->user()->agency_id) }}">@lang('listing.statistics')</a>
+                                    </li>
+                                @endif
+                            {{--@endcan--}}
+
+
+                        </ul>
+                    </div>
                 </li>
             @endcanany
 

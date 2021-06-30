@@ -23,6 +23,8 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
         Route::get('controll/{agency}', 'ListingController@index');
         Route::get('listing-view/{agency}', 'ListingViewController@index');
 
+
+
         Route::get('listing-cheque/{agency}', 'ListingChequeController@index');
         Route::get('listing-map/{agency}', function () {
 
@@ -111,6 +113,8 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
 
 
 
+        Route::get('statistics/{agency}', 'ListingController@statistics');
+        Route::post('statistics', 'ListingController@statistics_process')->name('statistics');
 
         Route::post('listing/store', 'ListingController@store')->name('listing.store');
         Route::patch('listing/update/{id}', 'ListingController@update')->name('listing.update');
