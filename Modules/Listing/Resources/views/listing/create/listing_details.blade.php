@@ -193,7 +193,7 @@
                      <div class="" >
                          <div class="description_en-1" onclick="handleDescModal()">
                              <textarea class="form-control"
-                              id="description_en-1" >{{old('description_en')}}</textarea>
+                              id="description_en-1" >@lang('listing.click_to_view_description')</textarea>
                          </div>    
                  
                          <div>

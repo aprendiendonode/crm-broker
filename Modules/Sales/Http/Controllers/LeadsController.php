@@ -193,7 +193,7 @@ class LeadsController extends Controller
     {
 
 
-        // dd($request->all());
+        dd($request->all());
 
         abort_if(Gate::denies('add_lead'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 

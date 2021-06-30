@@ -277,6 +277,7 @@ return [
     'choose_features_to_copy' => 'Choose Features To Copy',
     'no_arabic_profile_for_agency' => "No Arabic Profile For Agency",
     'no_english_profile_for_agent' => 'No English Profile For Agent',
+    'no_english_profile_for_agency' => 'No English Profile For Agency',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',
