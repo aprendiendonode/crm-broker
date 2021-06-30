@@ -22,24 +22,20 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ImportStatisticsSheet implements ShouldQueue
+class FinishedStatisticsSheet implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $business, $agency, $file,$id;
+    public $id;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct( $business, $agency, $file,$id)
+    public function __construct($id)
     {
-        $this->business = $business ;
-        $this->agency = $agency ;
-        $this->file = $file ;
-        $this->id = $id ;
-
+        $this->id = $id;
     }
 
     /**
@@ -49,11 +45,9 @@ class ImportStatisticsSheet implements ShouldQueue
      */
     public function handle()
     {
-        ini_set('memory_limit', '-1');
-        Excel::Import(new StatisticsImport(
-            $this->business,
-            $this->agency
-        ), public_path('statistics_sheets/'.$this->file));
+        $users = User::where('id', $this->id)->get();
+        event(new StatisticsFinishedEvent($this->id));
+        Notification::send($users, new StatisticsFinishedNotification());
     }
 
 }

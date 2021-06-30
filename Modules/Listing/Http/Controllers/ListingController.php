@@ -213,6 +213,10 @@ class ListingController extends Controller
     {
         return $this->repository->statistics($agency);
     }
+    public function statistics_view($agency)
+    {
+        return $this->repository->statistics_view($agency);
+    }
     public function statistics_process(Request $request)
     {
         return $this->repository->statistics_process($request);

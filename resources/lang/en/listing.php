@@ -299,5 +299,23 @@ return [
     'send_request_confirmation' =>  'Are you sure to Send Request to this agency?',
     /////////////////////////End Share Listing////////////////////////
 
+    'statistics'                    => 'Statistics',
+    'import_statistics'             => 'Import Statistics',
+    'sheet_import_process_start'    => 'Sheet import process starting.',
+    'data_source'                   => 'DATA SOURCE',
+    'transaction_type'              => 'TRANSACTION TYPE',
+    'statistics_type'               => 'SALE/RENT',
+    'day'                           => 'Day',
+    'month'                         => 'Month',
+    'country'                       => 'Country',
+    'area_code'                     => 'AREA CODE',
+    'property_type'                 => 'PROPERTY TYPE',
+    'property_number'               => 'PROPERTY NUMBER',
+    'additional_details'            => 'ADDITIONAL DETAILS',
+    'size_sqm'                      => 'SIZE SQM',
+    'price_sqm'                     => 'Total Worth',
+    'total_worth'                   => 'PRICE / SQM',
+    'size_sqft'                     => 'SIZE SQFT',
+    'price_sqft'                    => 'PRICE/SQFT',
 
 ];
