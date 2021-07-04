@@ -313,8 +313,8 @@ return [
     'property_number'               => 'PROPERTY NUMBER',
     'additional_details'            => 'ADDITIONAL DETAILS',
     'size_sqm'                      => 'SIZE SQM',
-    'price_sqm'                     => 'Total Worth',
-    'total_worth'                   => 'PRICE / SQM',
+    'price_sqm'                     => 'PRICE / SQM',
+    'total_worth'                   => 'Total Worth',
     'size_sqft'                     => 'SIZE SQFT',
     'price_sqft'                    => 'PRICE/SQFT',
 

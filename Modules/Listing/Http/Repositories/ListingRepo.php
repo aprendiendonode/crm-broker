@@ -2242,6 +2242,51 @@ class ListingRepo
         if (request('filter_data_source')) {
             $statistics->where('data_source', request('filter_data_source'));
         }
+        if (request('filter_date_from')) {
+            $statistics->where('day','>=', request('filter_date_from'));
+        }
+        if (request('filter_date_to')) {
+            $statistics->where('day','<=', request('filter_date_to'));
+        }
+        if (request('filter_property_purpose')) {
+            $statistics->where('type', request('filter_property_purpose'));
+        }
+        if (request('filter_size_sqft_from')) {
+            $statistics->where('size_sqft','>=', request('filter_size_sqft_from'));
+        }
+
+        if (request('filter_size_sqft_to')) {
+            $statistics->where('size_sqft','<=', request('filter_size_sqft_to'));
+        }
+        if (request('filter_price_sqft_from')) {
+            $statistics->where('price_sqft','>=', request('filter_price_sqft_from'));
+        }
+
+        if (request('filter_price_sqft_to')) {
+            $statistics->where('price_sqft','<=', request('filter_price_sqft_to'));
+        }
+
+        if (request('filter_size_sqm_from')) {
+            $statistics->where('size_sqm','>=', request('filter_size_sqm_from'));
+        }
+
+        if (request('filter_size_sqm_to')) {
+            $statistics->where('size_sqm','<=', request('filter_size_sqm_to'));
+        }
+        if (request('filter_price_sqm_from')) {
+            $statistics->where('price_sqm','>=', request('filter_price_sqm_from'));
+        }
+
+        if (request('filter_price_sqm_to')) {
+            $statistics->where('price_sqm','<=', request('filter_price_sqm_to'));
+        }
+        if (request('filter_total_worth_from')) {
+            $statistics->where('total_worth','>=', request('filter_total_worth_from'));
+        }
+
+        if (request('filter_total_worth_to')) {
+            $statistics->where('total_worth','<=', request('filter_total_worth_to'));
+        }
 
         $statistics = $statistics->paginate($per_page);
 

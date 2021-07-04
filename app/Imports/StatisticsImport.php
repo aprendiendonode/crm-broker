@@ -61,9 +61,6 @@ class StatisticsImport  implements  ToModel, WithStartRow
             $price_sqft = $row[15] / $size_sqft;
         }
 
-//        $day = Carbon::parse($row[3])->toDateString();
-//        $day = 25569 + (($row[3]+date('Z',$row[3])) / 86400);
-
 
         $statistics = new Statistics([
             'data_source' => $row[0],
