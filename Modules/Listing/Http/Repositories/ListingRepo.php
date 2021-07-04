@@ -158,25 +158,25 @@ class ListingRepo
                     'landlords' => $agency->landlords,
                     'tenants' => $agency->tenants,
                     'portals' =>
-                        cache()->remember('portals', 60 * 60 * 24, function () {
-                            return DB::table('portals')->get();
-                        }),
+                    cache()->remember('portals', 60 * 60 * 24, function () {
+                        return DB::table('portals')->get();
+                    }),
                     'cities' =>
-                        cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
-                            return DB::table('cities')->where('country_id', $agency->country_id)->get();
-                        }),
+                    cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('cities')->where('country_id', $agency->country_id)->get();
+                    }),
                     'communities' =>
-                        cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
-                            return DB::table('communities')->where('country_id', $agency->country_id)->get();
-                        }),
+                    cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('communities')->where('country_id', $agency->country_id)->get();
+                    }),
                     'sub_communities' =>
-                        cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
-                            return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
-                        }),
+                    cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
+                    }),
                     'listing_categories' =>
-                        cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
-                            return DB::table('listing_categories')->get();
-                        }),
+                    cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('listing_categories')->get();
+                    }),
 
 
                     'all_count' => $agency->listings_all_count,
@@ -2245,13 +2245,115 @@ class ListingRepo
 
             $request->file->move(public_path('statistics_sheets'), $statistics_file);
             StartLeadsInsertJobs::withChain([
-                new ImportStatisticsSheet($business,$agency,$statistics_file)
+                new ImportStatisticsSheet($business, $agency, $statistics_file)
             ])->dispatch();
 
             return back()->with(flash(trans('listing.sheet_import_process_start'), 'success'));
         } catch (\Exception $e) {
-//            throw $e;
+            //            throw $e;
             return back()->with(flash(trans('agency.something_went_wrong'), 'error'));
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    public function mark($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'type'  => ['required', 'in:hot,basic,signature'],
+                'ids'   => ['required', 'string']
+            ]);
+
+
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['hot' => $request->type]);
+            $msg = trans('listing.listing_marked') . ' ' . ucfirst($request->type);
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+        }
+    }
+
+
+
+    public function lsm_change($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'type'  => ['required', 'in:private,shared'],
+                'ids'   => ['required', 'string']
+            ]);
+
+
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['lsm' => $request->type]);
+            $msg = trans('listing.listing_lsm') . ' ' . ucfirst($request->type);
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+        }
+    }
+
+
+    public function staff_change_shortcut($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'ids'        => ['required', 'string'],
+                'staff_id'   => ['required'],
+                'agency' => ['required', 'integer', 'exists:agencies,id']
+            ]);
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            if (!in_array($request->staff_id, staff($request->agency)->pluck('id')->toArray())) {
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+
+
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['assigned_to' => $request->staff_id]);
+            $msg = trans('listing.listing_staff_updated');
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
         }
     }
 }

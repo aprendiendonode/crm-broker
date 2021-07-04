@@ -170,5 +170,11 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.get-communities');
         Route::post('get-sub-communities', 'ListingController@get_sub_communities')
             ->name('listings.get-sub-communities');
+        Route::post('mark', 'ListingController@mark')
+            ->name('listings.mark');
+        Route::post('lsm-change', 'ListingController@lsm_change')
+            ->name('listings.lsm-change');
+        Route::post('staff-change-shortcut', 'ListingController@staff_change_shortcut')
+            ->name('listings.staff-change-shortcut');
     });
 });

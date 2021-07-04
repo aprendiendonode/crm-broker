@@ -217,4 +217,17 @@ class ListingController extends Controller
     {
         return $this->repository->statistics_process($request);
     }
+
+    public function mark(Request $request)
+    {
+        return $this->repository->mark($request);
+    }
+    public function lsm_change(Request $request)
+    {
+        return $this->repository->lsm_change($request);
+    }
+    public function staff_change_shortcut(Request $request)
+    {
+        return $this->repository->staff_change_shortcut($request);
+    }
 }

@@ -278,6 +278,12 @@ return [
     'no_arabic_profile_for_agency' => "No Arabic Profile For Agency",
     'no_english_profile_for_agent' => 'No English Profile For Agent',
     'no_english_profile_for_agency' => 'No English Profile For Agency',
+    'statistics' => 'Statistics',
+    'listing_hot'    => 'Listing Has Been Marked Hot',
+    'listing_basic'  => 'Listing Has Been Marked Basic',
+    'listing_marked'  => 'Listing Has Been Marked',
+    'listing_lsm'     => 'Listing Has Been Updated To ',
+    'listing_staff_updated' => 'Listing Staff Updated',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',

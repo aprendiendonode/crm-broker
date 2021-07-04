@@ -9,6 +9,7 @@
     <link href="{{ asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/modals.css') }}" rel="stylesheet">
     <style>
         .toggle.android {
             border-radius: 0px;
@@ -45,16 +46,16 @@
 
             @elseif(moderator())
 
-            <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.live')({{ $live_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.live')({{ $live_count }})</div>
+                </a>
 
             @else
-            <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.live')({{ $live_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.live')({{ $live_count }})</div>
+                </a>
 
             @endif
 
@@ -63,25 +64,25 @@
 
             @if(owner())
 
-            <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.draft')({{ $draft_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.draft')({{ $draft_count }})</div>
+                </a>
 
 
             @elseif(moderator())
 
-            <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.draft')({{ $draft_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.draft')({{ $draft_count }})</div>
+                </a>
 
 
             @else
-            <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.draft')({{ $draft_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.draft')({{ $draft_count }})</div>
+                </a>
 
             @endif
 
@@ -213,7 +214,11 @@
                     @forelse($listings as $listing)
 
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $loop->iteration }}
+
+                                <input type="checkbox" onchange="viewFloatModal({{ $listing->id }})" />
+                            
+                            </td>
                             <td>
                                 <i class="fas fa-plus-circle cursor-pointer show-hidden-data-{{ $listing->id }}" onclick="show_data({{ $listing->id }})"></i>
                                 <i class="fas fa-minus-circle cursor-pointer d-none hide-data-{{ $listing->id }}" onclick="hide_data({{ $listing->id }})"></i>
@@ -454,6 +459,7 @@
 
     </div>
     @include('listing::listing.settings_modals')
+    @include('listing::listing.shortcut_modals')
 
 @endsection
 
@@ -473,6 +479,7 @@
 
     <script src="{{ asset('assets/libs/uploader-master/dist/js/jquery.dm-uploader.min.js') }}"></script>
     <script src="{{ asset('assets/libs/uploader-master/src/js/demo-ui.js') }}"></script>
+    <script src="{{ asset('assets/js/modals.js') }}"></script>
 
 
     <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
