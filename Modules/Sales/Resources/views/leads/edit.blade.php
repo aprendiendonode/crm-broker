@@ -1,4 +1,4 @@
-<form action="{{ url('sales/manage_leads/'.$lead->id) }}" data-parsley-validate="" method="POST"
+<form action="{{ url('sales/manage_leads/'.$lead->id) }}"  method="POST"
       enctype="multipart/form-data">
     <div class="row">
         @csrf

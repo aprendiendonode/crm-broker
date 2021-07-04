@@ -55,31 +55,38 @@
 
                         </div>
                         <div class="col-3">
-                            <div class="form-group mb-0 agent-profile-en-{{ $listing->id }}">
+                            <div class="form-group mb-0 profile-en-{{ $listing->id }}">
                                     <select
                                     onchange="event.preventDefault();editshowAgentProfile(this,'en',{{ $listing->id }})"
-                                     style="width:100px" class="form-control select2" data-toggle="select2" data-placeholder="@lang('listing.agent_profile')">
+                                     style="width:100px" class="form-control select2 agent-profile-en-{{ $listing->id }}" data-toggle="select2" data-placeholder="@lang('listing.agent_profile')">
                                         <option value=""></option>
-                                        @foreach($staffs as $staff )
-                                            <option
-                                              data-agentprofile="{{ $staff->description_en }}"
-                                              value="{{ $staff->id }}">{{ $staff->{'name_'.app()->getLocale()} }}
-                                            </option>
-                                       @endforeach     
+
+                                        <optgroup label="@lang('listing.english')">
+
+                                            @foreach($staffs as $staff )
+                                                <option
+                                                  data-agentprofile="{{ $staff->description_en }}"
+                                                  value=""
+                                                  >{{ $staff->{'name_'.app()->getLocale()} }}
+                                                </option>
+                                           @endforeach     
+                                        </optgroup>
                                     </select>
                                     <p class="agent-profile-message-en-{{ $listing->id }} text-danger"></p>
                             </div>
-                            <div class="form-group mb-0 d-none agent-profile-ar-{{ $listing->id }}">
+                            <div class="form-group mb-0 d-none profile-ar-{{ $listing->id }}">
                                     <select
                                     onchange="event.preventDefault();editshowAgentProfile(this,'ar',{{ $listing->id }})"
-                                     style="width:100px" class="form-control select2" data-toggle="select2" data-placeholder="@lang('listing.agent_profile')">
+                                     style="width:100px" class="form-control select2 agent-profile-ar-{{ $listing->id }}" data-toggle="select2" data-placeholder="@lang('listing.agent_profile')">
                                         <option value=""></option>
+                                        <optgroup label="@lang('listing.english')">
                                         @foreach($staffs as $staff )
                                             <option 
-                                               value="{{ $staff->id }}"
+                                               value=""
                                                data-agentprofile="{{ $staff->description_ar }}">{{ $staff->{'name_'.app()->getLocale()} }}
                                             </option>
                                        @endforeach     
+                                        </optgroup>
                                     </select>
 
                                     <p class="agent-profile-message-ar-{{ $listing->id }} text-danger"></p>

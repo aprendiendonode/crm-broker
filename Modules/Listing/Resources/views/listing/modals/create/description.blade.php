@@ -53,31 +53,39 @@
 
                         </div>
                         <div class="col-3">
-                            <div class="form-group mb-0 agent-profile-en">
+                            <div class="form-group mb-0 profile-en">
                                     <select
                                     onchange="event.preventDefault();showAgentProfile(this,'en')"
-                                     style="width:100px" class="form-control select2" data-toggle="select2" data-placeholder="@lang('listing.agent_profile')">
+                                     style="width:100px" class="form-control select2 agent-profile-en" data-toggle="select2" data-placeholder="@lang('listing.agent_profile')">
                                         <option value=""></option>
+
+                                        <optgroup label="@lang('listing.english')">
                                         @foreach($staffs as $staff )
                                             <option
+                                            value=""
                                               data-agentprofile="{{ $staff->description_en }}"
-                                              value="{{ $staff->id }}">{{ $staff->{'name_'.app()->getLocale()} }}
+                                             >
+                                             {{ $staff->{'name_'.app()->getLocale()} }}
                                             </option>
-                                       @endforeach     
+                                       @endforeach  
+                                       <optgroup>   
                                     </select>
                                     <p class="agent-profile-message-en text-danger"></p>
                             </div>
-                            <div class="form-group mb-0 d-none agent-profile-ar">
+                            <div class="form-group mb-0 d-none profile-ar">
                                     <select
                                     onchange="event.preventDefault();showAgentProfile(this,'ar')"
-                                     style="width:100px" class="form-control select2" data-toggle="select2" data-placeholder="@lang('listing.agent_profile')">
+                                     style="width:100px" class="form-control select2 agent-profile-ar" data-toggle="select2" data-placeholder="@lang('listing.agent_profile')">
                                         <option value=""></option>
+
+                                        <optgroup label="@lang('listing.arabic')">
                                         @foreach($staffs as $staff )
                                             <option 
-                                               value="{{ $staff->id }}"
+                                            value=""
                                                data-agentprofile="{{ $staff->description_ar }}">{{ $staff->{'name_'.app()->getLocale()} }}
                                             </option>
-                                       @endforeach     
+                                       @endforeach   
+                                        </optgroup>  
                                     </select>
 
                                     <p class="agent-profile-message-ar text-danger"></p>
@@ -190,6 +198,8 @@
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                    $('.agent-profile-ar').val("");
                 }else{
                     // typeof car.color === 'undefined'
                        if($('.agent-profile-en').find(':selected').data('agentprofile') == ''){
@@ -204,6 +214,8 @@
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition); 
+
+                    $('.agent-profile-en').val("");
                 }
         }
 
@@ -310,6 +322,7 @@
 
         function showTemplates(type){
             if(type == 'ar'){
+
                 if($('.load-templates-ar').find(':selected').data('desctemplate') == ''){
               
                     return;
@@ -321,6 +334,8 @@
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                    $('.load-templates-ar').val('');
                 }else{
                     // typeof car.color === 'undefined'
                        if($('.load-templates-en').find(':selected').data('desctemplate') == ''){
@@ -328,12 +343,17 @@
                             return;
                     }
                     const domEditableElement = document.querySelector( '.description-profile-modal .description_en .ck-editor__editable' );
+
+
                     const editorInstance = domEditableElement.ckeditorInstance;
                     const htmlDP = editorInstance.data.processor;
                     const viewFragment = htmlDP.toView($('.load-templates-en').find(':selected').data('desctemplate'));
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition); 
+
+                    $('.load-templates-en').val('');
+
                 }
 
 
