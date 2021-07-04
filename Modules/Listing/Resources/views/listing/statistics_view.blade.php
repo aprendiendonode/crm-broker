@@ -28,8 +28,48 @@
 
 
 @section('content')
+
     <div class="content pt-3">
 
+
+        <div class="mb-4">
+
+            <h3 class="p-2">@lang('listing.statistics')</h3>
+
+
+            <a
+                    @if(owner())
+                    href="{{ url('listing/statistics/'.request('agency')) }}"
+
+                    @elseif(moderator())
+                    href="{{ url('listing/statistics/'.request('agency')) }}"
+                    @else
+                    href="{{ url('listing/statistics/'.auth()->user()->agency_id) }}"
+                    @endif
+                    class="float-right btn btn-info waves-effect waves-light">
+                <i class="fe-plus-square"></i>@lang('listing.import_statistics')
+            </a>
+
+            <hr>
+        </div>
+
+        <button class="btn btn-primary mb-2" onclick="show_filter()">@lang('sales.filter') <i class="fa fa-search"></i></button>
+        <a class="btn btn-outline-primary mb-2"
+           @if(owner())
+           href="{{ url('listing/statistics_data/'.request('agency')) }}"
+
+           @elseif(moderator())
+           href="{{ url('listing/statistics_data/'.request('agency')) }}"
+           @else
+           href="{{ url('listing/statistics_data/'.auth()->user()->agency_id) }}"
+                @endif
+        >@lang('sales.reset_filters')</a>
+
+        <div class="mb-2 filter_lead "
+             @if( !request()->has('filter_data_source')) style="display: none;opacity:0;transition:0.7s" @endif>
+
+            @include('listing::listing.statistics_filter')
+        </div>
 
         <div class="table-responsive">
             <table id="demo-foo-filtering" class="table table-bordered toggle-circle mb-0" data-page-size="7">
@@ -68,8 +108,8 @@
                             <td> {{ $statistic->type }}</td>
                             <td> {{ $statistic->day }}</td>
                             <td> {{ $statistic->month }}</td>
-                            <td> {{ $statistic->country }}</td>
-                            <td> {{ $statistic->city }}</td>
+                            <td> {{ $statistic->country ?  $statistic->country->value : ''}}</td>
+                            <td> {{ $statistic->city ? $statistic->city->{'name_'.app()->getLocale()} : '' }}</td>
                             <td> {{ $statistic->area_code }}</td>
                             <td> {{ $statistic->community }}</td>
                             <td> {{ $statistic->subcommunity }}</td>
@@ -98,14 +138,7 @@
                     @endif
 
                 </div>
-                {{-- @can('can_generate_reports')
-                    <a
-                            data-plugin="tippy"
-                            data-tippy-placement="bottom-start"
-                            title="@lang('listing.export_help')" href="{{ url('listing/export_all/'.request('agency')) }}"
-                            class="mt-2">@lang('listing.generate_report')
-                    </a>
-                @endcan --}}
+
             </div>
         </div>
 
@@ -182,6 +215,32 @@
 
 
         })
+
+
+        function  show_filter(){
+            var  div = document.querySelector('.filter_lead');
+            if(div.style.display === 'none'){
+                div.style.display = 'block';
+
+                setTimeout(function(){
+
+                    div.style.opacity = 1;
+
+                },10);
+            } else {
+                div.style.display = 'none';
+                setTimeout(function(){
+
+                    div.style.opacity = 0;
+
+
+                },10);
+
+            }
+
+        }
+
+
     </script>
 
 
@@ -684,265 +743,3 @@
     </script>
 @endpush
 
-
-@push('js')
-    <script>
-
-        function editshowCompanyProfile(inputSelf, type, id) {
-
-            if (type == 'ar') {
-
-                if ($('.agency-profile-ar-' + id).data('agencyprofile') === '') {
-                    var message = @json(trans('listing.no_arabic_profile_for_agency'));
-                    $('.agency-profile-message-ar-' + id).text(message)
-                    return;
-                }
-
-                const domEditableElement = document.querySelector('.description-profile-modal-' + id + ' .edit_description_ar_' + id + ' .ck-editor__editable');
-                const editorInstance = domEditableElement.ckeditorInstance;
-                const htmlDP = editorInstance.data.processor;
-                const viewFragment = htmlDP.toView($('.agency-profile-ar-' + id).data('agencyprofile'));
-                const modelFragment = editorInstance.data.toModel(viewFragment);
-                const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                editorInstance.model.insertContent(modelFragment, insertPosition);
-            } else {
-                if ($('.agency-profile-en-' + id).data('agencyprofile') === '') {
-                    var message = @json(trans('listing.no_english_profile_for_agency'));
-                    $('.agency-profile-message-en-' + id).text(message)
-                    return;
-                }
-                const domEditableElement = document.querySelector('.description-profile-modal-' + id + '  .edit_description_en_' + id + ' .ck-editor__editable');
-                const editorInstance = domEditableElement.ckeditorInstance;
-                const htmlDP = editorInstance.data.processor;
-                const viewFragment = htmlDP.toView($('.agency-profile-en-' + id).data('agencyprofile'));
-                const modelFragment = editorInstance.data.toModel(viewFragment);
-                const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                editorInstance.model.insertContent(modelFragment, insertPosition);
-            }
-
-        }
-
-        function editshowAgentProfile(inputSelf, type, id) {
-
-
-            if (type == 'ar') {
-                if ($('.agent-profile-ar-' + id).find(':selected').data('agentprofile') == '') {
-                    var message = @json(trans('listing.no_arabic_profile_for_agent'));
-                    $('.agent-profile-message-ar-' + id).text(message)
-                    return;
-                }
-                const domEditableElement = document.querySelector('.description-profile-modal-' + id + ' .edit_description_ar_' + id + ' .ck-editor__editable');
-                const editorInstance = domEditableElement.ckeditorInstance;
-                const htmlDP = editorInstance.data.processor;
-                const viewFragment = htmlDP.toView($('.agent-profile-ar-' + id).find(':selected').data('agentprofile'));
-                const modelFragment = editorInstance.data.toModel(viewFragment);
-                const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                editorInstance.model.insertContent(modelFragment, insertPosition);
-            } else {
-                if ($('.agent-profile-en').find(':selected').data('agentprofile') == '') {
-                    var message = @json(trans('listing.no_english_profile_for_agent'));
-                    $('.agent-profile-message-en-' + id).text(message)
-                    return;
-                }
-                const domEditableElement = document.querySelector('.description-profile-modal-' + id + '  .edit_description_en_' + id + ' .ck-editor__editable');
-                const editorInstance = domEditableElement.ckeditorInstance;
-                const htmlDP = editorInstance.data.processor;
-                const viewFragment = htmlDP.toView($('.agent-profile-en-' + id).find(':selected').data('agentprofile'));
-                const modelFragment = editorInstance.data.toModel(viewFragment);
-                const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                editorInstance.model.insertContent(modelFragment, insertPosition);
-            }
-        }
-
-
-        function editloadCheckedFeatures(type, id) {
-
-
-            var checkboxesFeature = $('.choosen-features-' + id + ':checkbox:checked ').map(function () {
-                var name = this.name.replace('"', "");
-                name = name.replace('edit_features_' + id, "");
-                name = name.replace("[", "");
-                name = name.replace("]", "");
-                name = name.replace(/_/g, " ");
-
-                const words = name.split(" ");
-
-                for (let i = 0; i < words.length; i++) {
-                    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-                }
-
-                name = words.join(" ");
-
-                return name;
-            }).get();
-            var inputsFeature = $('.choosen-features-inputs-' + id).map(function () {
-
-                if (this.value != '') {
-
-                    var name = this.name.replace('"', "");
-                    name = name.replace('edit_features_' + id, "");
-                    name = name.replace("[", "");
-                    name = name.replace("]", "");
-                    name = name.replace(/_/g, " ");
-
-                    const words = name.split(" ");
-
-                    for (let i = 0; i < words.length; i++) {
-                        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-                    }
-
-                    name = words.join(" ");
-
-
-                    return name + ' ( ' + this.value + ')';
-                }
-
-            }).get();
-
-            var selectsFeature = $('.choosen-features-select-' + id).map(function () {
-                if (this.value != '') {
-                    var name = this.name.replace('"', "");
-                    name = name.replace('edit_features_' + id, "");
-                    name = name.replace("[", "");
-                    name = name.replace("]", "");
-                    name = name.replace(/_/g, " ");
-
-                    const words = name.split(" ");
-
-                    for (let i = 0; i < words.length; i++) {
-                        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-                    }
-
-                    name = words.join(" ");
-
-                    return name + ' ( ' + this.value + ')';
-                }
-
-
-            }).get();
-
-            var merged = inputsFeature.concat(checkboxesFeature);
-            var all = merged.concat(selectsFeature);
-
-            if (all.length > 0) {
-
-                var ul_html = '';
-                ul_html += '<ul>';
-                for (let index = 0; index < all.length; index++) {
-
-                    ul_html += '<li>' + all[index] + '</li>';
-
-                }
-
-                ul_html += '</ul>';
-                const domEditableElement = document.querySelector('.description-profile-modal-' + id + ' .edit_description_' + type + '_' + id + ' .ck-editor__editable');
-
-                const editorInstance = domEditableElement.ckeditorInstance;
-                const htmlDP = editorInstance.data.processor;
-                const viewFragment = htmlDP.toView(ul_html);
-                const modelFragment = editorInstance.data.toModel(viewFragment);
-                const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                editorInstance.model.insertContent(modelFragment, insertPosition);
-            } else {
-
-                var message = @json(trans('listing.choose_features_to_copy'));
-                $('.features_copy_message_' + type + '_' + id).text(message)
-                return;
-
-            }
-        }
-
-
-        function editshowTemplates(type, id) {
-            if (type == 'ar') {
-                if ($('.load-templates-ar-' + id).find(':selected').data('desctemplate') == '') {
-
-                    return;
-                }
-                const domEditableElement = document.querySelector('.description-profile-modal-' + id + ' .edit_description_ar_' + id + ' .ck-editor__editable');
-                const editorInstance = domEditableElement.ckeditorInstance;
-                const htmlDP = editorInstance.data.processor;
-                const viewFragment = htmlDP.toView($('.load-templates-ar-' + id).find(':selected').data('desctemplate'));
-                const modelFragment = editorInstance.data.toModel(viewFragment);
-                const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                editorInstance.model.insertContent(modelFragment, insertPosition);
-            } else {
-                // typeof car.color === 'undefined'
-                if ($('.load-templates-en-' + id).find(':selected').data('desctemplate') == '') {
-
-                    return;
-                }
-                const domEditableElement = document.querySelector('.description-profile-modal-' + id + '  .edit_description_en_' + id + ' .ck-editor__editable');
-                const editorInstance = domEditableElement.ckeditorInstance;
-                const htmlDP = editorInstance.data.processor;
-                const viewFragment = htmlDP.toView($('.load-templates-en-' + id).find(':selected').data('desctemplate'));
-                const modelFragment = editorInstance.data.toModel(viewFragment);
-                const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                editorInstance.model.insertContent(modelFragment, insertPosition);
-            }
-
-
-        }
-
-        function save_note(id) {
-            var note = $('.note-to-save-' + id).val();
-            console.log(note)
-            if (note == '') {
-                var message = @json(trans('listing.fill_the_note'));
-                $('.note-to-save-message-' + id).text(message)
-                return;
-            }
-            $.ajax({
-                url: '{{  route("listings.save_note") }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: id,
-                    note: note,
-
-                },
-                success: function (data) {
-                    var locale = @json(app()->getLocale());
-                    $('.note-to-save-message-' + id).text();
-                    $('.note-to-save-message-' + id).text();
-
-                    var htmlTr = '';
-                    htmlTr += '<tr>';
-                    htmlTr += '<td>';
-
-                    htmlTr += data.added_by;
-
-                    htmlTr += '</td>';
-                    htmlTr += '<td>';
-                    htmlTr += data.created_at;
-                    htmlTr += '</td>';
-                    htmlTr += '<td>';
-                    htmlTr += data.note;
-                    htmlTr += '</td>';
-                    htmlTr += '</tr>';
-
-                    $('.note-list-' + id + ' > tbody:last-child').append(htmlTr);
-
-                    toast(data.message, 'success');
-
-                },
-                error: function (error) {
-                    toast(error.responseJSON.message, 'error');
-                },
-            })
-        }
-
-        function show_data(id) {
-            $('.show-hidden-data-' + id).addClass('d-none');
-            $('.hide-data-' + id).removeClass('d-none');
-            $('.more_info_' + id).removeClass('d-none');
-        }
-
-        function hide_data(id) {
-            $('.show-hidden-data-' + id).removeClass('d-none');
-            $('.hide-data-' + id).addClass('d-none');
-            $('.more_info_' + id).addClass('d-none');
-
-        }
-    </script>
-@endpush

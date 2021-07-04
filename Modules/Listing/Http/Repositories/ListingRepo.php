@@ -2232,11 +2232,18 @@ class ListingRepo
     {
         return view('listing::listing.upload_statistics_sheet', compact('agency'));
     }
+
     public function statistics_view($agency)
     {
         $per_page  = 15;
         $pagination  = true;
-        $statistics = Statistics::where('agency_id', $agency)->paginate($per_page);
+        $statistics = Statistics::where('agency_id', $agency);
+
+        if (request('filter_data_source')) {
+            $statistics->where('data_source', request('filter_data_source'));
+        }
+
+        $statistics = $statistics->paginate($per_page);
 
         return view('listing::listing.statistics_view', compact('agency','statistics','pagination'));
     }

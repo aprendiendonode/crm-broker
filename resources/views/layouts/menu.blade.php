@@ -160,10 +160,6 @@
                             @endcan
 
 
-                        </ul>
-                    </div>
-                    <div class="collapse" id="sidebarListing">
-                        <ul class="nav-second-level">
 
                             {{--@can('importstatistics')--}}
                                 @if(owner())
