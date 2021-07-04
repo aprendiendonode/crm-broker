@@ -113,6 +113,7 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
 
 
 
+        Route::get('statistics_data/{agency}', 'ListingController@statistics_view')->name('statistics_view');
         Route::get('statistics/{agency}', 'ListingController@statistics');
         Route::post('statistics', 'ListingController@statistics_process')->name('statistics');
 

@@ -2,9 +2,14 @@
 
 namespace Modules\Listing\Http\Repositories;
 
+use App\Events\StatisticsFinishedEvent;
 use App\Imports\StatisticsImport;
+use App\Jobs\FinishedStatisticsSheet;
 use App\Jobs\ImportStatisticsSheet;
 use App\Jobs\StartLeadsInsertJobs;
+use App\Models\Statistics;
+use App\Models\User;
+use App\Notifications\StatisticsFinishedNotification;
 use PDF;
 use File;
 use Gate;
@@ -2228,6 +2233,66 @@ class ListingRepo
         return view('listing::listing.upload_statistics_sheet', compact('agency'));
     }
 
+    public function statistics_view($agency)
+    {
+        $per_page  = 15;
+        $pagination  = true;
+        $statistics = Statistics::where('agency_id', $agency);
+
+        if (request('filter_data_source')) {
+            $statistics->where('data_source', request('filter_data_source'));
+        }
+        if (request('filter_date_from')) {
+            $statistics->where('day', '>=', request('filter_date_from'));
+        }
+        if (request('filter_date_to')) {
+            $statistics->where('day', '<=', request('filter_date_to'));
+        }
+        if (request('filter_property_purpose')) {
+            $statistics->where('type', request('filter_property_purpose'));
+        }
+        if (request('filter_size_sqft_from')) {
+            $statistics->where('size_sqft', '>=', request('filter_size_sqft_from'));
+        }
+
+        if (request('filter_size_sqft_to')) {
+            $statistics->where('size_sqft', '<=', request('filter_size_sqft_to'));
+        }
+        if (request('filter_price_sqft_from')) {
+            $statistics->where('price_sqft', '>=', request('filter_price_sqft_from'));
+        }
+
+        if (request('filter_price_sqft_to')) {
+            $statistics->where('price_sqft', '<=', request('filter_price_sqft_to'));
+        }
+
+        if (request('filter_size_sqm_from')) {
+            $statistics->where('size_sqm', '>=', request('filter_size_sqm_from'));
+        }
+
+        if (request('filter_size_sqm_to')) {
+            $statistics->where('size_sqm', '<=', request('filter_size_sqm_to'));
+        }
+        if (request('filter_price_sqm_from')) {
+            $statistics->where('price_sqm', '>=', request('filter_price_sqm_from'));
+        }
+
+        if (request('filter_price_sqm_to')) {
+            $statistics->where('price_sqm', '<=', request('filter_price_sqm_to'));
+        }
+        if (request('filter_total_worth_from')) {
+            $statistics->where('total_worth', '>=', request('filter_total_worth_from'));
+        }
+
+        if (request('filter_total_worth_to')) {
+            $statistics->where('total_worth', '<=', request('filter_total_worth_to'));
+        }
+
+        $statistics = $statistics->paginate($per_page);
+
+        return view('listing::listing.statistics_view', compact('agency', 'statistics', 'pagination'));
+    }
+
     public function statistics_process($request)
     {
         try {
@@ -2240,17 +2305,19 @@ class ListingRepo
             }
 
             $business = auth()->user()->business_id;
+            $user_id = auth()->user()->id;
             $agency = request('agency');
             $statistics_file = time() . $request->file->getClientOriginalName();
 
             $request->file->move(public_path('statistics_sheets'), $statistics_file);
             StartLeadsInsertJobs::withChain([
-                new ImportStatisticsSheet($business, $agency, $statistics_file)
+                new ImportStatisticsSheet($business, $agency, $statistics_file, $user_id),
+                new FinishedStatisticsSheet($user_id)
             ])->dispatch();
+
 
             return back()->with(flash(trans('listing.sheet_import_process_start'), 'success'));
         } catch (\Exception $e) {
-            //            throw $e;
             return back()->with(flash(trans('agency.something_went_wrong'), 'error'));
         }
     }
