@@ -113,6 +113,7 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
 
 
 
+        Route::get('statistics_data/{agency}', 'ListingController@statistics_view')->name('statistics_view');
         Route::get('statistics/{agency}', 'ListingController@statistics');
         Route::post('statistics', 'ListingController@statistics_process')->name('statistics');
 
@@ -170,5 +171,15 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.get-communities');
         Route::post('get-sub-communities', 'ListingController@get_sub_communities')
             ->name('listings.get-sub-communities');
+        Route::post('mark', 'ListingController@mark')
+            ->name('listings.mark');
+        Route::post('lsm-change', 'ListingController@lsm_change')
+            ->name('listings.lsm-change');
+        Route::post('staff-change-shortcut', 'ListingController@staff_change_shortcut')
+            ->name('listings.staff-change-shortcut');
+        Route::post('status-change-shortcut', 'ListingController@status_change_shortcut')
+            ->name('listings.status-change-shortcut');
+        Route::post('move-to-archive', 'ListingController@move_to_archive')
+            ->name('listings.move-to-archive');
     });
 });

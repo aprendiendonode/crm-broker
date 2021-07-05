@@ -1,4 +1,4 @@
-<form action="{{ url('sales/manage_leads') }}" data-parsley-validate="" method="POST" enctype="multipart/form-data">
+<form action="{{ url('sales/manage_leads') }}"  method="POST" enctype="multipart/form-data" name="lead-create">
     <div class="row">
         @csrf
 
@@ -22,6 +22,13 @@
 
         <div class="col-md-4">
 
+            <input
+            type="text"
+            class="form-control"
+            name="phone"
+            id="telephone"
+          />
+      
 
             <div class="form-group" style="margin-bottom:32px">
                 <div>
@@ -162,6 +169,8 @@
             <input type="hidden" class="country_flag" name="country_flag">
 
 
+            <input type="hidden" name="phone1_code">
+
             <div class="form-group d-flex">
                 <div style="flex:2">
                     <div>
@@ -180,15 +189,15 @@
                     </select>
                 </div>
                 <div style="flex:4">
-                <div>
-                    <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
+                    <div>
+                        <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
+                    </div>
+                    <div class="">
+                        <input  
+                                type="text" class="form-control" name="phone1"
+                            value="{{ old('phone1') }}" placeholder="@lang('sales.phone1')" required>
+                    </div>
                 </div>
-                <div class="">
-                    <input  
-                            type="text" class="form-control" name="phone1"
-                           value="{{ old('phone1') }}" placeholder="@lang('sales.phone1')" required>
-                </div>
-            </div>
             </div>
 
 
@@ -998,8 +1007,32 @@
 
 
 @push('js')
+<script>
+    var input = document.querySelector("#telephone");
+    var iti = window.intlTelInput(input, {
+       
+      initialCountry: "auto",
+      geoIpLookup: function (callback) {
+        $.get("https://ipinfo.io", function () {}, "jsonp").always(function (
+          resp
+        ) {
+          var countryCode = resp && resp.country ? resp.country : "us";
+          callback(countryCode);
+        });
+      },
+      utilsScript: "{{ asset('assets/js/util.js') }}",
+    });
+    
+    
+    
+    $('#telephone').change(function(){
+        var number = iti.getSelectedCountryData();
 
+    
+    })
+    </script>
     <script>
+        
 
         function hide_create_custom() {
             $('.custom-create-staff').addClass('d-none');

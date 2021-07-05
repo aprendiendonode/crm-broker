@@ -160,24 +160,37 @@
                             @endcan
 
 
-                        </ul>
-                    </div>
-                    <div class="collapse" id="sidebarListing">
-                        <ul class="nav-second-level">
 
-                            {{--@can('view_statistics')--}}
+                            {{--@can('importstatistics')--}}
                                 @if(owner())
                                     <li>
-                                        <a href="{{ url('listing/statistics/'.request('agency')) }}">@lang('listing.statistics')</a>
+                                        <a href="{{ url('listing/statistics/'.request('agency')) }}">@lang('listing.import_statistics')</a>
                                     </li>
 
                                 @elseif(moderator())
                                     <li>
-                                        <a href="{{ url('listing/statistics/'.request('agency')) }}">@lang('listing.statistics')</a>
+                                        <a href="{{ url('listing/statistics/'.request('agency')) }}">@lang('listing.import_statistics')</a>
                                     </li>
                                 @else
                                     <li>
-                                        <a href="{{ url('listing/statistics/'.auth()->user()->agency_id) }}">@lang('listing.statistics')</a>
+                                        <a href="{{ url('listing/statistics/'.auth()->user()->agency_id) }}">@lang('listing.import_statistics')</a>
+                                    </li>
+                                @endif
+                            {{--@endcan--}}
+
+                            {{--@can('view_statistics')--}}
+                                @if(owner())
+                                    <li>
+                                        <a href="{{ url('listing/statistics_data/'.request('agency')) }}">@lang('listing.statistics')</a>
+                                    </li>
+
+                                @elseif(moderator())
+                                    <li>
+                                        <a href="{{ url('listing/statistics_data/'.request('agency')) }}">@lang('listing.statistics')</a>
+                                    </li>
+                                @else
+                                    <li>
+                                        <a href="{{ url('listing/statistics_data/'.auth()->user()->agency_id) }}">@lang('listing.statistics')</a>
                                     </li>
                                 @endif
                             {{--@endcan--}}

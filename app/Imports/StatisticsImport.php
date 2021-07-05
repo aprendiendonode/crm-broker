@@ -5,6 +5,7 @@ namespace App\Imports;
 
 use App\FaildLead;
 use App\Models\Statistics;
+use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
@@ -20,15 +21,17 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 //use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Modules\SuperAdmin\Entities\SubCommunity;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 
 //class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
-class StatisticsImport implements ToModel, WithStartRow
+class StatisticsImport  implements  ToModel, WithStartRow
 {
     public $business, $agency;
     public $const = null;
 
     public function __construct($business, $agency)
     {
+
         $this->business = $business;
         $this->agency = $agency;
     }
@@ -40,6 +43,7 @@ class StatisticsImport implements ToModel, WithStartRow
      */
     public function model(array $row)
     {
+
         if (!$this->const) {
             $this->const = $row[22];
         }
@@ -57,12 +61,13 @@ class StatisticsImport implements ToModel, WithStartRow
             $price_sqft = $row[15] / $size_sqft;
         }
 
+
         $statistics = new Statistics([
             'data_source' => $row[0],
             'transaction_type' => $row[1],
             'type' => strtolower($row[2]) == 'sale' || strtolower($row[2]) == 'rent' ? strtolower($row[2]) : null,
-            'day' => $row[3],
-            'month' => $row[4],
+            'day' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3])->format('Y-m-d'),
+            'month' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4])->format('Y-m'),
             'country_id' => $country ? $country->id : null,
             'city_id' => $city ? $city->id : null,
             'area_code' => $row[7],

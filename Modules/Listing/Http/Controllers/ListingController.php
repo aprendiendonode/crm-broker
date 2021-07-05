@@ -213,8 +213,33 @@ class ListingController extends Controller
     {
         return $this->repository->statistics($agency);
     }
+    public function statistics_view($agency)
+    {
+        return $this->repository->statistics_view($agency);
+    }
     public function statistics_process(Request $request)
     {
         return $this->repository->statistics_process($request);
+    }
+
+    public function mark(Request $request)
+    {
+        return $this->repository->mark($request);
+    }
+    public function lsm_change(Request $request)
+    {
+        return $this->repository->lsm_change($request);
+    }
+    public function staff_change_shortcut(Request $request)
+    {
+        return $this->repository->staff_change_shortcut($request);
+    }
+    public function status_change_shortcut(Request $request)
+    {
+        return $this->repository->status_change_shortcut($request);
+    }
+    public function move_to_archive(Request $request)
+    {
+        return $this->repository->move_to_archive($request);
     }
 }

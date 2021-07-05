@@ -277,6 +277,14 @@ return [
     'choose_features_to_copy' => 'Choose Features To Copy',
     'no_arabic_profile_for_agency' => "No Arabic Profile For Agency",
     'no_english_profile_for_agent' => 'No English Profile For Agent',
+    'no_english_profile_for_agency' => 'No English Profile For Agency',
+    'statistics' => 'Statistics',
+    'listing_hot'    => 'Listing Has Been Marked Hot',
+    'listing_basic'  => 'Listing Has Been Marked Basic',
+    'listing_marked'  => 'Listing Has Been Marked',
+    'listing_lsm'     => 'Listing Has Been Updated To ',
+    'listing_staff_updated' => 'Listing Staff Updated',
+    'listing_status_updated' => 'Listing Status Updated',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',
@@ -315,5 +323,23 @@ return [
     'send_request_confirmation' =>  'Are you sure to Send Request to this agency?',
     /////////////////////////End Share Listing////////////////////////
 
+    'statistics'                    => 'Statistics',
+    'import_statistics'             => 'Import Statistics',
+    'sheet_import_process_start'    => 'Sheet import process starting.',
+    'data_source'                   => 'DATA SOURCE',
+    'transaction_type'              => 'TRANSACTION TYPE',
+    'statistics_type'               => 'SALE/RENT',
+    'day'                           => 'Day',
+    'month'                         => 'Month',
+    'country'                       => 'Country',
+    'area_code'                     => 'AREA CODE',
+    'property_type'                 => 'PROPERTY TYPE',
+    'property_number'               => 'PROPERTY NUMBER',
+    'additional_details'            => 'ADDITIONAL DETAILS',
+    'size_sqm'                      => 'SIZE SQM',
+    'price_sqm'                     => 'PRICE / SQM',
+    'total_worth'                   => 'Total Worth',
+    'size_sqft'                     => 'SIZE SQFT',
+    'price_sqft'                    => 'PRICE/SQFT',
 
 ];

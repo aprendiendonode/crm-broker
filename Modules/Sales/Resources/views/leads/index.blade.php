@@ -11,6 +11,8 @@
 
 <link href="{{asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
 
+<link rel="stylesheet" href="{{ asset('assets/css/intlcss/intlTelInput.css') }}" />
+
 
 @endsection
 @section('content')
@@ -97,11 +99,16 @@
 <script src="{{asset('assets/libs/clockpicker/bootstrap-clockpicker.min.js')}}"></script>
 
 {{-- <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script> --}}
-<script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script> --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"
+integrity="sha512-DNeDhsl+FWnx5B1EQzsayHMyP6Xl/Mg+vcnFPXGNjUZrW28hQaa1+A4qL9M+AiOMmkAhKAWYHh1a+t6qxthzUw=="
+crossorigin="anonymous"
+></script>
 
-
-
+<script src="{{ asset('assets/js/validation.js') }}"></script>
 <script>
     $(document).ready(function() {
         $('.select2').select2();
