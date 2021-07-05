@@ -262,6 +262,22 @@ return [
     'main' => 'Main',
     'select_category' => 'Select A Category',
 
+    'tenant_start_date' => 'Tenant Start Date',
+    'tenant_end_date'   => 'Tenant End Date',
+    'tenant'            => 'Tenant',
+    'plot'              => 'Plot',
+    'select_template'   => 'Select Template',
+    'copy_features'     => 'Copy Features',
+    'company_profile'   => 'Company Profile',
+    'agent_profile'     => 'Agent Profile',
+    'add_description'   => 'Add Description',
+    'english'           => 'English',
+    'arabic'            => 'Arabic',
+    'no_arabic_profile_for_agent' => "No Arabic Profile For Agent",
+    'choose_features_to_copy' => 'Choose Features To Copy',
+    'no_arabic_profile_for_agency' => "No Arabic Profile For Agency",
+    'no_english_profile_for_agent' => 'No English Profile For Agent',
+
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',
     'title'                     =>  'Title',

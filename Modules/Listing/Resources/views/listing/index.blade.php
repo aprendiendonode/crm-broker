@@ -625,8 +625,8 @@
                 $('.en-button').removeClass('d-none');
                 $('.ar-button').addClass('d-none');
 
-                $('.agent-profile-en').removeClass('d-none');
-                $('.agent-profile-ar').addClass('d-none');
+                $('.profile-en').removeClass('d-none');
+                $('.profile-ar').addClass('d-none');
                 $('.features_copy_en').removeClass('d-none');
                 $('.features_copy_ar').addClass('d-none');
                 $('.templates-en').removeClass('d-none');
@@ -637,8 +637,8 @@
                 $('.ar-button').removeClass('d-none');
                 $('.en-button').addClass('d-none');
 
-                $('.agent-profile-ar').removeClass('d-none');
-                $('.agent-profile-en').addClass('d-none');
+                $('.profile-ar').removeClass('d-none');
+                $('.profile-en').addClass('d-none');
                 $('.features_copy_ar').removeClass('d-none');
                 $('.features_copy_en').addClass('d-none');
 
@@ -661,8 +661,8 @@
                 $('.en-button-'+id).removeClass('d-none');
                 $('.ar-button-'+id).addClass('d-none');
 
-                $('.agent-profile-en-'+id).removeClass('d-none');
-                $('.agent-profile-ar-'+id).addClass('d-none');
+                $('.profile-en-'+id).removeClass('d-none');
+                $('.profile-ar-'+id).addClass('d-none');
                 $('.features_copy_en_'+id).removeClass('d-none');
                 $('.features_copy_ar_'+id).addClass('d-none');
                 $('.templates-en-'+id).removeClass('d-none');
@@ -674,8 +674,8 @@
                 $('.ar-button-'+id).removeClass('d-none');
                 $('.en-button-'+id).addClass('d-none');
 
-                $('.agent-profile-ar-'+id).removeClass('d-none');
-                $('.agent-profile-en-'+id).addClass('d-none');
+                $('.profile-ar-'+id).removeClass('d-none');
+                $('.profile-en-'+id).addClass('d-none');
                 $('.features_copy_ar_'+id).removeClass('d-none');
                 $('.features_copy_en_'+id).addClass('d-none');
 
@@ -1155,6 +1155,8 @@ function updateMain(input,table,listing_id){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                
                 }else{
                     if( $('.agency-profile-en-'+id).data('agencyprofile') === ''){
                     var message = @json(trans('listing.no_english_profile_for_agency'));
@@ -1168,6 +1170,8 @@ function updateMain(input,table,listing_id){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                  
                 }
 
         }
@@ -1188,6 +1192,8 @@ function updateMain(input,table,listing_id){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                    $('.agent-profile-ar-'+id).val('');
                 }else{
                        if($('.agent-profile-en').find(':selected').data('agentprofile') == ''){
                             var message = @json(trans('listing.no_english_profile_for_agent'));
@@ -1201,6 +1207,8 @@ function updateMain(input,table,listing_id){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                    $('.agent-profile-en-'+id).val('');
                 }
         }
 
@@ -1318,6 +1326,8 @@ function updateMain(input,table,listing_id){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                    $('.load-templates-ar-'+id).val();
                 }else{
                     // typeof car.color === 'undefined'
                        if($('.load-templates-en-'+id).find(':selected').data('desctemplate') == ''){
@@ -1331,6 +1341,7 @@ function updateMain(input,table,listing_id){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+                    $('.load-templates-en-'+id).val();
                 }
 
 
