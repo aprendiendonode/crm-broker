@@ -284,6 +284,7 @@ return [
     'listing_marked'  => 'Listing Has Been Marked',
     'listing_lsm'     => 'Listing Has Been Updated To ',
     'listing_staff_updated' => 'Listing Staff Updated',
+    'listing_status_updated' => 'Listing Status Updated',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',

@@ -177,5 +177,9 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.lsm-change');
         Route::post('staff-change-shortcut', 'ListingController@staff_change_shortcut')
             ->name('listings.staff-change-shortcut');
+        Route::post('status-change-shortcut', 'ListingController@status_change_shortcut')
+            ->name('listings.status-change-shortcut');
+        Route::post('move-to-archive', 'ListingController@move_to_archive')
+            ->name('listings.move-to-archive');
     });
 });

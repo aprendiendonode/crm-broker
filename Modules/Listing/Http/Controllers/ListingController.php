@@ -234,4 +234,12 @@ class ListingController extends Controller
     {
         return $this->repository->staff_change_shortcut($request);
     }
+    public function status_change_shortcut(Request $request)
+    {
+        return $this->repository->status_change_shortcut($request);
+    }
+    public function move_to_archive(Request $request)
+    {
+        return $this->repository->move_to_archive($request);
+    }
 }

@@ -2423,4 +2423,54 @@ class ListingRepo
             return response()->json(['message' => trans('agency.something_went_wrong')], 400);
         }
     }
+    public function status_change_shortcut($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'ids'        => ['required', 'string'],
+                'status'    => ['required', 'in:draft,live,review,archive'],
+            ]);
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['status' => $request->status]);
+            $msg = trans('listing.listing_status_updated');
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+        }
+    }
+    public function move_to_archive($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'ids'        => ['required', 'string'],
+                'status'    => ['required', 'in:archive'],
+            ]);
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['status' => $request->status]);
+            $msg = trans('listing.listing_status_updated');
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+        }
+    }
 }

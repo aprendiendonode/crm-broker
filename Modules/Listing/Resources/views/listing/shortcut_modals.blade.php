@@ -150,33 +150,38 @@
              <div id="changeStatus">
                 <div class="modal-content shadow px-3 py-2">
                    <h6 class="text-center text-uppercase">Change Status</h6>
+                   <form id="statusForm">
+
+                   
                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="exampleRadios" id="Draft" value="Draft"
-                         checked />
+                      <input class="form-check-input" type="radio" name="statusChange" id="Draft" value="draft"
+                          />
                       <label class="form-check-label" for="Draft"> Draft </label>
                    </div>
                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="exampleRadios" id="Live" value="Live"
-                         checked />
+                      <input class="form-check-input" type="radio" name="statusChange" id="Live" value="live"
+                          />
                       <label class="form-check-label" for="Live"> Live </label>
                    </div>
                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="exampleRadios" id="Archive" value="Archive"
-                         checked />
+                      <input class="form-check-input" type="radio" name="statusChange" id="Archive" value="archive"
+                          />
                       <label class="form-check-label" for="Archive">
                          Archive
                       </label>
                    </div>
                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="exampleRadios" id="Review" value="Review"
-                         checked />
+                      <input class="form-check-input" type="radio" name="statusChange" id="Review" value="review"
+                          />
                       <label class="form-check-label" for="Review"> Review </label>
                    </div>
+
+                  </form>
                    <div class="d-flex justify-content-end">
                       <button onclick="closeModal('changeStatus')" class="btn btn-sm btn-outline-success mx-1">
                          No
                       </button>
-                      <button class="btn btn-sm btn-success mx-1">Yes</button>
+                      <button class="btn btn-sm btn-success mx-1" onclick="event.preventDefault();statusChange('{{ route('listings.status-change-shortcut') }}','{{ csrf_token() }}');">Yes</button>
                    </div>
                 </div>
              </div>
@@ -271,7 +276,8 @@
                       <button onclick="closeModal('moveToArchive')" class="btn btn-sm btn-outline-success mx-1">
                          No
                       </button>
-                      <button class="btn btn-sm btn-success mx-1">Yes</button>
+                      <button class="btn btn-sm btn-success mx-1"
+                       onclick="event.preventDefault();moveToArchive('{{ route('listings.move-to-archive') }}','{{ csrf_token() }}');">Yes</button>
                    </div>
                 </div>
              </div>

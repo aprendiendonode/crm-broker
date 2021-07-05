@@ -76,6 +76,10 @@ function markHotChange(type,url,csrf){
 function lsmChange(url,csrf){
   
 var type  = $('input[name=lsmChangeRadio]:checked', '#myform').val()
+if(typeof type == 'undefined'){
+   toast('Choose Type Please.','error')
+   return false;
+}
 
    $.ajax({
       url:url,
@@ -118,3 +122,53 @@ if(staff_id == ''){
    })
 
 }
+
+
+function statusChange(url,csrf){
+   var status  = $('input[name=statusChange]:checked', '#statusForm').val()
+
+  
+   if(typeof status == 'undefined'){
+      toast('Choose Status Please.','error')
+      return false;
+   }
+   
+      $.ajax({
+         url:url,
+         type:'POST',
+         data:{
+            ids : selectedRows.join(','),
+            status : status,
+            _token :csrf,
+          
+         },
+         success:function(data){
+            toast(data.message,'success')
+         },error:function(error){
+   
+         }
+      })
+   
+   }
+
+
+   function moveToArchive(url,csrf){
+      var status  = 'archive'
+
+         $.ajax({
+            url:url,
+            type:'POST',
+            data:{
+               ids : selectedRows.join(','),
+               status : status,
+               _token :csrf,
+             
+            },
+            success:function(data){
+               toast(data.message,'success')
+            },error:function(error){
+      
+            }
+         })
+      
+      }
