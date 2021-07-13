@@ -48,7 +48,7 @@
 
             
             <div class="mb-2 add_communication " @if(!session()->has('open-tab')) style="display: none;opacity:0;transition:0.7s" @endif>
-                @include('sales::settings.leadcommunications.create')
+                @include('sales::settings.LeadCommunications.create')
             </div>
         
 
@@ -73,12 +73,12 @@
                    
            
                             <td>
-                                @include('sales::settings.leadcommunications.controlls')
+                                @include('sales::settings.LeadCommunications.controlls')
                                
                             </td>
 
                         
-                            @include('sales::settings.leadcommunications.modals')
+                            @include('sales::settings.LeadCommunications.modals')
   
                         </tr>
                     
@@ -86,7 +86,7 @@
                             <tr  class="edit_communication_{{ $communication->id }}"  @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $communication->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
                                 <td colspan="8">
 
-                                    @include('sales::settings.leadcommunications.edit')
+                                    @include('sales::settings.LeadCommunications.edit')
 
                                 </td>
                             </tr>
