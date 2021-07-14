@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Modules\Setting\Entities\Template;
 use Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class EmailController extends Controller
 {

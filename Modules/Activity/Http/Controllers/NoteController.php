@@ -12,6 +12,7 @@ use Modules\Activity\Entities\ListingNote;
 use Modules\Activity\Entities\OpportunityNote;
 use Modules\Activity\Entities\TaskNote;
 use Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class NoteController extends Controller
 {
