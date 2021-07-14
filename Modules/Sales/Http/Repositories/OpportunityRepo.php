@@ -1085,6 +1085,7 @@ class OpportunityRepo
                 "email1"       =>    $request->{"client_email1_" . $request->opportunity_id},
                 "phone1"     =>     $request->{"client_phone1_" . $request->opportunity_id},
                 "phone1_code"     =>     $request->{"client_phone1_code_" . $request->opportunity_id},
+                "phone1_symbol"     =>     $request->{"client_phone1_symbol_" . $request->opportunity_id},
 
                 'converting_approval' => 'waiting_for_approve',
 
@@ -1148,9 +1149,9 @@ class OpportunityRepo
 
             $result = OpportunityResult::create([
                 // 'status' => $request->{'result_status_' . $id},
-                'stage' => $request->{'result_stage_' . $id},
-                'note' => $request->{'result_note_' . $id},
-                'added_by' => auth()->user()->id,
+                'stage'          => $request->{'result_stage_' . $id},
+                'note'           => $request->{'result_note_' . $id},
+                'added_by'       => auth()->user()->id,
                 'opportunity_id' => $opportunity->id,
             ]);
 
@@ -1889,6 +1890,8 @@ class OpportunityRepo
                 'phone1_code'  => $opportunity->phone1_code,
                 'phone2_code'  =>  $opportunity->phone2_code,
 
+                'phone1_symbol'  => $opportunity->phone1_symbol,
+                'phone2_symbol'  =>  $opportunity->phone2_symbol,
                 'skype' => $opportunity->skype,
                 'twitter' => $opportunity->twitter,
                 'facebook' => $opportunity->facebook,

@@ -7,10 +7,6 @@ $(function () {
 
     }, "Enter a valid number");
 
-    // Initialize form validation on the registration form.
-
-    // It has the name attribute "registration"
-
     $("form[name='lead-create']").validate({
 
         // Specify validation rules

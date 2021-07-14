@@ -107,10 +107,14 @@ class Opportunity extends Model
             "edit_phone2_" . $id                        => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
             "edit_phone3_" . $id                        => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
             "edit_phone4_" . $id                        => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
-            "edit_phone1_code_" . $id                        => "required",
-            "edit_phone2_code_" . $id                        => "sometimes|nullable",
-            "edit_phone3_code_" . $id                        => "sometimes|nullable",
-            "edit_phone4_code_" . $id                        => "sometimes|nullable",
+            "edit_phone1_code_" . $id                        => "required|string",
+            "edit_phone2_code_" . $id                        => "sometimes|nullable|string",
+            "edit_phone3_code_" . $id                        => "sometimes|nullable|string",
+            "edit_phone4_code_" . $id                        => "sometimes|nullable|string",
+            "edit_phone1_symbol_" . $id                        => "required|string",
+            "edit_phone2_symbol_" . $id                        => "sometimes|nullable|string",
+            "edit_phone3_symbol_" . $id                        => "sometimes|nullable|string",
+            "edit_phone4_symbol_" . $id                        => "sometimes|nullable|string",
             "edit_landline_" . $id                      => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
             "edit_fax_" . $id                           => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
             "edit_developer_" . $id                     => "sometimes|nullable|string",
@@ -157,6 +161,11 @@ class Opportunity extends Model
 
             "client_phone1_" .  $request->opportunity_id                       => "required|regex:/^([0-9\s\-\+\(\)]*)$/",
             "client_phone2_" .  $request->opportunity_id                       => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
+            "client_phone1_code_" .  $request->opportunity_id                       => "required|string",
+            "client_phone2_code_" .  $request->opportunity_id                       => "sometimes|nullable|string",
+
+            "client_phone1_symbol_" .  $request->opportunity_id                       => "required|string",
+            "client_phone2_symbol_" .  $request->opportunity_id                       => "sometimes|nullable|string",
 
             // "client_country_" .  $request->opportunity_id                      => "required|string|exists:countries,value",
 

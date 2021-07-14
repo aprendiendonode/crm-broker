@@ -9,7 +9,8 @@
                     <div class="d-flex">
                   
                         <div class="" style="flex:4">
-                            <input type="text" class="form-control phone_check" data-plugin="tippy" data-tippy-placement="top-start" title="@lang('agency.phone')"  name="phone_check" >
+                            <input type="text" class="form-control phone_check" data-plugin="tippy" data-tippy-placement="top-start"
+                             title="@lang('agency.phone')"  name="phone_check" >
                         </div>
                     </div>
                 </div>
@@ -26,25 +27,18 @@
 
             </div> 
     --}}
-
-
-
             <div class="col-md-6 col-lg-4 mt-3">
 
-                <button class="btn btn-primary" onclick="check_lead()" >@lang('sales.check')</button>
+                <button class="btn btn-primary" onclick="check_lead('{{ $business }}','{{ $agency }}',"{{ url('sales/leads/'.$agency) }}",
+                '{{ trans('sales.found_lead') }}', '{{ trans("sales.not_found_lead") }}',)
+                " >@lang('sales.check')</button>
                 <button class="btn btn-success" onclick="event.preventDefault();show_add_div()" >@lang('sales.create_directly')</button>
             </div>
             <div class="col-md-12 col-lg-12 mt-1">
 
               <p class="check-result" style="font-size:20px;"></p>
             </div>
-
-
-
-
     </div>
-  
-
 
 </div>
 
@@ -52,19 +46,12 @@
 @push('js')
     <script>
 
-      function check_lead(){
-        //    var email = $('.email_check').val();
+      function check_lead(business,agency,url,found,not_found){
            var phone = $('.phone_check').val();
-
-            {{--var total_leads = @json($total_leads);--}}
             var filtered_leads = [];
-          var agency   =  @json($agency);
-          var business =  @json($business);
+          var agency   =  agency;
+          var business =  business;
 
-                // total_leads.filter(function(lead){
-                //     return lead.phone1 == phone || lead.phone2 == phone || lead.phone3 == phone  || lead.phone4 == phone || lead.landline == phone;
-                //     //  ||  lead.email1 == email ||  lead.email2 == email || lead.email3 == email
-                // });
           $.ajax({
               url:"{{ route('leads.check_before_create')  }}",
               type:'POST',
@@ -81,15 +68,15 @@
 
 
                   if(filtered_leads.length > 0){
-                      var result_words = @json(trans('sales.found_lead'));
-                      var url = @json(url('sales/leads/'.$agency));
+                      var result_words = found
+                      var url = url
                       var link = '<a href="'+url+'?filter_phone='+phone+'"> Here </a>'
                       $('.check-result').text(filtered_leads.length  +' '+result_words )
                       $('.check-result').append(link)
 
                   } else {
 
-                      var result_words = @json(trans('sales.not_found_lead'));
+                      var result_words = not_found
                       $('.check-result').text(result_words)
                   }
 

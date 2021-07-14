@@ -28,7 +28,7 @@
 
 <div class="rejection_form_{{ $opportunity->id }} @if($opportunity->converting_approval == 'rejected') d-none @endif">
 
-<form  action="{{ url('sales/convert-to-client') }}" data-parsley-validate="" method="POST" enctype="multipart/form-data">
+<form  action="{{ url('sales/convert-to-client') }}" data-parsley-validate="" method="POST" name="client-update-{{ $opportunity->id }}" enctype="multipart/form-data">
     <div class="row">
             @csrf
     
@@ -110,29 +110,16 @@
 
           
         <div class="form-group d-flex">
-
-            <div style="flex:2">
-                <div>
-                    <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
-                </div>
-                <select class="form-control select2" name="client_phone1_code_{{ $opportunity->id }}" required>
-                    <option value=""></option>
-                    @foreach($countries as $code)
-                        <option 
-                        @if(old('client_phone1_code_'.$opportunity->id,$opportunity->phone1_code) == $code->phone_code)
-                         selected
-                        @endif
-                                value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
-                    @endforeach
-                </select>
-            </div>
+            <input type="hidden" name="client_phone1_code_{{ $opportunity->id }}" class="client_phone1_code_{{ $opportunity->id }} "   value="{{ old('client_phone1_code_'.$opportunity->id,$opportunity->phone1_code) }}">
+            <input type="hidden" name="client_phone1_symbol_{{ $opportunity->id }}" class="client_phone1_symbol_{{ $opportunity->id }} " value="{{ old('client_phone1_symbol_'.$opportunity->id,$opportunity->phone1_symbol) }}">
+         
             <div style="flex:4">
             <div>
                 <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
             </div>
             <div class="">
                 <input  
-                        type="text" class="form-control"
+                        type="text" class="form-control client_phone1_{{ $opportunity->id }}"
                        name="client_phone1_{{ $opportunity->id }}" value="{{ old("client_phone1_{$opportunity->id}",$opportunity->phone1) }}"
                        placeholder="@lang('sales.phone1')" required>
             </div>
@@ -144,7 +131,7 @@
         <div class="form-group">
             <lable class="text-muted pr-2 font-weight-medium mt-1" style="flex:2">@lang('sales.email')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></lable>
 
-            <input type="email" class="form-control"  name="client_email1_{{ $opportunity->id }}"  value="{{ old("client_email1_{$opportunity->id}",$opportunity->email1) }}" placeholder="@lang('sales.email')">
+            <input type="email" class="form-control "  name="client_email1_{{ $opportunity->id }}"  value="{{ old("client_email1_{$opportunity->id}",$opportunity->email1) }}" placeholder="@lang('sales.email')">
         </div>
 
 
@@ -531,3 +518,109 @@ function add_single_recurring(id){
 }
 </script>
   @endpush
+
+
+
+  @if( (session()->has('open-client-tab') && session('open-client-tab') ==  $opportunity->id ))
+
+
+  @push('js')
+  <script>
+  
+                  
+                  var formClientPageSubmit = true;
+                  
+                  var opportunity =@json($opportunity) ;
+                  var client_page_phone1 = document.querySelector(".client_phone1_"+opportunity.id);
+                  var client_page_phone1_iti = window.intlTelInput(client_page_phone1, {
+                  
+                    initialCountry: "auto",
+                    utilsScript: "{{ asset('assets/js/util.js') }}",
+                  });
+                  var symbol = "{{ old('client_phone1_symbol_'.$opportunity->id,$opportunity->phone1_sumbol) }}"
+                  if(symbol){
+  
+                      client_page_phone1_iti.setCountry(symbol);
+                  }
+  
+                  
+                  $('.client_phone1_'+opportunity.id).change(function(){
+                      
+                      var number = client_page_phone1_iti.getSelectedCountryData();
+                      if(client_page_phone1_iti.isValidNumber() == false){
+                          $('.client_phone1_'+opportunity.id).css({"border-color": "red", 
+                          "border-width":"1px", 
+                          "border-style":"solid"});
+                          formClientPageSubmit = false;
+                          return false;
+                      } else{
+                          $('.client_phone1_'+opportunity.id).css({"border-color": "#ced4da", 
+                          "border-width":"1px", 
+                          "border-style":"solid"});
+                          formClientPageSubmit = true;
+                      }
+  
+  
+                  
+                      var str = client_page_phone1.value;
+                      if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                          formClientPageSubmit = false;
+                          $('.client_phone1_'+opportunity.id).css({"border-color": "red", 
+                          "border-width":"1px", 
+                          "border-style":"solid"});
+                          return false;
+                      }else{
+  
+                          $('.client_phone1_'+opportunity.id).css({"border-color": "#ced4da", 
+                          "border-width":"1px", 
+                          "border-style":"solid"});
+                          formClientPageSubmit = true;
+                      }
+  
+              
+                      
+                  })
+  
+                  client_page_phone1.addEventListener("countrychange", function() {
+                          number = client_page_phone1_iti.getSelectedCountryData()           
+                          $('.client_phone1_code_'+opportunity.id).val(number.dialCode)
+                          $('.client_phone1_symbol_'+opportunity.id).val(number.iso2)
+                          if(client_page_phone1.value != ''){
+                              var str = client_page_phone1.value;
+                              if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                  formClientPageSubmit = false;
+                                  $('.client_phone1_'+opportunity.id).css({"border-color": "red", 
+                                  "border-width":"1px", 
+                                  "border-style":"solid"});
+                                  return false;
+                              }else{
+  
+                                  $('.client_phone1_'+opportunity.id).css({"border-color": "#ced4da", 
+                                  "border-width":"1px", 
+                                  "border-style":"solid"});
+                                  formClientPageSubmit = true;
+                              }
+                          }
+                          if(!client_page_phone1_iti.isValidNumber()){
+                                  formClientPageSubmit = false;
+                                  $('.client_phone1_'+opportunity.id).css({"border-color": "red", 
+                                  "border-width":"1px", 
+                                  "border-style":"solid"});
+                                  return false;
+                          }
+  
+  
+                  });
+                  
+  
+  
+               
+  
+                  $('form[name="client-update-'+opportunity.id+'"]').submit(function(e){
+                      return formClientPageSubmit == false ? event.preventDefault() : true;
+                  });
+  
+  
+  </script>
+  @endpush
+  @endif

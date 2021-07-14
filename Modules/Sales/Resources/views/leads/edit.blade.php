@@ -1,4 +1,5 @@
 <form action="{{ url('sales/manage_leads/'.$lead->id) }}"  method="POST"
+    name="lead-update-{{ $lead->id }}"
       enctype="multipart/form-data">
     <div class="row">
         @csrf
@@ -155,6 +156,7 @@
 
             <input type="hidden" class="country_code" name="edit_country_code_{{ $lead->id }}"
                    value="{{ old("edit_country_code_{$lead->id}",$lead->country_code) }}">
+
             <input type="hidden" class="timezone" name="edit_timezone_{{ $lead->id }}"
                    value="{{ old("edit_timezone_{$lead->id}",$lead->timezone) }}">
             <input type="hidden" class="country_flag" name="edit_country_flag_{{ $lead->id }}"
@@ -163,28 +165,22 @@
 
             <div class="form-group d-flex">
 
-                <div style="flex:2">
-                    <div>
-                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
-                    </div>
-                    <select class="form-control select2" name="edit_phone1_code_{{ $lead->id }}" required>
-                        <option value=""></option>
-                        @foreach($countries as $code)
-                            <option 
-                            @if(old('edit_phone1_code_'.$lead->id,$lead->phone1_code) == $code->phone_code)
-                             selected
-                            @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <input type="hidden" name="edit_phone1_code_{{ $lead->id }}" class="edit_phone1_code_{{ $lead->id }}"   value="{{ old('edit_phone1_code_'.$lead->id,$lead->phone1_code) }}">
+                <input type="hidden" name="edit_phone1_symbol_{{ $lead->id }}" class="edit_phone1_symbol_{{ $lead->id }}" value="{{ old('edit_phone1_symbol_'.$lead->id,$lead->phone1_symbol) }}">
+                <input type="hidden" name="edit_phone2_code_{{ $lead->id }}" class="edit_phone2_code_{{ $lead->id }}"   value="{{ old('edit_phone2_code_'.$lead->id,$lead->phone2_code) }}">
+                <input type="hidden" name="edit_phone2_symbol_{{ $lead->id }}" class="edit_phone2_symbol_{{ $lead->id }}" value="{{ old('edit_phone2_symbol_'.$lead->id,$lead->phone2_symbol) }}">
+                <input type="hidden" name="edit_phone3_code_{{ $lead->id }}" class="edit_phone3_code_{{ $lead->id }}" value="{{ old('edit_phone3_code_'.$lead->id,$lead->phone3_code) }}">
+                <input type="hidden" name="edit_phone3_symbol_{{ $lead->id }}" class="edit_phone3_symbol_{{ $lead->id }}" value="{{ old('edit_phone3_symbol_'.$lead->id,$lead->phone3_symbol) }}">
+                <input type="hidden" name="edit_phone4_code_{{ $lead->id }}" class="edit_phone4_code_{{ $lead->id }}" value="{{ old('edit_phone4_code_'.$lead->id,$lead->phone4_code) }}">
+                <input type="hidden" name="edit_phone4_symbol_{{ $lead->id }}" class="edit_phone4_symbol_{{ $lead->id }}" value="{{ old('edit_phone4_symbol_'.$lead->id,$lead->phone4_symbol) }}">
+
                 <div style="flex:4">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
                 </div>
                 <div class="">
                     <input  
-                            type="text" class="form-control"
+                            type="text" class="form-control phone1_{{ $lead->id }}"
                            name="edit_phone1_{{ $lead->id }}" value="{{ old("edit_phone1_{$lead->id}",$lead->phone1) }}"
                            placeholder="@lang('sales.phone1')" required>
                 </div>
@@ -194,21 +190,6 @@
 
             <div class="form-group d-flex">
 
-                <div style="flex:2">
-                    <div>
-                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
-                    </div>
-                    <select class="form-control select2" name="edit_phone2_code_{{ $lead->id }}" >
-                        <option value=""></option>
-                        @foreach($countries as $code)
-                            <option 
-                            @if(old('edit_phone2_code_'.$lead->id,$lead->phone2_code) == $code->phone_code)
-                             selected
-                            @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
-                        @endforeach
-                    </select>
-                </div>
                 <div style="flex:4">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone2')</label>
@@ -216,7 +197,7 @@
 
                 <div class="">
                     <input   
-                            type="text" class="form-control"
+                            type="text" class="form-control phone2_{{ $lead->id }}"
                            name="edit_phone2_{{ $lead->id }}" value="{{ old("edit_phone2_{$lead->id}",$lead->phone2) }}"
                            placeholder="@lang('sales.phone2')">
                 </div>
@@ -226,22 +207,6 @@
 
             <div class="form-group d-flex">
 
-
-                <div style="flex:2">
-                    <div>
-                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
-                    </div>
-                    <select class="form-control select2" name="edit_phone3_code_{{ $lead->id }}" >
-                        <option value=""></option>
-                        @foreach($countries as $code)
-                            <option 
-                            @if(old('edit_phone3_code_'.$lead->id,$lead->phone3_code) == $code->phone_code)
-                             selected
-                            @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
-                        @endforeach
-                    </select>
-                </div>
                 <div style="flex:4">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone3')</label>
@@ -250,7 +215,7 @@
 
                 <div class="">
                     <input   
-                            type="text" class="form-control"
+                            type="text" class="form-control phone3_{{ $lead->id }}"
                            name="edit_phone3_{{ $lead->id }}" value="{{ old("edit_phone3_{$lead->id}",$lead->phone3) }}"
                            placeholder="@lang('sales.phone3')">
                 </div>
@@ -259,23 +224,6 @@
 
 
             <div class="form-group d-flex">
-
-                          <div style="flex:2">
-                    <div>
-                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
-                    </div>
-                    <select class="form-control select2" name="edit_phone4_code_{{ $lead->id }}" >
-                        <option value=""> </option>
-                        @foreach($countries as $code)
-                            <option 
-                                @if(old('edit_phone4_code_'.$lead->id,$lead->phone4_code) == $code->phone_code)
-                                selected
-                                @endif
-                                value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}
-                           </option>
-                        @endforeach
-                    </select>
-                </div>
                 <div style="flex:4">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone4')</label>
@@ -283,7 +231,7 @@
 
                 <div class="">
                     <input   
-                            type="text" class="form-control"
+                            type="text" class="form-control phone4_{{ $lead->id }}"
                            name="edit_phone4_{{ $lead->id }}" value="{{ old("edit_phone4_{$lead->id}",$lead->phone4) }}"
                            placeholder="@lang('sales.phone4')">
                 </div>
@@ -947,3 +895,357 @@
     </div>
 
 </form>
+
+
+@if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $lead->id ))
+
+
+@push('js')
+<script>
+
+                
+                var formEditSubmit = true;
+                
+                var lead =@json($lead) ;
+                var edit_page_phone1 = document.querySelector(".phone1_"+lead.id);
+                var edit_page_phone1_iti = window.intlTelInput(edit_page_phone1, {
+                
+                  initialCountry: "auto",
+                  utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+                if(lead.phone1_symbol ){
+
+                    edit_page_phone1_iti.setCountry(lead.phone1_symbol);
+                }
+
+                
+                $('.phone1_'+lead.id).change(function(){
+                    
+                    var number = edit_page_phone1_iti.getSelectedCountryData();
+                    if(edit_page_phone1_iti.isValidNumber() == false){
+                        $('.phone1_'+lead.id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = false;
+                        return false;
+                    } else{
+                        $('.phone1_'+lead.id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = true;
+                    }
+
+
+                
+                    var str = edit_page_phone1.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formEditSubmit = false;
+                        $('.phone1_'+lead.id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.phone1_'+lead.id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                edit_page_phone1.addEventListener("countrychange", function() {
+                        number = edit_page_phone1_iti.getSelectedCountryData()           
+                        $('.edit_page_phone1_code_'+lead.id).val(number.dialCode)
+                        $('.edit_page_phone1_symbol_'+lead.id).val(number.iso2)
+                        if(edit_page_phone1.value != ''){
+                            var str = edit_page_phone1.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formEditSubmit = false;
+                                $('.phone1_'+lead.id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.phone1_'+lead.id).css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formEditSubmit = true;
+                            }
+                        }
+                        if(!edit_page_phone1_iti.isValidNumber()){
+                                formEditSubmit = false;
+                                $('.phone1_'+lead.id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+                
+
+
+
+
+
+                var edit_page_phone2 = document.querySelector(".phone2_"+lead.id);
+                var edit_page_phone2_iti = window.intlTelInput(edit_page_phone2, {
+                
+                  initialCountry: "auto",
+                  utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+                if(lead.phone2_symbol){
+
+                    edit_page_phone2_iti.setCountry(lead.phone2_symbol);
+                }
+
+
+
+                $('.phone2_'+lead.id).change(function(){
+                    var number = edit_page_phone2_iti.getSelectedCountryData();
+                    if(edit_page_phone2_iti.isValidNumber() == false){
+                        $('.phone2_'+lead.id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = false;
+                        return false;
+                    } else{
+                        $('.phone2_'+lead.id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = true;
+                    }
+
+
+                
+                    var str = edit_page_phone2.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formEditSubmit = false;
+                        $('.phone2_'+lead.id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.phone2_'+lead.id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                edit_page_phone2.addEventListener("countrychange", function() {
+                        number = edit_page_phone2_iti.getSelectedCountryData()           
+                        $('.edit_page_phone2_code_'+lead.id).val(number.dialCode)
+                        $('.edit_page_phone2_symbol_'+lead.id).val(number.iso2)
+                        if(edit_page_phone2.value != ''){
+                            var str = edit_page_phone2.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formEditSubmit = false;
+                                $('.phone2_'+lead.id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.phone2_'+lead.id).css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formEditSubmit = true;
+                            }
+                        }
+                        if(!edit_page_phone2_iti.isValidNumber()){
+                                formEditSubmit = false;
+                                $('.phone2_'+lead.id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+
+
+
+
+
+
+
+                var edit_page_phone3 = document.querySelector(".phone3_"+lead.id);
+                var edit_page_phone3_iti = window.intlTelInput(edit_page_phone3, {
+                
+                  initialCountry: "auto",
+                  utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+              if(lead.phone3_symbol){
+
+                edit_page_phone3_iti.setCountry(lead.phone3_symbol);
+              }
+
+
+                $('.phone3_'+lead.id).change(function(){
+                    var number = edit_page_phone3_iti.getSelectedCountryData();
+                    if(edit_page_phone3_iti.isValidNumber() == false){
+                        $('.phone3_'+lead.id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = false;
+                        return false;
+                    } else{
+                        $('.phone3_'+lead.id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = true;
+                    }
+
+
+                
+                    var str = edit_page_phone3.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formEditSubmit = false;
+                        $('.phone3_'+lead.id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.phone3_'+lead.id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                edit_page_phone3.addEventListener("countrychange", function() {
+                        number = edit_page_phone3_iti.getSelectedCountryData()           
+                        $('.edit_page_phone3_code_'+lead.id).val(number.dialCode)
+                        $('.edit_page_phone3_symbol_'+lead.id).val(number.iso2)
+                        if(edit_page_phone3.value != ''){
+                            var str = edit_page_phone3.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formEditSubmit = false;
+                                $('.phone3_'+lead.id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.phone3_'+lead.id).css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formEditSubmit = true;
+                            }
+                        }
+                        if(!edit_page_phone3_iti.isValidNumber()){
+                                formEditSubmit = false;
+                                $('.phone3_'+lead.id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+
+
+
+
+
+
+                var edit_page_phone4 = document.querySelector(".phone4_"+lead.id);
+                var edit_page_phone4_iti = window.intlTelInput(edit_page_phone4, {
+                
+                  initialCountry: "auto",
+                  utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+                 if(lead.phone4_symbol){
+                edit_page_phone4_iti.setCountry(lead.phone4_symbol);
+                }
+
+
+                $('.phone4_'+lead.id).change(function(){
+                    var number = edit_page_phone4_iti.getSelectedCountryData();
+                    if(edit_page_phone4_iti.isValidNumber() == false){
+                        $('.phone4_'+lead.id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = false;
+                        return false;
+                    } else{
+                        $('.phone4_'+lead.id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = true;
+                    }
+
+
+                
+                    var str = edit_page_phone4.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formEditSubmit = false;
+                        $('.phone4_'+lead.id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.phone4_'+lead.id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formEditSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                edit_page_phone4.addEventListener("countrychange", function() {
+                        number = edit_page_phone4_iti.getSelectedCountryData()           
+                        $('.edit_page_phone4_code_'+lead.id).val(number.dialCode)
+                        $('.edit_page_phone4_symbol_'+lead.id).val(number.iso2)
+                        if(edit_page_phone4.value != ''){
+                            var str = edit_page_phone4.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formEditSubmit = false;
+                                $('.phone4_'+lead.id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.phone4_'+lead.id).css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formEditSubmit = true;
+                            }
+                        }
+                        if(!edit_page_phone4_iti.isValidNumber()){
+                                formEditSubmit = false;
+                                $('.phone4_'+lead.id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+
+
+                $('form[name="lead-update-'+lead.id+'"]').submit(function(e){
+                    return formEditSubmit == false ? event.preventDefault() : true;
+                });
+
+
+</script>
+@endpush
+@endif

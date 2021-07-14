@@ -22,14 +22,6 @@
 
         <div class="col-md-4">
 
-            <input
-            type="text"
-            class="form-control"
-            name="phone"
-            id="telephone"
-          />
-      
-
             <div class="form-group" style="margin-bottom:32px">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.salutation')</label>
@@ -136,7 +128,7 @@
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.nationality')</label>
                 </div>
-                <select required onchange="toggleCountryData()" id="nationality_id" class="form-control select2 "
+                <select required  id="nationality_id" class="form-control select2 "
                         name="nationality_id"
                         data-toggle="select2" data-placeholder="@lang('sales.nationality')">
                     <option value=""></option>
@@ -167,34 +159,18 @@
             <input type="hidden" class="country_code" name="country_code">
             <input type="hidden" class="timezone" name="timezone">
             <input type="hidden" class="country_flag" name="country_flag">
-
-
-            <input type="hidden" name="phone1_code">
-
             <div class="form-group d-flex">
-                <div style="flex:2">
-                    <div>
-                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
-                    </div>
-                    <select class="form-control select2" name="phone1_code" required>
-                    
-                        <option value=""></option>
-                        @foreach($countries as $code)
-                            <option 
-                            @if(old('phone1_code') == $code->phone_code) 
-                            selected
-                            @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->value .' ) '   }}</option>
-                        @endforeach
-                    </select>
-                </div>
+            
+                    <input type="hidden" name="phone1_code" class="phone1_code" >
+                    <input type="hidden" name="phone1_symbol" class="phone1_symbol" >
+        
                 <div style="flex:4">
                     <div>
                         <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
                     </div>
                     <div class="">
                         <input  
-                                type="text" class="form-control" name="phone1"
+                                type="text" class="form-control phone1" name="phone1"
                             value="{{ old('phone1') }}" placeholder="@lang('sales.phone1')" required>
                     </div>
                 </div>
@@ -202,21 +178,10 @@
 
 
             <div class="form-group d-flex">
-                <div style="flex:2">
-                    <div>
-                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
-                    </div>
-                    <select class="form-control select2" name="phone2_code">
-                        <option value=""></option>
-                        @foreach($countries as $code)
-                            <option 
-                            @if(old('phone2_code') == $code->phone_code) 
-                             selected
-                            @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->value .' ) '   }}</option>
-                        @endforeach
-                    </select>
-                </div>
+
+                <input type="hidden" name="phone2_code" class="phone2_code" >
+                <input type="hidden" name="phone2_symbol" class="phone2_symbol" >
+
                 <div style="flex:4">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone2')</label>
@@ -224,7 +189,7 @@
 
                 <div class="">
                     <input   
-                           type="text" class="form-control" name="phone2"
+                           type="text" class="form-control phone2" name="phone2"
                            value="{{ old('phone2') }}" placeholder="@lang('sales.phone2')">
                 </div>
             </div>
@@ -233,21 +198,9 @@
 
             <div class="form-group d-flex">
 
-                <div style="flex:2">
-                    <div>
-                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
-                    </div>
-                    <select class="form-control select2" name="phone3_code">
-                        <option value=""></option>
-                        @foreach($countries as $code)
-                            <option
-                            @if(old('phone3_code') == $code->phone_code) 
-                            selected
-                            @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->value .' ) '   }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <input type="hidden" name="phone3_code" class="phone3_code" >
+                <input type="hidden" name="phone3_symbol" class="phone3_symbol" >
+
                 <div style="flex:4">
 
 
@@ -258,7 +211,7 @@
 
                 <div class="">
                     <input   
-                            type="text" class="form-control" name="phone3"
+                            type="text" class="form-control phone3" name="phone3"
                            value="{{ old('phone3') }}" placeholder="@lang('sales.phone3')">
                 </div>
             </div>
@@ -267,29 +220,17 @@
 
             <div class="form-group d-flex">
 
-                <div style="flex:3">
-                    <div>
-                        <label class="text-muted font-weight-medium" for="">@lang('sales.country_code')</label>
-                    </div>
-                    <select class="form-control select2" name="phone4_code" >
-                        <option value=""></option>
-                        @foreach($countries as $code)
-                            <option 
-                            @if(old('phone4_code') == $code->phone_code) 
-                            selected
-                            @endif
-                                    value="{{$code->phone_code}}" >{{ $code->phone_code .' ( '. $code->value .' ) '   }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div style="flex:3">
+                <input type="hidden" name="phone4_code" class="phone4_code" >
+                <input type="hidden" name="phone4_symbol" class="phone4_symbol" >
+
+                <div style="flex:4">
                 <div>
                     <label class="text-muted font-weight-medium" for="">@lang('sales.phone4')</label>
                 </div>
 
                 <div class="">
                     <input   
-                           type="text" class="form-control" name="phone4"
+                           type="text" class="form-control phone4" name="phone4"
                            value="{{ old('phone4') }}" placeholder="@lang('sales.phone4')">
                 </div>
             </div>
@@ -308,20 +249,6 @@
                 </div>
 
             </div>
-
-            {{--
-
-             <div>
-             <label class="text-muted font-weight-medium" for="">@lang('sales.salutation')</label>
-             </div>
-             <div class="form-group">
-               
-                    <div class="" >
-                        <input data-plugin="tippy"  data-tippy-placement="top-start" title="@lang('sales.zip')" type="text" class="form-control" name="zip"   value="{{ old('zip') }}"  placeholder="@lang('sales.zip')"  >
-                    </div>
-               
-            </div> --}}
-
 
             <div class="form-group">
                 <div>
@@ -1007,29 +934,321 @@
 
 
 @push('js')
+
 <script>
-    var input = document.querySelector("#telephone");
-    var iti = window.intlTelInput(input, {
+     var formSubmit = true;  
+    var phone1 = document.querySelector(".phone1");
+    var phone1_iti = window.intlTelInput(phone1, {
+    
+      initialCountry: "auto",
+
+      utilsScript: "{{ asset('assets/js/util.js') }}",
+    });
+    
+    $('.phone1').change(function(){
+        var number = phone1_iti.getSelectedCountryData();
+        if(phone1_iti.isValidNumber() == false){
+            $('.phone1').css({"border-color": "red", 
+             "border-width":"1px", 
+             "border-style":"solid"});
+             formSubmit = false;
+            return false;
+        } else{
+            $('.phone1').css({"border-color": "#ced4da", 
+             "border-width":"1px", 
+             "border-style":"solid"});
+             formSubmit = true;
+        }
+
+
+      
+        var str = phone1.value;
+        if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+            formSubmit = false;
+            $('.phone1').css({"border-color": "red", 
+            "border-width":"1px", 
+            "border-style":"solid"});
+            return false;
+        }else{
+
+            $('.phone1').css({"border-color": "#ced4da", 
+            "border-width":"1px", 
+            "border-style":"solid"});
+            formSubmit = true;
+        }
+
+ 
+        
+    })
+
+        phone1.addEventListener("countrychange", function() {
+            number = phone1_iti.getSelectedCountryData()           
+            $('.phone1_code').val(number.dialCode)
+            $('.phone1_symbol').val(number.iso2)
+            if(phone1.value != ''){
+                var str = phone1.value;
+                if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                    formSubmit = false;
+                    $('.phone1').css({"border-color": "red", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    return false;
+                }else{
+
+                    $('.phone1').css({"border-color": "#ced4da", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    formSubmit = true;
+                }
+            }
+            if(!phone1_iti.isValidNumber()){
+                    formSubmit = false;
+                    $('.phone1').css({"border-color": "red", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    return false;
+            }
+
+
+      });
+
+
+
+    var phone2 = document.querySelector(".phone2");
+    var phone2_iti = window.intlTelInput(phone2, {
        
       initialCountry: "auto",
       geoIpLookup: function (callback) {
-        $.get("https://ipinfo.io", function () {}, "jsonp").always(function (
-          resp
-        ) {
-          var countryCode = resp && resp.country ? resp.country : "us";
-          callback(countryCode);
-        });
+        
+          $('.phone2_code').val("{{ old('phone2_code') }}")
+          callback("{{ old('phone2_symbol') }}");
+       
       },
       utilsScript: "{{ asset('assets/js/util.js') }}",
     });
     
-    
-    
-    $('#telephone').change(function(){
-        var number = iti.getSelectedCountryData();
+    $('.phone2').change(function(){
+        var number = phone2_iti.getSelectedCountryData();
+        if(phone2_iti.isValidNumber() == false){
+            $('.phone2').css({"border-color": "red", 
+             "border-width":"1px", 
+             "border-style":"solid"});
+            formSubmit = false;
+            return false;
+        }   else{
+            $('.phone1').css({"border-color": "#ced4da", 
+             "border-width":"1px", 
+             "border-style":"solid"});
+            formSubmit = true;
+        }
+        
+          var str = phone2.value;
+        if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+            formSubmit = false;
+            $('.phone2').css({"border-color": "red", 
+            "border-width":"1px", 
+            "border-style":"solid"});
+            return false;
+        }else{
 
-    
+            $('.phone2').css({"border-color": "#ced4da", 
+            "border-width":"1px", 
+            "border-style":"solid"});
+            formSubmit = true;
+        }
     })
+
+
+        phone2.addEventListener("countrychange", function() {
+            number = phone2_iti.getSelectedCountryData()           
+            $('.phone2_code').val(number.dialCode)
+            $('.phone2_symbol').val(number.iso2)
+            if(phone2.value != ''){
+                var str = phone2.value;
+                if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                    formSubmit = false;
+                    $('.phone2').css({"border-color": "red", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    return false;
+                }else{
+
+                    $('.phone2').css({"border-color": "#ced4da", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    formSubmit = true;
+                }
+            }
+            if(!phone2_iti.isValidNumber()){
+                    formSubmit = false;
+                    $('.phone2').css({"border-color": "red", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    return false;
+            }
+
+
+      });
+
+    var phone3 = document.querySelector(".phone3");
+    var phone3_iti = window.intlTelInput(phone3, {
+       
+      initialCountry: "auto",
+    //   geoIpLookup: function (callback) {
+
+    //       $('.phone3_code').val(20)
+    //       callback('EG');
+       
+    //   },
+      utilsScript: "{{ asset('assets/js/util.js') }}",
+    });
+    
+    $('.phone3').change(function(){
+        var number = phone3_iti.getSelectedCountryData();
+        if(phone3_iti.isValidNumber() == false){
+            $('.phone3').css({"border-color": "red", 
+             "border-width":"1px", 
+             "border-style":"solid"});
+            formSubmit = false;
+
+            return false;
+        } else{
+            $('.phone3').css({"border-color": "#ced4da", 
+             "border-width":"1px", 
+             "border-style":"solid"});
+            formSubmit = true;
+
+        }  
+           var str = phone3.value;
+        if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+            formSubmit = false;
+            $('.phone3').css({"border-color": "red", 
+            "border-width":"1px", 
+            "border-style":"solid"});
+            return false;
+        }else{
+
+            $('.phone3').css({"border-color": "#ced4da", 
+            "border-width":"1px", 
+            "border-style":"solid"});
+            formSubmit = true;
+        }      
+    })
+
+
+        phone3.addEventListener("countrychange", function() {
+            number = phone3_iti.getSelectedCountryData()           
+            $('.phone3_code').val(number.dialCode)
+            $('.phone3_symbol').val(number.iso2)
+            if(phone3.value != ''){
+                var str = phone3.value;
+                if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                    formSubmit = false;
+                    $('.phone3').css({"border-color": "red", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    return false;
+                }else{
+
+                    $('.phone3').css({"border-color": "#ced4da", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    formSubmit = true;
+                }
+            }
+            if(!phone3_iti.isValidNumber()){
+                    formSubmit = false;
+                    $('.phone3').css({"border-color": "red", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    return false;
+            }
+
+
+      });
+
+
+
+    var phone4 = document.querySelector(".phone4");
+    var phone4_iti = window.intlTelInput(phone4, {
+       
+      initialCountry: "auto",
+    //   geoIpLookup: function (callback) {
+
+    //       $('.phone4_code').val(20)
+    //       callback('EG');
+       
+    //   },
+      utilsScript: "{{ asset('assets/js/util.js') }}",
+    });
+    
+    $('.phone4').change(function(){
+        var number = phone4_iti.getSelectedCountryData();
+        if(phone4_iti.isValidNumber() == false){
+            $('.phone4').css({"border-color": "red", 
+             "border-width":"1px", 
+             "border-style":"solid"});
+             formSubmit = false;
+
+            return false;
+        }   else{
+            $('.phone4').css({"border-color": "#ced4da", 
+             "border-width":"1px", 
+             "border-style":"solid"});
+            formSubmit = true;
+        } 
+        
+            var str = phone4.value;
+        if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+            formSubmit = false;
+            $('.phone4').css({"border-color": "red", 
+            "border-width":"1px", 
+            "border-style":"solid"});
+            return false;
+        }else{
+
+            $('.phone4').css({"border-color": "#ced4da", 
+            "border-width":"1px", 
+            "border-style":"solid"});
+            formSubmit = true;
+        }
+    })
+
+        phone4.addEventListener("countrychange", function() {
+            number = phone4_iti.getSelectedCountryData()           
+            $('.phone4_code').val(number.dialCode)
+            $('.phone4_symbol').val(number.iso2)
+            if(phone4.value != ''){
+                var str = phone4.value;
+                if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                    formSubmit = false;
+                    $('.phone4').css({"border-color": "red", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    return false;
+                }else{
+
+                    $('.phone4').css({"border-color": "#ced4da", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    formSubmit = true;
+                }
+            }
+            if(!phone4_iti.isValidNumber()){
+                    formSubmit = false;
+                    $('.phone4').css({"border-color": "red", 
+                    "border-width":"1px", 
+                    "border-style":"solid"});
+                    return false;
+            }
+
+
+      });
+
+
+    $('form[name="lead-create"]').submit(function(e){
+        return formSubmit == false ? event.preventDefault() : true;
+    });
     </script>
     <script>
         

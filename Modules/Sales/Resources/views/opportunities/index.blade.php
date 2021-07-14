@@ -15,6 +15,12 @@
 <link href="{{asset('assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('assets/css/main.css')}}" rel="stylesheet" type="text/css">
 
+<link rel="stylesheet" href="{{ asset('assets/css/intlcss/intlTelInput.css') }}" />
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"
+integrity="sha512-DNeDhsl+FWnx5B1EQzsayHMyP6Xl/Mg+vcnFPXGNjUZrW28hQaa1+A4qL9M+AiOMmkAhKAWYHh1a+t6qxthzUw=="
+crossorigin="anonymous"
+></script>
 
 
 @endsection
@@ -118,7 +124,7 @@
 {{-- <script src="{{ asset('assets/libs/devbridge-autocomplete/jquery.autocomplete.min.js') }}"></script> --}}
 
 
-<script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script> --}}
 
 
 
@@ -491,24 +497,487 @@ opportunities.data.forEach(function(value,key){
 
 <script>
     var load_listing = false;
-    function table_row_show(row_id,id){
+    function table_row_show(row_id ,opportunity =null ,id){
       
         $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
+
+                        
+            var exists = false;
+            var exists_value = null;
+            @if( session()->has('open-edit-tab') )
+            exists = true;
+            exists_value = @json(session('open-edit-tab'));
+            @endif 
+
+            if(opportunity != null){
+
+                if(exists_value != opportunity.id ){
     
+                exists =  false ;
+                }
+            }
+
+        
         if(id == 'edit_opportunity_'+row_id){
                     region = @json($agency_region);
                     injectGoogleMapsApiScript({
                         key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
                         libraries: 'places',
-                        language: 'ar',
+                        language: 'en',
                         region: region,
                         callback: 'initMap',
                     });
+
+
+     
+   if(exists == false && exists_value != opportunity.id){
+                var edit_phone1 = document.querySelector(".phone1_"+row_id);
+                var edit_phone1_iti = window.intlTelInput(edit_phone1, {
+                
+                  initialCountry: "auto",
+                  utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+                if(opportunity.phone1_symbol ){
+
+                    edit_phone1_iti.setCountry(opportunity.phone1_symbol);
                 }
 
 
 
+                $('.phone1_'+row_id).change(function(){
+                    var number = edit_phone1_iti.getSelectedCountryData();
+                    if(edit_phone1_iti.isValidNumber() == false){
+                        $('.phone1_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = false;
+                        return false;
+                    } else{
+                        $('.phone1_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+
+                
+                    var str = edit_phone1.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formSubmit = false;
+                        $('.phone1_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.phone1_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                edit_phone1.addEventListener("countrychange", function() {
+                        number = edit_phone1_iti.getSelectedCountryData()           
+                        $('.edit_phone1_code_'+row_id).val(number.dialCode)
+                        $('.edit_phone1_symbol_'+row_id).val(number.iso2)
+                        if(edit_phone1.value != ''){
+                            var str = edit_phone1.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formSubmit = false;
+                                $('.phone1_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.phone1_'+row_id).css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formSubmit = true;
+                            }
+                        }
+                        if(!edit_phone1_iti.isValidNumber()){
+                                formSubmit = false;
+                                $('.phone1_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+                
+
+
+
+
+
+                var edit_phone2 = document.querySelector(".phone2_"+row_id);
+                var edit_phone2_iti = window.intlTelInput(edit_phone2, {
+                
+                  initialCountry: "auto",
+                  utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+                if(opportunity.phone2_symbol){
+
+                    edit_phone2_iti.setCountry(opportunity.phone2_symbol);
+                }
+
+
+
+                $('.phone2_'+row_id).change(function(){
+                    var number = edit_phone2_iti.getSelectedCountryData();
+                    if(edit_phone2_iti.isValidNumber() == false){
+                        $('.phone2_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = false;
+                        return false;
+                    } else{
+                        $('.phone2_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+
+                
+                    var str = edit_phone2.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formSubmit = false;
+                        $('.phone2_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.phone2_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                edit_phone2.addEventListener("countrychange", function() {
+                        number = edit_phone2_iti.getSelectedCountryData()           
+                        $('.edit_phone2_code_'+row_id).val(number.dialCode)
+                        $('.edit_phone2_symbol_'+row_id).val(number.iso2)
+                        if(edit_phone2.value != ''){
+                            var str = edit_phone2.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formSubmit = false;
+                                $('.phone2_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.phone2_'+row_id).css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formSubmit = true;
+                            }
+                        }
+                        if(!edit_phone2_iti.isValidNumber()){
+                                formSubmit = false;
+                                $('.phone2_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+
+
+
+
+
+
+
+                var edit_phone3 = document.querySelector(".phone3_"+row_id);
+                var edit_phone3_iti = window.intlTelInput(edit_phone3, {
+                
+                  initialCountry: "auto",
+                  utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+              if(opportunity.phone3_symbol){
+
+                edit_phone3_iti.setCountry(opportunity.phone3_symbol);
+              }
+
+
+                $('.phone3_'+row_id).change(function(){
+                    var number = edit_phone3_iti.getSelectedCountryData();
+                    if(edit_phone3_iti.isValidNumber() == false){
+                        $('.phone3_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = false;
+                        return false;
+                    } else{
+                        $('.phone3_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+
+                
+                    var str = edit_phone3.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formSubmit = false;
+                        $('.phone3_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.phone3_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                edit_phone3.addEventListener("countrychange", function() {
+                        number = edit_phone3_iti.getSelectedCountryData()           
+                        $('.edit_phone3_code_'+row_id).val(number.dialCode)
+                        $('.edit_phone3_symbol_'+row_id).val(number.iso2)
+                        if(edit_phone3.value != ''){
+                            var str = edit_phone3.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formSubmit = false;
+                                $('.phone3_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.phone3_'+row_id).css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formSubmit = true;
+                            }
+                        }
+                        if(!edit_phone3_iti.isValidNumber()){
+                                formSubmit = false;
+                                $('.phone3_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+
+
+
+
+
+
+                var edit_phone4 = document.querySelector(".phone4_"+row_id);
+                var edit_phone4_iti = window.intlTelInput(edit_phone4, {
+                
+                  initialCountry: "auto",
+                  utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+                 if(opportunity.phone4_symbol){
+                edit_phone4_iti.setCountry(opportunity.phone4_symbol);
+                }
+
+
+                $('.phone4_'+row_id).change(function(){
+                    var number = edit_phone4_iti.getSelectedCountryData();
+                    if(edit_phone4_iti.isValidNumber() == false){
+                        $('.phone4_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = false;
+                        return false;
+                    } else{
+                        $('.phone4_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+
+                
+                    var str = edit_phone4.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formSubmit = false;
+                        $('.phone4_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.phone4_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                edit_phone4.addEventListener("countrychange", function() {
+                        number = edit_phone4_iti.getSelectedCountryData()           
+                        $('.edit_phone4_code_'+row_id).val(number.dialCode)
+                        $('.edit_phone4_symbol_'+row_id).val(number.iso2)
+                        if(edit_phone4.value != ''){
+                            var str = edit_phone4.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formSubmit = false;
+                                $('.phone4_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.phone4_'+row_id).css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formSubmit = true;
+                            }
+                        }
+                        if(!edit_phone4_iti.isValidNumber()){
+                                formSubmit = false;
+                                $('.phone4_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+
+
+                $('form[name="lead-update-'+row_id+'"]').submit(function(e){
+                    return formEditSubmit == false ? event.preventDefault() : true;
+                });
+
+            }
+
+
+
+
+
+
+
+
+
+
+                }
+
+
+   if(id == 'client_'+row_id){
+    
+     if(exists == false && exists_value != opportunity.id){
+                var client_phone1 = document.querySelector(".client_phone1_"+row_id);
+                var client_phone1_iti = window.intlTelInput(client_phone1, {
+                
+                  initialCountry: "auto",
+                  utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+                if(opportunity.phone1_symbol ){
+
+                    client_phone1_iti.setCountry(opportunity.phone1_symbol);
+                }
+
+                $('.client_phone1_'+row_id).change(function(){
+                    var number = client_phone1_iti.getSelectedCountryData();
+                    if(client_phone1_iti.isValidNumber() == false){
+                        $('.client_phone1_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formClientSubmit = false;
+                        return false;
+                    } else{
+                        $('.client_phone1_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formClientSubmit = true;
+                    }
+
+
+                
+                    var str = client_phone1.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formClientSubmit = false;
+                        $('.client_phone1_'+row_id).css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.client_phone1_'+row_id).css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formClientSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                client_phone1.addEventListener("countrychange", function() {
+                        number = client_phone1_iti.getSelectedCountryData()           
+                        $('.client_phone1_code_'+row_id).val(number.dialCode)
+                        $('.client_phone1_symbol_'+row_id).val(number.iso2)
+                        if(client_phone1.value != ''){
+                            var str = client_phone1.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formClientSubmit = false;
+                                $('.client_phone1_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.client_phone1_'+row_id).css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formClientSubmit = true;
+                            }
+                        }
+                        if(!client_phone1_iti.isValidNumber()){
+                                formClientSubmit = false;
+                                $('.client_phone1_'+row_id).css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+                
+                $('form[name="client-update-'+row_id+'"]').submit(function(e){
+                    return formClientSubmit == false ? event.preventDefault() : true;
+                });
+
+            }
+
+
+
+        }
+        
+
+
         if(id == 'client_'+row_id && load_listing == false){
+
              var locale  =  @json(app()->getLocale());
              var agency  =  @json($agency);
                 $.ajax({
@@ -660,4 +1129,12 @@ opportunities.data.forEach(function(value,key){
 
     </script>
     
+
+
+    
+@endpush
+
+
+@push('js')
+
 @endpush

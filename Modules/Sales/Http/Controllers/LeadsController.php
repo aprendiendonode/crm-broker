@@ -137,41 +137,41 @@ class LeadsController extends Controller
         return view(
             'sales::leads.index',
             [
-                'leads' => $leads->paginate($per_page),
-                'pagination' => $pagination,
+                'leads'         => $leads->paginate($per_page),
+                'pagination'    => $pagination,
                 //                'total_leads' => $agency->leads,
-                'staffs' => staff($agency->id),
-                'countries' =>
+                'staffs'        => staff($agency->id),
+                'countries'     =>
                 cache()->remember('countries', 60 * 60 * 24, function () use ($agency) {
                     return DB::table('countries')->get();
                 }),
-                'cities' =>
+                'cities'        =>
                 cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
                     return DB::table('cities')->get();
                 }),
-                'communities' =>
+                'communities'   =>
                 cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
                     return DB::table('communities')->get();
                 }),
-                'sub_communities' =>
+                'sub_communities'     =>
                 cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
                     return DB::table('sub_communities')->get();
                 }),
 
-                'agency'        => $agency->id,
-                'agency_region' => $agency->country ? $agency->country->iso2 : '',
-                'business' => $business,
-                'lead_sources' => $agency->lead_sources,
-                'lead_communications' => $agency->lead_communications,
-                'lead_priorities' => $agency->lead_priorities,
-                'lead_qualifications' => $agency->lead_qualifications,
-                'lead_types' => $agency->lead_types,
-                'lead_properties' => $agency->lead_properties,
-                'task_status' => $agency->task_status,
-                'task_types' => $agency->task_types,
-                'call_status' => $agency->call_status,
-                'developers' => $agency->developers,
-                'languages' =>
+                'agency'               => $agency->id,
+                'agency_region'        => $agency->country ? $agency->country->iso2 : '',
+                'business'             => $business,
+                'lead_sources'         => $agency->lead_sources,
+                'lead_communications'  => $agency->lead_communications,
+                'lead_priorities'      => $agency->lead_priorities,
+                'lead_qualifications'  => $agency->lead_qualifications,
+                'lead_types'           => $agency->lead_types,
+                'lead_properties'      => $agency->lead_properties,
+                'task_status'          => $agency->task_status,
+                'task_types'           => $agency->task_types,
+                'call_status'          => $agency->call_status,
+                'developers'           => $agency->developers,
+                'languages'            =>
                 cache()->remember('languages', 60 * 60 * 24, function () use ($agency) {
                     return DB::table('languages')->get();
                 }),
@@ -191,9 +191,6 @@ class LeadsController extends Controller
 
     public function store(Request $request)
     {
-
-
-
         abort_if(Gate::denies('add_lead'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $agency = Agency::where('id', $request->agency_id)->where('business_id', auth()->user()->business_id)->firstOrFail();
@@ -241,14 +238,18 @@ class LeadsController extends Controller
 
 
                 "phone1" => "required|regex:/^([0-9\s\-\+\(\)]*)$/",
-                "phone1_code" => "required|exists:countries,phone_code",
+                "phone1_code" => "required|string",
+                "phone1_symbol" => "required|string",
 
                 "phone2" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
-                "phone2_code" => "sometimes|nullable|exists:countries,phone_code",
+                "phone2_code" => "sometimes|nullable|string",
+                "phone2_symbol" => "sometimes|nullable|string",
                 "phone3" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
-                "phone3_code" => "sometimes|nullable|exists:countries,phone_code",
+                "phone3_code" => "sometimes|nullable|string",
+                "phone3_symbol" => "sometimes|nullable|string",
                 "phone4" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
-                "phone4_code" => "sometimes|nullable|exists:countries,phone_code",
+                "phone4_code" => "sometimes|nullable|string",
+                "phone4_symbol" => "sometimes|nullable|string",
                 "landline" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "fax" => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "developer" => ["sometimes", "nullable", Rule::exists('developers', 'id')->where(function ($q) use ($request) {
@@ -564,13 +565,10 @@ class LeadsController extends Controller
             Lead::create([
                 'table_name' => 'leads',
                 "source_id" => $request->source_id,
-
                 "type_id" => $request->type_id,
                 "qualification_id" => $request->qualification_id,
                 "communication_id" => $request->communication_id,
                 "priority_id" => $request->priority_id,
-
-
                 "company" => $request->company,
                 "website" => $request->website,
                 // "contact_date"                  => $request->contact_date,
@@ -590,41 +588,52 @@ class LeadsController extends Controller
                 "nationality_id" => $request->nationality_id,
 
 
-                "phone1" => $request->phone1,
-                "phone1_code" => $request->phone1_code,
-                "phone2_code" => $request->phone2_code,
-                "phone3_code" => $request->phone3_code,
-                "phone4_code" => $request->phone4_code,
-                "landline" => $request->landline,
+                "phone1"                    => $request->phone1,
+                "phone2"                    => $request->phone2,
+                "phone3"                    => $request->phone3,
+                "phone4"                    => $request->phone4,
+
+                "phone1_code"               => $request->phone1_code,
+                "phone2_code"               => $request->phone2_code,
+                "phone3_code"               => $request->phone3_code,
+                "phone4_code"               => $request->phone4_code,
+
+
+                "phone1_symbol"               => strtoupper($request->phone1_symbol),
+                "phone2_symbol"               => strtoupper($request->phone2_symbol),
+                "phone3_symbol"               => strtoupper($request->phone3_symbol),
+                "phone4_symbol"               => strtoupper($request->phone4_symbol),
+
+                "landline"                  => $request->landline,
                 // "zip"                           => $request->zip,
-                "fax" => $request->fax,
-                "developer" => $request->developer,
-                "country" => $agency->country_id,
-                "city_id" => $request->city_id,
-                "community" => $request->community,
-                "sub_community" => $request->sub_community,
+                "fax"                       => $request->fax,
+                "developer"                 => $request->developer,
+                "country"                   => $agency->country_id,
+                "city_id"                   => $request->city_id,
+                "community"                 => $request->community,
+                "sub_community"             => $request->sub_community,
 
-                "building_name" => $request->building_name,
-                "property_purpose" => $request->property_purpose,
-                "property_no" => $request->property_no,
-                "property_id" => $request->property_id,
-                "address" => $request->address,
-                "lat_loc"  => $request->lat_loc,
-                "lng_loc"   => $request->lng_loc,
+                "building_name"              => $request->building_name,
+                "property_purpose"           => $request->property_purpose,
+                "property_no"                => $request->property_no,
+                "property_id"                => $request->property_id,
+                "address"                    => $request->address,
+                "lat_loc"                    => $request->lat_loc,
+                "lng_loc"                    => $request->lng_loc,
 
-                "property_reference" => $request->property_reference,
-                "size_sqft" => $request->size_sqft,
-                "size_sqm" => $request->size_sqm,
-                "bedrooms" => $request->bedrooms,
-                "bathrooms" => $request->bathrooms,
-                "parkings" => $request->parkings,
-                "salutation" => $request->salutation,
-                "skype" => $request->skype,
-                "other" => $request->other,
+                "property_reference"         => $request->property_reference,
+                "size_sqft"                  => $request->size_sqft,
+                "size_sqm"                   => $request->size_sqm,
+                "bedrooms"                   => $request->bedrooms,
+                "bathrooms"                  => $request->bathrooms,
+                "parkings"                   => $request->parkings,
+                "salutation"                 => $request->salutation,
+                "skype"                      => $request->skype,
+                "other"                      => $request->other,
                 // "assigned_to" => serialize($staff_assigned),
-                "agency_id" => $request->agency_id,
-                'business_id' => $request->business_id,
-                'status'       => 'active',
+                "agency_id"                  => $request->agency_id,
+                'business_id'                => $request->business_id,
+                'status'                     => 'active',
 
             ]);
 
@@ -697,6 +706,18 @@ class LeadsController extends Controller
                 "edit_phone2_" . $id => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "edit_phone3_" . $id => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "edit_phone4_" . $id => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
+
+
+                "edit_phone1_symbol_" . $id => "required|string",
+                "edit_phone2_symbol_" . $id => "sometimes|nullable|string",
+                "edit_phone3_symbol_" . $id => "sometimes|nullable|string",
+                "edit_phone4_symbol_" . $id => "sometimes|nullable|string",
+                "edit_phone1_code_" . $id => "required|string",
+                "edit_phone2_code_" . $id => "sometimes|nullable|string",
+                "edit_phone3_code_" . $id => "sometimes|nullable|string",
+                "edit_phone4_code_" . $id => "sometimes|nullable|string",
+
+
                 "edit_landline_" . $id => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
                 "edit_fax_" . $id => "sometimes|nullable|regex:/^([0-9\s\-\+\(\)]*)$/",
 
@@ -1051,16 +1072,20 @@ class LeadsController extends Controller
                 "size_sqft" => $request->{'edit_size_sqft_' . $id},
                 "size_sqm" => $request->{'edit_size_sqm_' . $id},
                 "bedrooms" => $request->{'edit_bedrooms_' . $id},
-                "bathrooms" => $request->{'edit_bathrooms_' . $id},
-                "parkings" => $request->{'edit_parkings_' . $id},
-                "salutation" => $request->{'edit_salutation_' . $id},
-                "skype" => $request->{'edit_skype_' . $id},
-                "other" => $request->{'edit_other_' . $id},
+                "bathrooms"      => $request->{'edit_bathrooms_' . $id},
+                "parkings"      => $request->{'edit_parkings_' . $id},
+                "salutation"    => $request->{'edit_salutation_' . $id},
+                "skype"         => $request->{'edit_skype_' . $id},
+                "other"         => $request->{'edit_other_' . $id},
                 // "assigned_to"                  => serialize($request->{'edit_assigned_to_' . $id}),
-                "phone1_code" => $request->{'edit_phone1_code_' . $id},
-                "phone2_code" => $request->{'edit_phone2_code_' . $id},
-                "phone3_code" => $request->{'edit_phone3_code_' . $id},
-                "phone4_code" => $request->{'edit_phone4_code_' . $id},
+                "phone1_code"   => $request->{'edit_phone1_code_' . $id},
+                "phone2_code"   => $request->{'edit_phone2_code_' . $id},
+                "phone3_code"   => $request->{'edit_phone3_code_' . $id},
+                "phone4_code"   => $request->{'edit_phone4_code_' . $id},
+                "phone1_symbol" => strtoupper($request->{'edit_phone1_symbol_' . $id}),
+                "phone2_symbol" => strtoupper($request->{'edit_phone2_symbol_' . $id}),
+                "phone3_symbol" => strtoupper($request->{'edit_phone3_symbol_' . $id}),
+                "phone4_symbol" => strtoupper($request->{'edit_phone4_symbol_' . $id}),
 
 
             ]);
@@ -1831,16 +1856,8 @@ class LeadsController extends Controller
         abort_if(Gate::denies('assign_task_on_lead'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
 
-        $lead = Lead::where('id', $request->lead_id)->where('business_id', auth()->user()->business_id)->first();
-
-        abort_if(!$lead, Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-
-        $qualification = LeadQualifications::where('id', $request->{'opportunity_qualification_id_' . $request->lead_id})->where('business_id', auth()->user()->business_id)->first();
-
-
-        abort_if(!$qualification, Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        $lead = Lead::where('id', $request->lead_id)->where('business_id', auth()->user()->business_id)->firstOrFail();
+        $qualification = LeadQualifications::where('id', $request->{'opportunity_qualification_id_' . $request->lead_id})->where('business_id', auth()->user()->business_id)->firstOrFail();
 
         try {
 
@@ -2176,6 +2193,13 @@ class LeadsController extends Controller
                 "phone2_code" => $lead->phone2_code,
                 "phone3_code" => $lead->phone3_code,
                 "phone4_code" => $lead->phone4_code,
+
+                "phone1_symbol" => $lead->phone1_symbol,
+                "phone2_symbol" => $lead->phone2_symbol,
+                "phone3_symbol" => $lead->phone3_symbol,
+                "phone4_symbol" => $lead->phone4_symbol,
+
+
                 "landline" => $lead->landline,
                 // "zip"                           => $lead->zip,
                 "fax" => $lead->fax,

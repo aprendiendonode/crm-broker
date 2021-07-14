@@ -513,6 +513,7 @@ return [
     'modified_successfully' => 'Modified Successfully',
     'active' => 'Active',
     'active_lead' => 'Active Lead',
-    'confirm_active' => 'Confirm Active'
+    'confirm_active' => 'Confirm Active',
+    'no_result_for_leads' => 'No Result For Leads',
 
 ];

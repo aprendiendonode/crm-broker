@@ -72,13 +72,6 @@
                         <div style="width:30px" class="mr-1"><img class="w-100" src="{{ asset('images/flags/'.$flag) }}" alt=""></div>
                         @endif
                         <div>
-
-                            @php
-
-                       
-
-
-                            @endphp
                             <div> {{ $phone_number }}</div>
                             <div>{{ $long_name }}</div>
                             @if($time)
@@ -162,7 +155,8 @@
             </tr>
             @can('edit_lead')
 
-                <tr  class="table-row_{{ $lead->id }} edit_lead_{{ $lead->id }} @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $lead->id ))  @else d-none @endif"   >
+                <tr  class="table-row_{{ $lead->id }} edit_lead_{{ $lead->id }}
+                     @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $lead->id )) "  @else d-none @endif"   >
                     <td colspan="8">
 
                         @include('sales::leads.edit',['edited_lead' => $lead])

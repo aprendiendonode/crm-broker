@@ -39,7 +39,8 @@
                    
                            <option value=""></option>
                            @forelse($lead_qualifications as $ql)
-                           <option @if(old("call_qualification_id_{$lead->id}",$lead->qualification_id) == $ql->id) selected @endif  value="{{ $ql->id}}">{{ $ql->{'name_'.app()->getLocale()} }}</option>
+                           <option @if(old("call_qualification_id_{$lead->id}",$lead->qualification_id) == $ql->id) selected @endif
+                              value="{{ $ql->id}}">{{ $ql->{'name_'.app()->getLocale()} }}</option>
                            @empty
 
                            @endforelse
@@ -78,7 +79,9 @@
                        
                                <option value=""></option>
                                @forelse($call_status as $status)
-                               <option @if(old("call_status_id_{$lead->id}") == $status->id) selected @endif  value="{{ $status->id}}">{{ $status->{'name_'.app()->getLocale()} }}</option>
+                               <option @if(old("call_status_id_{$lead->id}") == $status->id) selected @endif  value="{{ $status->id}}">
+                                {{ $status->{'name_'.app()->getLocale()} }}
+                               </option>
                                @empty
 
                                @endforelse
@@ -106,11 +109,11 @@
             <div class="form-group mb-3  ">
                 <label class="text-muted font-weight-medium">@lang('sales.contact_date')<i class="text-danger" style="font-size:15px;font-weight:bold">*</i></label>
                 <div class="input-group">
-                <input type="text" name="call_contact_date_{{ $lead->id }}"  class="form-control basic-datepicker" value="{{ old('call_contact_date_'.$lead->id,  date('Y-m-d')) }}" placeholder="@lang('sales.contact_date')" required>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="mdi mdi-clock-outline"></i></span>
-                </div>
-            </div>                
+                    <input type="text" name="call_contact_date_{{ $lead->id }}"  class="form-control basic-datepicker" value="{{ old('call_contact_date_'.$lead->id,  date('Y-m-d')) }}" placeholder="@lang('sales.contact_date')" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="mdi mdi-clock-outline"></i></span>
+                    </div>
+                 </div>                
             </div>
           
     

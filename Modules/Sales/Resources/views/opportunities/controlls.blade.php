@@ -1,6 +1,6 @@
 @can('edit_opportunity')
 <i
-  onclick="event.preventDefault();  table_row_show({{ $opportunity->id }},'edit_opportunity_{{ $opportunity->id }}')"
+  onclick="event.preventDefault();  table_row_show({{ $opportunity->id }},{{ $opportunity }},'edit_opportunity_{{ $opportunity->id }}')"
    data-plugin="tippy" 
    data-tippy-placement="top-start" 
    title="@lang('agency.edit')"
@@ -15,7 +15,7 @@
 
 <i
 
-  onclick="event.preventDefault();  table_row_show({{ $opportunity->id }},'task_{{ $opportunity->id }}')"
+  onclick="event.preventDefault();  table_row_show({{ $opportunity->id }},null,'task_{{ $opportunity->id }}')"
    data-plugin="tippy" 
    data-tippy-placement="top-start" 
    title="@lang('sales.task')"
@@ -31,7 +31,7 @@
 
 <i
 
-  onclick="event.preventDefault();table_row_show({{ $opportunity->id }},'assign_{{ $opportunity->id }}')"
+  onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'assign_{{ $opportunity->id }}')"
    data-plugin="tippy" 
    data-tippy-placement="top-start" 
    title="@lang('sales.assign')"
@@ -44,7 +44,7 @@
 @can('edit_opportunity')
   <i
 
-    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},'call_{{ $opportunity->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'call_{{ $opportunity->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.call')"
@@ -54,7 +54,7 @@
 @endcan   
 
 
-@can('delete_opportunity')
+{{-- @can('delete_opportunity')
   <i
       data-plugin="tippy" 
       data-tippy-placement="top-start" 
@@ -63,12 +63,12 @@
   
       class="fe-trash cursor-pointer feather-16">
   </i>
-@endcan
+@endcan --}}
 
 @can('edit_opportunity')
   <i
 
-    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},'question_{{ $opportunity->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'question_{{ $opportunity->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.question')"
@@ -83,7 +83,7 @@
 @can('edit_opportunity')
   <i
 
-    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},'result_{{ $opportunity->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'result_{{ $opportunity->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.update_result')"
@@ -96,7 +96,7 @@
 @can('convert_opportunity_to_client')
 
     <i
-    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},'approve_{{ $opportunity->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'approve_{{ $opportunity->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.waiting_for_approve')"
@@ -121,7 +121,7 @@
     <i
 
 
-    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},'hold_{{ $opportunity->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'hold_{{ $opportunity->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.on_hold')"
@@ -144,7 +144,7 @@
 
     <i
 
-    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},'client_{{ $opportunity->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'client_{{ $opportunity->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.convert_reject_opportunity_to_client')"
@@ -167,7 +167,7 @@
 @else
     <i
 
-    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},'client_{{ $opportunity->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},{{ $opportunity }},'client_{{ $opportunity->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.convert_to_client')"
@@ -181,7 +181,7 @@
 @can('edit_opportunity')
     <i
 
-        onclick="event.preventDefault();table_row_show({{ $opportunity->id }},'total_result_{{ $opportunity->id }}')"
+        onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'total_result_{{ $opportunity->id }}')"
         data-plugin="tippy" 
         data-tippy-placement="top-start" 
         title="@lang('sales.total_result')"
@@ -189,9 +189,5 @@
     </i>
     @endcan   
 
-@push('js')
-
-
-@endpush
 
 
