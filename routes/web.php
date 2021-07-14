@@ -20,16 +20,21 @@ use Spatie\ArrayToXml\ArrayToXml;
 |
 */
 
+
+
+//Route::get('test','Controller@test');
 //php artisan cache:forget spatie.permission.cache
 //php artisan cache:clear
 
+Route::get('manage-language/{lang}', 'LanguageController@manageLanguage')->name('manage.language');
+Route::post('store-language-data/{lang}', 'LanguageController@storeLanguageData')->name('store.language.data');
 
-Route::get('assign-permissions', function() {
+Route::get('assign-permissions', function () {
     // $user = auth()->user();
     $users = User::where('type', 'owner')->get();
     $permissions = Permission::all();
-    foreach($users as $user) {
-        foreach($permissions as $permission) {
+    foreach ($users as $user) {
+        foreach ($permissions as $permission) {
             $user->givePermissionTo($permission->name);
         }
     }
@@ -46,64 +51,106 @@ Route::middleware(['guest'])->group(function () {
 
 
 Route::get('change_language/{lang}', 'Controller@change_language')->name('change_language')->middleware('checkauth');
-Route::middleware(['checkauth', 'authority'])->group(function () {
 
 
-Route::get('xml/{business}/{agency}/listings', function ($business, $agency) {
-    $listings = Listing::where('business_id', $business)->where('agency_id', $agency)
-        ->get()->map(function ($listing, $key) {
 
-            $images = [];
-            foreach ($listing->photos->pluck('path') as $photo) {
+Route::middleware(['checkauth',  'lang'])->group(function () {
+    Route::post('change-mode', function () {
+        User::findorfail(auth()->user()->id)->update(['default_mode' => request('mode')]);
+        return response()->json(['status' => 'success'], 200);
+    });
+    Route::post('change-width', function () {
+        User::findorfail(auth()->user()->id)->update(['default_width' => request('width')]);
+        return response()->json(['status' => 'success'], 200);
+    });
 
-                $images[]   = (string)$photo;
-            }
-            // dd($images);
-            return [
-                'Count'                    => ['_cdata' => ((string)($key + 1))],
-                'Unit_Type'                => ['_cdata' => $listing->type ? $listing->type->name_en : ''],
-                'Ad_Type'                  => ['_cdata' => \Str::ucfirst($listing->purpose)],
-                'Emirate'                  => ['_cdata' => $listing->city],
-                'Community'                => ['_cdata' => $listing->community],
-                'Property_Name'            => ['_cdata' => $listing->location],
-                'Property_Ref_No'          => ['_cdata' => $listing->listing_ref],
-                'price'                    => ['_cdata' => $listing->price],
-                'Frequency'                => ['_cdata' => $listing->rent_frequency],
-                'Unit_Builtup_Area'        => ['_cdata' => $listing->area],
-                'No_of_Rooms'              => ['_cdata' => $listing->beds],
-                'No_of_Bathrooms'          => ['_cdata' => $listing->baths],
-                'Property_Title'           => ['_cdata' => $listing->title],
-                'Web_Remarks'              => ['_cdata' => $listing->description_en],
-                'Listing_Agent'           =>  ['_cdata' => $listing->agent ? $listing->agent->name_en : ''],
-                'Listing_Agent_Phone'     =>  ['_cdata' => $listing->agent ? $listing->agent->phone : ''],
-                'Listing_Agent_Email'     =>  ['_cdata' => $listing->agent ? $listing->agent->email : ''],
-                'Images'                  =>  ['ImageUrl' =>   $images],
-                'Listing_Date'            =>  ['c_data' => $listing->create_at],
-                'Last_Updated'            =>  ['c_data' => $listing->updated_at],
-                'Facilities'              =>  ['Facility'  =>  $listing->view->name_en],
-                'unit_measure'            => ['c_data' => $listing->updated_at],
-                'Geopoints'               => [
-                    'Latitude' => $listing->updated_at,
-                    'Longitude' => $listing->updated_at,
-                ],
-                'Permit_Id'      => ['c_data' => $listing->permit_id],
-                'featured_on_companywebsite'    => ['c_data' => $listing->updated_at],
-                'Developer' => ['c_data' => $listing->devloper ? $listing->developer->name_en : ''],
-                'under_construction'    => ['c_data' => $listing->updated_at],
-                'Off_Plan'    => ['c_data' => $listing->updated_at],
-                'Views' =>
-                ['view' =>  $listing->view->name_en],
+    Route::post('change-position', function () {
+        User::findorfail(auth()->user()->id)->update(['default_position' => request('position')]);
+        return response()->json(['status' => 'success'], 200);
+    });
+    Route::post('change-sidebar-color', function () {
+        User::findorfail(auth()->user()->id)->update(['default_sidebar_color' => request('sidebar_color')]);
+        return response()->json(['status' => 'success'], 200);
+    });
+    Route::post('change-sidebar-size', function () {
 
-                'Cheques' =>  $listing->view->name_en,
-                'Exclusive_Rights' =>  $listing->exclusive_rights,
 
-            ];
-        });
+        User::findorfail(auth()->user()->id)->update(['default_sidebar_size' => request('sidebar_size')]);
+        return response()->json(['status' => 'success'], 200);
+    });
+    Route::post('reset-to-default', function () {
 
-    $result = ArrayToXml::convert(['listing' => $listings->toArray()], 'listings');
-    return response()->xml($result);
+
+        User::findorfail(auth()->user()->id)->update([
+
+            'default_sidebar_size'  => 'default',
+            'default_mode'          => 'light',
+            'default_width'         => 'fluid',
+            'default_position'      => 'fixed',
+            'default_sidebar_color' => 'light',
+
+        ]);
+        return response()->json(['status' => 'success'], 200);
+    });
 });
-Route::feeds();
+Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
+
+
+    Route::get('xml/{business}/{agency}/listings', function ($business, $agency) {
+        $listings = Listing::where('business_id', $business)->where('agency_id', $agency)
+            ->get()->map(function ($listing, $key) {
+
+                $images = [];
+                foreach ($listing->photos->pluck('path') as $photo) {
+
+                    $images[]   = (string)$photo;
+                }
+                // dd($images);
+                return [
+                    'Count'                    => ['_cdata' => ((string)($key + 1))],
+                    'Unit_Type'                => ['_cdata' => $listing->type ? $listing->type->name_en : ''],
+                    'Ad_Type'                  => ['_cdata' => \Str::ucfirst($listing->purpose)],
+                    'Emirate'                  => ['_cdata' => $listing->city],
+                    'Community'                => ['_cdata' => $listing->community],
+                    'Property_Name'            => ['_cdata' => $listing->location],
+                    'Property_Ref_No'          => ['_cdata' => $listing->listing_ref],
+                    'price'                    => ['_cdata' => $listing->price],
+                    'Frequency'                => ['_cdata' => $listing->rent_frequency],
+                    'Unit_Builtup_Area'        => ['_cdata' => $listing->area],
+                    'No_of_Rooms'              => ['_cdata' => $listing->beds],
+                    'No_of_Bathrooms'          => ['_cdata' => $listing->baths],
+                    'Property_Title'           => ['_cdata' => $listing->title],
+                    'Web_Remarks'              => ['_cdata' => $listing->description_en],
+                    'Listing_Agent'           =>  ['_cdata' => $listing->agent ? $listing->agent->name_en : ''],
+                    'Listing_Agent_Phone'     =>  ['_cdata' => $listing->agent ? $listing->agent->phone : ''],
+                    'Listing_Agent_Email'     =>  ['_cdata' => $listing->agent ? $listing->agent->email : ''],
+                    'Images'                  =>  ['ImageUrl' =>   $images],
+                    'Listing_Date'            =>  ['c_data' => $listing->create_at],
+                    'Last_Updated'            =>  ['c_data' => $listing->updated_at],
+                    'Facilities'              =>  ['Facility'  =>  $listing->view->name_en],
+                    'unit_measure'            => ['c_data' => $listing->updated_at],
+                    'Geopoints'               => [
+                        'Latitude' => $listing->updated_at,
+                        'Longitude' => $listing->updated_at,
+                    ],
+                    'Permit_Id'      => ['c_data' => $listing->permit_id],
+                    'featured_on_companywebsite'    => ['c_data' => $listing->updated_at],
+                    'Developer' => ['c_data' => $listing->devloper ? $listing->developer->name_en : ''],
+                    'under_construction'    => ['c_data' => $listing->updated_at],
+                    'Off_Plan'    => ['c_data' => $listing->updated_at],
+                    'Views' =>
+                    ['view' =>  $listing->view->name_en],
+
+                    'Cheques' =>  $listing->view->name_en,
+                    'Exclusive_Rights' =>  $listing->exclusive_rights,
+
+                ];
+            });
+
+        $result = ArrayToXml::convert(['listing' => $listings->toArray()], 'listings');
+        return response()->xml($result);
+    });
+    Route::feeds();
 
 
     Route::get('/', function () {
@@ -118,10 +165,9 @@ Route::feeds();
             if (count($agencies) > 0) {
                 return redirect('home/' . $agencies[0]);
             }
-        } elseif( auth()->user()->type == 'superadmin'){
-            return redirect('superadmin/home' );
-        }
-        else {
+        } elseif (auth()->user()->type == 'superadmin') {
+            return redirect('superadmin/home');
+        } else {
             if (auth()->user()->agency_id != null) {
                 return redirect('home/' . auth()->user()->agency_id);
             }
@@ -142,10 +188,9 @@ Route::feeds();
             if (count($agencies) > 0) {
                 return redirect('home/' . $agencies[0]);
             }
-        }elseif( auth()->user()->type == 'superadmin'){
-            return redirect('superadmin/home' );
-
-        }  else {
+        } elseif (auth()->user()->type == 'superadmin') {
+            return redirect('superadmin/home');
+        } else {
             if (auth()->user()->agency_id != null) {
 
                 return redirect('home/' . auth()->user()->agency_id);
@@ -198,5 +243,4 @@ Route::middleware(['checkauth'])->group(function () {
     });
 
     Route::post('update_notification', 'Controller@change_Notify_status');
-
 });

@@ -118,7 +118,9 @@
                          <input 
                           name="edit_deposite_percent_{{ $listing->id }}"
                           value="{{ old('edit_deposite_percent_'.$listing->id,$listing->deposite_percent) }}"
-                          type="text" class="form-control" id="depost-percenatage"
+                          type="number" class="form-control" id="deposit-percenatage_{{ $listing->id }}"
+                            onchange="updatePriceEdit({{ $listing->id }})"
+                            onkeyup="updatePriceEdit({{ $listing->id }})"
                           >
                          <div class="input-group-prepend">
                              <div class="input-group-text">%</div>
@@ -129,8 +131,9 @@
                          <input 
                          name="edit_deposite_value_{{ $listing->id }}"
                          value="{{ old('edit_deposite_value_'.$listing->id,$listing->deposite_value) }}"
-                         type="text" 
-                         class="form-control" id="depost-cash" >
+                         type="text"
+                         id="depositValue_{{ $listing->id }}" 
+                         class="form-control" readonly>
                          <div class="input-group-prepend">
                              <div class="input-group-text">AED</div>
                          </div>

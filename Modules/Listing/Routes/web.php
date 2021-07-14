@@ -1,5 +1,6 @@
 <?php
 
+use Modules\SuperAdmin\Entities\SubCommunity;
 use Modules\Listing\Entities\TemporaryListing;
 
 /*
@@ -22,13 +23,76 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
         Route::get('controll/{agency}', 'ListingController@index');
         Route::get('listing-view/{agency}', 'ListingViewController@index');
 
+
+
         Route::get('listing-cheque/{agency}', 'ListingChequeController@index');
-        Route::get('listing-type/{agency}', 'ListingTypeController@index');
+        Route::get('listing-map/{agency}', function () {
+
+
+
+            $sub =
+
+                [
+
+
+
+
+                    '
+  Al Diyafah Road
+',
+                    'Satwa Road',
+                    '
+  Makeen Residence Al Satwa
+',
+                    'The Flagship One',
+                    'Square 334',
+                    '
+  Eden House
+',
+                    '
+  Bin Dhaen Holding Building Satwa
+',
+                    '
+  Al Zomoroda Building
+',
+                    '
+  Adaire 1
+',
+                    '
+  Cloud 88
+',
+                    '
+  Al Khair 5
+',
+                    '
+  Al Khair Building 1
+',
+                    '
+  Al Badaa Residences
+'
+
+
+                ];
+
+
+
+            foreach ($sub as $s) {
+
+                SubCommunity::create([
+                    'name_en'    => trim($s),
+                    'name_ar'    => trim($s),
+                    'country_id' => 234,
+                    'community_id' => 120
+                ]);
+            }
+
+            /*  return view('listing::listing.listing_map'); */
+        });
 
 
         Route::get('locations/{agency}', 'ListingController@locations');
         Route::get('uploader/{agency}', 'ListingController@uploader');
-        Route::get('download-brochure-pdf/{type}/{agency}', 'ListingController@brochure');
+        Route::get('download-brochure-pdf/{type}/{listing}/{agency}', 'ListingController@brochure');
         Route::get('export_all/{agency}', 'ListingController@export_all');
     });
 });
@@ -48,11 +112,10 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
         Route::post('delete-listing-cheque', 'ListingChequeController@destroy');
 
 
-        Route::post('manage-listing-type', 'ListingTypeController@store');
-        // Route::post('lead_source_from_leads', 'ListingTypeController@add_lead_source');
-        Route::patch('manage-listing-type/{type_id}', 'ListingTypeController@update');
-        Route::post('delete-listing-type', 'ListingTypeController@destroy');
 
+        Route::get('statistics_data/{agency}', 'ListingController@statistics_view')->name('statistics_view');
+        Route::get('statistics/{agency}', 'ListingController@statistics');
+        Route::post('statistics', 'ListingController@statistics_process')->name('statistics');
 
         Route::post('listing/store', 'ListingController@store')->name('listing.store');
         Route::patch('listing/update/{id}', 'ListingController@update')->name('listing.update');
@@ -69,6 +132,12 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.remove-listing-temporary');
         Route::post('update-listing-temporary-active', 'ListingController@update_listing_temporary_active')
             ->name('listings.update-listing-temporary-active');
+
+        Route::post('update-listing-main-photo', 'ListingController@update_listing_main_photo')
+            ->name('listings.update-listing-main-photo');
+
+        Route::post('update-listing-temporary-category', 'ListingController@update_listing_temporary_category')
+            ->name('listings.update-listing-temporary-category');
         Route::patch('update-listing-portals/{listing}', 'ListingController@update_listing_portals')
             ->name('listings.portals');
         Route::post('listing/delete', 'ListingController@destroy')->name('listings.delete');
@@ -102,5 +171,15 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.get-communities');
         Route::post('get-sub-communities', 'ListingController@get_sub_communities')
             ->name('listings.get-sub-communities');
+        Route::post('mark', 'ListingController@mark')
+            ->name('listings.mark');
+        Route::post('lsm-change', 'ListingController@lsm_change')
+            ->name('listings.lsm-change');
+        Route::post('staff-change-shortcut', 'ListingController@staff_change_shortcut')
+            ->name('listings.staff-change-shortcut');
+        Route::post('status-change-shortcut', 'ListingController@status_change_shortcut')
+            ->name('listings.status-change-shortcut');
+        Route::post('move-to-archive', 'ListingController@move_to_archive')
+            ->name('listings.move-to-archive');
     });
 });

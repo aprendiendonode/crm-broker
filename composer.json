@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2.5",
+        "astrotomic/laravel-translatable": "^11.9",
         "barryvdh/laravel-dompdf": "^0.9.0",
         "bmatovu/laravel-xml": "^3.0",
         "dirape/token": "^2.3",
@@ -35,7 +36,6 @@
         "spatie/laravel-ray": "^1.13"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.6",
         "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.9.1",
         "laravel/telescope": "^3.0",

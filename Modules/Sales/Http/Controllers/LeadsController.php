@@ -193,7 +193,6 @@ class LeadsController extends Controller
     {
 
 
-        // dd($request->all());
 
         abort_if(Gate::denies('add_lead'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
@@ -1571,7 +1570,6 @@ class LeadsController extends Controller
             return back()->with(flash(trans('sales.call_created'), 'success'))->with('open-call-tab', $id);
         } catch (\Exception $e) {
 
-            dd($e->getMessage());
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-call-tab', $id);
         }
@@ -1589,7 +1587,6 @@ class LeadsController extends Controller
             return back()->with(flash(trans('sales.call_deleted'), 'success'))->with('open-call-tab', $request->call_lead_id);
         } catch (\Exception $e) {
 
-            dd($e->getMessage());
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-call-tab', $request->call_lead_id);
         }
@@ -1798,7 +1795,6 @@ class LeadsController extends Controller
 
             return back()->with(flash(trans('sales.task_assigned'), 'success'))->with('open-task-tab', $id);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             DB::rollback();
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-task-tab', $id);
         }

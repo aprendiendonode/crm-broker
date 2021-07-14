@@ -38,7 +38,7 @@
 </i>
 @endcan
 
-
+@if($listing->status == 'archive')
 @can('delete_listing')
 
 
@@ -73,7 +73,7 @@
         class="fe-trash cursor-pointer feather-16">
 </i>
 @endcan
-
+@endif
 
 @push('js')
     <script>
@@ -88,9 +88,12 @@
                     region: 'EG',
                     callback: 'initMap',
                 });
-            }
 
-            ClassicEditor
+                $('#photos-modal_'+row_id).modal({
+                    show: false,
+                    backdrop: 'static'
+                    })
+                ClassicEditor
                     .create(document.querySelector('#edit_description_en_' + row_id))
                     .then()
                     .catch(error => {
@@ -105,6 +108,9 @@
                     .catch(error => {
 
                     });
+            }
+
+         
         
         $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
         if($('.'+id).hasClass('d-none')){

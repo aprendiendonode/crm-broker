@@ -30,7 +30,7 @@
     <!-- icons -->
 @endsection
 @section('content')
-
+{{--@dd('kkkkk')--}}
     <div class="content p-3">
 
         <div class="d-flex justify-content-between mb-3">
@@ -161,27 +161,6 @@
         $(document).ready(function () {
             $('.select2').select2();
 
-
-            {{--var task_statuses = @json($task_status);--}}
-            {{--for (var i = 0; i < task_statuses.data.length; i++) {--}}
-
-                {{--ClassicEditor--}}
-                    {{--.create(document.querySelector('#description_edit_en_' + task_statuses.data[i].id))--}}
-                    {{--.then()--}}
-                    {{--.catch(error => {--}}
-
-                    {{--});--}}
-
-                {{--ClassicEditor--}}
-                    {{--.create(document.querySelector('#description_edit_ar_' + task_statuses.data[i].id), {--}}
-                        {{--language: 'ar'--}}
-                    {{--})--}}
-                    {{--.then()--}}
-                    {{--.catch(error => {--}}
-
-                    {{--});--}}
-            {{--}--}}
-
         })
     </script>
 
@@ -269,58 +248,4 @@
     </script>
 
 
-    <script>
-
-        // function toggle_desc() {
-        //     type = $('.description').prop('checked');
-        //     if (type == true) {
-        //         //english
-        //         $('.description_en').removeClass('d-none');
-        //         $('.description_ar').addClass('d-none');
-        //     } else {
-        //         $('.description_en').addClass('d-none');
-        //         $('.description_ar').removeClass('d-none');
-        //
-        //
-        //     }
-        // }
-        //
-        // ClassicEditor
-        //     .create(document.querySelector('#description_en'))
-        //     .then()
-        //     .catch(error => {
-        //
-        //     });
-        //
-        // ClassicEditor
-        //     .create(document.querySelector('#description_ar'), {
-        //         language: 'ar'
-        //     })
-        //     .then()
-        //     .catch(error => {
-        //
-        //     });
-        //
-        //
-        // function toggle_edit_desc(id) {
-        //     type = $('.description_edit_' + id).prop('checked');
-        //     if (type == true) {
-        //         //english
-        //         $('.description_edit_en_' + id).removeClass('d-none');
-        //         $('.description_edit_ar_' + id).addClass('d-none');
-        //     } else {
-        //         $('.description_edit_en_' + id).addClass('d-none');
-        //         $('.description_edit_ar_' + id).removeClass('d-none');
-        //
-        //
-        //     }
-        // }
-
-        // function load_edit_description(id){
-
-
-        // }
-
-
-    </script>
 @endpush

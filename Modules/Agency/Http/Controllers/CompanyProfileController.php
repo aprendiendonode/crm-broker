@@ -35,8 +35,10 @@ class CompanyProfileController extends Controller
         $countries = Country::all();
         $cities    = City::all();
 
-        return view('agency::company_profile.index',
-            compact('agency', 'business', 'countries', 'cities'));
+        return view(
+            'agency::company_profile.index',
+            compact('agency', 'business', 'countries', 'cities')
+        );
     }
 
 
@@ -61,7 +63,7 @@ class CompanyProfileController extends Controller
                 'description_ar'   => 'nullable|sometimes|string',
 
                 'country_code'     => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
-//                'city_code'        => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                //                'city_code'        => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
                 'phone'            => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
 
 
@@ -137,6 +139,10 @@ class CompanyProfileController extends Controller
             ]);
 
             DB::commit();
+            cache()->forget('cities');
+            cache()->forget('communities');
+            cache()->forget('sub_communities');
+
             return back()->with(flash(trans('agency.agency_updated'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();

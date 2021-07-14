@@ -7,9 +7,7 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionGroup extends Model
 {
-    protected $fillable = [
-        'name'
-    ];
+    protected $guarded = [];
 
     public function permissions() {
         return $this->hasMany(Permission::class);

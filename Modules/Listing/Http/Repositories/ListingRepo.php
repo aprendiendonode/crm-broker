@@ -2,6 +2,14 @@
 
 namespace Modules\Listing\Http\Repositories;
 
+use App\Events\StatisticsFinishedEvent;
+use App\Imports\StatisticsImport;
+use App\Jobs\FinishedStatisticsSheet;
+use App\Jobs\ImportStatisticsSheet;
+use App\Jobs\StartLeadsInsertJobs;
+use App\Models\Statistics;
+use App\Models\User;
+use App\Notifications\StatisticsFinishedNotification;
 use PDF;
 use File;
 use Gate;
@@ -41,7 +49,7 @@ use Modules\Sales\Entities\Opportunity;
 use Illuminate\Support\Facades\Validator;
 use Modules\Activity\Entities\TaskStatus;
 use Modules\Listing\Entities\ListingPlan;
-use Modules\Listing\Entities\ListingType;
+use Modules\SuperAdmin\Entities\ListingType;
 use Modules\Activity\Entities\ListingNote;
 use Modules\Listing\Entities\ListingPhoto;
 use Modules\Listing\Entities\ListingVideo;
@@ -60,6 +68,8 @@ class ListingRepo
     public function index($agency)
     {
 
+
+        cache()->forget('listing_categories');
         try {
             $pagination = true;
             $business = auth()->user()->business_id;
@@ -75,8 +85,6 @@ class ListingRepo
 
             ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
-
-
             $listings_query = Listing::with([
                 'tasks', 'agent',
                 'tasks.addBy',
@@ -87,17 +95,13 @@ class ListingRepo
                 'city', 'community', 'subCommunity',
 
 
-
             ])->where('agency_id', $agency->id)->where('business_id', $business);
-
 
 
             if (request()->has('status_main')) {
                 $listings_query->where('status', request()->status_main);
             }
 
-
-            //filter
             if (request('purpose')) {
                 $listings_query->where('purpose', request('purpose'));
             }
@@ -120,7 +124,6 @@ class ListingRepo
                 });
             }
 
-
             if (request('min_bed')) {
                 if (request('min_bed') == 'studio') {
                     $listings_query->where('beds', request('min_bed'));
@@ -138,55 +141,58 @@ class ListingRepo
             return view(
                 'listing::listing.index',
                 [
-                    'agency_data'   => $agency,
-                    'agency'        => $agency->id,
+                    'agency_data' => $agency,
+                    'agency' => $agency->id,
                     'agency_region' => $agency->country ? $agency->country->iso2 : '',
 
-                    'staffs'        => staff($agency->id),
+                    'staffs' => staff($agency->id),
                     'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
                         return DB::table('listing_types')->get();
                     }),
                     'listing_views' => $agency->listing_views,
-                    'listings'      => $listings_query->paginate($per_page),
-                    'ref_ids'       => $listings_query->pluck('listing_ref')->unique(),
-                    'pagination'    => $pagination,
-                    'locations'     => $listings_query->pluck('location')->unique(),
-                    'business'      => $business,
-                    'lead_sources'  => $agency->lead_sources,
-                    'task_status'   => $agency->task_status,
-                    'task_types'    => $agency->task_types,
-                    'developers'    => $agency->developers,
-                    'cheques'       => $agency->cheques,
-                    'landlords'     => $agency->landlords,
-                    'tenants'       => $agency->tenants,
-                    'portals'       =>
+                    'listings' => $listings_query->paginate($per_page),
+                    'ref_ids' => $listings_query->pluck('listing_ref')->unique(),
+                    'pagination' => $pagination,
+                    'locations' => $listings_query->pluck('location')->unique(),
+                    'business' => $business,
+                    'lead_sources' => $agency->lead_sources,
+                    'task_status' => $agency->task_status,
+                    'task_types' => $agency->task_types,
+                    'developers' => $agency->developers,
+                    'cheques' => $agency->cheques,
+                    'landlords' => $agency->landlords,
+                    'tenants' => $agency->tenants,
+                    'portals' =>
                     cache()->remember('portals', 60 * 60 * 24, function () {
                         return DB::table('portals')->get();
                     }),
-                    'cities'        =>
+                    'cities' =>
                     cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
                         return DB::table('cities')->where('country_id', $agency->country_id)->get();
                     }),
-                    'communities'        =>
+                    'communities' =>
                     cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
                         return DB::table('communities')->where('country_id', $agency->country_id)->get();
                     }),
-                    'sub_communities'        =>
+                    'sub_communities' =>
                     cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
                         return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
                     }),
+                    'listing_categories' =>
+                    cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
+                        return DB::table('listing_categories')->get();
+                    }),
 
 
-                    'all_count'     => $agency->listings_all_count,
+                    'all_count' => $agency->listings_all_count,
                     'archive_count' => $agency->listings_archive_count,
-                    'review_count'  => $agency->listings_review_count,
-                    'draft_count'   => $agency->listings_draft_count,
-                    'live_count'    => $agency->listings_live_count,
+                    'review_count' => $agency->listings_review_count,
+                    'draft_count' => $agency->listings_draft_count,
+                    'live_count' => $agency->listings_live_count,
                     'descriptionTemplates' => $agency->descriptionTemplates
                 ]
             );
         } catch (\Exception $e) {
-
             abort(404);
         }
     }
@@ -257,7 +263,7 @@ class ListingRepo
                     mkdir(public_path("listings/photos"));
                 }
 
-                foreach ($photos as $folder) {
+                foreach ($photos as $key => $folder) {
                     $photo = TemporaryListing::where('folder', $folder)->first();
                     if ($photo) {
                         $moved = ListingPhoto::create(
@@ -266,6 +272,9 @@ class ListingRepo
                                 'main' => $photo->main,
                                 'watermark' => $photo->watermark,
                                 'active' => $photo->active,
+                                'photo_main' => $request->checked_main_hidden[$key],
+                                'icon' => $photo->icon,
+                                'listing_category_id' => $photo->listing_category_id,
                             ]
                         );
 
@@ -282,6 +291,8 @@ class ListingRepo
                             }
                             $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
                             foreach ($files as $file) {
+
+
                                 File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
                             }
                             $removed_dir = public_path("temporary/listings/$photo->folder");
@@ -418,6 +429,7 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_created'), 'success'));
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
         }
     }
@@ -435,7 +447,7 @@ class ListingRepo
                     'name' => ['required', 'string', 'max:225'],
                     'email' => [
                         'sometimes', 'nullable', 'email', 'string', 'max:225',
-                        Rule::unique('clients', 'email1'),  Rule::unique('clients', 'email2'),
+                        Rule::unique('clients', 'email1'), Rule::unique('clients', 'email2'),
 
                     ],
                     'phone' => [
@@ -447,11 +459,6 @@ class ListingRepo
                     'agency' => ['required', 'integer', 'exists:agencies,id'],
                     'business' => ['required', 'integer', 'exists:businesses,id']
                 ]);
-
-
-
-
-
 
 
                 if ($validator->fails()) {
@@ -509,7 +516,6 @@ class ListingRepo
                 }
 
 
-
                 $check_unique_emails = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
 
                     $query->where([
@@ -561,11 +567,6 @@ class ListingRepo
 
                     return response()->json(['message' => trans('sales.existing_phone_in_opportunities') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
                 }
-
-
-
-
-
 
 
                 $tenant_type = LeadType::firstOrCreate(
@@ -613,7 +614,7 @@ class ListingRepo
                     'name' => ['required', 'string', 'max:225'],
                     'email' => [
                         'sometimes', 'nullable', 'email', 'string', 'max:225',
-                        Rule::unique('clients', 'email1'),  Rule::unique('clients', 'email2'),
+                        Rule::unique('clients', 'email1'), Rule::unique('clients', 'email2'),
 
                     ],
                     'phone' => [
@@ -681,7 +682,6 @@ class ListingRepo
                 }
 
 
-
                 $check_unique_emails = Opportunity::where('business_id', $request->business)->where('agency_id', $request->agency)->where(function ($query) use ($request) {
 
                     $query->where([
@@ -733,9 +733,6 @@ class ListingRepo
 
                     return response()->json(['message' => trans('sales.existing_phone_in_opportunities') . ' ' . $check_unique_phones->first()->full_name ?? ''], 400);
                 }
-
-
-
 
 
                 $landlord_type = LeadType::firstOrCreate(
@@ -843,11 +840,22 @@ class ListingRepo
 
             $main_photo_path = public_path('temporary/listings/' . $main_tmp_folder . '/' . $photo_name);
 
+
+            $icon_tmp_folder_path = public_path("temporary/listings/$main_tmp_folder/icon-$photo_name");
+
+
+            Image::make($main_photo_path)
+                ->resize(100, 100, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->save($icon_tmp_folder_path);
+
+
             $watermark = Watermark::where('agency_id', $request->agency)->where('active', 'yes')->first();
-
             // * image with full size and watermark
-            $with_watermark_tmp_folder_path = public_path("temporary/listings/$main_tmp_folder/mainWatermark-$photo_name");
 
+            $with_watermark_tmp_folder_path = public_path("temporary/listings/$main_tmp_folder/mainWatermark-$photo_name");
 
             if ($watermark) {
                 Image::make($main_photo_path)
@@ -860,6 +868,8 @@ class ListingRepo
                 'folder' => $main_tmp_folder,
                 'main' => $photo_name,
                 'watermark' => 'mainWatermark-' . $photo_name,
+                // 'borchure' => 'mainborchure-' . $photo_name,
+                'icon' => 'icon-' . $photo_name,
                 'active' => 'watermark',
             ]);
             return [
@@ -898,7 +908,6 @@ class ListingRepo
 
             // * image with full size and watermark
             $with_watermark_tmp_folder_path = public_path("temporary/plans/$main_tmp_folder/mainWatermark-$plan_name");
-
 
 
             $watermark = Watermark::where('agency_id', $request->agency)->where('active', 'yes')->first();
@@ -977,12 +986,13 @@ class ListingRepo
             $documents = $request->{'edit_documents_' . $id};
             $floor_plans = $request->{'edit_floor_plans_' . $id};
             $photos = $request->{'edit_photos_' . $id};
+            $check_hidden_photos = $request->{'edit_checked_main_hidden_' . $id};
 
             $validator = Validator::make($request->all(), Listing::update_validation($request, $id));
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-edit-tab', $id);
             }
-
+            // dd('here');
             if (count($cheque_date) != count($cheque_amount) || count($cheque_date) != count($cheque_percentage)) {
                 return back()->withInput()->with(flash(trans('listing.cheque_inputs_invalid'), 'danger'))
                     ->with('open-edit-tab', $id);
@@ -1002,13 +1012,14 @@ class ListingRepo
             unset($inputs['edit_photos_' . $id]);
             unset($inputs['edit_floor_plans_' . $id]);
             unset($inputs['edit_documents_' . $id]);
+            unset($inputs['edit_checked_main_hidden_' . $id]);
             /*   dd('here', $inputs); */
 
             $fixed_array_keys = [];
             foreach ($inputs as $key => $input) {
                 $fixed_array_keys[str_replace(['edit_', '_' . $id], '', $key)] = $input;
             }
-            // dd($fixed_array_keys);
+
             if (!array_key_exists('view_ids', $fixed_array_keys)) {
                 $fixed_array_keys['view_ids'] = [];
             }
@@ -1026,15 +1037,24 @@ class ListingRepo
                     mkdir(public_path("listings/photos"));
                 }
 
-                foreach ($photos as $folder) {
+                foreach ($photos as $key => $folder) {
                     $photo = TemporaryListing::where('folder', $folder)->first();
                     if ($photo) {
+
+                        if (in_array('yes', $check_hidden_photos)) {
+                            ListingPhoto::where('listing_id', $listing->id)->update(['photo_main' => 'no']);
+                        }
+
+                        // dd($fixed_array_keys, $request->all());
                         $moved = ListingPhoto::create(
                             [
                                 'listing_id' => $listing->id,
                                 'main' => $photo->main,
                                 'watermark' => $photo->watermark,
                                 'active' => $photo->active,
+                                'photo_main' => $check_hidden_photos[$key],
+                                'icon'       => $photo->icon,
+                                'listing_category_id'       =>  $photo->listing_category_id
                             ]
                         );
 
@@ -1193,19 +1213,86 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_modified'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e->getMessage());
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }
 
 
-    public function brochure($request, $type)
+    public function update_listing_main_photo($request)
     {
+        if ($request->ajax()) {
+
+            try {
+                DB::beginTransaction();
+
+
+                ListingPhoto::where('listing_id', $request->listing_id)->update(['photo_main' => 'no']);
+
+                ListingPhoto::findOrFail($request->id)->update(['photo_main' => 'yes']);
+
+                DB::commit();
+
+                return response()->json(['message' => trans('listing.updated')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+
+    public function update_listing_temporary_category($request)
+    {
+        if ($request->ajax()) {
+
+            try {
+                DB::beginTransaction();
+
+                $validator = '';
+                if ($request->table == 'temp') {
+                    $validator = Validator::make($request->all(), [
+                        'category_id' => ['required', 'exists:listing_categories,id'],
+                        'id' => ['required', 'exists:temporary_listings_photos,id'],
+                    ]);
+                } else {
+                    $validator = Validator::make($request->all(), [
+                        'category_id' => ['required', 'exists:listing_categories,id'],
+                        'id' => ['required', 'exists:listing_photos,id'],
+                    ]);
+                }
+
+                if ($validator->fails()) {
+
+                    return response()->json(['status' => 'failed', 'error' => $validator->errors()->all()[0]], 400);
+                }
+
+                if ($request->table == 'temp') {
+                    TemporaryListing::findOrFail($request->id)->update(['listing_category_id' => $request->category_id]);
+                } else {
+                    ListingPhoto::findOrFail($request->id)->update(['listing_category_id' => $request->category_id]);
+                }
+
+                DB::commit();
+
+                return response()->json(['message' => trans('listing.updated')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+
+    public function brochure($request, $type, $listing)
+    {
+        $listing = Listing::findorfail($listing);
+
         if ($type == 'single') {
-            $pdf = PDF::loadView('listing::listing.brochure_single');
-            return $pdf->download('single.pdf');
+
+            $pdf = PDF::loadView('listing::listing.brochure_single', ['listing' => $listing]);
+            return $pdf->stream($listing->title . '.pdf');
         } else {
-            $pdf = PDF::loadView('listing::listing.brochure_multi');
-            return $pdf->download('multi.pdf');
+            $pdf = PDF::loadView('listing::listing.brochure_multi', ['listing' => $listing]);
+            return $pdf->stream($listing->title . '.pdf');
         }
     }
 
@@ -1371,7 +1458,7 @@ class ListingRepo
         $listings = Listing::whereIn('agency_id', $shared_agencies)->where('lsm', 'shared');
         $locations = $listings->pluck('location')->unique();
         array_push($shared_agencies, $agency);
-        $types = ListingType::whereIn('agency_id', $shared_agencies)->get();
+        $types = ListingType::all();
 
 
         if (request('purpose')) {
@@ -1683,16 +1770,16 @@ class ListingRepo
 
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'error'))->with('open-portals-tab', $id);
             }
-         
+
             $listing->update([
                 'portals' => $request->{'portals_' . $id} ? $request->{'portals_' . $id} : []
             ]);
-            if(!empty($request->{'portals_' . $id})){
-            $listing->portalsList->isEmpty() != true ? $listing->portalsList->each->delete(): '' ;
-                foreach($request->{'portals_' . $id } as $item ){
+            if (!empty($request->{'portals_' . $id})) {
+                $listing->portalsList->isEmpty() != true ? $listing->portalsList->each->delete() : '';
+                foreach ($request->{'portals_' . $id} as $item) {
                     PortalListing::create([
-                        'listing_id' =>$listing->id,
-                        'portal_id' =>$item
+                        'listing_id' => $listing->id,
+                        'portal_id' => $item
                     ]);
                 }
             }
@@ -2098,6 +2185,7 @@ class ListingRepo
 
         return Excel::download(new ListingsExport($agency), 'listings-list.xlsx');
     }
+
     public function get_communities($request)
     {
 
@@ -2116,6 +2204,7 @@ class ListingRepo
             }
         }
     }
+
     public function get_sub_communities($request)
     {
 
@@ -2133,10 +2222,255 @@ class ListingRepo
     }
 
 
-
     public function show($listing_id, $listing_ref)
     {
-        $listing = Listing::findorfail($listing_id);
-        return view('listing::listing.front', $listing);
+        $listing = Listing::with(['agency', 'agent'])->where('id', $listing_id)->firstOrFail();
+        return view('listing::listing.front', ['listing' => $listing]);
+    }
+
+    public function statistics($agency)
+    {
+        return view('listing::listing.upload_statistics_sheet', compact('agency'));
+    }
+
+    public function statistics_view($agency)
+    {
+        $per_page  = 15;
+        $pagination  = true;
+        $statistics = Statistics::where('agency_id', $agency);
+
+        if (request('filter_data_source')) {
+            $statistics->where('data_source', request('filter_data_source'));
+        }
+        if (request('filter_date_from')) {
+            $statistics->where('day', '>=', request('filter_date_from'));
+        }
+        if (request('filter_date_to')) {
+            $statistics->where('day', '<=', request('filter_date_to'));
+        }
+        if (request('filter_property_purpose')) {
+            $statistics->where('type', request('filter_property_purpose'));
+        }
+        if (request('filter_size_sqft_from')) {
+            $statistics->where('size_sqft', '>=', request('filter_size_sqft_from'));
+        }
+
+        if (request('filter_size_sqft_to')) {
+            $statistics->where('size_sqft', '<=', request('filter_size_sqft_to'));
+        }
+        if (request('filter_price_sqft_from')) {
+            $statistics->where('price_sqft', '>=', request('filter_price_sqft_from'));
+        }
+
+        if (request('filter_price_sqft_to')) {
+            $statistics->where('price_sqft', '<=', request('filter_price_sqft_to'));
+        }
+
+        if (request('filter_size_sqm_from')) {
+            $statistics->where('size_sqm', '>=', request('filter_size_sqm_from'));
+        }
+
+        if (request('filter_size_sqm_to')) {
+            $statistics->where('size_sqm', '<=', request('filter_size_sqm_to'));
+        }
+        if (request('filter_price_sqm_from')) {
+            $statistics->where('price_sqm', '>=', request('filter_price_sqm_from'));
+        }
+
+        if (request('filter_price_sqm_to')) {
+            $statistics->where('price_sqm', '<=', request('filter_price_sqm_to'));
+        }
+        if (request('filter_total_worth_from')) {
+            $statistics->where('total_worth', '>=', request('filter_total_worth_from'));
+        }
+
+        if (request('filter_total_worth_to')) {
+            $statistics->where('total_worth', '<=', request('filter_total_worth_to'));
+        }
+
+        $statistics = $statistics->paginate($per_page);
+
+        return view('listing::listing.statistics_view', compact('agency', 'statistics', 'pagination'));
+    }
+
+    public function statistics_process($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|file|mimes:xlsx,csv,xls'
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'));
+            }
+
+            $business = auth()->user()->business_id;
+            $user_id = auth()->user()->id;
+            $agency = request('agency');
+            $statistics_file = time() . $request->file->getClientOriginalName();
+
+            $request->file->move(public_path('statistics_sheets'), $statistics_file);
+            StartLeadsInsertJobs::withChain([
+                new ImportStatisticsSheet($business, $agency, $statistics_file, $user_id),
+                new FinishedStatisticsSheet($user_id)
+            ])->dispatch();
+
+
+            return back()->with(flash(trans('listing.sheet_import_process_start'), 'success'));
+        } catch (\Exception $e) {
+            return back()->with(flash(trans('agency.something_went_wrong'), 'error'));
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    public function mark($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'type'  => ['required', 'in:hot,basic,signature'],
+                'ids'   => ['required', 'string']
+            ]);
+
+
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['hot' => $request->type]);
+            $msg = trans('listing.listing_marked') . ' ' . ucfirst($request->type);
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+        }
+    }
+
+
+
+    public function lsm_change($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'type'  => ['required', 'in:private,shared'],
+                'ids'   => ['required', 'string']
+            ]);
+
+
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['lsm' => $request->type]);
+            $msg = trans('listing.listing_lsm') . ' ' . ucfirst($request->type);
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+        }
+    }
+
+
+    public function staff_change_shortcut($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'ids'        => ['required', 'string'],
+                'staff_id'   => ['required'],
+                'agency' => ['required', 'integer', 'exists:agencies,id']
+            ]);
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            if (!in_array($request->staff_id, staff($request->agency)->pluck('id')->toArray())) {
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+
+
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['assigned_to' => $request->staff_id]);
+            $msg = trans('listing.listing_staff_updated');
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+        }
+    }
+    public function status_change_shortcut($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'ids'        => ['required', 'string'],
+                'status'    => ['required', 'in:draft,live,review,archive'],
+            ]);
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['status' => $request->status]);
+            $msg = trans('listing.listing_status_updated');
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+        }
+    }
+    public function move_to_archive($request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'ids'        => ['required', 'string'],
+                'status'    => ['required', 'in:archive'],
+            ]);
+
+            if ($validator->fails()) {
+
+                return response()->json(['message' => $validator->errors()->all()[0]], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+
+            Listing::whereIn('id', $ids)->update(['status' => $request->status]);
+            $msg = trans('listing.listing_status_updated');
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+        }
     }
 }

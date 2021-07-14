@@ -2,7 +2,6 @@
     <div class="modal-dialog modal-full-width">
         <div class="modal-content">
             <div class="modal-header py-2">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
                 <div class="text-center mb-3">
@@ -33,9 +32,10 @@
                                     height: 100%;">
 
 
-<i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" id="remove-uploaderFile{{  $uniq_id }}" onclick="return confirm('are you sure ?') ? removePhoto(this,'main') : false"></i> 
+                            <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" 
+                            id="remove-uploaderFile{{  $uniq_id }}" onclick="return confirm('are you sure ?') ? removePhoto(this,'main') : false"></i> 
 
-<input type="hidden" class="photo-id" value={{ $photo->id }}>
+                                    <input type="hidden" class="photo-id" value={{ $photo->id }}>
                                     <div class="with-watermark">
                                         <img class=" preview-img w-50 m-auto @if($photo->active != 'watermark') d-none @endif" 
                                         src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark)  }}"
@@ -50,10 +50,11 @@
 
                                     </div>
                                 
-                                    <input type="hidden" name="edit_photos_{{ $listing->id }}[]" class="listing_photos">
-                                
-                                        <div class="media-body mb-1">
+                                    {{-- <input type="hidden" name="edit_photos_{{ $listing->id }}[]" class="listing_photos"> --}}
+                                    <div class="media-body mb-1">
                                             <div class="d-flex justify-content-between my-2">
+
+                                           <div>     
                                             <div class="@if($photo->active != 'watermark') d-none @endif with-enlarg-watermark">
                                                 
                                                 <a target="_blank" href="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark)  }}">@lang('listing.enlarg')</a>
@@ -61,6 +62,29 @@
                                             </div>
                                             <div class="@if($photo->active != 'main') d-none @endif no-enlarg-watermark">
                                                 <a target="_blank" href="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main)  }}">@lang('listing.enlarg')</a>
+                                            </div>
+
+                                            <div>
+                                                <div class="form-group">
+                                                <label for="">Select a Gategory</label>
+                                                  <select
+                                                  id="listing-category-{{ $uniq_id }}"
+                                                   class="form-control listing-category-{{ $listing->id }}" onchange="updateListingCategory(this,'main')" >
+                                                    <option value="">@lang('listing.select_category')</option>
+                                                    @foreach($listing_categories as $category)
+                                                      <option
+                                                      data-allowed="{{ $category->allowed }}"
+                                                       value="{{ $category->id }}"
+                                                        @if($photo->listing_category_id == $category->id) selected @endif
+                                                        >
+                                                       
+                                                        {{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}
+                                                      </option>
+                                                    @endforeach
+                                                  </select>
+                                                </div>
+                                              </div>
+
                                             </div>
                                             <div>
                                                 <div class="form-group mb-0">
@@ -73,6 +97,16 @@
                                                  id="watermark-uploaderFile{{ $uniq_id }}"
                                                  class="watermark" onchange="toggleWatermark(this,'main')">
                                                 </div>
+                                                <div class="form-group mb-0">
+                                                    <label for="waterMark" class="mb-0">@lang('listing.main')</label>
+                                                <input type="checkbox" 
+                                                id="checked-main-uploaderFile{{ $uniq_id }}"
+                                                 name="checked_main" class="checked_main" @if($photo->photo_main == 'yes') checked @endif onchange="updateMain(this,'main','{{ $listing->id }}')">
+
+
+                                                {{-- <input type="hidden"   id="checked-main-uploaderFile{{ $uniq_id }}-hidden" name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden" value="{{ $photo->photo_main }} "> --}}
+                                                 
+                                            </div>
                                             </div>
                                             </div>
                                             
@@ -128,8 +162,7 @@
             </div>
             
             <div class="modal-footer">  
-                <button type="button" class="btn btn-light" data-dismiss="modal">@lang('listing.close')</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                <button type="button"  class="btn btn-primary" onclick="handleCloseModal('{{ $listing->id }}')" aria-hidden="true">
                     @lang('listing.done')
                 </button>
             </div>
@@ -208,10 +241,30 @@
             <div class="d-none no-enlarg-watermark">
                 <a target="_blank" href="">@lang('listing.enlarg')</a>
             </div>
+
+            <div>
+                <div class="form-group">
+                <label for="">Select a Gategory</label>
+                  <select class="form-control listing-category-{{ $listing->id }}" onchange="updateListingCategory(this,'temp')" >
+                    <option value="">@lang('listing.select_category')</option>
+                    @foreach($listing_categories as $category)
+                      <option value="{{ $category->id }}">
+                        {{ app()->getLocale() == 'en' ? $category->name  : $category->localized_name }}
+                      </option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
             <div>
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">@lang('listing.watermark')</label>
                 <input type="checkbox" checked name="waterMark" class="watermark" onchange="toggleWatermark(this,'temporary')">
+              </div>
+
+              <div class="form-group mb-0">
+                <label for="waterMark" class="mb-0">@lang('listing.main')</label>
+                <input type="checkbox"  name="checked_main" class="checked_main" onchange="updateMain(this,'temporary')">
+                <input type="hidden"  name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden" value="no">
               </div>
             </div>
           </div>
@@ -233,6 +286,7 @@
   </script>
   
 <script>
+
     $(function(){
         var listing_id = @json($listing->id);
 
@@ -289,7 +343,10 @@
 
                 $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)
                 $('#uploaderFile' + id).find('.photo-id').val( data.photo.id)
-
+                $('#uploaderFile' + id).find('.checked_main').attr('id','checked-main-uploaderFile' + id)
+                $('#uploaderFile' + id).find('.checked_main_hidden').attr('id','checked-main-uploaderFile' + id+'-hidden')
+               
+                $('#uploaderFile' + id).find('.listing-category-'+listing_id).attr('id','listing-category-' + id)
 
             },
             onUploadError: function(id, xhr, status, message){

@@ -21,17 +21,19 @@
 {{-- <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css" /> --}}
 
 <!-- App css -->
-    <link href="{{asset('assets/css/bootstrap-modern.min.css')}}" rel="stylesheet" type="text/css"
-          id="bs-default-stylesheet"/>
-    <link href="{{asset('assets/css/app-modern.min.css')}}" rel="stylesheet" type="text/css"
-          id="app-default-stylesheet"/>
+        @if(auth()->user()->default_mode == 'light')
+            <link href="{{asset('assets/css/bootstrap-modern.min.css')}}" rel="stylesheet" type="text/css"
+                id="bs-default-stylesheet"/>
+            <link href="{{asset('assets/css/app-modern.min.css')}}" rel="stylesheet" type="text/css"
+                id="app-default-stylesheet"/>
+        @endif        
 
-
-    <link href="{{asset('assets/css/bootstrap-modern-dark.min.css')}}" rel="stylesheet" type="text/css"
-          id="bs-dark-stylesheet" disabled/>
-    <link href="{{asset('assets/css/app-modern-dark.min.css')}}" rel="stylesheet" type="text/css"
-          id="app-dark-stylesheet" disabled/>
-
+          @if(auth()->user()->default_mode == 'dark')
+            <link href="{{asset('assets/css/bootstrap-modern-dark.min.css')}}" rel="stylesheet" type="text/css"
+                id="bs-dark-stylesheet" />
+            <link href="{{asset('assets/css/app-modern-dark.min.css')}}" rel="stylesheet" type="text/css"
+                id="app-dark-stylesheet" />
+           @endif
     <!-- icons -->
     <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"
@@ -72,7 +74,10 @@
 </head>
 
 <body data-layout-mode="detached"
-      data-layout='{"mode": "light", "width": "fluid", "menuPosition": "fixed", "sidebar": { "color": "light", "size": "default", "showuser": true}, "topbar": {"color": "dark"}, "showRightSidebarOnPageLoad": true}'>
+      data-layout='{"mode": "{{ auth()->user()->default_mode }}",
+       "width": "{{ auth()->user()->default_width }}", "menuPosition": "{{ auth()->user()->default_position }}",
+        "sidebar": { "color": "{{ auth()->user()->default_sidebar_color }}", "size": "{{ auth()->user()->default_sidebar_size }}", "showuser": true}, "topbar": {"color": "dark"}, "showRightSidebarOnPageLoad": true}'
+      >
 
 <!-- Begin page -->
 <div id="wrapper">
@@ -936,27 +941,32 @@ justify-content: space-between; min-height: 92vh;">
                     </div>
 
                     <h6 class="font-weight-medium font-14 mt-4 mb-2 pb-1">Color Scheme</h6>
-                    <div class="custom-control custom-switch mb-1">
-                        <input type="radio" class="custom-control-input" name="color-scheme-mode" value="light"
-                               id="light-mode-check" checked/>
-                        <label class="custom-control-label" for="light-mode-check">Light Mode</label>
-                    </div>
+               
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="color-scheme-mode" value="dark"
-                               id="dark-mode-check"/>
+                               id="dark-mode-check" @if(auth()->user()->default_mode == 'dark') checked @endif/>
                         <label class="custom-control-label" for="dark-mode-check">Dark Mode</label>
+                    </div>
+                    <div class="custom-control custom-switch mb-1">
+                        <input type="radio" class="custom-control-input" name="color-scheme-mode" value="light"
+                     
+                               id="light-mode-check" @if(auth()->user()->default_mode == 'light') checked @endif />
+                             
+                        <label class="custom-control-label" for="light-mode-check">Light Mode</label>
                     </div>
 
                     <!-- Width -->
                     <h6 class="font-weight-medium font-14 mt-4 mb-2 pb-1">Width</h6>
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="width" value="fluid" id="fluid-check"
-                               checked/>
+                        @if(auth()->user()->default_width == 'fluid') checked @endif  />
                         <label class="custom-control-label" for="fluid-check">Fluid</label>
                     </div>
                     <div class="custom-control custom-switch mb-1">
-                        <input type="radio" class="custom-control-input" name="width" value="boxed" id="boxed-check"/>
+                        <input type="radio" class="custom-control-input" name="width" value="boxed" id="boxed-check"
+                        @if(auth()->user()->default_width == 'boxed') checked @endif
+                        />
                         <label class="custom-control-label" for="boxed-check">Boxed</label>
                     </div>
 
@@ -966,13 +976,18 @@ justify-content: space-between; min-height: 92vh;">
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="menus-position" value="fixed"
                                id="fixed-check"
-                               checked/>
+                               @if(auth()->user()->default_position == 'fixed') checked @endif
+                               />
                         <label class="custom-control-label" for="fixed-check">Fixed</label>
                     </div>
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="menus-position" value="scrollable"
-                               id="scrollable-check"/>
+                               id="scrollable-check"
+
+                               @if(auth()->user()->default_position == 'scrollable') checked @endif
+                               
+                               />
                         <label class="custom-control-label" for="scrollable-check">Scrollable</label>
                     </div>
 
@@ -981,25 +996,31 @@ justify-content: space-between; min-height: 92vh;">
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="leftsidebar-color" value="light"
-                               id="light-check" checked/>
+                               id="light-check" 
+                               @if(auth()->user()->default_sidebar_color == 'light') checked @endif
+                               />
                         <label class="custom-control-label" for="light-check">Light</label>
                     </div>
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="leftsidebar-color" value="dark"
+                        @if(auth()->user()->default_sidebar_color == 'dark') checked @endif
                                id="dark-check"/>
                         <label class="custom-control-label" for="dark-check">Dark</label>
                     </div>
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="leftsidebar-color" value="brand"
+                        @if(auth()->user()->default_sidebar_color == 'brand') checked @endif
                                id="brand-check"/>
                         <label class="custom-control-label" for="brand-check">Brand</label>
                     </div>
 
                     <div class="custom-control custom-switch mb-3">
                         <input type="radio" class="custom-control-input" name="leftsidebar-color" value="gradient"
-                               id="gradient-check"/>
+                        @if(auth()->user()->default_sidebar_color == 'gradient') checked @endif
+                               id="gradient-check"
+                               />
                         <label class="custom-control-label" for="gradient-check">Gradient</label>
                     </div>
 
@@ -1008,12 +1029,15 @@ justify-content: space-between; min-height: 92vh;">
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="leftsidebar-size" value="default"
-                               id="default-size-check" checked/>
+                               id="default-size-check"
+                               @if(auth()->user()->default_sidebar_size == 'default') checked @endif
+                               />
                         <label class="custom-control-label" for="default-size-check">Default</label>
                     </div>
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="leftsidebar-size" value="condensed"
+                        @if(auth()->user()->default_sidebar_size == 'condensed') checked @endif
                                id="condensed-check"/>
                         <label class="custom-control-label" for="condensed-check">Condensed
                             <small>(Extra Small size)</small>
@@ -1022,6 +1046,7 @@ justify-content: space-between; min-height: 92vh;">
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="leftsidebar-size" value="compact"
+                        @if(auth()->user()->default_sidebar_size == 'compact') checked @endif
                                id="compact-check"/>
                         <label class="custom-control-label" for="compact-check">Compact
                             <small>(Small size)</small>
@@ -1029,17 +1054,17 @@ justify-content: space-between; min-height: 92vh;">
                     </div>
 
                     <!-- User info -->
-                    <h6 class="font-weight-medium font-14 mt-4 mb-2 pb-1">Sidebar User Info</h6>
+                    {{-- <h6 class="font-weight-medium font-14 mt-4 mb-2 pb-1">Sidebar User Info</h6>
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="checkbox" class="custom-control-input" name="leftsidebar-user" value="fixed"
                                id="sidebaruser-check"/>
                         <label class="custom-control-label" for="sidebaruser-check">Enable</label>
-                    </div>
+                    </div> --}}
 
 
                     <!-- Topbar -->
-                    <h6 class="font-weight-medium font-14 mt-4 mb-2 pb-1">Topbar</h6>
+                    {{-- <h6 class="font-weight-medium font-14 mt-4 mb-2 pb-1">Topbar</h6>
 
                     <div class="custom-control custom-switch mb-1">
                         <input type="radio" class="custom-control-input" name="topbar-color" value="dark"
@@ -1052,10 +1077,10 @@ justify-content: space-between; min-height: 92vh;">
                         <input type="radio" class="custom-control-input" name="topbar-color" value="light"
                                id="lighttopbar-check"/>
                         <label class="custom-control-label" for="lighttopbar-check">Light</label>
-                    </div>
+                    </div> --}}
 
 
-                    <button class="btn btn-primary btn-block mt-4" id="resetBtn">Reset to Default</button>
+                    <button class="btn btn-primary btn-block mt-4" id="resetBtn" onclick="return confirm('are you sure ?') ? resetToDefault() : false;">Reset to Default</button>
 
 
                 </div>
@@ -1145,6 +1170,104 @@ justify-content: space-between; min-height: 92vh;">
 @endif
 <!-- App js-->
 @stack('js')
+<script>
+function changeDefaultMode(mode){
+
+$.ajax({
+    url:"{{ url('change-mode') }}",
+    type: "POST",
+    data:{
+        _token: "{{ csrf_token() }}",
+        mode:mode
+    },
+    success:function(){
+        location.reload();
+    }
+
+})
+}
+function changeDefaultWidth(width){
+
+$.ajax({
+    url:"{{ url('change-width') }}",
+    type: "POST",
+    data:{
+        _token: "{{ csrf_token() }}",
+        width:width
+    },
+    success:function(){
+        location.reload();
+    }
+
+})
+}
+function changeDefaultPosition(position){
+
+$.ajax({
+    url:"{{ url('change-position') }}",
+    type: "POST",
+    data:{
+        _token: "{{ csrf_token() }}",
+        position:position
+    },
+    success:function(){
+        location.reload();
+    }
+
+})
+}
+function changeDefaultSidebarColor(sidebar_color){
+
+$.ajax({
+    url:"{{ url('change-sidebar-color') }}",
+    type: "POST",
+    data:{
+        _token: "{{ csrf_token() }}",
+        sidebar_color:sidebar_color
+    },
+    success:function(){
+        location.reload();
+    }
+
+})
+}
+
+
+
+function changeDefaultSidebarSize(sidebar_size){
+
+$.ajax({
+    url:"{{ url('change-sidebar-size') }}",
+    type: "POST",
+    data:{
+        _token: "{{ csrf_token() }}",
+        sidebar_size:sidebar_size
+    },
+    success:function(){
+        location.reload();
+    }
+
+})
+}
+function resetToDefault(){
+
+$.ajax({
+    url:"{{ url('reset-to-default') }}",
+    type: "POST",
+    data:{
+        _token: "{{ csrf_token() }}",
+      
+    },
+    success:function(){
+        location.reload();
+    }
+
+})
+}
+
+
+
+ </script>
 <script src="{{asset('assets/js/app.min.js')}}"></script>
 
 

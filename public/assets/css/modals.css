@@ -1,0 +1,58 @@
+#floatBar {
+    /* display   : none; */
+    position: fixed;
+    bottom: -5rem;
+    transition: 0.5s;
+    z-index: 100;
+}
+.viewModal {
+    display: block !important;
+    opacity: 1;
+    bottom: 0 !important;
+    z-index: 100;
+}
+/* #floatBar .container {
+    max-width: 90% !important;
+    margin: 0 !important;
+    margin-left: 5% !important;
+    padding: 0 !important;
+} */
+
+/* #floatBar .container .btn-sm {
+   padding      : .22rem .5rem;
+   font-size    : .656rem;
+   line-height  : 1.5;
+   border-radius: .2rem;
+} */
+
+#markHot,
+#unMarkHot,
+#unMarkSignture,
+#listingSharing,
+#changeStaff,
+#changeStatus,
+#uploadPortals,
+#moveToArchive {
+    display: none;
+    position: absolute;
+    bottom: 3rem !important;
+    min-width: 270px;
+    left: -5rem;
+    right: -5rem;
+    z-index: 100;
+}
+
+#markHot {
+    left: 0rem;
+    right: 0rem;
+}
+
+#markSignture,
+#emailBrochure {
+    position: fixed;
+    top: 5rem;
+    width: 50%;
+    margin: 0 15%;
+    display: none;
+    z-index: 100;
+}

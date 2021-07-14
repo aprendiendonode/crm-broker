@@ -63,6 +63,8 @@
                                     onclick="changeNotifyStatus('result','{{$notify->data['opportunity_id'] ?? '' }}','{{ $notify->id}}')"
                                     @elseif( $notify->data['type'] == 'question')
                                     onclick="changeNotifyStatus('question','{{$notify->data['opportunity_id'] ?? '' }}','{{$notify->id}}')"
+                                    @elseif( $notify->data['type'] == 'statistics')
+                                    onclick="changeNotifyStatus('statistics','{{$notify->data['opportunity_id'] ?? '' }}','{{$notify->id}}')"
                                     @endif
 
 

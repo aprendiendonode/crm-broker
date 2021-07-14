@@ -9,6 +9,7 @@
     <link href="{{ asset('assets/libs/clockpicker/bootstrap-clockpicker.min.css')}}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/modals.css') }}" rel="stylesheet">
     <style>
         .toggle.android {
             border-radius: 0px;
@@ -45,16 +46,16 @@
 
             @elseif(moderator())
 
-            <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.live')({{ $live_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.request('agency').'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.live')({{ $live_count }})</div>
+                </a>
 
             @else
-            <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.live')({{ $live_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=live') }}" class="list-link @if(request('status_main') == 'live') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.live')({{ $live_count }})</div>
+                </a>
 
             @endif
 
@@ -63,25 +64,25 @@
 
             @if(owner())
 
-            <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.draft')({{ $draft_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.draft')({{ $draft_count }})</div>
+                </a>
 
 
             @elseif(moderator())
 
-            <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.draft')({{ $draft_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.request('agency').'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.draft')({{ $draft_count }})</div>
+                </a>
 
 
             @else
-            <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
-                <i class="fas fa-info-circle mr-1"></i>
-                <div>@lang('listing.draft')({{ $draft_count }})</div>
-            </a>
+                <a href="{{ url('listing/controll/'.auth()->user()->agency_id.'?status_main=draft') }}" class="list-link @if(request('status_main') == 'draft') active @endif">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <div>@lang('listing.draft')({{ $draft_count }})</div>
+                </a>
 
             @endif
 
@@ -187,7 +188,7 @@
         @include('listing::listing.filter')
 
         <div class="table-responsive">
-            <table class="table table-bordered toggle-circle mb-0">
+            <table class="table table-bordered toggle-circle mb-0" style="table-layout: fixed;">
                 <thead>
                     <tr>
                         <th># </th>
@@ -213,10 +214,41 @@
                     @forelse($listings as $listing)
 
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $loop->iteration }}
+
+                                <input type="checkbox" onchange="viewFloatModal({{ $listing->id }})" />
+                            
+                            </td>
                             <td>
                                 <i class="fas fa-plus-circle cursor-pointer show-hidden-data-{{ $listing->id }}" onclick="show_data({{ $listing->id }})"></i>
                                 <i class="fas fa-minus-circle cursor-pointer d-none hide-data-{{ $listing->id }}" onclick="hide_data({{ $listing->id }})"></i>
+                                @php 
+                                $photo_table = $listing->photos->where('photo_main','yes')->first();
+                                @endphp
+
+                                @if($photo_table)
+                                    @if($photo_table->main == 'main')
+                                    <a target="_blank" href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->main) }}">
+
+
+                             
+                                    <img 
+                                    class="w-100"
+                                     src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
+
+                                    </a>
+                                    @else
+                                    <a
+                                    target="_blank"
+                                     href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->watermark) }}">
+                                     <img
+                                     class="w-100"
+                                      src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
+                                    </a>
+                                 
+
+                                    @endif
+                                @endif
                             </td>
                             <td><a target="_blank" href="{{ route('listings.front',[$listing->id,$listing->listing_ref]) }}">{{ $listing->listing_ref }}</a></td>
                             <td>{{ Str::ucfirst($listing->purpose) }}</td>
@@ -228,14 +260,14 @@
                                   class="cursor-pointer"
                                   data-plugin="tippy"
                                 data-tippy-placement="top-start"
-{{--                                title="{{  ($listing->city && $listing->city->{'name_'.app()->getLocale()} ? $listing->city->{'name_'.app()->getLocale()} : '') .' , '. ($listing->community && $listing->community->{'name_'.app()->getLocale()} ? $listing->community->{'name_'.app()->getLocale()} : '' ).' , '. ($listing->subCommunity && $listing->subCommunity->{'name_'.app()->getLocale()} ? $listing->subCommunity->{'name_'.app()->getLocale()} : '' ).' , '.$listing->location ?? '' }}"--}}
+                               title="{{  ($listing->city && $listing->city->{'name_'.app()->getLocale()} ? $listing->city->{'name_'.app()->getLocale()} : '') .' , '. ($listing->community && $listing->community->{'name_'.app()->getLocale()} ? $listing->community->{'name_'.app()->getLocale()} : '' ).' , '. ($listing->subCommunity && $listing->subCommunity->{'name_'.app()->getLocale()} ? $listing->subCommunity->{'name_'.app()->getLocale()} : '' ).' , '.$listing->location ?? '' }}"
                                 >
                                  {{ Str::words($listing->location,3,'...') }}
                                 </span>
                          </td>
                             <td>{{ number_format($listing->area)  }}</td>
                             <td>{{ number_format($listing->price) }}</td>
-                            <td>{{ $listing->agent->{'name_'.app()->getLocale()} }}</td>
+                            <td>{{ ucfirst( $listing->agent->{'name_'.app()->getLocale()} ) }}</td>
                             <td>{{ $listing->updated_at->toFormattedDateString() }}</td>
                             <td>
                                 @can('edit_listing')
@@ -271,70 +303,6 @@
 
 
                     </tr>
-                    @can('edit_listing')
-
-                        <tr class="table-row_{{ $listing->id }} edit_listing_{{ $listing->id }}
-                            @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else d-none @endif
-                            "
-                             >
-                            <td colspan="14">
-
-                                @include('listing::listing.edit.index')
-
-                            </td>
-                        </tr>
-
-
-
-                        <tr  class="table-row_{{ $listing->id }} portals_{{ $listing->id }}
-                            @if( (session()->has('open-portals-tab') && session('open-portals-tab') ==  $listing->id ))
-                              @else d-none @endif
-                            "   >
-                            <td colspan="14">
-
-                                @include('listing::listing.portals')
-
-                            </td>
-                        </tr>
-
-                        <tr  class="table-row_{{ $listing->id }} notes_{{ $listing->id }}
-                            @if( (session()->has('open-notes-tab') && session('open-notes-tab') ==  $listing->id ))
-                              @else d-none @endif
-                            "   >
-                            <td colspan="14">
-
-                                @include('listing::listing.notes')
-
-                            </td>
-                        </tr>
-                        <tr  class="table-row_{{ $listing->id }} borchures_{{ $listing->id }}
-                            @if( (session()->has('open-borchures-tab') && session('open-borchures-tab') ==  $listing->id ))
-                              @else d-none @endif
-                            "   >
-                            <td colspan="14">
-
-                                @include('listing::listing.borchures')
-
-                            </td>
-                        </tr>
-
-
-
-                        <tr  class="table-row_{{ $listing->id }} task_{{ $listing->id }}
-
-                            @if( (session()->has('open-task-tab') && session('open-task-tab') ==  $listing->id ))
-                            @else d-none @endif
-
-                            "  >
-                            <td colspan="14">
-
-                                @include('listing::listing.tasks.tasks')
-
-                            </td>
-                        </tr>
-
-                    @endcan
-
 
                     <tr  class=" more_info_{{ $listing->id }} d-none"  >
                         <td colspan="2"></td>
@@ -386,7 +354,7 @@
                              title="@lang('listing.added_by')"
 
                              class="far fa-user cursor-pointer feather-16 px-1">
-                             {{ $listing->addedBy ? $listing->addedBy->{'name_'.app()->getLocale()} : '' }}
+                             {{ $listing->addedBy ? Str::ucfirst( $listing->addedBy->{'name_'.app()->getLocale()} ) : '' }}
                           </i>
 
                            </div>
@@ -394,6 +362,72 @@
                         </td>
                     </tr>
 
+                    @can('edit_listing')
+
+                        <tr class="table-row_{{ $listing->id }} edit_listing_{{ $listing->id }}
+                            @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else d-none @endif
+                            "
+                             >
+                            <td colspan="13">
+
+                                @include('listing::listing.edit.index')
+
+                            </td>
+                        </tr>
+
+
+
+                        <tr  class="table-row_{{ $listing->id }} portals_{{ $listing->id }}
+                            @if( (session()->has('open-portals-tab') && session('open-portals-tab') ==  $listing->id ))
+                              @else d-none @endif
+                            "   >
+                            <td colspan="13">
+
+                                @include('listing::listing.portals')
+
+                            </td>
+                        </tr>
+
+                        <tr  class="table-row_{{ $listing->id }} notes_{{ $listing->id }}
+                            @if( (session()->has('open-notes-tab') && session('open-notes-tab') ==  $listing->id ))
+                              @else d-none @endif
+                            "   >
+                            <td colspan="13">
+
+                                @include('listing::listing.notes')
+
+                            </td>
+                        </tr>
+                        <tr  class="table-row_{{ $listing->id }} borchures_{{ $listing->id }}
+                            @if( (session()->has('open-borchures-tab') && session('open-borchures-tab') ==  $listing->id ))
+                              @else d-none @endif
+                            "   >
+                            <td colspan="13">
+
+                                @include('listing::listing.borchures')
+
+                            </td>
+                        </tr>
+
+
+
+                        <tr  class="table-row_{{ $listing->id }} task_{{ $listing->id }}
+
+                            @if( (session()->has('open-task-tab') && session('open-task-tab') ==  $listing->id ))
+                            @else d-none @endif
+
+                            "  >
+                            <td colspan="13">
+
+                                @include('listing::listing.tasks.tasks')
+
+                            </td>
+                        </tr>
+
+                    @endcan
+
+
+               
 
 
 
@@ -412,19 +446,20 @@
                     @endif
 
                 </div>
-                @can('can_generate_reports')
+                {{-- @can('can_generate_reports')
                     <a
                             data-plugin="tippy"
                             data-tippy-placement="bottom-start"
                             title="@lang('listing.export_help')" href="{{ url('listing/export_all/'.request('agency')) }}"
                             class="mt-2">@lang('listing.generate_report')
                     </a>
-                @endcan
+                @endcan --}}
             </div>
         </div>
 
     </div>
     @include('listing::listing.settings_modals')
+    @include('listing::listing.shortcut_modals')
 
 @endsection
 
@@ -444,6 +479,7 @@
 
     <script src="{{ asset('assets/libs/uploader-master/dist/js/jquery.dm-uploader.min.js') }}"></script>
     <script src="{{ asset('assets/libs/uploader-master/src/js/demo-ui.js') }}"></script>
+    <script src="{{ asset('assets/js/modals.js') }}"></script>
 
 
     <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
@@ -540,7 +576,7 @@
                 injectGoogleMapsApiScript({
                     key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
                     libraries: 'places',
-                    language: 'ar',
+                    language: 'en',
                     region: region,
                     callback: 'initMap',
                 });
@@ -596,8 +632,8 @@
                 $('.en-button').removeClass('d-none');
                 $('.ar-button').addClass('d-none');
 
-                $('.agent-profile-en').removeClass('d-none');
-                $('.agent-profile-ar').addClass('d-none');
+                $('.profile-en').removeClass('d-none');
+                $('.profile-ar').addClass('d-none');
                 $('.features_copy_en').removeClass('d-none');
                 $('.features_copy_ar').addClass('d-none');
                 $('.templates-en').removeClass('d-none');
@@ -608,8 +644,8 @@
                 $('.ar-button').removeClass('d-none');
                 $('.en-button').addClass('d-none');
 
-                $('.agent-profile-ar').removeClass('d-none');
-                $('.agent-profile-en').addClass('d-none');
+                $('.profile-ar').removeClass('d-none');
+                $('.profile-en').addClass('d-none');
                 $('.features_copy_ar').removeClass('d-none');
                 $('.features_copy_en').addClass('d-none');
 
@@ -632,8 +668,8 @@
                 $('.en-button-'+id).removeClass('d-none');
                 $('.ar-button-'+id).addClass('d-none');
 
-                $('.agent-profile-en-'+id).removeClass('d-none');
-                $('.agent-profile-ar-'+id).addClass('d-none');
+                $('.profile-en-'+id).removeClass('d-none');
+                $('.profile-ar-'+id).addClass('d-none');
                 $('.features_copy_en_'+id).removeClass('d-none');
                 $('.features_copy_ar_'+id).addClass('d-none');
                 $('.templates-en-'+id).removeClass('d-none');
@@ -645,8 +681,8 @@
                 $('.ar-button-'+id).removeClass('d-none');
                 $('.en-button-'+id).addClass('d-none');
 
-                $('.agent-profile-ar-'+id).removeClass('d-none');
-                $('.agent-profile-en-'+id).addClass('d-none');
+                $('.profile-ar-'+id).removeClass('d-none');
+                $('.profile-en-'+id).addClass('d-none');
                 $('.features_copy_ar_'+id).removeClass('d-none');
                 $('.features_copy_en_'+id).addClass('d-none');
 
@@ -965,6 +1001,7 @@ function togglePlanWatermark(input,table){
 }
 
 function toggleWatermark(input,table){
+
     var id         = input.id
     var sliced_id  = id.slice(10);
     var  photo_id = $('#'+sliced_id+' .photo-id').val();
@@ -996,6 +1033,111 @@ function toggleWatermark(input,table){
     })
 
     }
+
+
+
+    
+function updateMain(input,table,listing_id){
+ 
+    // checked-main-uploaderFile89ljjtz9nx check box
+    // 89ljjtz9nx  select
+
+    var id         = input.id
+    var sliced_id  = id.slice(13);
+
+    var slicedForListingCategory = sliced_id.slice(12);
+
+    if($('#listing-category-'+slicedForListingCategory).val() == ''){
+        toast("Please Select a Category First",'error')
+        $('#'+input.id).prop('checked',false);
+        return false; 
+    }
+    if($('#listing-category-'+slicedForListingCategory).find(':selected').data('allowed') == 'no'){
+        toast("This Category Not Allowed To be Main Photo",'error')
+        $('#'+input.id).prop('checked',false);
+        return false;
+    }
+
+  
+     $(' .checked_main').prop('checked',false);
+
+     $('.checked_main_hidden').val('no');
+
+     $('#'+input.id).prop('checked',true);
+
+     $('#'+input.id+'-hidden').val('yes');
+     var  photo_id = $('#'+sliced_id+' .photo-id').val();
+     if(table == 'main'){
+        
+
+         $.ajax({
+        url:'{{  route("listings.update-listing-main-photo") }}',
+        type:'POST',
+        data:{
+            _token: '{{ csrf_token() }}',
+            id    : photo_id,
+            listing_id :listing_id
+       
+
+        },
+        success: function(data){
+
+        },
+        error: function(error){
+
+        },
+    })
+     }
+
+    }
+
+
+   function updateListingCategory(input,table){
+
+    var id         = input.id
+    var sliced_id  = id.slice(17);
+    var  photo_id = $('#uploaderFile'+sliced_id+' .photo-id').val();
+
+
+    var category_id = $('#'+input.id).val()
+
+ 
+
+        $.ajax({
+        url:'{{  route("listings.update-listing-temporary-category") }}',
+        type:'POST',
+        data:{
+            _token: '{{ csrf_token() }}',
+            id          : photo_id,
+            category_id : category_id,
+            table : table
+       
+        },
+        success: function(data){
+
+            toast(data.message,'success')
+        },
+        error: function(error){
+
+        },
+    })
+
+        
+    }
+
+    function handleCloseModal(listing) {
+      
+
+  let isAllSelected = ![...document.querySelectorAll('.listing-category-'+listing)].some(el => el.value == '' );
+
+  if(isAllSelected) {
+    $('#photos-modal_'+listing).modal('toggle');
+  }else {
+    toast('please select all categories','error');
+  }
+  
+}
+
 </script>
 @endpush
 
@@ -1020,6 +1162,8 @@ function toggleWatermark(input,table){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                
                 }else{
                     if( $('.agency-profile-en-'+id).data('agencyprofile') === ''){
                     var message = @json(trans('listing.no_english_profile_for_agency'));
@@ -1033,6 +1177,8 @@ function toggleWatermark(input,table){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                  
                 }
 
         }
@@ -1053,6 +1199,8 @@ function toggleWatermark(input,table){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                    $('.agent-profile-ar-'+id).val('');
                 }else{
                        if($('.agent-profile-en').find(':selected').data('agentprofile') == ''){
                             var message = @json(trans('listing.no_english_profile_for_agent'));
@@ -1066,6 +1214,8 @@ function toggleWatermark(input,table){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                    $('.agent-profile-en-'+id).val('');
                 }
         }
 
@@ -1183,6 +1333,8 @@ function toggleWatermark(input,table){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+
+                    $('.load-templates-ar-'+id).val();
                 }else{
                     // typeof car.color === 'undefined'
                        if($('.load-templates-en-'+id).find(':selected').data('desctemplate') == ''){
@@ -1196,6 +1348,7 @@ function toggleWatermark(input,table){
                     const modelFragment = editorInstance.data.toModel( viewFragment );
                     const insertPosition = editorInstance.model.document.selection.getFirstPosition();
                     editorInstance.model.insertContent(modelFragment, insertPosition);
+                    $('.load-templates-en-'+id).val();
                 }
 
 

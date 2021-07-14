@@ -458,6 +458,9 @@ function ($) {
     */
     LayoutThemeApp.prototype._saveConfig = function(newConfig) {
         this.config = $.extend(this.config, newConfig);
+
+
+        
         // NOTE: You can make ajax call here to save preference on server side or localstorage as well
     },
 
@@ -467,6 +470,8 @@ function ($) {
      * @param {*} config 
      */
     LayoutThemeApp.prototype.updateConfig = function(param, config) {
+
+      
         var newObj = {};
         if (typeof config === 'object' && config !== null) {
             var originalParam = this.config[param];
@@ -543,7 +548,8 @@ function ($) {
      * @param {*} mode 
      */
     LayoutThemeApp.prototype.changeMode = function(mode) {
-        // sets the theme
+       
+    
         switch (mode) {
             case "dark": {
                 this.defaultBSStyle.attr("disabled", true);

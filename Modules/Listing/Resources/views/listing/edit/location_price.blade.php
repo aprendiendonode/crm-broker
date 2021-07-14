@@ -181,8 +181,8 @@
             </span>
             <span class="text-danger"> *</span></label>
             <div class="input-group mb-2" >
-                <input type="text"  value="{{ old('edit_price_'.$listing->id,$listing->price) }}" class="form-control decimal_convert" 
-                       name="edit_price_{{ $listing->id }}" id="rent_{{ $listing->id }}" required>
+                <input type="number"  value="{{ old('edit_price_'.$listing->id,$listing->price) }}" class="form-control decimal_convert" 
+                       name="edit_price_{{ $listing->id }}" onkeyup="updatePriceEdit({{ $listing->id }})" onchange="updatePriceEdit({{ $listing->id }})" min="1" id="rent-sale_{{ $listing->id }}" required>
             
             </div>
         </div>
@@ -217,8 +217,10 @@
                         <input
                         name ="edit_comission_percent_{{ $listing->id }}"
                         value="{{ old('edit_comission_percent_'.$listing->id,$listing->comission_percent) }}"
-                         type="text" class="form-control" 
-                         id="inlineFormInputGroupUsername1_{{ $listing->id }}"
+                         type="number" class="form-control" 
+                         id="annual-commission_{{ $listing->id }}"
+                            onchange="updatePriceEdit({{ $listing->id }})"
+                            onkeyup="updatePriceEdit({{ $listing->id }})"
                          data-tippy-placement="top-start" title=""
                          >
                         <div class="input-group-prepend">
@@ -230,9 +232,10 @@
                         name="edit_comission_value_{{ $listing->id }}"
                         value="{{ old('edit_comission_value_'.$listing->id,$listing->comission_value) }}"
                          type="text" class="form-control"
-                          id="inlineFormInputGroupUsername2_{{ $listing->id }}"
+                          id="commissionValue_{{ $listing->id }}"
                            data-tippy-placement="top-start"
                             title=""
+                            readonly
                             >
                         <div class="input-group-prepend">
                             <div class="input-group-text">AED</div>

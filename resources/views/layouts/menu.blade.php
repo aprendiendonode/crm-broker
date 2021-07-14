@@ -160,6 +160,42 @@
                             @endcan
 
 
+
+                            {{--@can('importstatistics')--}}
+                                @if(owner())
+                                    <li>
+                                        <a href="{{ url('listing/statistics/'.request('agency')) }}">@lang('listing.import_statistics')</a>
+                                    </li>
+
+                                @elseif(moderator())
+                                    <li>
+                                        <a href="{{ url('listing/statistics/'.request('agency')) }}">@lang('listing.import_statistics')</a>
+                                    </li>
+                                @else
+                                    <li>
+                                        <a href="{{ url('listing/statistics/'.auth()->user()->agency_id) }}">@lang('listing.import_statistics')</a>
+                                    </li>
+                                @endif
+                            {{--@endcan--}}
+
+                            {{--@can('view_statistics')--}}
+                                @if(owner())
+                                    <li>
+                                        <a href="{{ url('listing/statistics_data/'.request('agency')) }}">@lang('listing.statistics')</a>
+                                    </li>
+
+                                @elseif(moderator())
+                                    <li>
+                                        <a href="{{ url('listing/statistics_data/'.request('agency')) }}">@lang('listing.statistics')</a>
+                                    </li>
+                                @else
+                                    <li>
+                                        <a href="{{ url('listing/statistics_data/'.auth()->user()->agency_id) }}">@lang('listing.statistics')</a>
+                                    </li>
+                                @endif
+                            {{--@endcan--}}
+
+
                         </ul>
                     </div>
                 </li>
@@ -405,7 +441,7 @@
                             @endif
                         @endcan
 
-                        @can('view_tasks')
+                        @can('manage_task_status')
                             @if(!owner())
                                 <li>
                                     <a href="{{ route('setting.task_status.index',auth()->user()->agency_id) }}">@lang('settings.task_status')</a>
@@ -495,6 +531,7 @@
 
 
                         {{-- @can('manage_contacts_settings') --}}
+                         @can('manage_lead_setting')
                         <li>
 
 
@@ -504,7 +541,9 @@
                                 <span class="menu-arrow"></span>
                             </a>
 
-                            {{-- @can('manage_lead_setting') --}}
+
+
+
                             <div class="collapse" id="sidebarsettings">
                                 <ul class="nav-second-level">
 
@@ -638,7 +677,7 @@
                                         </ul>
                                     </div>
 
-                            {{-- @endcan --}}
+
 
                             {{-- @can('manage_lead_setting') --}}
                                 @if(owner())
@@ -662,7 +701,7 @@
 
 
                         </li>
-                        {{-- @endcan --}}
+                        @endcan
 
 
                         @can('manage_listing_settings')
@@ -677,7 +716,7 @@
 
                             <div class="collapse" id="sidebarlistingSetting">
                                 <ul class="nav-second-level">
-                                    {{--@can('view_listing')--}}
+                                    @can('view_listing')
                                         @if(owner())
                                             <li>
                                                 <a href="{{ url('listing/listing-view/'.request('agency')) }}">@lang('listing.listing_view')</a>
@@ -692,7 +731,7 @@
                                                 <a href="{{ url('listing/listing-view/'.auth()->user()->agency_id) }}">@lang('listing.listing_view')</a>
                                             </li>
                                         @endif
-                                    {{--@endcan--}}
+                                    @endcan
 
 
                                     @if(owner())
@@ -711,21 +750,7 @@
                                     @endif
 
 
-                                    @if(owner())
-                                        <li>
-                                            <a href="{{ url('listing/listing-type/'.request('agency')) }}">@lang('listing.listing_type')</a>
-                                        </li>
-
-                                    @elseif(moderator())
-                                        <li>
-                                            <a href="{{ url('listing/listing-type/'.request('agency')) }}">@lang('listing.listing_type')</a>
-                                        </li>
-                                    @else
-                                        <li>
-                                            <a href="{{ url('listing/listing-type/'.auth()->user()->agency_id) }}">@lang('listing.listing_type')</a>
-                                        </li>
-                                    @endif
-
+               
 
                                 </ul>
                             </div>
@@ -750,10 +775,29 @@
                 </a>
                 <div class="collapse
                 @if(
-                    in_array( request()->segment(2) , ['countries','cities','communities','sub-communities'])
+                    in_array( request()->segment(2) , ['countries','cities','communities','sub-communities','listing-type'])
                 ) show @endif
                         " id="sidebarSuperadmin">
                     <ul class="nav-second-level">
+
+
+                        
+                        <li>
+                            <a href="{{ url('superadmin/listing-type') }}">@lang('listing.listing_type')</a>
+                        </li>
+                        {{-- @can('manage group permissions') --}}
+                        <li>
+                            <a href="{{ url('superadmin/permissions-group') }}">@lang('superadmin.permissions_group')</a>
+                        </li>
+                        {{-- @endcan --}}
+
+                        {{-- @can('manage permissions') --}}
+                        <li>
+                            <a href="{{ url('superadmin/permissions') }}">@lang('superadmin.permissions_items')</a>
+                        </li>
+                        {{-- @endcan --}}
+
+
 
 
                         <a href="#sidebargeoLocations" data-toggle="collapse">
@@ -786,6 +830,11 @@
                                 <li>
                                     <a href="{{ route('sub-communities.index') }}">@lang('superadmin.sub_communities.sub_communities')</a>
                                 </li>
+
+
+
+
+
 
 
                             </ul>

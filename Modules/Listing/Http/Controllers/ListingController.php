@@ -119,6 +119,14 @@ class ListingController extends Controller
     {
         return $this->repository->update_listing_temporary_active($request);
     }
+    public function update_listing_main_photo(Request $request)
+    {
+        return $this->repository->update_listing_main_photo($request);
+    }
+    public function update_listing_temporary_category(Request $request)
+    {
+        return $this->repository->update_listing_temporary_category($request);
+    }
     public function share_listing($agency, ListingRepo $repository)
     {
         abort_if(Gate::denies('share_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -200,5 +208,38 @@ class ListingController extends Controller
     public function get_sub_communities(Request $request)
     {
         return $this->repository->get_sub_communities($request);
+    }
+    public function statistics($agency)
+    {
+        return $this->repository->statistics($agency);
+    }
+    public function statistics_view($agency)
+    {
+        return $this->repository->statistics_view($agency);
+    }
+    public function statistics_process(Request $request)
+    {
+        return $this->repository->statistics_process($request);
+    }
+
+    public function mark(Request $request)
+    {
+        return $this->repository->mark($request);
+    }
+    public function lsm_change(Request $request)
+    {
+        return $this->repository->lsm_change($request);
+    }
+    public function staff_change_shortcut(Request $request)
+    {
+        return $this->repository->staff_change_shortcut($request);
+    }
+    public function status_change_shortcut(Request $request)
+    {
+        return $this->repository->status_change_shortcut($request);
+    }
+    public function move_to_archive(Request $request)
+    {
+        return $this->repository->move_to_archive($request);
     }
 }

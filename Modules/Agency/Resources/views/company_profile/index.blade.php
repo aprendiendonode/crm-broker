@@ -201,7 +201,7 @@
                                 <input
                                         type="text" class="form-control" name="cell"
                                         value="{{ old('cell',$agency->cell) }}" placeholder="@lang('agency.cell')"
-                                        required>
+                                        >
                             </div>
                         </div>
                     </div>

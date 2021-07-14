@@ -13,10 +13,25 @@ use Modules\SuperAdmin\Entities\City;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Activity\Entities\ListingNote;
 use Modules\SuperAdmin\Entities\Community;
+use Modules\SuperAdmin\Entities\ListingType;
 use Modules\SuperAdmin\Entities\SubCommunity;
 
-class Listing extends Model implements Feedable
+use Spatie\MediaLibrary\Models\Media;
+
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+
+class Listing extends Model implements Feedable, HasMedia
 {
+    use HasMediaTrait;
+
+    public function registerMediaConversions(Media $media = null)
+    {
+        $this->addMediaConversion('thumb')
+            ->width(368)
+            ->height(232)
+            ->sharpen(10);
+    }
 
     public function toFeedItem(): FeedItem
     {
@@ -134,7 +149,7 @@ class Listing extends Model implements Feedable
 
     public function portalsList()
     {
-        return $this->hasMany(PortalListing::class,'listing_id');
+        return $this->hasMany(PortalListing::class, 'listing_id');
     }
 
 
@@ -147,9 +162,8 @@ class Listing extends Model implements Feedable
         return [
 
             "type_id" => [
-                'required', 'integer', Rule::exists('listing_types', 'id')->where(function ($q) use ($request) {
-                    $q->where('agency_id', $request->agency_id);
-                })
+                'required', 'integer', Rule::exists('listing_types', 'id')
+
             ],
 
             "loc_lat"                                  => ['sometimes', 'nullable', 'string'],
@@ -172,7 +186,7 @@ class Listing extends Model implements Feedable
             "price"                                    => ['required', 'string'],
             "rent_frequency"                           => ['sometimes', 'nullable', 'string', 'in:yearly,monthly,weekly,daily'],
             "comission_percent"                        => ['sometimes', 'nullable', 'numeric'],
-            "comission_value"                          => ['sometimes', 'nullable', 'numeric'],
+            "comission_value"                          => ['sometimes', 'nullable', 'string'],
             "never_lived_in"                           => ['sometimes', 'nullable', 'in:yes,no'],
             "featured_on_company_website"              => ['sometimes', 'nullable', 'in:yes,no'],
             "exclusive_rights"                         => ['sometimes', 'nullable', 'in:yes,no'],
@@ -187,7 +201,7 @@ class Listing extends Model implements Feedable
             "area"                                     => ['required', 'numeric'],
 
             "deposite_percent"                         => ['sometimes', 'nullable', 'numeric'],
-            "deposite_value"                           => ['sometimes', 'nullable', 'numeric'],
+            "deposite_value"                           => ['sometimes', 'nullable', 'string'],
             "listing_rent_cheque_id"                   => ['sometimes', 'nullable', Rule::exists('listing_rent_cheques', 'id')->where(function ($q) use ($request) {
                 $q->where('agency_id', $request->agency_id);
             })],
@@ -248,9 +262,7 @@ class Listing extends Model implements Feedable
         return [
 
             "edit_type_id_" . $id => [
-                'required', 'integer', Rule::exists('listing_types', 'id')->where(function ($q) use ($request) {
-                    $q->where('agency_id', $request->agency_id);
-                })
+                'required', 'integer', Rule::exists('listing_types', 'id')
             ],
 
 
@@ -272,7 +284,7 @@ class Listing extends Model implements Feedable
             "edit_price_" . $id                                    => ['required', 'string'],
             "edit_rent_frequency_" . $id                           => ['sometimes', 'nullable', 'string', 'in:yearly,monthly,weekly,daily'],
             "edit_comission_percent_" . $id                        => ['sometimes', 'nullable', 'numeric'],
-            "edit_comission_value_" . $id                          => ['sometimes', 'nullable', 'numeric'],
+            "edit_comission_value_" . $id                          => ['sometimes', 'nullable', 'string'],
             "edit_never_lived_in_" . $id                           => ['sometimes', 'nullable', 'in:yes,no'],
             "edit_featured_on_company_website_" . $id              => ['sometimes', 'nullable', 'in:yes,no'],
             "edit_exclusive_rights_" . $id                         => ['sometimes', 'nullable', 'in:yes,no'],
@@ -287,7 +299,7 @@ class Listing extends Model implements Feedable
             "edit_area_" . $id                                     => ['required', 'numeric'],
 
             "edit_deposite_percent_" . $id                         => ['sometimes', 'nullable', 'numeric'],
-            "edit_deposite_value_" . $id                           => ['sometimes', 'nullable', 'numeric'],
+            "edit_deposite_value_" . $id                           => ['sometimes', 'nullable', 'string'],
             "edit_listing_rent_cheque_id_" . $id                   => ['sometimes', 'nullable', Rule::exists('listing_rent_cheques', 'id')->where(function ($q) use ($request) {
                 $q->where('agency_id', $request->agency_id);
             })],
@@ -332,6 +344,7 @@ class Listing extends Model implements Feedable
             "edit_cheque_amount_" . $id                            => ['required', 'array'],
             "edit_cheque_percentage_" . $id                        => ['required', 'array'],
             "edit_photos_" . $id                                   => ['sometimes', 'nullable', 'array'],
+            "edit_checked_main_hidden_" . $id                      => ['sometimes', 'nullable', 'array'],
 
             // |regex:/^([0-9\s\-\+\(\)]*)$/
 

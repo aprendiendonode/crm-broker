@@ -22,7 +22,7 @@
     
     <div class="d-flex justify-content-start">
     
-        <button onclick="event.preventDefault();hide_add_div()" type="button" class="btn  btn-outline-success waves-effect waves-light">
+        <button onclick="event.preventDefault();table_row_hide('edit_listing_{{ $listing->id }}')" type="button" class="btn  btn-outline-success waves-effect waves-light">
            @lang('agency.cancel')
         </button>
         <button type="submit" class="btn  btn-success waves-effect waves-light ml-2">
@@ -36,6 +36,27 @@
     @push('js')
     
     <script>
+    var currencyFormatter = new Intl.NumberFormat('en-EG', {
+    //   style: 'currency',
+    //   currency: 'EGP',
+    });
+
+
+        function updatePriceEdit(id) {
+            // console.log(id);
+            // console.log('price', document.getElementById(`rent-sale_${id}`));
+            // console.log('annaul-commission', document.getElementById(`annual-commission_${id}`));
+            let price = +document.getElementById(`rent-sale_${id}`).value;
+            let annualCommissionPercentage = +(document.getElementById(`annual-commission_${id}`).value) / 100;
+            let depositPercenatage = +(document.getElementById(`deposit-percenatage_${id}`).value) / 100;
+            // let commissionValue = document.getElementById('commissionValue');
+          
+            // document.getElementById(`commissionValue_${id}`).value = currencyFormatter.format(annualCommissionPercentage * price);
+            document.getElementById(`commissionValue_${id}`).value = currencyFormatter.format(annualCommissionPercentage * price);
+           
+            document.getElementById(`depositValue_${id}`).value = currencyFormatter.format(depositPercenatage * price);
+        }
+    
         function editShowRentDiv(id) {
             console.log(id);
             if($('.rent-radio-'+id)[0].checked){

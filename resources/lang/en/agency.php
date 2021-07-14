@@ -16,7 +16,7 @@ return [
     'submit'        => 'Add',
     'cancel'        => 'Cancel',
     'name'          => 'Name',
-    'name_ar'       => 'Arabic Name',
+    'name_ar'       => 'Localized Name',
     'brn'           => 'BRN',
     'email'         => 'Email',
     'password'      => 'Password',
@@ -43,7 +43,7 @@ return [
     'staff_updated'          => 'Staff UPDATED Successfully',
     'staff_creating_failed'  => 'Staff Creation Failed',
     'english_name'           => 'English Name',
-    'arabic_name'            => 'Arabic Name',
+    'arabic_name'            => 'Localized Name',
     'country_code'           => 'Country Code',
     'city_code'              => 'City Code',
     'phone'                  => 'Phone',
@@ -253,6 +253,7 @@ return [
     'watermark_image'                 => 'Watermark Image',
     'update_all_listing'              => 'Update watermark for all the listings',
     'watermark_updated'               => 'watermark updated successfully',
+    'profile'          =>      'Profile',
 
 
 
