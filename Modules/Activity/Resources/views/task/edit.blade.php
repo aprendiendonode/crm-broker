@@ -340,24 +340,6 @@
             }
         }
 
-        // function show_reference_div_edit(id)
-        // {
-        //
-        //
-        //         var task_type_edit = document.getElementById('task_type_edit_'+id).value;
-        //         var reference_div_edit = document.getElementById('reference_div_edit_'+id);
-        //
-        //         if (task_type_edit == 'property_viewing')
-        //         {
-        //             reference_div_edit.style.display = 'block';
-        //
-        //         }else{
-        //
-        //             reference_div_edit.style.display = 'none';
-        //
-        //         }
-        //
-        // }
 
         function show_module_div_edit(module, id) {
 

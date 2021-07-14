@@ -11,6 +11,7 @@ use Modules\Activity\Entities\LeadNote;
 use Modules\Activity\Entities\ListingNote;
 use Modules\Activity\Entities\OpportunityNote;
 use Modules\Activity\Entities\TaskNote;
+use Gate;
 
 class NoteController extends Controller
 {

@@ -18,6 +18,7 @@ use Modules\Setting\Entities\MailList;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Modules\Setting\Entities\Template;
+use Gate;
 
 class EmailController extends Controller
 {
