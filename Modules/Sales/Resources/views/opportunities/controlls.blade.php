@@ -121,7 +121,7 @@
     <i
 
 
-    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'hold_{{ $opportunity->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},{{ $opportunity }},'hold_{{ $opportunity->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.on_hold')"
@@ -144,7 +144,7 @@
 
     <i
 
-    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},null,'client_{{ $opportunity->id }}')"
+    onclick="event.preventDefault();table_row_show({{ $opportunity->id }},{{ $opportunity }},'client_{{ $opportunity->id }}')"
     data-plugin="tippy" 
     data-tippy-placement="top-start" 
     title="@lang('sales.convert_reject_opportunity_to_client')"

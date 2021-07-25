@@ -987,42 +987,15 @@ opportunities.data.forEach(function(value,key){
 
 
                         }
-                        
-
-
-        if(id == 'client_'+row_id && load_listing == false){
-
-             var locale  =  @json(app()->getLocale());
-             var agency  =  @json($agency);
-                $.ajax({
-                    url  : "{{ route('sales.load-listings') }}",
-                    type : 'POST',
-                    data :{
-                        _token :'{{ csrf_token() }}',
-                        agency_id : agency
-                    },
-                    success: function(data){
-                        load_listing = true;
-                        var option = '';
-                        data.listings.forEach(function(value,key){
-                                  option += '<option value="'+value.id+'" >';
-                                  option += value.listing_ref;
-                                  option += '</option>';
-                             })
- 
-                    $('listing-loading-'+row_id).append(option)
-             
-            }
 
 
 
 
 
-        })
 
 
 
-        var hold_exists = false;
+            var hold_exists = false;
             var hold_exists_value = null;
             @if( session()->has('open-hold-tab') )
             hold_exists = true;
@@ -1037,62 +1010,39 @@ opportunities.data.forEach(function(value,key){
                 }
             }
 
-                        
+                     
         if(id == 'hold_'+row_id) {
-                
-                if(hold_exists == false && hold_exists_value != opportunity.id){
-                        var hold_phone1 = document.querySelector(".hold_phone1_"+row_id);
-                        var hold_phone1_iti = window.intlTelInput(hold_phone1, {
-                        
-                            initialCountry: "auto",
-                            utilsScript: "{{ asset('assets/js/util.js') }}",
-                        });
-                        if(opportunity.phone1_symbol ){
+          
+                        if(hold_exists == false && hold_exists_value != opportunity.id){
+                            console.log('here')
+                                var hold_phone1 = document.querySelector(".hold_phone1_"+row_id);
+                                var hold_phone1_iti = window.intlTelInput(hold_phone1, {
+                                
+                                    initialCountry: "auto",
+                                    utilsScript: "{{ asset('assets/js/util.js') }}",
+                                });
+                                if(opportunity.phone1_symbol ){
 
-                            hold_phone1_iti.setCountry(opportunity.phone1_symbol);
-                        }
+                                    hold_phone1_iti.setCountry(opportunity.phone1_symbol);
+                                }
 
-                        $('.hold_phone1_'+row_id).change(function(){
-                            var number = hold_phone1_iti.getSelectedCountryData();
-                            if(hold_phone1_iti.isValidNumber() == false){
-                                $('.hold_phone1_'+row_id).css({"border-color": "red", 
-                                "border-width":"1px", 
-                                "border-style":"solid"});
-                                formClientSubmit = false;
-                                return false;
-                            } else{
-                                $('.hold_phone1_'+row_id).css({"border-color": "#ced4da", 
-                                "border-width":"1px", 
-                                "border-style":"solid"});
-                                formClientSubmit = true;
-                            }
+                                $('.hold_phone1_'+row_id).change(function(){
+                                    var number = hold_phone1_iti.getSelectedCountryData();
+                                    if(hold_phone1_iti.isValidNumber() == false){
+                                        $('.hold_phone1_'+row_id).css({"border-color": "red", 
+                                        "border-width":"1px", 
+                                        "border-style":"solid"});
+                                        formClientSubmit = false;
+                                        return false;
+                                    } else{
+                                        $('.hold_phone1_'+row_id).css({"border-color": "#ced4da", 
+                                        "border-width":"1px", 
+                                        "border-style":"solid"});
+                                        formClientSubmit = true;
+                                    }
 
 
-                        
-                            var str = hold_phone1.value;
-                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
-                                formClientSubmit = false;
-                                $('.hold_phone1_'+row_id).css({"border-color": "red", 
-                                "border-width":"1px", 
-                                "border-style":"solid"});
-                                return false;
-                            }else{
-
-                                $('.hold_phone1_'+row_id).css({"border-color": "#ced4da", 
-                                "border-width":"1px", 
-                                "border-style":"solid"});
-                                formClientSubmit = true;
-                            }
-
-                    
-                            
-                        })
-
-                        hold_phone1.addEventListener("countrychange", function() {
-                                number = hold_phone1_iti.getSelectedCountryData()           
-                                $('.hold_phone1_code_'+row_id).val(number.dialCode)
-                                $('.hold_phone1_symbol_'+row_id).val(number.iso2)
-                                if(hold_phone1.value != ''){
+                                
                                     var str = hold_phone1.value;
                                     if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
                                         formClientSubmit = false;
@@ -1107,30 +1057,102 @@ opportunities.data.forEach(function(value,key){
                                         "border-style":"solid"});
                                         formClientSubmit = true;
                                     }
-                                }
-                                if(!hold_phone1_iti.isValidNumber()){
-                                        formClientSubmit = false;
-                                        $('.hold_phone1_'+row_id).css({"border-color": "red", 
-                                        "border-width":"1px", 
-                                        "border-style":"solid"});
-                                        return false;
-                                }
+
+                            
+                                    
+                                })
+
+                                hold_phone1.addEventListener("countrychange", function() {
+                                        number = hold_phone1_iti.getSelectedCountryData()           
+                                        $('.hold_phone1_code_'+row_id).val(number.dialCode)
+                                        $('.hold_phone1_symbol_'+row_id).val(number.iso2)
+                                        if(hold_phone1.value != ''){
+                                            var str = hold_phone1.value;
+                                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                                formClientSubmit = false;
+                                                $('.hold_phone1_'+row_id).css({"border-color": "red", 
+                                                "border-width":"1px", 
+                                                "border-style":"solid"});
+                                                return false;
+                                            }else{
+
+                                                $('.hold_phone1_'+row_id).css({"border-color": "#ced4da", 
+                                                "border-width":"1px", 
+                                                "border-style":"solid"});
+                                                formClientSubmit = true;
+                                            }
+                                        }
+                                        if(!hold_phone1_iti.isValidNumber()){
+                                                formClientSubmit = false;
+                                                $('.hold_phone1_'+row_id).css({"border-color": "red", 
+                                                "border-width":"1px", 
+                                                "border-style":"solid"});
+                                                return false;
+                                        }
 
 
-                        });
-                        
-                        $('form[name="hold-update-'+row_id+'"]').submit(function(e){
-                            return formClientSubmit == false ? event.preventDefault() : true;
-                        });
+                                });
+                                
+                                $('form[name="hold-update-'+row_id+'"]').submit(function(e){
+                                    return formClientSubmit == false ? event.preventDefault() : true;
+                                });
 
-                    }
+                            }
 
 
 
                 }
-                
-    }
 
+
+
+
+
+
+
+
+
+
+
+                        
+
+
+                        if(id == 'client_'+row_id && load_listing == false){
+
+                            var locale  =  @json(app()->getLocale());
+                            var agency  =  @json($agency);
+                                $.ajax({
+                                    url  : "{{ route('sales.load-listings') }}",
+                                    type : 'POST',
+                                    data :{
+                                        _token :'{{ csrf_token() }}',
+                                        agency_id : agency
+                                    },
+                                    success: function(data){
+                                        load_listing = true;
+                                        var option = '';
+                                        data.listings.forEach(function(value,key){
+                                                option += '<option value="'+value.id+'" >';
+                                                option += value.listing_ref;
+                                                option += '</option>';
+                                            })
+                
+                                    $('listing-loading-'+row_id).append(option)
+                            
+                            }
+
+
+
+
+
+                        })
+
+
+                                
+                    }
+
+
+
+    
 
     if($('.'+id).hasClass('d-none')){
             $('.'+id).removeClass('d-none');
