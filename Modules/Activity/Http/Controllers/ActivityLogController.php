@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Activity\Entities\ActivityLog;
 use Symfony\Component\HttpFoundation\Response;
+use Gate;
 
 
 class ActivityLogController extends Controller

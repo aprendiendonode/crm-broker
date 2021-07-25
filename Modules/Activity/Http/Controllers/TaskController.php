@@ -255,9 +255,9 @@ class TaskController extends Controller
         $task = Task::findorfail($id);
         if (owner()){
 
-            $tasks = auth()->user()->getTasksByUserId()->pluck('id');
+            $tasks = auth()->user()->getTasksByUserId($agency)->pluck('id');
         }else{
-            $tasks = auth()->user()->getTasksByUserId()->pluck('task_id');
+            $tasks = auth()->user()->getTasksByUserId($agency)->pluck('task_id');
 
         }
 
@@ -530,11 +530,12 @@ class TaskController extends Controller
             // validation data
             $task = Task::findorfail($request->task_id);
 
+            $agency = $task->agency_id;
             if (owner()){
 
-                $tasks = auth()->user()->getTasksByUserId()->pluck('id');
+                $tasks = auth()->user()->getTasksByUserId($agency)->pluck('id');
             }else{
-                $tasks = auth()->user()->getTasksByUserId()->pluck('task_id');
+                $tasks = auth()->user()->getTasksByUserId($agency)->pluck('task_id');
 
             }
 

@@ -87,7 +87,7 @@ class User extends Authenticatable
 
             //if user is stuff show tasks related to you only
             //            $tasks = Task::where('agency_id',$this->agency_id)->where('business_id',$this->business_id);
-            $tasks = $this->tasks()->where('agency_id', $agency_id);
+            $tasks = $this->tasks()->where('business_id', $this->business_id)->where('agency_id', $agency_id);
         }
 
         return $tasks;
