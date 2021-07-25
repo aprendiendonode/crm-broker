@@ -63,11 +63,13 @@ class CompanyProfileController extends Controller
                 'description_ar'   => 'nullable|sometimes|string',
 
                 'country_code'     => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                'country_symbol'     => 'required|string',
                 //                'city_code'        => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
                 'phone'            => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
 
 
                 'cell_code'        => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
+                'cell_symbol'        => 'sometimes|nullable|string',
                 'cell'             => 'sometimes|nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:2|max:20',
 
                 'website'          => 'sometimes|nullable|string|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
@@ -115,10 +117,12 @@ class CompanyProfileController extends Controller
                 'description_ar'   => $request->description_ar,
 
                 'country_code'     => $request->country_code,
+                'country_symbol'     => $request->country_symbol,
                 'city_code'        => $request->city_code,
                 'phone'            => $request->phone,
 
                 'cell_code'        => $request->cell_code,
+                'cell_symbol'        => $request->cell_symbol,
                 'cell'             => $request->cell,
 
                 'website'          => $request->website,

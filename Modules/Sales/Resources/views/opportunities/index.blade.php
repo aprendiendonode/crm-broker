@@ -861,7 +861,7 @@ opportunities.data.forEach(function(value,key){
                 });
 
 
-                $('form[name="lead-update-'+row_id+'"]').submit(function(e){
+                $('form[name="opportunity-update-'+row_id+'"]').submit(function(e){
                     return formEditSubmit == false ? event.preventDefault() : true;
                 });
 

@@ -1625,6 +1625,7 @@ class OpportunityRepo
                 'email1' => $request->{"hold_email1_" . $request->opportunity_id},
                 'phone1' => $request->{"hold_phone1_" . $request->opportunity_id},
                 'phone1_code' => $request->{"hold_phone1_code_" . $request->opportunity_id},
+                'phone1_symbol' => $request->{"hold_phone1_symbol_" . $request->opportunity_id},
                 // 'country' => $request->{"hold_country_" . $request->opportunity_id},
 
                 // 'language' => $request->{"hold_language_" . $request->opportunity_id},

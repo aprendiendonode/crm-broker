@@ -1,6 +1,6 @@
 @can('edit_client')
 <i
-  onclick="event.preventDefault();  table_row_show({{ $client->id }},'edit_client_{{ $client->id }}')"
+  onclick="event.preventDefault();  table_row_show({{ $client->id }},{{ $client }},'edit_client_{{ $client->id }}')"
    data-plugin="tippy" 
    data-tippy-placement="top-start" 
    title="@lang('agency.edit')"
@@ -74,24 +74,7 @@
 
 @push('js')
 <script>
-
-function table_row_show(row_id,id){
  
- $('.table-row_'+row_id+':not(.'+id+')').addClass('d-none');
-    if($('.'+id).hasClass('d-none')){
-        $('.'+id).removeClass('d-none');
-    }else{
-        $('.'+id).addClass('d-none');
-
-    }
-
-}
-function table_row_hide(id){
-    
-    $('.'+id).addClass('d-none');
-
-}
-  
 
 function  hide_edit_div(id){
 

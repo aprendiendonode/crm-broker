@@ -159,6 +159,8 @@ class ClientRepo
                 "phone1"                       => $request->{'edit_phone1_' . $id},
                 "phone1_code"                  => $request->{'edit_phone1_code_' . $id},
                 "phone2_code"                  => $request->{'edit_phone2_code_' . $id},
+                "phone1_symbol"                => $request->{'edit_phone1_symbol_' . $id},
+                "phone2_symbol"                => $request->{'edit_phone2_symbol_' . $id},
                 "phone2"                       => $request->{'edit_phone2_' . $id},
                 "landline"                     => $request->{'edit_landline_' . $id},
                 "fax"                          => $request->{'edit_fax_' . $id},

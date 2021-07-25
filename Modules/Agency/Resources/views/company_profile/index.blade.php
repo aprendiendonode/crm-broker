@@ -33,6 +33,15 @@
     </style>
 
 
+
+<link rel="stylesheet" href="{{ asset('assets/css/intlcss/intlTelInput.css') }}" />
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"
+integrity="sha512-DNeDhsl+FWnx5B1EQzsayHMyP6Xl/Mg+vcnFPXGNjUZrW28hQaa1+A4qL9M+AiOMmkAhKAWYHh1a+t6qxthzUw=="
+crossorigin="anonymous"
+></script>
+
+
     <!-- icons -->
 @endsection
 @section('title',trans('agency.agency_profile'))
@@ -47,7 +56,7 @@
 
 
         </div>
-        <form action="{{route('agency.profile.update',$agency->id)}}" data-parsley-validate="" method="post"
+        <form action="{{route('agency.profile.update',$agency->id)}}" data-parsley-validate="" name="agency-update" method="post"
               enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -131,80 +140,44 @@
 
 
                     <div class="form-group d-flex">
-                        <div style="flex:2">
+
+                        <input type="hidden" name="country_code" class="country_code"   value="{{ old('country_code',$agency->country_code) }}">
+                        <input type="hidden" name="country_symbol" class="country_symbol" value="{{ old('country_symbol',$agency->country_symbol) }}">
+                       
+                        <input type="hidden" name="cell_code" class="cell_code"   value="{{ old('cell_code',$agency->cell_code) }}">
+                        <input type="hidden" name="cell_symbol" class="cell_symbol" value="{{ old('cell_symbol',$agency->cell_symbol) }}">
+                       
+                        <div style="flex:4">
                             <div>
                                 <label class="text-muted font-weight-medium" for="">@lang('agency.primary')</label>
                             </div>
-                            <select class="form-control select2" name="country_code" required>
-
-                                <option value=""></option>
-                                @foreach($countries as $code)
-                                    <option
-                                            @if(old('country_code') == null)
-                                            @if($agency->country_code == $code->phone_code)
-                                            selected
-                                            @elseif($agency->country->phone_code == $code->phone_code)
-                                            selected
-
-                                            @endif
-                                            @elseif(old('country_code') ==  $code->phone_code)
-                                            selected
-                                            @endif
-                                            value="{{$code->phone_code}}">{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div style="flex:4">
-                            <div>
-                                <label class="text-muted font-weight-medium" for="">@lang('agency.phone')</label>
-                            </div>
                             <div class="">
-                                <input
-                                        type="text" class="form-control" name="phone"
-                                        value="{{ old('phone',$agency->phone) }}" placeholder="@lang('agency.phone')"
-                                        required>
+                                <input  
+                                        type="text" class="form-control phone"
+                                    name="phone" value="{{ old("phone",$agency->phone) }}"
+                                    placeholder="@lang('sales.phone')" required>
                             </div>
-                        </div>
+                         </div>
                     </div>
-
-
-
+            
+            
                     <div class="form-group d-flex">
-                        <div style="flex:2">
+            
+                 
+                        <div style="flex:4">
                             <div>
                                 <label class="text-muted font-weight-medium" for="">@lang('agency.secondary')</label>
                             </div>
-                            <select class="form-control select2" name="cell_code" required>
-
-                                <option value=""></option>
-                                @foreach($countries as $code)
-                                    <option
-                                            @if(old('cell_code') == null)
-                                            @if($agency->cell_code == $code->phone_code)
-                                            selected
-                                            @elseif($agency->country->phone_code == $code->phone_code)
-                                            selected
-
-                                            @endif
-                                            @elseif(old('cell_code') ==  $code->phone_code)
-                                            selected
-                                            @endif
-                                            value="{{$code->phone_code}}">{{ $code->phone_code .' ( '. $code->iso2 .' ) '   }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div style="flex:4">
-                            <div>
-                                <label class="text-muted font-weight-medium" for="">@lang('agency.cell')</label>
-                            </div>
+            
                             <div class="">
-                                <input
-                                        type="text" class="form-control" name="cell"
-                                        value="{{ old('cell',$agency->cell) }}" placeholder="@lang('agency.cell')"
-                                        >
+                                <input   
+                                        type="text" class="form-control cell"
+                                    name="cell" value="{{ old("cell",$agency->cell) }}"
+                                    placeholder="@lang('agency.cell')">
                             </div>
-                        </div>
+                         </div>
                     </div>
+            
 
                     <div class="form-group">
                         <label class="mb-1 font-weight-medium text-muted"
@@ -422,6 +395,183 @@
             .catch(error => {
 
             });
+
+
+            var agency = @json($agency);
+                var phone = document.querySelector(".phone");
+                var phone_iti = window.intlTelInput(phone, {
+                
+                initialCountry: "auto",
+                utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+                if(agency.country_symbol ){
+
+                    phone_iti.setCountry(agency.country_symbol);
+                }
+
+
+
+                $('.phone').change(function(){
+                    var number = phone_iti.getSelectedCountryData();
+                    if(phone_iti.isValidNumber() == false){
+                        $('.phone').css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = false;
+                        return false;
+                    } else{
+                        $('.phone').css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+
+                
+                    var str = phone.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formSubmit = false;
+                        $('.phone').css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.phone').css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                phone.addEventListener("countrychange", function() {
+                        number = phone_iti.getSelectedCountryData()           
+                        $('.country_code').val(number.dialCode)
+                        $('.country_symbol').val(number.iso2)
+                        if(phone.value != ''){
+                            var str = phone.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formSubmit = false;
+                                $('.phone').css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.phone').css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formSubmit = true;
+                            }
+                        }
+                        if(!phone_iti.isValidNumber()){
+                                formSubmit = false;
+                                $('.phone').css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+                
+
+
+
+
+
+                var cell = document.querySelector(".cell");
+                var cell_iti = window.intlTelInput(cell, {
+                
+                initialCountry: "auto",
+                utilsScript: "{{ asset('assets/js/util.js') }}",
+                });
+                if(agency.cell_symbol){
+
+                    cell_iti.setCountry(agency.cell_symbol);
+                }
+
+
+
+                $('.cell').change(function(){
+                    var number = cell_iti.getSelectedCountryData();
+                    if(cell_iti.isValidNumber() == false){
+                        $('.cell').css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = false;
+                        return false;
+                    } else{
+                        $('.cell').css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+
+                
+                    var str = cell.value;
+                    if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                        formSubmit = false;
+                        $('.cell').css({"border-color": "red", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        return false;
+                    }else{
+
+                        $('.cell').css({"border-color": "#ced4da", 
+                        "border-width":"1px", 
+                        "border-style":"solid"});
+                        formSubmit = true;
+                    }
+
+            
+                    
+                })
+
+                cell.addEventListener("countrychange", function() {
+                        number = cell_iti.getSelectedCountryData()           
+                        $('.cell_code').val(number.dialCode)
+                        $('.cell_symbol').val(number.iso2)
+                        if(cell.value != ''){
+                            var str = cell.value;
+                            if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                formSubmit = false;
+                                $('.cell').css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                            }else{
+
+                                $('.cell_').css({"border-color": "#ced4da", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                formSubmit = true;
+                            }
+                        }
+                        if(!cell_iti.isValidNumber()){
+                                formSubmit = false;
+                                $('.cell').css({"border-color": "red", 
+                                "border-width":"1px", 
+                                "border-style":"solid"});
+                                return false;
+                        }
+
+
+                });
+
+
+
+
+                $('form[name="agency-update"]').submit(function(e){
+                    return formSubmit == false ? event.preventDefault() : true;
+                });
+
+
+
 
     </script>
 @endpush
