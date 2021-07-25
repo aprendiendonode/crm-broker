@@ -237,6 +237,7 @@ class OpportunityRepo
                 $fixed_array_keys[str_replace(['edit_', '_' . $id], '', $key)] = $input;
             }
             $fixed_array_keys['full_name'] =  $request->{'edit_full_name_' . $id} != null ? $request->{'edit_full_name_' . $id} : ($request->{'edit_first_name_' . $id} . ' ' . $request->{'edit_sec_name_' . $id});
+            // dd($fixed_array_keys);
             $opportunity->update($fixed_array_keys);
             DB::commit();
             return back()->with(flash(trans('sales.opportunity_updated'), 'success'))->with('open-edit-tab', $id);

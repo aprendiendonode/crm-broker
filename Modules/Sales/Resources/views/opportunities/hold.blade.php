@@ -29,7 +29,7 @@
 
 
 <div class=" approval_form_{{ $opportunity->id }} d-none">
-    <form  action="{{ url('sales/suggest-for-approve') }}" data-parsley-validate="" method="POST" enctype="multipart/form-data">
+    <form  action="{{ url('sales/suggest-for-approve') }}" data-parsley-validate="" method="POST"  name="hold-update-{{ $opportunity->id }}" enctype="multipart/form-data">
 
 
 
@@ -109,10 +109,27 @@
         
 
 
-
+          
+                <div class="form-group d-flex">
+                    <input type="hidden" name="hold_phone1_code_{{ $opportunity->id }}" class="hold_phone1_code_{{ $opportunity->id }} "   value="{{ old('hold_phone1_code_'.$opportunity->id,$opportunity->phone1_code) }}">
+                    <input type="hidden" name="hold_phone1_symbol_{{ $opportunity->id }}" class="hold_phone1_symbol_{{ $opportunity->id }} " value="{{ old('hold_phone1_symbol_'.$opportunity->id,$opportunity->phone1_symbol) }}">
+                 
+                        <div style="flex:4">
+                            <div>
+                                <label class="text-muted font-weight-medium" for="">@lang('sales.phone1')</label>
+                            </div>
+                            <div class="">
+                                <input  
+                                        type="text" class="form-control hold_phone1_{{ $opportunity->id }}"
+                                    name="hold_phone1_{{ $opportunity->id }}" value="{{ old("hold_phone1_{$opportunity->id}",$opportunity->phone1) }}"
+                                    placeholder="@lang('sales.phone1')" required>
+                            </div>
+                        </div>
+                </div>
+        
                 
           
-        <div class="form-group d-flex">
+        {{-- <div class="form-group d-flex">
 
             <div style="flex:2">
                 <div>
@@ -140,7 +157,7 @@
                        placeholder="@lang('sales.phone1')" required>
             </div>
         </div>
-        </div>
+        </div> --}}
 
                
         <div class="form-group">
@@ -788,3 +805,111 @@
    }
 </script>
   @endpush
+
+
+
+  
+
+  @if( (session()->has('open-hold-tab') && session('open-hold-tab') ==  $opportunity->id ))
+
+
+  @push('js')
+  <script>
+  
+                  
+                  var formClientPageSubmit = true;
+                  
+                  var opportunity =@json($opportunity) ;
+                  var hold_page_phone1 = document.querySelector(".hold_phone1_"+opportunity.id);
+                  var hold_page_phone1_iti = window.intlTelInput(hold_page_phone1, {
+                  
+                    initialCountry: "auto",
+                    utilsScript: "{{ asset('assets/js/util.js') }}",
+                  });
+                  var symbol = "{{ old('hold_phone1_symbol_'.$opportunity->id,$opportunity->phone1_sumbol) }}"
+                  if(symbol){
+  
+                      hold_page_phone1_iti.setCountry(symbol);
+                  }
+  
+                  
+                  $('.hold_phone1_'+opportunity.id).change(function(){
+                      
+                      var number = hold_page_phone1_iti.getSelectedCountryData();
+                      if(hold_page_phone1_iti.isValidNumber() == false){
+                          $('.hold_phone1_'+opportunity.id).css({"border-color": "red", 
+                          "border-width":"1px", 
+                          "border-style":"solid"});
+                          formClientPageSubmit = false;
+                          return false;
+                      } else{
+                          $('.hold_phone1_'+opportunity.id).css({"border-color": "#ced4da", 
+                          "border-width":"1px", 
+                          "border-style":"solid"});
+                          formClientPageSubmit = true;
+                      }
+  
+  
+                  
+                      var str = hold_page_phone1.value;
+                      if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                          formClientPageSubmit = false;
+                          $('.hold_phone1_'+opportunity.id).css({"border-color": "red", 
+                          "border-width":"1px", 
+                          "border-style":"solid"});
+                          return false;
+                      }else{
+  
+                          $('.hold_phone1_'+opportunity.id).css({"border-color": "#ced4da", 
+                          "border-width":"1px", 
+                          "border-style":"solid"});
+                          formClientPageSubmit = true;
+                      }
+  
+              
+                      
+                  })
+  
+                  hold_page_phone1.addEventListener("countrychange", function() {
+                          number = hold_page_phone1_iti.getSelectedCountryData()           
+                          $('.hold_phone1_code_'+opportunity.id).val(number.dialCode)
+                          $('.hold_phone1_symbol_'+opportunity.id).val(number.iso2)
+                          if(hold_page_phone1.value != ''){
+                              var str = hold_page_phone1.value;
+                              if(str.split('').slice(0,(number.dialCode.length)).join('') == number.dialCode){
+                                  formClientPageSubmit = false;
+                                  $('.hold_phone1_'+opportunity.id).css({"border-color": "red", 
+                                  "border-width":"1px", 
+                                  "border-style":"solid"});
+                                  return false;
+                              }else{
+  
+                                  $('.hold_phone1_'+opportunity.id).css({"border-color": "#ced4da", 
+                                  "border-width":"1px", 
+                                  "border-style":"solid"});
+                                  formClientPageSubmit = true;
+                              }
+                          }
+                          if(!hold_page_phone1_iti.isValidNumber()){
+                                  formClientPageSubmit = false;
+                                  $('.hold_phone1_'+opportunity.id).css({"border-color": "red", 
+                                  "border-width":"1px", 
+                                  "border-style":"solid"});
+                                  return false;
+                          }
+  
+  
+                  });
+                  
+  
+  
+               
+  
+                  $('form[name="hold-update-'+opportunity.id+'"]').submit(function(e){
+                      return formClientPageSubmit == false ? event.preventDefault() : true;
+                  });
+  
+  
+  </script>
+  @endpush
+  @endif
