@@ -546,7 +546,7 @@ crossorigin="anonymous"
                                 return false;
                             }else{
 
-                                $('.cell_').css({"border-color": "#ced4da", 
+                                $('.cell').css({"border-color": "#ced4da", 
                                 "border-width":"1px", 
                                 "border-style":"solid"});
                                 formSubmit = true;
