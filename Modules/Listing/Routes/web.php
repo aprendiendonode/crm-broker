@@ -21,6 +21,10 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
     Route::prefix('listing')->group(function () {
         Route::get('controll/{agency}', 'ListingController@index');
+
+        Route::get('create/{agency}', 'ListingController@create')->name('listing.create');
+
+
         Route::get('listing-view/{agency}', 'ListingViewController@index');
 
 

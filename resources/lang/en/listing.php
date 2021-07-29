@@ -285,6 +285,8 @@ return [
     'listing_lsm'     => 'Listing Has Been Updated To ',
     'listing_staff_updated' => 'Listing Staff Updated',
     'listing_status_updated' => 'Listing Status Updated',
+    'Property for Sale'         => 'Property for Sale',
+    'Property for Rent'         => 'Property for Rent',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',

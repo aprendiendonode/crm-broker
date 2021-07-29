@@ -3,8 +3,10 @@
 namespace Modules\Listing\Http\Controllers;
 
 use Gate;
+use App\Models\Agency;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Listing\Http\Repositories\ListingRepo;
 
@@ -21,6 +23,45 @@ class ListingController extends Controller
     {
         abort_if(Gate::denies('view_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->repository->index($agency);
+    }
+
+
+    public function create($agency)
+    {
+        $business = auth()->user()->business_id;
+
+        $agency = Agency::with([
+            'lead_sources',
+            'landlords',
+            'tenants',
+            'task_status',
+            'descriptionTemplates'
+
+        ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
+
+
+        return view('listing::listing.create', [
+            'business' => $business,
+            'agency' => $agency->id,
+            'staffs' => staff($agency->id),
+            'agency_region' => $agency->country ? $agency->country->iso2 : '',
+
+            'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
+                return DB::table('listing_types')->get();
+            }),
+            'listing_views' => $agency->listing_views,
+            'cities' =>  cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                return DB::table('cities')->where('country_id', $agency->country_id)->get();
+            }),
+            'communities' =>
+            cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
+                return DB::table('communities')->where('country_id', $agency->country_id)->get();
+            }),
+            'sub_communities' =>
+            cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
+                return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
+            }),
+        ]);
     }
 
     public function store(Request $request)
