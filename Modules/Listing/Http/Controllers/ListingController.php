@@ -40,12 +40,25 @@ class ListingController extends Controller
         ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
 
-        return view('listing::listing.create', [
+        return view('listing::listing.create.index', [
+            'agency_data' => $agency,
             'business' => $business,
             'agency' => $agency->id,
             'staffs' => staff($agency->id),
             'agency_region' => $agency->country ? $agency->country->iso2 : '',
 
+            'lead_sources' => $agency->lead_sources,
+            'task_status' => $agency->task_status,
+            'task_types' => $agency->task_types,
+            'developers' => $agency->developers,
+            'cheques' => $agency->cheques,
+            'landlords' => $agency->landlords,
+            'tenants' => $agency->tenants,
+            'descriptionTemplates' => $agency->descriptionTemplates,
+            'portals' =>
+            cache()->remember('portals', 60 * 60 * 24, function () {
+                return DB::table('portals')->get();
+            }),
             'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
                 return DB::table('listing_types')->get();
             }),
@@ -61,6 +74,11 @@ class ListingController extends Controller
             cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
                 return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
             }),
+            'listing_categories' =>
+            cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
+                return DB::table('listing_categories')->get();
+            }),
+
         ]);
     }
 
