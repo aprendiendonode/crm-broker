@@ -172,16 +172,19 @@
             </div>
 
             @can('add_listing')
-                <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
+                {{-- <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
                     <i class="fe-plus-square"></i> @lang('listing.add_listing')
-                </button>
+                </button> --}}
+                <a href="{{ url('listing/create/'.$agency) }}" type="button" class="btn btn-info waves-effect waves-light">
+                    <i class="fe-plus-square"></i> @lang('listing.add_listing')
+                </a>
             @endcan
         </div>
 
         @can('add_listing')
-            <div class="mb-2 add_listing " @if(!session()->has('open-tab')) style="display: none;opacity:0;transition:0.7s" @endif>
+            {{-- <div class="mb-2 add_listing " @if(!session()->has('open-tab')) style="display: none;opacity:0;transition:0.7s" @endif>
                 @include('listing::listing.create.index')
-            </div>
+            </div> --}}
         @endcan
 
 

@@ -21,7 +21,7 @@ class CreateListingsTable extends Migration
             $table->foreign('business_id')->references('id')->on('businesses')->onDelete('cascade');
 
 
-            $table->enum('purpose', ['rent', 'sale'])->default('sale');
+            $table->enum('purpose', ['rent', 'sale', 'short'])->default('sale');
             $table->text('location')->nullable();
             $table->bigInteger('city_id')->nullable();
             $table->bigInteger('community_id')->nullable();
