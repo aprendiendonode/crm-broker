@@ -36,6 +36,18 @@
         title="Edit"
         class="fa fa-edit cursor-pointer feather-16">
 </i>
+
+
+<i
+        onclick="event.preventDefault();
+         load_edit({{ $listing->id }})
+        "
+        data-plugin="tippy"
+        data-tippy-placement="top-start"
+        title="Edit"
+        class="fa fa-edit cursor-pointer feather-16">
+</i>
+
 @endcan
 
 @if($listing->status == 'archive')
@@ -78,6 +90,7 @@
 @push('js')
     <script>
 
+     
         function table_row_show(row_id,id){
 
             if(id == 'edit_listing_'+row_id){

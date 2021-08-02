@@ -367,13 +367,22 @@
 
                     @can('edit_listing')
 
-                        <tr class="table-row_{{ $listing->id }} edit_listing_{{ $listing->id }}
+                        {{-- <tr class="table-row_{{ $listing->id }} edit_listing_{{ $listing->id }}
                             @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $listing->id ))  @else d-none @endif
                             "
                              >
                             <td colspan="13">
 
                                 @include('listing::listing.edit.index')
+
+                            </td>
+                        </tr> --}}
+
+
+                        <tr class="load_edit_listing_{{ $listing->id }} d-none  ">
+                            <td colspan="13" class="load_edit_listing_show_{{ $listing->id }}">
+
+                                {{-- @include('listing::listing.edit.index') --}}
 
                             </td>
                         </tr>
@@ -1416,5 +1425,100 @@ function updateMain(input,table,listing_id){
             $('.more_info_'+id).addClass('d-none');
 
         }
+
+        function load_edit(listing){
+            
+            $.ajax({
+                url:"{{ route('listing.load-edit') }}",
+                method : "POST",
+                data : {
+                    _token : '{{ csrf_token() }}',
+                    listing : listing,
+                },
+                success : function(data){
+
+                    $('.load_edit_listing_show_'+listing).append(data)
+
+                    $('.load_edit_listing_show_'+ listing +' .select2').select2();
+                    $('#photos-modal_'+listing).modal({
+                    show: false,
+                    backdrop: 'static'
+                    })
+                ClassicEditor
+                    .create(document.querySelector('#edit_description_en_' + listing))
+                    .then()
+                    .catch(error => {
+
+                    });
+
+                ClassicEditor
+                    .create(document.querySelector('#edit_description_ar_' + listing), {
+                        language: 'ar'
+                    })
+                    .then()
+                    .catch(error => {
+
+                    });
+
+                    $('.load_edit_listing_'+listing).removeClass('d-none')
+
+                },
+                error : function (error) {
+
+                }
+
+            });
+            }
+
+
+
+
+            var currencyFormatter = new Intl.NumberFormat('en-EG', {
+    //   style: 'currency',
+    //   currency: 'EGP',
+    });
+
+
+        function updatePriceEdit(id) {
+            
+            let price = +document.getElementById(`rent-sale_${id}`).value;
+            let annualCommissionPercentage = +(document.getElementById(`annual-commission_${id}`).value) / 100;
+            let depositPercenatage = +(document.getElementById(`deposit-percenatage_${id}`).value) / 100;
+            
+            document.getElementById(`commissionValue_${id}`).value = currencyFormatter.format(annualCommissionPercentage * price);
+           
+            document.getElementById(`depositValue_${id}`).value = currencyFormatter.format(depositPercenatage * price);
+        }
+    
+        function editShowRentDiv(id) {
+            console.log(id);
+            if($('.rent-radio-'+id)[0].checked){
+                $('#rent_div_'+id)[0].style.display = "block";
+                document.getElementById(`rent-sale-label-${id}`).innerHTML = "Rent";
+            }else {
+                document.getElementById(`rent-sale-label-${id}`).innerHTML = "Sale";
+                $('#rent_div_'+id)[0].style.display = "none";
+            }
+        }
+        function editShowSubRentDiv(id) {
+        
+            if($('.sub-rent-checkbox-'+id)[0].checked){
+                $('#sub_rent_div_'+id)[0].style.display = "block";
+            }else {
+                $('#sub_rent_div_'+id)[0].style.display = "none";
+            }
+                
+        }
+        
+        function editShowFurnishedQuestion(id){
+            question_status = $('.listing_type_'+id).find(':selected').data('furnished');
+            if(question_status == 'yes'){
+                $('.furnished_question_'+id).removeClass('d-none');
+            }else{
+                $('.furnished_question_'+id).addClass('d-none');
+            }
+        
+        }
+
     </script>
 @endpush

@@ -259,6 +259,8 @@
             @endforeach
         </select>
     </div>
+
+    
     <div class="form-group">
         <label for="status" class="font-weight-medium text-muted">  @lang('listing.status')</label>
         <select class="form-control select2" name="edit_status_{{ $listing->id }}"

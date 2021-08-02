@@ -138,6 +138,10 @@ class Listing extends Model implements Feedable, HasMedia
     {
         return $this->hasMany(ListingChequeCalculator::class);
     }
+    public function cheque_type()
+    {
+        return $this->belongsTo(ListingCheque::class, 'listing_rent_cheque_id');
+    }
     public function view()
     {
         return $this->belongsTo(ListingView::class);

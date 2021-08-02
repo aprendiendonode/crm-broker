@@ -30,68 +30,6 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
 
         Route::get('listing-cheque/{agency}', 'ListingChequeController@index');
-        Route::get('listing-map/{agency}', function () {
-
-
-
-            $sub =
-
-                [
-
-
-
-
-                    '
-  Al Diyafah Road
-',
-                    'Satwa Road',
-                    '
-  Makeen Residence Al Satwa
-',
-                    'The Flagship One',
-                    'Square 334',
-                    '
-  Eden House
-',
-                    '
-  Bin Dhaen Holding Building Satwa
-',
-                    '
-  Al Zomoroda Building
-',
-                    '
-  Adaire 1
-',
-                    '
-  Cloud 88
-',
-                    '
-  Al Khair 5
-',
-                    '
-  Al Khair Building 1
-',
-                    '
-  Al Badaa Residences
-'
-
-
-                ];
-
-
-
-            foreach ($sub as $s) {
-
-                SubCommunity::create([
-                    'name_en'    => trim($s),
-                    'name_ar'    => trim($s),
-                    'country_id' => 234,
-                    'community_id' => 120
-                ]);
-            }
-
-            /*  return view('listing::listing.listing_map'); */
-        });
 
 
         Route::get('locations/{agency}', 'ListingController@locations');
@@ -185,5 +123,7 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.status-change-shortcut');
         Route::post('move-to-archive', 'ListingController@move_to_archive')
             ->name('listings.move-to-archive');
+        Route::post('load-edit', 'ListingController@load_edit_view')
+            ->name('listing.load-edit');
     });
 });

@@ -145,17 +145,17 @@ class ListingRepo
                     'agency' => $agency->id,
                     'agency_region' => $agency->country ? $agency->country->iso2 : '',
 
-                    'staffs' => staff($agency->id),
+                    'staffs' => staff($agency->id), //filter
                     'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
                         return DB::table('listing_types')->get();
-                    }),
+                    }), //filter
                     'listing_views' => $agency->listing_views,
                     'listings' => $listings_query->paginate($per_page),
                     'ref_ids' => $listings_query->pluck('listing_ref')->unique(),
                     'pagination' => $pagination,
                     'locations' => $listings_query->pluck('location')->unique(),
                     'business' => $business,
-                    'lead_sources' => $agency->lead_sources,
+                    'lead_sources' => $agency->lead_sources, //lead source
                     'task_status' => $agency->task_status,
                     'task_types' => $agency->task_types,
                     'developers' => $agency->developers,
