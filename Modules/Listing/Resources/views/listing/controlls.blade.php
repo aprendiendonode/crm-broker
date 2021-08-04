@@ -26,26 +26,26 @@
 
 @can('edit_listing')
 
-
 <i
         onclick="event.preventDefault();
-         table_row_show({{ $listing->id }},'edit_listing_{{ $listing->id }}')
+        
+         load_edit({{ $listing->id }},'{{ $listing }}')
         "
         data-plugin="tippy"
         data-tippy-placement="top-start"
         title="Edit"
-        class="fa fa-edit cursor-pointer feather-16">
+        class="load-edit-{{ $listing->id }} fa fa-edit cursor-pointer feather-16">
 </i>
 
-
 <i
         onclick="event.preventDefault();
-         load_edit({{ $listing->id }})
+        
+         close_edit({{ $listing->id }})
         "
         data-plugin="tippy"
         data-tippy-placement="top-start"
-        title="Edit"
-        class="fa fa-edit cursor-pointer feather-16">
+        title="Close"
+        class="close-edit-{{ $listing->id }} fas fa-times-circle cursor-pointer feather-16 d-none">
 </i>
 
 @endcan

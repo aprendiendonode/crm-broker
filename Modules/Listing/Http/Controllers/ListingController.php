@@ -112,7 +112,7 @@ class ListingController extends Controller
 
 
 
-        return view('listing::listing.edit', [
+        return view('listing::listing.edit.index', [
             'listing'    => $listing,
             'agency_data' => $agency,
             'agency' => $agency->id,

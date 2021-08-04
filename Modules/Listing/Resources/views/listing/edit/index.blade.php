@@ -1,94 +1,82 @@
 
-<form id="edit-staff-form" action="{{ route('listing.update',$listing->id) }}" data-parsley-validate="" method="POST" enctype="multipart/form-data">
-    <div class="row">
-            @csrf
-            @method('PATCH')
-            @if($agency)
-            <input type="hidden" name="agency_id" value="{{ $agency }}">
-          @endif
-          @if($business)
-            <input type="hidden" name="business_id" value="{{ $business }}">
-          @endif
-      
-    
-      @include('listing::listing.edit.location_price')
-      @include('listing::listing.edit.listing_details')
-      @include('listing::listing.edit.associates')
-      @include('listing::listing.modals.edit_modals')
 
-   
 
-    </div>
+<form id="edit-staff-form-{{ $listing->id }}" action="{{ route('listing.update',$listing->id) }}" data-parsley-validate="" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PATCH')
+    <div class="d-flex justify-content-start mb-2">
     
-    <div class="d-flex justify-content-start">
-    
-        <button onclick="event.preventDefault();table_row_hide('edit_listing_{{ $listing->id }}')" type="button" class="btn  btn-outline-success waves-effect waves-light">
+        <button onclick="event.preventDefault();close_edit({{ $listing->id }})" type="button" class="btn  btn-outline-success waves-effect waves-light">
            @lang('agency.cancel')
         </button>
         <button type="submit" class="btn  btn-success waves-effect waves-light ml-2">
             <span class="btn-label"><i class="mdi mdi-check-all"></i></span>@lang('agency.modify')
         </button>
     </div>
-    
-</form>
-    
-    
-    @push('js')
-    
-    <script>
-    var currencyFormatter = new Intl.NumberFormat('en-EG', {
-    //   style: 'currency',
-    //   currency: 'EGP',
-    });
+    <div class="row">
 
 
-        function updatePriceEdit(id) {
-            // console.log(id);
-            // console.log('price', document.getElementById(`rent-sale_${id}`));
-            // console.log('annaul-commission', document.getElementById(`annual-commission_${id}`));
-            let price = +document.getElementById(`rent-sale_${id}`).value;
-            let annualCommissionPercentage = +(document.getElementById(`annual-commission_${id}`).value) / 100;
-            let depositPercenatage = +(document.getElementById(`deposit-percenatage_${id}`).value) / 100;
-            // let commissionValue = document.getElementById('commissionValue');
-          
-            // document.getElementById(`commissionValue_${id}`).value = currencyFormatter.format(annualCommissionPercentage * price);
-            document.getElementById(`commissionValue_${id}`).value = currencyFormatter.format(annualCommissionPercentage * price);
-           
-            document.getElementById(`depositValue_${id}`).value = currencyFormatter.format(depositPercenatage * price);
-        }
     
-        function editShowRentDiv(id) {
-            console.log(id);
-            if($('.rent-radio-'+id)[0].checked){
-                $('#rent_div_'+id)[0].style.display = "block";
-                document.getElementById(`rent-sale-label-${id}`).innerHTML = "Rent";
-            }else {
-                document.getElementById(`rent-sale-label-${id}`).innerHTML = "Sale";
-                $('#rent_div_'+id)[0].style.display = "none";
-            }
-        }
-        function editShowSubRentDiv(id) {
+         
         
-            if($('.sub-rent-checkbox-'+id)[0].checked){
-                $('#sub_rent_div_'+id)[0].style.display = "block";
-            }else {
-                $('#sub_rent_div_'+id)[0].style.display = "none";
-            }
-                
-        }
-        
-        function editShowFurnishedQuestion(id){
-            question_status = $('.listing_type_'+id).find(':selected').data('furnished');
-            if(question_status == 'yes'){
-                $('.furnished_question_'+id).removeClass('d-none');
-            }else{
-                $('.furnished_question_'+id).addClass('d-none');
-            }
-        
-        }
+            <div class="col-lg-6">
+                <div class="card">             
+                    @include('listing::listing.edit.tabs.photos')
+                </div>
+                <!-- END carousel-->
+            </div>
 
-    </script>
 
+            <div class="col-xl-6">
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        @include('listing::listing.edit.tabs.agent')
+
+                    </div>
+                    <div class="col-xl-12">
+ 
+                                @include('listing::listing.edit.tabs.pricing')
 
  
-    @endpush
+                    </div>
+
+
+                </div>
+
+            </div> <!-- end col -->
+            <div class="col-xl-6">
+                @include('listing::listing.edit.tabs.details_modals')
+             </div> <!-- end col -->
+ 
+      
+            <div class="col-xl-6">
+                <div class="row">
+                    <div class="col-xl-12">
+                        @include('listing::listing.edit.tabs.locations')
+                    </div>
+                    <div class="col-xl-12">
+                        @include('listing::listing.edit.tabs.documents_plans_extra')
+                    </div>
+                </div>
+             
+
+            </div>  
+         
+          
+    </div>
+    
+    <div class="d-flex justify-content-start">
+    
+        <button onclick="event.preventDefault();close_edit({{ $listing->id }})" type="button" class="btn  btn-outline-success waves-effect waves-light">
+           @lang('agency.cancel')
+        </button>
+        <button type="submit" class="btn  btn-success waves-effect waves-light ml-2">
+            <span class="btn-label"><i class="mdi mdi-check-all"></i></span>@lang('agency.modify')
+        </button>
+    </div>
+ 
+    @include('listing::listing.modals.edit_modals')
+
+
+</form>

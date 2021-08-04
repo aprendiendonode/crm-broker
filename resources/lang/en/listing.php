@@ -306,6 +306,13 @@ return [
     'video' => 'Video',
     'pricing' => 'Pricing',
     'Price' => 'Price',
+    'no_documents' => 'No Documents',
+    'no_floor_plans' => 'No Floor Plans',
+    'document'  => 'Document',
+    'done'      => 'Done',
+    'street'    => 'Street',
+    'locations'    => 'Locations',
+    'commission'    => 'Commission',
 
 
     ////////////////////////Start Share Listing////////////////////////

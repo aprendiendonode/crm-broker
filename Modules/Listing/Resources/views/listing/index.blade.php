@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/modals.css') }}" rel="stylesheet">
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG"></script>
+
     <style>
         .toggle.android {
             border-radius: 0px;
@@ -24,6 +26,52 @@
         .ck-editor__editable_inline {
                 min-height: 350px;
         }
+
+        .lds-facebook {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  left: 8px;
+  width: 14px;
+  background:#981717;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook div:nth-child(1) {
+  left: 8px;
+  animation-delay: -0.24s;
+}
+.lds-facebook div:nth-child(2) {
+  left: 32px;
+  animation-delay: -0.12s;
+}
+.lds-facebook div:nth-child(3) {
+  left: 56px;
+  animation-delay: 0;
+}
+@keyframes lds-facebook {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%, 100% {
+    top: 24px;
+    height: 32px;
+  }
+}
+
+
+
+.table-info-summary {
+margin-bottom: 0px !important;
+}
+.table-info-summary td,th {
+ padding:5px !important;
+}
     </style>
 
     @endsection
@@ -381,7 +429,10 @@
 
                         <tr class="load_edit_listing_{{ $listing->id }} d-none  ">
                             <td colspan="13" class="load_edit_listing_show_{{ $listing->id }}">
+                                <div class="lds-ring-row-{{ $listing->id }} row d-none justify-content-center">
 
+                                    <div class="lds-facebook"><div></div><div></div><div></div></div>
+                                </div>
                                 {{-- @include('listing::listing.edit.index') --}}
 
                             </td>
@@ -498,10 +549,6 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/ar.js"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
-     {{--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap"--}}
-     {{--async >--}}
-    {{--</script> --}}
-
     <script>
         $(document).ready(function () {
 
@@ -577,57 +624,6 @@
                 googleMapsScriptIsInjected = true;
             };
 
-
-
-
-
-        function show_add_div() {
-            var div = document.querySelector('.add_listing');
-            if (div.style.display === 'none') {
-             var region = @json($agency_region);
-                injectGoogleMapsApiScript({
-                    key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
-                    libraries: 'places',
-                    language: 'en',
-                    region: region,
-                    callback: 'initMap',
-                });
-
-
-                div.style.display = 'block';
-
-                setTimeout(function () {
-
-                    div.style.opacity = 1;
-
-                }, 10);
-            } else {
-                div.style.display = 'none';
-                setTimeout(function () {
-
-                    div.style.opacity = 0;
-
-
-                }, 10);
-
-            }
-
-        }
-
-
-        function hide_add_div() {
-            var div = document.querySelector('.add_listing');
-
-            div.style.display = 'none';
-            setTimeout(function () {
-
-                div.style.opacity = 0;
-
-
-            }, 10);
-
-
-        }
 
 
     </script>
@@ -1426,8 +1422,13 @@ function updateMain(input,table,listing_id){
 
         }
 
-        function load_edit(listing){
-            
+        function load_edit(listing,listing_data){
+            var region = @json($agency_region);
+            $('.lds-ring-row-'+listing).removeClass('d-none')
+            $('.load_edit_listing_'+listing).removeClass('d-none')
+            $('.close-edit-'+listing).removeClass('d-none')
+            $('.load-edit-'+listing).addClass('d-none')
+
             $.ajax({
                 url:"{{ route('listing.load-edit') }}",
                 method : "POST",
@@ -1435,8 +1436,10 @@ function updateMain(input,table,listing_id){
                     _token : '{{ csrf_token() }}',
                     listing : listing,
                 },
+           
                 success : function(data){
-
+                   
+                
                     $('.load_edit_listing_show_'+listing).append(data)
 
                     $('.load_edit_listing_show_'+ listing +' .select2').select2();
@@ -1444,30 +1447,116 @@ function updateMain(input,table,listing_id){
                     show: false,
                     backdrop: 'static'
                     })
-                ClassicEditor
-                    .create(document.querySelector('#edit_description_en_' + listing))
-                    .then()
-                    .catch(error => {
 
-                    });
+                        edit_autocompletelocation_input = new google.maps.places.Autocomplete((document.getElementById('location_input_'+listing)), {
+                            types: ["establishment"],
+                            });
+                            edit_autocompletelocation_input.setComponentRestrictions({
+                            country: [region],
+                        });
 
-                ClassicEditor
-                    .create(document.querySelector('#edit_description_ar_' + listing), {
-                        language: 'ar'
-                    })
-                    .then()
-                    .catch(error => {
+                        google.maps.event.addListener(edit_autocompletelocation_input, 'place_changed', function () {
+                                var place = edit_autocompletelocation_input.getPlace();
+                                        $('#latitude_'+listing).val(place.geometry.location.lat());
+                                        $('#longitude_'+listing).val(place.geometry.location.lng());
+                        
+                        
 
-                    });
+                            });
 
-                    $('.load_edit_listing_'+listing).removeClass('d-none')
+
+                            var editMap = new google.maps.Map(document.getElementById('map_'+listing), {
+                                    center: {lat: listing_data.loc_lat ? parseInt(listing_data.loc_lat) : 30.0444 , lng:  listing_data.loc_lng ? parseInt(listing_data.loc_lng ) : 31.2357  },
+                                    zoom: 13,
+                                    
+                                    mapTypeId: 'roadmap'
+                                }); 
+
+                                var geocoder = new google.maps.Geocoder();
+                                google.maps.event.addListener(editMap, 'click', function(event) {
+                                    SelectedLatLng = event.latLng;
+                                    geocoder.geocode({
+                                        'latLng': event.latLng
+                                    }, function(results, status) {
+                                        if (status == google.maps.GeocoderStatus.OK) {
+                                            if (results[0]) {
+                                                deleteMarkers();
+                                                addMarkerRunTime(event.latLng);
+                                                SelectedLocation = results[0].formatted_address;
+                                                console.log( results[0].formatted_address);
+                                                editSplitLatLng(String(event.latLng),listing);
+                                                $("#location_input_"+listing).val(results[0].formatted_address);
+                                            }
+                                        }
+                                    });
+                                });
+
+
+                                function addMarkerRunTime(location) {
+                                    var marker = new google.maps.Marker({
+                                        position: location,
+                                        map: editMap
+                                    });
+                                    markers.push(marker);
+                                }
+
+
+                
+                            function setMapOnAll(map) {
+                                for (var i = 0; i < markers.length; i++) {
+                                    markers[i].setMap(map);
+                                }
+                            }
+                            function clearMarkers() {
+                                setMapOnAll(null);
+                            }
+                            function deleteMarkers() {
+                                clearMarkers();
+                                markers = [];
+                            }
+                        
+                            var markers = [];
+
+
+
+                        ClassicEditor
+                            .create(document.querySelector('#edit_description_en_' + listing))
+                            .then()
+                            .catch(error => {
+
+                            });
+
+                            ClassicEditor
+                                .create(document.querySelector('#edit_description_ar_' + listing), {
+                                    language: 'ar'
+                                })
+                                .then()
+                                .catch(error => {
+
+                                });
+
+                                $('.lds-ring-row-'+listing).addClass('d-none')
+                            
 
                 },
                 error : function (error) {
-
+                    $('.lds-ring-row-'+listing).addClass('d-none')
+                     $('.load_edit_listing_'+listing).addClass('d-none')
+                     $('.close-edit-'+listing).addClass('d-none')
+                     $('.load-edit-'+listing).removeClass('d-none')
                 }
 
             });
+            }
+
+
+            function close_edit(listing){
+                $('#edit-staff-form-'+listing).remove();
+                $('.load_edit_listing_'+listing).addClass('d-none')
+                $('.close-edit-'+listing).addClass('d-none')
+                $('.load-edit-'+listing).removeClass('d-none')
+
+                
             }
 
 
@@ -1521,4 +1610,27 @@ function updateMain(input,table,listing_id){
         }
 
     </script>
+
+
+<script>
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+        function splitLatLng(latLng){
+            var newString = latLng.substring(0, latLng.length-1);
+            var newString2 = newString.substring(1);
+            var trainindIdArray = newString2.split(',');
+            var lat = trainindIdArray[0];
+            var Lng  = trainindIdArray[1];
+            $("#latitude").val(lat);
+            $("#longitude").val(Lng);
+        }
+</script>
+
+
 @endpush
