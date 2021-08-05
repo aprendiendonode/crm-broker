@@ -25,8 +25,8 @@
                             <td width="200">
                                 @lang('listing.Price')
                             </td>
-                            <td>
-                                {{ $listing->Price  }}
+                            <td class="listing-pricing-price-{{ $listing->id }}">
+                                {{ $listing->price  }}
                                 <!-- ko foreach: externalListings --><!-- /ko -->
                             </td>
                         </tr>
@@ -35,7 +35,7 @@
                             <td width="200">
                                 @lang('listing.commission')
                             </td>
-                            <td>
+                            <td class="listing-pricing-commission-{{ $listing->id }}">
                                 {{  $listing->commission .' - '. $listing->comission_percent .'%'  }}
                                 <!-- ko foreach: externalListings --><!-- /ko -->
                             </td>
@@ -46,7 +46,7 @@
                             <td width="200">
                                 @lang('listing.deposite')
                             </td>
-                            <td>
+                            <td class="listing-pricing-deposite-{{ $listing->id }}">
                                 {{ $listing->deposite_value .' - '. $listing->deposite_percent .'%' }}
                                 <!-- ko foreach: externalListings --><!-- /ko -->
                             </td>
@@ -56,7 +56,7 @@
                             <td width="200">
                                 @lang('listing.rent_frequency')
                             </td>
-                            <td>
+                            <td class="listing-pricing-rent-frequency-{{ $listing->id }}">
                                 {{ $listing->rent_frequency  }}
                                 <!-- ko foreach: externalListings --><!-- /ko -->
                             </td>
@@ -66,7 +66,7 @@
                             <td width="200">
                                 @lang('listing.cheque')
                             </td>
-                            <td>
+                            <td class="listing-pricing-cheque-{{ $listing->id }}">
                                 {{ $listing->cheque_type->{'name_'.app()->getLocale()} ?? '' }}
                                 <!-- ko foreach: externalListings --><!-- /ko -->
                             </td>
@@ -102,7 +102,7 @@
                         </span>
                         <span class="text-danger"> *</span></label>
                         <div class="input-group mb-2" >
-                            <input type="number"  value="{{ old('edit_price_'.$listing->id,$listing->price) }}" class="form-control decimal_convert" 
+                            <input type="number"  value="{{ old('edit_price_'.$listing->id,$listing->price) }}" class="listing-price-{{ $listing->id }} form-control decimal_convert" 
                                    name="edit_price_{{ $listing->id }}" onkeyup="updatePriceEdit({{ $listing->id }})" onchange="updatePriceEdit({{ $listing->id }})" min="1" id="rent-sale_{{ $listing->id }}" required>
                         
                         </div>
@@ -118,7 +118,7 @@
                                     <input
                                     name ="edit_comission_percent_{{ $listing->id }}"
                                     value="{{ old('edit_comission_percent_'.$listing->id,$listing->comission_percent) }}"
-                                     type="number" class="form-control" 
+                                     type="number" class="form-control listing-commission-percent-{{ $listing->id }}" 
                                      id="annual-commission_{{ $listing->id }}"
                                         onchange="updatePriceEdit({{ $listing->id }})"
                                         onkeyup="updatePriceEdit({{ $listing->id }})"
@@ -132,7 +132,7 @@
                                     <input
                                     name="edit_comission_value_{{ $listing->id }}"
                                     value="{{ old('edit_comission_value_'.$listing->id,$listing->comission_value) }}"
-                                     type="text" class="form-control"
+                                     type="text" class="form-control listing-commission-value-{{ $listing->id }}"
                                       id="commissionValue_{{ $listing->id }}"
                                        data-tippy-placement="top-start"
                                         title=""
@@ -158,7 +158,7 @@
                                     <input 
                                      name="edit_deposite_percent_{{ $listing->id }}"
                                      value="{{ old('edit_deposite_percent_'.$listing->id,$listing->deposite_percent) }}"
-                                     type="number" class="form-control" id="deposit-percenatage_{{ $listing->id }}"
+                                     type="number" class="form-control listing-deposite-percent-{{ $listing->id }}" id="deposit-percenatage_{{ $listing->id }}"
                                        onchange="updatePriceEdit({{ $listing->id }})"
                                        onkeyup="updatePriceEdit({{ $listing->id }})"
                                      >
@@ -173,7 +173,7 @@
                                     value="{{ old('edit_deposite_value_'.$listing->id,$listing->deposite_value) }}"
                                     type="text"
                                     id="depositValue_{{ $listing->id }}" 
-                                    class="form-control" readonly>
+                                    class="form-control listing-deposite-value-{{ $listing->id }}" readonly>
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">AED</div>
                                     </div>
@@ -188,8 +188,8 @@
                         {{-- rent paid every month,week,day,year --}}
                         <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.rent_frequency')</label>
                         <div class="d-flex" style="flex:2">
-                            <select name="edit_rent_frequency_{{ $listing->id }}" class="form-control select2" 
-                               name="edit_Frequency_{{ $listing->id }}" data-toggle="select2" data-placeholder="@lang('listing.rent_frequency')">
+                            <select name="edit_rent_frequency_{{ $listing->id }}" class="form-control select2 listing-rent-frequency-{{ $listing->id }}" 
+                              data-toggle="select2" data-placeholder="@lang('listing.rent_frequency')">
                                 <option value=""></option>
                                 <option @if(old('edit_rent_frequency_'.$listing->id,$listing->rent_frequency) == 'yearly') selected @endif value="yearly">
                                     @lang('listing.yearly')
@@ -208,7 +208,7 @@
                     </div>
                     <div class="form-group">
                         <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.cheque')</label>
-                         <select class="form-control select2"
+                         <select class="form-control select2 listing-cheque-{{ $listing->id }}"
                           name="edit_listing_rent_cheque_id_{{ $listing->id }}" 
                           data-toggle="select2" data-placeholder="@lang('listing.select')">
                             <option value=""></option>
@@ -228,6 +228,11 @@
                 <div class="modal-footer">
 
                     <button type="button" class="btn btn-primary" data-dismiss="modal">@lang('listing.close')</button>
+                    <button type="button" class="btn btn-success"
+                    onclick="updateListingPricing(
+                        {{ $listing->id }},'{{ route('listings.update-listing-pricing') }}',
+                     '{{ csrf_token() }}', '{{ $listing->agency_id }}' , '{{ $listing->business_id }}' ,'{{ app()->getLocale()  }}' )"
+                     >@lang('listing.modify')</button>
                 </div>
             </div><!-- /.modal-content -->
 

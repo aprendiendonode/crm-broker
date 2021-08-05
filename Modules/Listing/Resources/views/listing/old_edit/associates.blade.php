@@ -234,9 +234,9 @@
          
        
            
-   </div>
-</div>
-</div>
+        </div>
+        </div>
+    </div>
 
     <div class="form-group">
         <label for="assignTo" class="font-weight-medium text-muted">

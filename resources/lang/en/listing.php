@@ -313,7 +313,10 @@ return [
     'street'    => 'Street',
     'locations'    => 'Locations',
     'commission'    => 'Commission',
-
+    'tenancy_contact_start_date' => 'Contact Start Date',
+    'tenancy_contact_end_date'   => 'Contact End Date',
+    'source'                     => 'Source',
+    'close'                      => 'Close',
 
     ////////////////////////Start Share Listing////////////////////////
     'share_listing'             =>  'Share Listing',

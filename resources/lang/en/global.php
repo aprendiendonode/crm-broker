@@ -15,4 +15,10 @@ return [
         'no_data_in_table'  => 'No Data In Table',
 
     ],
+
+    'created'                       => 'Created Successfully',
+    'modified'                      => 'Modified Successfully',
+    'deleted'                       => 'Deleted Successfully',
+    'something_wrong'               => 'Something Went Wrong',
+
 ];

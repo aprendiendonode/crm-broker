@@ -1,7 +1,7 @@
 
 
 
-<form id="edit-staff-form-{{ $listing->id }}" action="{{ route('listing.update',$listing->id) }}" data-parsley-validate="" method="POST" enctype="multipart/form-data">
+<form id="edit-staff-form-{{ $listing->id }}" action="{{ route('listing.update',$listing->id) }}"  method="POST" enctype="multipart/form-data">
     @csrf
     @method('PATCH')
     <div class="d-flex justify-content-start mb-2">

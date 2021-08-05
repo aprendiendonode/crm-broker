@@ -11,6 +11,7 @@
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/modals.css') }}" rel="stylesheet">
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG"></script>
+     <script src="{{ asset('assets/js/listing_modify.js') }}"></script>
 
     <style>
         .toggle.android {
@@ -301,7 +302,8 @@ margin-bottom: 0px !important;
                                     @endif
                                 @endif
                             </td>
-                            <td><a target="_blank" href="{{ route('listings.front',[$listing->id,$listing->listing_ref]) }}">{{ $listing->listing_ref }}</a></td>
+                            <td >
+                                <a target="_blank" href="{{ route('listings.front',[$listing->id,$listing->listing_ref]) }}">{{ $listing->listing_ref }}</a></td>
                             <td>{{ Str::ucfirst($listing->purpose) }}</td>
                             <td>{{ $listing->type ? $listing->type->{'name_'.app()->getLocale()} : '' }}</td>
                             {{--@dd($listing)--}}
@@ -316,9 +318,9 @@ margin-bottom: 0px !important;
                                  {{ Str::words($listing->location,3,'...') }}
                                 </span>
                          </td>
-                            <td>{{ number_format($listing->area)  }}</td>
-                            <td>{{ number_format($listing->price) }}</td>
-                            <td>{{ ucfirst( $listing->agent->{'name_'.app()->getLocale()} ) }}</td>
+                            <td class="listing-agent-table-area-{{ $listing->id }}"> {{ number_format($listing->area)  }}</td>
+                            <td class="listing-agent-table-price-{{ $listing->id }}">{{ number_format($listing->price) }}</td>
+                            <td class="listing-agent-table-name-{{ $listing->id }}">{{ ucfirst( $listing->agent->{'name_'.app()->getLocale()} ) }}</td>
                             <td>{{ $listing->updated_at->toFormattedDateString() }}</td>
                             <td>
                                 @can('edit_listing')

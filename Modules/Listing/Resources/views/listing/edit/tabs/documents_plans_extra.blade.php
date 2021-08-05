@@ -66,14 +66,61 @@
             <button type="button" style="float: right;" class="btn btn-primary" data-toggle="modal" data-target="#extraInfo-modal_{{ $listing->id }}">@lang('listing.edit')</button>
 
             <div class=" mb-4">
-              
-                   
-                    <div>@lang('listing.key_location'): {{ $listing->key_location }}</div>
-                    <div>@lang('listing.govfield1'): {{ $listing->govfield1 }}</div>
-                    <div>@lang('listing.govfield2'): {{ $listing->govfield2 }}</div>
-                    <div>@lang('listing.yearly_service_charges'): {{ $listing->yearly_service_charges }}</div>
-                    <div>@lang('listing.monthly_cooling_charges'): {{ $listing->monthly_cooling_charges }}</div>
-                    <div>@lang('listing.monthly_cooling_provider'): {{ $listing->monthly_cooling_provider }}</div>
+                <table class="table table-striped table-info-summary">
+                                
+                    <tbody>
+                        <tr>
+                            <td width="200">
+                                @lang('listing.key_location')
+                            </td>
+                            <td class="listing-extra-info-key-location-{{ $listing->id }}">
+                                {{ $listing->key_location }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="200">
+                                @lang('listing.govfield1')
+                            </td>
+                            <td class="listing-extra-info-govfield1-{{ $listing->id }}">
+                                {{ $listing->govfield1 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="200">
+                                @lang('listing.govfield2')
+                            </td>
+                            <td class="listing-extra-info-govfield2-{{ $listing->id }}">
+                                {{ $listing->govfield2 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="200">
+                                @lang('listing.yearly_service_charges')
+                            </td>
+                            <td class="listing-extra-info-yearly-service-charges-{{ $listing->id }}">
+                                {{ $listing->yearly_service_charges }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="200">
+                                @lang('listing.monthly_cooling_charges')
+                            </td>
+                            <td class="listing-extra-info-monthly-cooling-charges-{{ $listing->id }}">
+                                {{ $listing->monthly_cooling_charges }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="200">
+                                @lang('listing.monthly_cooling_provider')
+                            </td>
+                            <td class="listing-extra-info-monthly-cooling-provider-{{ $listing->id }}">
+                                {{ $listing->monthly_cooling_provider }}
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>        
+     
              
 
              

@@ -125,5 +125,13 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.move-to-archive');
         Route::post('load-edit', 'ListingController@load_edit_view')
             ->name('listing.load-edit');
+        Route::post('update-listing-agent', 'ListingController@updateListingAgent')
+            ->name('listings.update-listing-agent');
+        Route::post('update-listing-pricing', 'ListingController@updateListingPricing')
+            ->name('listings.update-listing-pricing');
+        Route::post('update-listing-locations', 'ListingController@updateListingLocation')
+            ->name('listings.update-listing-locations');
+        Route::post('update-listing-extra-info', 'ListingController@updateListingExtraInfo')
+            ->name('listings.update-listing-extra-info');
     });
 });

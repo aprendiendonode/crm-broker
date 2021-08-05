@@ -988,7 +988,7 @@ class ListingRepo
             $photos = $request->{'edit_photos_' . $id};
             $check_hidden_photos = $request->{'edit_checked_main_hidden_' . $id};
 
-            $validator = Validator::make($request->all(), Listing::update_validation($request, $id));
+            $validator = Validator::make($request->all(), Listing::update_validation($request, $id, $listing));
             if ($validator->fails()) {
                 return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-edit-tab', $id);
             }

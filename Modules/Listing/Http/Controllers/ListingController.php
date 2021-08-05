@@ -3,11 +3,18 @@
 namespace Modules\Listing\Http\Controllers;
 
 use Gate;
+use App\Models\User;
 use App\Models\Agency;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Listing\Entities\Listing;
+use Modules\SuperAdmin\Entities\City;
+use Illuminate\Support\Facades\Validator;
+use Modules\SuperAdmin\Entities\Community;
+use Modules\Listing\Entities\ListingCheque;
+use Modules\SuperAdmin\Entities\SubCommunity;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Listing\Http\Repositories\ListingRepo;
 
@@ -158,6 +165,146 @@ class ListingController extends Controller
     }
 
 
+
+    public function updateListingAgent(Request $request)
+    {
+        if ($request->ajax()) {
+            try {
+                $listing = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+                $agent = User::where('id', $request->agent)->where('business_id', $request->business)->firstOrFail();
+                $listing->update([
+                    'assigned_to'      => $request->agent
+                ]);
+
+                return response()->json(['message' => trans('global.modified'), 'agent' => $agent], 200);
+            } catch (\Exception $th) {
+                return response()->json(['message' => trans('global.something_wrong')], 400);
+            }
+        }
+    }
+
+
+
+    public function updateListingPricing(Request $request)
+    {
+        if ($request->ajax()) {
+            try {
+                $listing = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+                $cheque =  ListingCheque::where('id', $request->cheque)->where('business_id', $request->business)->where('agency_id', $request->agency)->firstOrFail();
+
+                $validator = Validator::make($request->all(), [
+                    "price"                                   => ['required', 'string'],
+                    "rent_frequency"                          => ['sometimes', 'nullable', 'string', 'in:yearly,monthly,weekly,daily'],
+                    "comission_percent"                       => ['sometimes', 'nullable', 'numeric'],
+                    "comission_value"                         => ['sometimes', 'nullable', 'string'],
+                    "deposite_percent"                        => ['sometimes', 'nullable', 'numeric'],
+                    "deposite_value"                          => ['sometimes', 'nullable', 'string'],
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                }
+                $listing->update([
+                    'price'                  => $request->price,
+                    'rent_frequency'         => $request->rent_frequency,
+                    'comission_percent'      => $request->comission_percent,
+                    'comission_value'        => $request->comission_value,
+                    'comission_percent'      => $request->comission_percent,
+                    'comission_value'        => $request->comission_value,
+                    'listing_rent_cheque_id' => $cheque->id,
+                ]);
+
+                return response()->json(['message' => trans('global.modified'), 'cheque' => $cheque], 200);
+            } catch (\Exception $th) {
+                dd($th);
+                return response()->json(['message' => trans('global.something_wrong')], 400);
+            }
+        }
+    }
+
+
+
+    public function updateListingLocation(Request $request)
+    {
+
+        if ($request->ajax()) {
+            try {
+                $listing   = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+                $city      =  City::findOrFail($request->city);
+                $community =  Community::findOrFail($request->community);
+                $sub_community = '';
+                if ($request->sub_community) {
+
+                    $sub_community       =  SubCommunity::findOrFail($request->sub_community);
+                }
+
+                $validator = Validator::make($request->all(), [
+                    "loc_lat"                                  => ['sometimes', 'nullable', 'string'],
+                    "loc_lng"                                  => ['sometimes', 'nullable', 'string'],
+                    "location"                                 => ['sometimes', 'nullable', 'string'],
+                    "sub_community"                            => ['sometimes', 'nullable', 'string', 'exists:sub_communities,id'],
+                    "unit"                                     => ['sometimes', 'nullable', 'string'],
+                    "plot"                                     => ['sometimes', 'nullable', 'string'],
+                    "street"                                   => ['sometimes', 'nullable', 'string'],
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                }
+                $listing->update([
+                    'loc_lat'                   => $request->loc_lat,
+                    'loc_lng'                   => $request->loc_lng,
+                    'location'                  => $request->location,
+                    'sub_community_id'          => $request->sub_community,
+                    'community_id'              => $request->community,
+                    'city_id'                   => $request->city,
+                    'unit_no'                   => $request->unit,
+                    'plot_no'                   => $request->plot,
+                    'street_no'                 => $request->street,
+                ]);
+
+                return response()->json(['message' => trans('global.modified'), 'city' => $city, 'community' => $community, 'sub_community' => $sub_community], 200);
+            } catch (\Exception $th) {
+                dd($th);
+                return response()->json(['message' => trans('global.something_wrong')], 400);
+            }
+        }
+    }
+
+
+    public function updateListingExtraInfo(Request $request)
+    {
+
+        if ($request->ajax()) {
+            try {
+                $listing   = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+
+                $validator = Validator::make($request->all(), [
+                    "key_location"                             => ['sometimes', 'nullable', 'string'],
+                    "govfield1"                                => ['sometimes', 'nullable', 'string'],
+                    "govfield2"                                => ['sometimes', 'nullable', 'string'],
+                    "yearly_service_charges"                   => ['sometimes', 'nullable', 'numeric'],
+                    "monthly_cooling_charges"                  => ['sometimes', 'nullable', 'numeric'],
+                    "monthly_cooling_provider"                 => ['sometimes', 'nullable', 'numeric'],
+
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                }
+                $listing->update([
+                    'key_location'               => $request->key_location,
+                    'govfield1'                  => $request->govfield1,
+                    'govfield2'                  => $request->govfield2,
+                    'yearly_service_charges'     => $request->yearly_service_charges,
+                    'monthly_cooling_charges'    => $request->monthly_cooling_charges,
+                    'monthly_cooling_provider'   => $request->monthly_cooling_provider,
+                ]);
+
+                return response()->json(['message' => trans('global.modified')], 200);
+            } catch (\Exception $th) {
+
+                return response()->json(['message' => trans('global.something_wrong')], 400);
+            }
+        }
+    }
 
 
 

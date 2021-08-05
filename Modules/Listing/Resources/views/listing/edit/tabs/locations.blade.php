@@ -25,17 +25,17 @@
                                 <td width="200">
                                     @lang('listing.location')
                                 </td>
-                                <td>
+                                <td class="listing-locations-location-{{ $listing->id }}">
                                     {{ $listing->location}}
                                     <!-- ko foreach: externalListings --><!-- /ko -->
                                 </td>
                             </tr>
                             <tr>
                               
-                                <td width="200">
+                                <td width="200" >
                                     @lang('listing.city')
                                 </td>
-                                <td>
+                                <td class="listing-locations-city-{{ $listing->id }}">
                                     {{ $listing->city->{'name_'.app()->getLocale()} ?? '' }}
                                     <!-- ko foreach: externalListings --><!-- /ko -->
                                 </td>
@@ -46,7 +46,7 @@
                                 <td width="200">
                                     @lang('listing.community')
                                 </td>
-                                <td>
+                                <td class="listing-locations-community-{{ $listing->id }}">
                                     {{ $listing->community->{'name_'.app()->getLocale()} ?? '' }}
                                     <!-- ko foreach: externalListings --><!-- /ko -->
                                 </td>
@@ -56,8 +56,8 @@
                                 <td width="200">
                                     @lang('listing.sub_community')
                                 </td>
-                                <td>
-                                    {{ $listing->sub_community->{'name_'.app()->getLocale()} ?? '' }}
+                                <td class="listing-locations-sub-community-{{ $listing->id }}">
+                                    {{ $listing->subCommunity->{'name_'.app()->getLocale()} ?? '' }}
                                     <!-- ko foreach: externalListings --><!-- /ko -->
                                 </td>
                             </tr>
@@ -66,8 +66,8 @@
                                 <td width="200">
                                     @lang('listing.unit')
                                 </td>
-                                <td>
-                                    {{ $listing->unit }}
+                                <td class="listing-locations-unit-{{ $listing->id }}">
+                                    {{ $listing->unit_no }}
                                     <!-- ko foreach: externalListings --><!-- /ko -->
                                 </td>
                             </tr>
@@ -76,8 +76,8 @@
                                 <td width="200">
                                     @lang('listing.floor')
                                 </td>
-                                <td>
-                                    {{ $listing->floor }}
+                                <td class="listing-locations-plot-{{ $listing->id }}">
+                                    {{ $listing->plot_no }}
                                     <!-- ko foreach: externalListings --><!-- /ko -->
                                 </td>
                             </tr>
@@ -86,8 +86,8 @@
                                 <td width="200">
                                     @lang('listing.street')
                                 </td>
-                                <td>
-                                    {{ $listing->street }}
+                                <td class="listing-locations-street-{{ $listing->id }}">
+                                    {{ $listing->street_no }}
                                     <!-- ko foreach: externalListings --><!-- /ko -->
                                 </td>
                             </tr>
@@ -126,11 +126,19 @@
 
                         <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.location')</label>
                         <div class="d-flex align-items-center" style="flex:2">
-                            <input type="text" class="form-control" name="edit_location_{{ $listing->id }}" id="location_input_{{ $listing->id }}"  
+                            <input
+                             type="text" class="form-control listing-location-{{ $listing->id }}"
+                             name="edit_location_{{ $listing->id }}" id="location_input_{{ $listing->id }}"  
                             value="{{ old('edit_location_'.$listing->id,$listing->location) }}" 
                              placeholder="">
-                             <input type="hidden" name="edit_loc_lat_{{ $listing->id }}" id="latitude_{{ $listing->id }}" value="{{ old('edit_loc_lat_'.$listing->id,$listing->loc_lat) }}" >
-                             <input type="hidden" name="edit_loc_lng_{{ $listing->id }}" id="longitude_{{ $listing->id }}" value="{{ old('edit_loc_lng_'.$listing->id,$listing->loc_lng) }}">
+                             <input type="hidden"
+                             class="listing-loc-lat-{{ $listing->id }}"
+                              name="edit_loc_lat_{{ $listing->id }}"
+                               id="latitude_{{ $listing->id }}" value="{{ old('edit_loc_lat_'.$listing->id,$listing->loc_lat) }}" >
+                             <input type="hidden" 
+                             name="edit_loc_lng_{{ $listing->id }}"
+                             class="listing-loc-lng-{{ $listing->id }}"
+                              id="longitude_{{ $listing->id }}" value="{{ old('edit_loc_lng_'.$listing->id,$listing->loc_lng) }}">
                        
                         </div>
                     </div>
@@ -139,7 +147,11 @@
         
                     <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.city')<span class="text-danger">*</span></label>
                     <div style="flex:2;">
-                        <select required onchange="getCommunitites('edit',{{ $listing->id }})" class="form-control select2 city-in-edit-{{ $listing->id }}" name="edit_city_id_{{ $listing->id }}"
+                        <select
+                          
+                         onchange="getCommunitites('edit',{{ $listing->id }})" 
+                         class="form-control select2 listing-city-{{ $listing->id }} city-in-edit-{{ $listing->id }}".
+                          name="edit_city_id_{{ $listing->id }}"
                          data-toggle="select2" data-placeholder="@lang('listing.city')">
                                 <option value=""></option>
                             
@@ -160,7 +172,9 @@
         
                 <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') <span class="text-danger">*</span></label>
                 <div style="flex:2;">
-                    <select required onchange="getSubCommunities('edit',{{ $listing->id }})" class="form-control select2 community-in-edit-{{ $listing->id }}" name="edit_community_id_{{ $listing->id }}"
+                    <select 
+                     onchange="getSubCommunities('edit',{{ $listing->id }})" 
+                     class="form-control select2 listing-community-{{ $listing->id }} community-in-edit-{{ $listing->id }}" name="edit_community_id_{{ $listing->id }}"
                      data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
                      <option value=""></option>
                      @foreach($communities->where('city_id',$listing->city_id) as $community)
@@ -187,7 +201,7 @@
         
                 <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.sub_community')</label>
                 <div style="flex:2;">
-                    <select class="form-control select2 sub-community-in-edit-{{ $listing->id }}" name="edit_sub_community_id_{{ $listing->id }}"
+                    <select class="form-control select2 sub-community-in-edit-{{ $listing->id }} listing-sub-community-{{ $listing->id }}" name="edit_sub_community_id_{{ $listing->id }}"
                      data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
                      <option value=""></option>
         
@@ -213,16 +227,16 @@
                 <div class="form-group">
                     <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.unit')</label>
                     <div class="d-flex" style="flex:2">
-                        <input type="text" class="form-control mr-2"
+                        <input type="text" class="form-control mr-2 listing-unit-{{ $listing->id }}"
                         placeholder="@lang('listing.unit')"
                          name="edit_unit_no_{{ $listing->id }}" data-plugin="tippy" data-tippy-placement="top-start" 
                         title="@lang('listing.unit')" id="unit_{{ $listing->id }}"  value="{{ old('edit_unit_no_'.$listing->id,$listing->unit_no) }}">
-                        <input type="text" class="form-control mr-2"
+                        <input type="text" class="form-control mr-2 listing-plot-{{ $listing->id }}"
                          data-plugin="tippy" data-tippy-placement="top-start" title="@lang('listing.plot')" placeholder="@lang('listing.plot')"
                          name="edit_plot_no_{{ $listing->id }}" id="plot_{{ $listing->id }}"  value="{{ old('edit_plot_no_'.$listing->id,$listing->plot_no) }}">
                         <input type="text" data-plugin="tippy" 
                         placeholder="@lang('street')"
-                        data-tippy-placement="top-start" title="@lang('listing.street')" class="form-control"
+                        data-tippy-placement="top-start" title="@lang('listing.street')" class="form-control listing-street-{{ $listing->id }}"
                          name="edit_street_no_{{ $listing->id }}" id="street_{{ $listing->id }}"  value="{{ old('edit_street_no_'.$listing->id,$listing->street_no) }}">
                     </div>
                 </div>
@@ -231,6 +245,9 @@
                 <div class="modal-footer">
 
                     <button type="button" class="btn btn-primary" data-dismiss="modal">@lang('listing.close')</button>
+                    <button type="button" class="btn btn-success" onclick="updateListingLocation(
+                        {{ $listing->id }},'{{ route('listings.update-listing-locations') }}',
+                     '{{ csrf_token() }}', '{{ $listing->agency_id }}' , '{{ $listing->business_id }}' ,'{{ app()->getLocale()  }}' )">@lang('listing.modify')</button>
                 </div>
             </div><!-- /.modal-content -->
 

@@ -10,15 +10,16 @@ use Illuminate\Validation\Rule;
 use Modules\Activity\Entities\Task;
 use Modules\Sales\Entities\Developer;
 use Modules\SuperAdmin\Entities\City;
+use Spatie\MediaLibrary\Models\Media;
+use Modules\Sales\Entities\LeadSource;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Activity\Entities\ListingNote;
 use Modules\SuperAdmin\Entities\Community;
-use Modules\SuperAdmin\Entities\ListingType;
-use Modules\SuperAdmin\Entities\SubCommunity;
-
-use Spatie\MediaLibrary\Models\Media;
 
 use Spatie\MediaLibrary\HasMedia\HasMedia;
+
+use Modules\SuperAdmin\Entities\ListingType;
+use Modules\SuperAdmin\Entities\SubCommunity;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 class Listing extends Model implements Feedable, HasMedia
@@ -117,6 +118,11 @@ class Listing extends Model implements Feedable, HasMedia
     public function subCommunity()
     {
         return $this->belongsTo(SubCommunity::class, 'sub_community_id');
+    }
+
+    public function source()
+    {
+        return $this->belongsTo(LeadSource::class, 'source_id');
     }
     public function videos()
     {
@@ -260,8 +266,9 @@ class Listing extends Model implements Feedable, HasMedia
 
         ];
     }
-    public static function update_validation($request, $id)
+    public static function update_validation($request, $id, $listing)
     {
+
 
         return [
 
@@ -270,25 +277,16 @@ class Listing extends Model implements Feedable, HasMedia
             ],
 
 
-            "edit_loc_lat_" . $id                                  => ['sometimes', 'nullable', 'string'],
-            "edit_loc_lng_" . $id                                  => ['sometimes', 'nullable', 'string'],
-            "edit_purpose_" . $id                                  => ['required', 'in:sale,rent'],
-            "edit_location_" . $id                                 => ['sometimes', 'nullable', 'string'],
-            "edit_city_id_" . $id                                     => ['required', 'string'],
-            "edit_community_id_" . $id                                => ['required', 'string'],
-            "edit_sub_community_id_" . $id                            => ['sometimes', 'nullable', 'string'],
-            "edit_unit_no_" . $id                                  => ['sometimes', 'nullable', 'string'],
-            "edit_plot_no_" . $id                                  => ['sometimes', 'nullable', 'string'],
-            "edit_street_no_" . $id                                => ['sometimes', 'nullable', 'string'],
+
+            "edit_purpose_" . $id                                  => ['required', 'in:sale,rent,short'],
+
             "edit_portals_" . $id                                  => ['sometimes', 'nullable', 'array'],
             "edit_view_ids_" . $id                                 => ['sometimes', 'nullable', 'array'],
-            "edit_view_ids_" . $id . ".*"                          => ['sometimes', 'nullable', Rule::exists('listing_views', 'id')->where(function ($q) use ($request) {
-                $q->where('agency_id', $request->agency_id);
+            "edit_view_ids_" . $id . ".*"                          => ['sometimes', 'nullable', Rule::exists('listing_views', 'id')->where(function ($q) use ($request, $listing) {
+                $q->where('agency_id', $listing->agency_id);
             })],
-            "edit_price_" . $id                                    => ['required', 'string'],
-            "edit_rent_frequency_" . $id                           => ['sometimes', 'nullable', 'string', 'in:yearly,monthly,weekly,daily'],
-            "edit_comission_percent_" . $id                        => ['sometimes', 'nullable', 'numeric'],
-            "edit_comission_value_" . $id                          => ['sometimes', 'nullable', 'string'],
+
+
             "edit_never_lived_in_" . $id                           => ['sometimes', 'nullable', 'in:yes,no'],
             "edit_featured_on_company_website_" . $id              => ['sometimes', 'nullable', 'in:yes,no'],
             "edit_exclusive_rights_" . $id                         => ['sometimes', 'nullable', 'in:yes,no'],
@@ -296,17 +294,12 @@ class Listing extends Model implements Feedable, HasMedia
             "edit_baths_" . $id                                    => ['sometimes', 'nullable', 'integer'],
             "edit_parkings_" . $id                                 => ['sometimes', 'nullable', 'integer'],
             "edit_year_built_" . $id                               => ['sometimes', 'nullable', 'integer'],
-            "edit_developer_id_" . $id                             => ['sometimes', 'nullable', Rule::exists('developers', 'id')->where(function ($q) use ($request) {
-                $q->where('agency_id', $request->agency_id);
+            "edit_developer_id_" . $id                             => ['sometimes', 'nullable', Rule::exists('developers', 'id')->where(function ($q) use ($request, $listing) {
+                $q->where('agency_id', $listing->agency_id);
             })],
             "edit_plot_area_" . $id                                => ['sometimes', 'nullable', 'numeric'],
             "edit_area_" . $id                                     => ['required', 'numeric'],
 
-            "edit_deposite_percent_" . $id                         => ['sometimes', 'nullable', 'numeric'],
-            "edit_deposite_value_" . $id                           => ['sometimes', 'nullable', 'string'],
-            "edit_listing_rent_cheque_id_" . $id                   => ['sometimes', 'nullable', Rule::exists('listing_rent_cheques', 'id')->where(function ($q) use ($request) {
-                $q->where('agency_id', $request->agency_id);
-            })],
             "edit_title_" . $id                                    => ['sometimes', 'nullable', 'string'],
             "edit_lsm_" . $id                                      => ['required', 'in:private,shared'],
             // "edit_permit_no_" . $id                                => ['sometimes', 'nullable', 'string'],
@@ -314,21 +307,19 @@ class Listing extends Model implements Feedable, HasMedia
             // "edit_rera_property_no_log_" . $id                     => ['required', 'numeric'],
             // "edit_rera_property_no_" . $id                         => ['sometimes', 'nullable', 'string'],
             // "edit_rera_property_expiry_date_" . $id                => ['sometimes', 'nullable', 'string', 'date_format:Y-m-d'],
-            "edit_landlord_id_" . $id                              => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request) {
-                $q->where('agency_id', $request->agency_id);
+            "edit_landlord_id_" . $id                              => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request, $listing) {
+                $q->where('agency_id', $listing->agency_id);
             })],
             "edit_rented_" . $id                                   => ['required', 'in:yes,no'],
             "edit_tenancy_contract_start_date_" . $id              => ['sometimes', 'nullable',  "before_or_equal:edit_tenancy_contract_end_date_{$id}", 'date_format:Y-m-d'],
             "edit_tenancy_contract_end_date_" . $id                => ['sometimes', 'nullable',  "after_or_equal:edit_tenancy_contract_start_date_{$id}", 'date_format:Y-m-d'],
-            "edit_tenant_id_" . $id                                => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request) {
-                $q->where('agency_id', $request->agency_id);
+            "edit_tenant_id_" . $id                                => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request, $listing) {
+                $q->where('agency_id', $listing->agency_id);
             })],
-            "edit_source_id_" . $id                                => ['required', Rule::exists('lead_sources', 'id')->where(function ($q) use ($request) {
-                $q->where('agency_id', $request->agency_id);
+            "edit_source_id_" . $id                                => ['required', Rule::exists('lead_sources', 'id')->where(function ($q) use ($request, $listing) {
+                $q->where('agency_id', $listing->agency_id);
             })],
-            "edit_assigned_to_" . $id                              => ['required', Rule::exists('users', 'id')->where(function ($q) use ($request) {
-                $q->where('business_id', $request->business_id);
-            })],
+
             "edit_status_" . $id                                   => ['required', 'in:draft,live,archive,review'],
             "edit_note_" . $id                                     => ['sometimes', 'nullable', 'string'],
             "edit_features_" . $id                                 => ['required', 'array'],
