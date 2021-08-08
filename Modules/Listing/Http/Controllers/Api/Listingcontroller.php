@@ -10,8 +10,49 @@ use Modules\Listing\Entities\Listing;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Validator;
 
-class Listingcontroller extends Controller
+class ListingController extends Controller
 {
+     
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function home(Request $request){
+      try{
+        $validator = Validator::make($request->all(), [
+            'business_token'  => 'required',
+            'agency_token'  => 'required'
+           ],[
+                'business_token.required'  => 'Bussiness token is required',
+                'agency_token.required'  => 'Agency token is required'
+            ]
+           );
+
+            if ($validator->fails()) {
+                return response()->json(array('status' => 'Error','message' =>$validator->errors()->all()[0]),401);
+            }
+            $business = Business::where('business_token', $request->business_token)->firstOrFail();
+            $agency   = Agency::where('business_id', $business->id)->where('agency_token',$request->agency_token)->firstOrFail();
+            $listing_types= cache()->remember('listing_types', 60 * 60 * 24, function () {
+                return DB::table('listing_types')->get(['name_en','name_ar','id']);
+                });
+            $cities=  cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                    return DB::table('cities')->where('country_id', $agency->country_id)->get();
+                });
+            $listingsAll=Listing::whereHas('portalsList', function($q){
+                    $q->where('portal_id',2);
+                })->where('agency_id',$agency->id)->with('photos')->take(6)->get();
+              return response()->json(array(
+                'status' => 'success',
+                'listing' => $listingsAll,
+                'listing_types' => $listing_types,
+                'cities' => $cities,
+            ),200);
+          } catch (\Throwable $e) {
+               return response()->json(array(
+                   'status' => $e->getMessage()),401);
+           }
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable

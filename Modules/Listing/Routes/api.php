@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 */
 
 Route::prefix('listing')->group(function () {
+    Route::get('home', 'Api\ListingController@home');
     Route::get('Listing', 'Api\ListingController@index');
     Route::get('Listing/{type}', 'Api\ListingController@index');
     Route::get('single', 'Api\ListingController@singleListing');
