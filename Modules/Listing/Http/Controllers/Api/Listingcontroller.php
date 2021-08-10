@@ -43,9 +43,36 @@ class ListingController extends Controller
             $listingsAll=Listing::whereHas('portalsList', function($q){
                     $q->where('portal_id',2);
                 })->where('agency_id',$agency->id)->with('photos')->take(6)->get();
+                    $data=[];
+            foreach($listingsAll as $item){
+             
+                if($item->photos->isEmpty() != true){
+                    $image=$item->photos->first()->active == 'main' ? asset('listings/photos/agency_'.$agency->id.'/listing_'.$item->id.'/photo_'.$item->photos->first()->id.'/'.$item->photos->first()->main) : asset('listings/photos/agency_'.$agency->id.'/listing_'.$item->id.'/photo_'.$item->photos->first()->id.'/'.$item->photos->first()->watermark);
+                }else{
+                    $image=null;
+                }
+                
+               $id=array(
+                    'id' => $item->id,
+                    'purpose' => $item->purpose ?? '',
+                    'beds' => $item->beds ?? 0,
+                    'parkings' => $item->parkings ??0,
+                    'baths' => $item->baths ??0,
+                    'area' => $item->area ?? '',
+                    'furnished' => $item->furnished ?? 'no',
+                    'title' => $item->title ?? '',
+                    'location' => $item->location ?? '',
+                    'price' => $item->price ?? '',
+                    'rent_frequency' => $item->rent_frequency ?? '',
+                    'image' =>$image,
+                    'shorttime_from' =>$item->shorttime_from ?? '',
+                    'shorttime_to' =>$item->shorttime_to ?? '',
+                    );
+                    array_push($data,$id);      
+            }
               return response()->json(array(
                 'status' => 'success',
-                'listing' => $listingsAll,
+                'listing' =>  $data,
                 'listing_types' => $listing_types,
                 'cities' => $cities,
             ),200);
@@ -75,19 +102,25 @@ class ListingController extends Controller
             if ($validator->fails()) {
                 return response()->json(array('status' => 'Error','message' =>$validator->errors()->all()[0]),401);
             }
-          $business = Business::where('business_token', $request->business_token)->firstOrFail();
-          $agency   = Agency::where('business_id', $business->id)->where('agency_token',$request->agency_token)->firstOrFail();
-          if($type != null){
-            $listingsAll=Listing::whereHas('portalsList', function($q){
-                $q->where('portal_id',2);
-            })->where([['agency_id',$agency->id],['purpose',$type]])->with('photos')->get();
-
-          }else{
-
-              $listingsAll=Listing::whereHas('portalsList', function($q){
+            $business = Business::where('business_token', $request->business_token)->firstOrFail();
+            $agency   = Agency::where('business_id', $business->id)->where('agency_token',$request->agency_token)->firstOrFail();
+            $listing_types= cache()->remember('listing_types', 60 * 60 * 24, function () {
+            return DB::table('listing_types')->get(['name_en','name_ar','id']);
+            });
+            $cities=  cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                    return DB::table('cities')->where('country_id', $agency->country_id)->get();
+                });
+            if($type != null){
+                $listingsAll=Listing::whereHas('portalsList', function($q){
                     $q->where('portal_id',2);
-                  })->where('agency_id',$agency->id)->with('photos')->get();
-          }
+                })->where([['agency_id',$agency->id],['purpose',$type]])->with('photos')->get();
+
+            }else{
+
+                $listingsAll=Listing::whereHas('portalsList', function($q){
+                        $q->where('portal_id',2);
+                    })->where('agency_id',$agency->id)->with('photos')->get();
+            }
 
             $data=[];
             foreach($listingsAll as $item){
@@ -111,13 +144,17 @@ class ListingController extends Controller
                     'price' => $item->price ?? '',
                     'rent_frequency' => $item->rent_frequency ?? '',
                     'image' =>$image,
+                    'shorttime_from' =>$item->shorttime_from ?? '',
+                    'shorttime_to' =>$item->shorttime_to ?? '',
                     );
                     array_push($data,$id);      
             }
           return response()->json(array(
              'status' => 'success',
-             'listing' => $data),
-             200);
+             'listing' => $data,
+             'listing_types' => $listing_types,
+             'cities' => $cities
+            ), 200);
            } catch (\Throwable $e) {
             return response()->json(array(
                 'status' => 'Error'),401);
@@ -148,7 +185,7 @@ class ListingController extends Controller
 
               $business = Business::where('business_token', $request->business_token)->firstOrFail();
               $agency   = Agency::where('business_id', $business->id)->where('agency_token',$request->agency_token)->with('country')->firstOrFail();
-              $listing=Listing::where([['agency_id',$agency->id],['id',$request->listing_id]])->with('videos','photos','documents','plans','addedBy')->first();
+              $listing  =Listing::where([['agency_id',$agency->id],['id',$request->listing_id]])->with('videos','photos','documents','plans','addedBy')->first();
              //  image 
               $image=[];
               if($listing->photos->isEmpty() != true){
@@ -173,7 +210,7 @@ class ListingController extends Controller
            //simiral properties 
            $listingsAll=Listing::whereHas('portalsList', function($q){
              $q->where('portal_id',2);
-              })->where([['agency_id',$agency->id],['id','!=',$request->listing_id]])->with('photos')->take(4)->get(); 
+              })->where([['agency_id',$agency->id],['id','!=',$request->listing_id],['purpose',$listing->purpose]])->with('photos')->take(3)->get(); 
 
               $data=[];
               foreach($listingsAll as $item){
@@ -197,6 +234,8 @@ class ListingController extends Controller
                       'price' => $item->price ?? '',
                       'rent_frequency' => $item->rent_frequency ?? '',
                       'image' =>$imagelisting,
+                      'shorttime_from' =>$item->shorttime_from ?? '',
+                      'shorttime_to' =>$item->shorttime_to ?? '',
                       );
                       array_push($data,$id);      
               }
@@ -213,7 +252,7 @@ class ListingController extends Controller
                 ),
                 200);
              } catch (\Throwable $e) {
-                dd($e);
+                // dd($e);
               return response()->json(array(
                   'status' => 'Error','message' =>$e->getMessage()),401);
           }
@@ -256,39 +295,98 @@ class ListingController extends Controller
                 })->where([['agency_id',$agency->id]])->with(['photos','photo_main']);
              
                 if($request->type != null){
-                    $listingsAll->where('purpose',$request->type);
-                }
-                if($request->city != null){
-                    $listingsAll->whereIn('city_id',$request->city);
-                }
-                if($request->listing_typy != null){
-                    $listingsAll->where('type_id',$request->listing_typy);
-                }
-                if($request->size != null){
-                    $listingsAll->where('area',$request->size);
-                }
-                if($request->price_from != null || $request->price_to != null){
-                    if($request->price_from != null && $request->price_to != null){
-                        $listingsAll->where('price','>=',$request->price_from);
-                        $listingsAll->where('price','<=',$request->price_to);
-                    }elseif($request->price_from != null){
-                        $listingsAll->where('price','>=',$request->price_from);
-                    }elseif($request->price_to != null){
-                        $listingsAll->where('price','<=',$request->price_to);
+                    if($request->type  == 'short'){
+                        //
+                        $listingsAll->where('purpose','short');
+                        if($request->date != null){
+                            
+                            $data=explode(' to ',$request->date);
+                            $datefrom=$data[0];
+                            $dateto=$data[1];
+                            $listingsAll->whereDate('shorttime_from','<=',$datefrom);
+                            $listingsAll->whereDate('shorttime_to','>=',$dateto);
+
+                        }
+                        //  
+                        if($request->city != null){
+                            $listingsAll->whereIn('city_id',$request->city);
+                        }
+                        if($request->listing_typy != null){
+                            $listingsAll->where('type_id',$request->listing_typy);
+                        }
+                      
+                        if($request->bedroom != null){
+                            $listingsAll->where('beds',$request->bedroom);
+                        }
+                    }elseif($request->type  == 'sale'){
+                        $listingsAll->where('purpose','sale');
+                        if($request->city != null){
+                            $listingsAll->whereIn('city_id',$request->city);
+                        }
+                        if($request->listing_typy != null){
+                            $listingsAll->where('type_id',$request->listing_typy);
+                        }
+                        if($request->size != null){
+                            $listingsAll->where('area',$request->size);
+                        }
+                        if($request->price_from != null || $request->price_to != null){
+                            if($request->price_from != null && $request->price_to != null){
+                                $listingsAll->where('price','>=',$request->price_from);
+                                $listingsAll->where('price','<=',$request->price_to);
+                            }elseif($request->price_from != null){
+                                $listingsAll->where('price','>=',$request->price_from);
+                            }elseif($request->price_to != null){
+                                $listingsAll->where('price','<=',$request->price_to);
+                            }
+                        }
+                        if($request->bedroom != null){
+                            $listingsAll->where('beds',$request->bedroom);
+                        }
+                        if($request->bathroom != null){
+                            $listingsAll->where('baths',$request->bathroom);
+                        }
+                        if($request->furnitured != null){
+                            $listingsAll->where('furnished',$request->furnitured);
+                        }
+                        if($request->parking != null){
+                            $listingsAll->where('parkings',$request->parking);
+                        }
+                    }elseif($request->type  == 'rent'){
+                        $listingsAll->where('purpose','rent');
+                        if($request->city != null){
+                            $listingsAll->whereIn('city_id',$request->city);
+                        }
+                        if($request->listing_typy != null){
+                            $listingsAll->where('type_id',$request->listing_typy);
+                        }
+                        if($request->size != null){
+                            $listingsAll->where('area',$request->size);
+                        }
+                        if($request->price_from != null || $request->price_to != null){
+                            if($request->price_from != null && $request->price_to != null){
+                                $listingsAll->where('price','>=',$request->price_from);
+                                $listingsAll->where('price','<=',$request->price_to);
+                            }elseif($request->price_from != null){
+                                $listingsAll->where('price','>=',$request->price_from);
+                            }elseif($request->price_to != null){
+                                $listingsAll->where('price','<=',$request->price_to);
+                            }
+                        }
+                        if($request->bedroom != null){
+                            $listingsAll->where('beds',$request->bedroom);
+                        }
+                        if($request->bathroom != null){
+                            $listingsAll->where('baths',$request->bathroom);
+                        }
+                        if($request->furnitured != null){
+                            $listingsAll->where('furnished',$request->furnitured);
+                        }
+                        if($request->parking != null){
+                            $listingsAll->where('parkings',$request->parking);
+                        }
                     }
                 }
-                if($request->bedroom != null){
-                    $listingsAll->where('beds',$request->bedroom);
-                }
-                if($request->bathroom != null){
-                    $listingsAll->where('baths',$request->bathroom);
-                }
-                if($request->furnitured != null){
-                    $listingsAll->where('furnished',$request->furnitured);
-                }
-                if($request->parking != null){
-                    $listingsAll->where('parkings',$request->parking);
-                }
+               
                 $data=[];
             foreach($listingsAll->get() as $item){
              
@@ -311,6 +409,8 @@ class ListingController extends Controller
                     'price' => $item->price ?? '',
                     'rent_frequency' => $item->rent_frequency ?? '',
                     'image' =>$image,
+                    'shorttime_from' =>$item->shorttime_from ?? '',
+                    'shorttime_to' =>$item->shorttime_to ?? '',
                     );
                     array_push($data,$id);      
             }
@@ -335,6 +435,5 @@ class ListingController extends Controller
                 'status' => $e->getMessage()),401);
         }
     }
-
 
 }
