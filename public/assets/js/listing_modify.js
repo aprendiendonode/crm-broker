@@ -209,3 +209,167 @@
 
         })
     }
+
+
+
+
+    
+    function updateListingDetails(listing,route ,token,agency,business,locale){
+       
+        var purpose                              = $('.listing-purpose-'+listing).val()
+        var status                              = $('.listing-status-'+listing).val()
+        var lsm                                  = $('.listing-lsm-'+listing).val()
+        var title                                = $('.listing-title-'+listing).val()
+        var type                                 = $('.listing-type-'+listing).val()
+        var beds                                 = $('.listing-beds-'+listing).val()
+        var parkings                             = $('.listing-parkings-'+listing).val()
+        var baths                                = $('.listing-baths-'+listing).val()
+        var year_built                           = $('.listing-year-built-'+listing).val()
+        var plot_area                            = $('.listing-plot-area-'+listing).val()
+        var area                                 = $('.listing-area-'+listing).val()
+        var sources                              = $('.listing-source-'+listing).val()
+        var landlord                             = $('.listing-landlord-'+listing).val()
+        var developer                            = $('.listing-developer-'+listing).val()
+        var rented                               = $('.listing-rented-'+listing).val()
+        var never_lived_in                       = $('.listing-never-lived-in-'+listing).val()
+        var featured_on_company_website          = $('.listing-featured-on-company-website-'+listing).val()
+        var exclusive_rights                     = $('.listing-exclusive-rights-'+listing).val()
+        var tenant_start_date                    = $('.listing-tenant-start-date-'+listing).val()
+        var tenant_end_date                      = $('.listing-tenant-end-date-'+listing).val()
+        var tenant                               = $('.listing-tenant-'+listing).val()
+
+
+        $.ajax({
+            url:route ,
+            type:"POST",
+            data:{
+                _token                               : token,
+                listing                              : listing,
+                business                             : business,
+                agency                               : agency,
+                purpose                              : purpose,
+                status                              : status,
+                lsm                                  : lsm, 
+                title                                : title,
+                type                                 : type,
+                beds                                 : beds,
+                parkings                             : parkings,
+                baths                                : baths,
+                year_built                           : year_built,
+                plot_area                            : plot_area,
+                area                                 : area,
+                source                               : sources,
+                landlord                             : landlord,
+                developer                            : developer,
+                rented                               : rented,
+                never_lived_in                       : never_lived_in,
+                featured_on_company_website          : featured_on_company_website,
+                exclusive_rights                     : exclusive_rights,
+                tenant_start_date                    : tenant_start_date,
+                tenant_end_date                      : tenant_end_date,
+                tenant                               : tenant,
+                
+               
+            },
+            success: function(data){
+
+                 $('.listing-details-Purpose-'+listing).text(purpose)
+                 $('.listing-details-status-'+listing).text(status)
+                 $('.listing-details-lsm-'+listing).text(lsm)
+                 $('.listing-details-title-'+listing).text(title)
+                 $('.listing-details-type-'+listing).text(type)
+                 $('.listing-details-beds-'+listing).text(beds)
+                 $('.listing-details-parkings-'+listing).text(parkings)
+                 $('.listing-details-baths-'+listing).text(baths)
+                 $('.listing-details-year-built-'+listing).text(year_built)
+                 $('.listing-details-year-area-'+listing).text(plot_area)
+                 $('.listing-details-area-'+listing).text(area)
+                 $('.listing-details-sources-'+listing).text(sources)
+                 $('.listing-details-landlord-'+listing).text(landlord)
+                 $('.listing-details-developer-'+listing).text(developer)
+                 $('.listing-details-rented-'+listing).text(rented)
+                 $('.listing-details-never-lived-in-'+listing).text(never_lived_in)
+                 $('.listing-details-featured-on-company-website-'+listing).text(featured_on_company_website)
+                 $('.listing-details-exclusive-rights-'+listing).text(exclusive_rights)
+                 $('.listing-details-tenant-start-date-'+listing).text(tenant_start_date)
+                 $('.listing-details-tenant-start-date-'+listing).text(tenant_end_date)
+                 $('.listing-details-tenant-'+listing).text(tenant)
+                toast(data.message,'success')
+                $('#extraInfo-modal_'+listing).modal('hide')
+            },
+            error: function(error){
+                toast('error','error')
+            }
+
+        })
+    }
+
+
+
+    function editShowRentDiv(id) {
+        
+        if($('.rent-radio-'+id +' option:selected').val() == 'rent'){
+            $('#rent_div_'+id)[0].style.display = "block";
+            document.getElementById(`rent-sale-label-${id}`).innerHTML = "Rent";
+        }else {
+            document.getElementById(`rent-sale-label-${id}`).innerHTML = "Sale";
+            $('#rent_div_'+id)[0].style.display = "none";
+        }
+    }
+    function editShowSubRentDiv(id) {
+    
+        if($('.sub-rent-checkbox-'+id)[0].checked){
+            $('#sub_rent_div_'+id)[0].style.display = "block";
+        }else {
+            $('#sub_rent_div_'+id)[0].style.display = "none";
+        }
+            
+    }
+    
+    function editShowFurnishedQuestion(id){
+        question_status = $('.listing_type_'+id).find(':selected').data('furnished');
+        if(question_status == 'yes'){
+            $('.furnished_question_'+id).removeClass('d-none');
+        }else{
+            $('.furnished_question_'+id).addClass('d-none');
+        }
+    
+    }
+
+
+    function updateListingDescription(listing,route ,token,agency,business,locale){
+     
+        console.log(
+            
+            editor_en.getData(),editor_ar.getData()
+            )
+        $.ajax({
+            url:route ,
+            type:"POST",
+            data:{
+                _token                    : token,
+                listing                   : listing,
+                business                  : business,
+                agency                    : agency,
+                description_en            : description_en,
+                description_ar            : description_ar,
+            
+               
+            },
+            success: function(data){
+        
+                var description = locale == 'en' ? data.desciption_en : data.desciption_ar
+                
+                $('.listing-desc-description-'+listing).text(description)
+              
+
+                toast(data.message,'success')
+                $('#description-modal-'+listing).modal('hide')
+            },
+            error: function(error){
+                toast('error','error')
+            }
+
+        })
+    }
+

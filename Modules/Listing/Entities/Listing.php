@@ -272,13 +272,6 @@ class Listing extends Model implements Feedable, HasMedia
 
         return [
 
-            "edit_type_id_" . $id => [
-                'required', 'integer', Rule::exists('listing_types', 'id')
-            ],
-
-
-
-            "edit_purpose_" . $id                                  => ['required', 'in:sale,rent,short'],
 
             "edit_portals_" . $id                                  => ['sometimes', 'nullable', 'array'],
             "edit_view_ids_" . $id                                 => ['sometimes', 'nullable', 'array'],
@@ -287,48 +280,21 @@ class Listing extends Model implements Feedable, HasMedia
             })],
 
 
-            "edit_never_lived_in_" . $id                           => ['sometimes', 'nullable', 'in:yes,no'],
-            "edit_featured_on_company_website_" . $id              => ['sometimes', 'nullable', 'in:yes,no'],
-            "edit_exclusive_rights_" . $id                         => ['sometimes', 'nullable', 'in:yes,no'],
-            "edit_beds_" . $id                                     => ['sometimes', 'nullable', 'string'],
-            "edit_baths_" . $id                                    => ['sometimes', 'nullable', 'integer'],
-            "edit_parkings_" . $id                                 => ['sometimes', 'nullable', 'integer'],
-            "edit_year_built_" . $id                               => ['sometimes', 'nullable', 'integer'],
-            "edit_developer_id_" . $id                             => ['sometimes', 'nullable', Rule::exists('developers', 'id')->where(function ($q) use ($request, $listing) {
-                $q->where('agency_id', $listing->agency_id);
-            })],
-            "edit_plot_area_" . $id                                => ['sometimes', 'nullable', 'numeric'],
-            "edit_area_" . $id                                     => ['required', 'numeric'],
 
-            "edit_title_" . $id                                    => ['sometimes', 'nullable', 'string'],
-            "edit_lsm_" . $id                                      => ['required', 'in:private,shared'],
+
+
+
             // "edit_permit_no_" . $id                                => ['sometimes', 'nullable', 'string'],
             // "edit_rera_property_no_status_" . $id                  => ['required', 'in:invalid,valid'],
             // "edit_rera_property_no_log_" . $id                     => ['required', 'numeric'],
             // "edit_rera_property_no_" . $id                         => ['sometimes', 'nullable', 'string'],
             // "edit_rera_property_expiry_date_" . $id                => ['sometimes', 'nullable', 'string', 'date_format:Y-m-d'],
-            "edit_landlord_id_" . $id                              => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request, $listing) {
-                $q->where('agency_id', $listing->agency_id);
-            })],
-            "edit_rented_" . $id                                   => ['required', 'in:yes,no'],
-            "edit_tenancy_contract_start_date_" . $id              => ['sometimes', 'nullable',  "before_or_equal:edit_tenancy_contract_end_date_{$id}", 'date_format:Y-m-d'],
-            "edit_tenancy_contract_end_date_" . $id                => ['sometimes', 'nullable',  "after_or_equal:edit_tenancy_contract_start_date_{$id}", 'date_format:Y-m-d'],
-            "edit_tenant_id_" . $id                                => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request, $listing) {
-                $q->where('agency_id', $listing->agency_id);
-            })],
-            "edit_source_id_" . $id                                => ['required', Rule::exists('lead_sources', 'id')->where(function ($q) use ($request, $listing) {
-                $q->where('agency_id', $listing->agency_id);
-            })],
 
-            "edit_status_" . $id                                   => ['required', 'in:draft,live,archive,review'],
+
+
+
             "edit_note_" . $id                                     => ['sometimes', 'nullable', 'string'],
             "edit_features_" . $id                                 => ['required', 'array'],
-            "edit_key_location_" . $id                             => ['sometimes', 'nullable', 'string'],
-            "edit_govfield1_" . $id                                => ['sometimes', 'nullable', 'string'],
-            "edit_govfield2_" . $id                                => ['sometimes', 'nullable', 'string'],
-            "edit_yearly_service_charges_" . $id                   => ['sometimes', 'nullable', 'numeric'],
-            "edit_monthly_cooling_charges_" . $id                  => ['sometimes', 'nullable', 'numeric'],
-            "edit_monthly_cooling_provider_" . $id                 => ['sometimes', 'nullable', 'numeric'],
 
             "edit_video_title_" . $id                              => ['required', 'array'],
             "edit_video_link_" . $id                               => ['required', 'array'],

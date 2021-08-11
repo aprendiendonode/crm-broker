@@ -4,25 +4,25 @@
 
 return [
     'listing_settings' => 'Listing Settings',
-    'add_listing' => 'ADD Listing',
-    'listing'            => 'Listing',
-    'manage_listing'     => 'Manage Listing',
-    'manage_listing_views' => 'Manage Listing Views',
-    'listing_view'         => 'Listing View',
-    'name'                 => 'Name',
-    'created_on'           => 'Created On',
+    'add_listing'           => 'ADD Listing',
+    'listing'               => 'Listing',
+    'manage_listing'        => 'Manage Listing',
+    'manage_listing_views'  => 'Manage Listing Views',
+    'listing_view'          => 'Listing View',
+    'name'                  => 'Name',
+    'created_on'            => 'Created On',
 
-    'controlls'            => 'Controlls',
-    'delete_view'          => 'Delete View',
-    'edit_view'            => 'Edit View',
-    'add_view'             => 'Add View',
-    'view_updated'         => 'View Modified',
-    'view_created'         => 'View Created',
-    'view_deleted'         => 'View Deleted',
-    'cancel'               => 'Cancel',
-    'confirm_delete'       => 'Confirm Delete',
-    'head_up'              => 'Head Up',
-    'settings'             => 'Settings',
+    'controlls'             => 'Controlls',
+    'delete_view'           => 'Delete View',
+    'edit_view'             => 'Edit View',
+    'add_view'              => 'Add View',
+    'view_updated'          => 'View Modified',
+    'view_created'          => 'View Created',
+    'view_deleted'          => 'View Deleted',
+    'cancel'                => 'Cancel',
+    'confirm_delete'        => 'Confirm Delete',
+    'head_up'               => 'Head Up',
+    'settings'              => 'Settings',
 
 
     'manage_listing_cheques' => 'Manage Listing Cheques',
@@ -373,5 +373,9 @@ return [
     'total_worth'                   => 'Total Worth',
     'size_sqft'                     => 'SIZE SQFT',
     'price_sqft'                    => 'PRICE/SQFT',
+
+    'landlord_created'              => 'Landlord Created',
+    'yes'                                   => 'Yes',
+    'no'                                    => 'No'
 
 ];

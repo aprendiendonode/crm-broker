@@ -13,6 +13,8 @@
                 <div>
                     <div class="row">
                         <div class="col-6">
+
+    
                             <div class="form-group mb-2">
                                 <label class="font-weight-medium text-muted" for="">@lang('listing.key_location')</label>
                                 <input 

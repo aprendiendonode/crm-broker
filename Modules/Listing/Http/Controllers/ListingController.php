@@ -122,16 +122,16 @@ class ListingController extends Controller
         return view('listing::listing.edit.index', [
             'listing'    => $listing,
             'agency_data' => $agency,
-            'agency' => $agency->id,
-            'agency_region' => $agency->country ? $agency->country->iso2 : '',
-            'lead_sources' => $agency->lead_sources,
-            'task_status' => $agency->task_status,
-            'task_types' => $agency->task_types,
-            'developers' => $agency->developers,
-            'cheques' => $agency->cheques,
-            'landlords' => $agency->landlords,
-            'tenants' => $agency->tenants,
-            'portals' =>
+            'agency'             => $agency->id,
+            'agency_region'      => $agency->country ? $agency->country->iso2 : '',
+            'lead_sources'       => $agency->lead_sources,
+            'task_status'        => $agency->task_status,
+            'task_types'         => $agency->task_types,
+            'developers'         => $agency->developers,
+            'cheques'            => $agency->cheques,
+            'landlords'          => $agency->landlords,
+            'tenants'            => $agency->tenants,
+            'portals'            =>
             cache()->remember('portals', 60 * 60 * 24, function () {
                 return DB::table('portals')->get();
             }),
@@ -308,7 +308,80 @@ class ListingController extends Controller
 
 
 
-    /**********************************End Assign Task********************************* */
+    public function updateListingDetails(Request $request)
+    {
+        if ($request->ajax()) {
+            try {
+                $listing   = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+
+                $validator = Validator::make($request->all(), [
+                    "purpose"                                  => ['required', 'in:sale,rent,short'],
+                    "title"                                    => ['sometimes', 'nullable', 'string'],
+                    "type" => [
+                        'required', 'integer', Rule::exists('listing_types', 'id')
+                    ],
+                    "status"                                 => ['required', 'in:draft,live,archive,review'],
+                    "never_lived_in"                           => ['sometimes', 'nullable', 'in:yes,no'],
+                    "featured_on_company_website"              => ['sometimes', 'nullable', 'in:yes,no'],
+                    "exclusive_rights"                         => ['sometimes', 'nullable', 'in:yes,no'],
+                    "beds"                                     => ['sometimes', 'nullable', 'string'],
+                    "baths"                                    => ['sometimes', 'nullable', 'integer'],
+                    "parkings"                                 => ['sometimes', 'nullable', 'integer'],
+                    "year_built"                               => ['sometimes', 'nullable', 'integer'],
+                    "developer"                                => ['sometimes', 'nullable', Rule::exists('developers', 'id')->where(function ($q) use ($request, $listing) {
+                        $q->where('agency_id', $listing->agency_id);
+                    })],
+                    "plot_area"                                => ['sometimes', 'nullable', 'numeric'],
+                    "area"                                     => ['required', 'numeric'],
+                    "lsm"                                      => ['required', 'in:private,shared'],
+                    "landlord"                                 => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request, $listing) {
+                        $q->where('agency_id', $listing->agency_id);
+                    })],
+                    "rented"                                   => ['required', 'in:yes,no'],
+                    "tenant_start_date"                        => ['sometimes', 'nullable',  "before_or_equal:tenant_end_date_{$request->listing}", 'date_format:Y-m-d'],
+                    "tenant_end_date"                          => ['sometimes', 'nullable',  "after_or_equal:tenant_start_date_{$request->listing}", 'date_format:Y-m-d'],
+                    "tenant"                                   => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request, $listing) {
+                        $q->where('agency_id', $listing->agency_id);
+                    })],
+                    "source"                                   => ['required', Rule::exists('lead_sources', 'id')->where(function ($q) use ($request, $listing) {
+                        $q->where('agency_id', $listing->agency_id);
+                    })],
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                }
+                $listing->update([
+                    "purpose"                                  => $request->purpose,
+                    "status"                                  => $request->status,
+                    "title"                                    => $request->title,
+                    "type_id"                                  => $request->type,
+                    "never_lived_in"                           => $request->never_lived_in,
+                    "featured_on_company_website"              => $request->featured_on_company_website,
+                    "exclusive_rights"                         => $request->exclusive_rights,
+                    "beds"                                     => $request->beds,
+                    "baths"                                    => $request->baths,
+                    "parkings"                                 => $request->parkings,
+                    "year_built"                               => $request->year_built,
+                    "developer_id"                             => $request->developer,
+                    "plot_area"                                => $request->plot_area,
+                    "area"                                     => $request->area,
+                    "lsm"                                      => $request->lsm,
+                    "landlord_id"                              => $request->landlord,
+                    "rented"                                   => $request->rented,
+                    "tenancy_contract_start_date"              => $request->tenant_start_date,
+                    "tenancy_contract_end_date"                => $request->tenant_end_date,
+                    "tenant_id"                                => $request->tenant,
+                    "source_id"                                => $request->source,
+                ]);
+
+                return response()->json(['message' => trans('global.modified')], 200);
+            } catch (\Exception $th) {
+
+                return response()->json(['message' => trans('global.something_wrong')], 400);
+            }
+        }
+    }
+
 
 
 

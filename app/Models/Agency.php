@@ -172,7 +172,7 @@ class Agency extends Model
     {
         return $this->hasMany(Client::class)
             ->whereHas('type', function ($q) {
-                return $q->where('role', 'seller');
+                return $q->where('role', 'landlord');
             });
     }
 

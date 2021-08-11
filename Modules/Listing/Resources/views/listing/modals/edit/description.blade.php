@@ -38,7 +38,8 @@
                                     id="edit_description_ar_{{ $listing->id }}"
                                         class="form-control textarea-ar"
                                         style="min-height: 334px;direction:rtl"
-                                        row="6" col="6"  name="edit_description_ar_{{ $listing->id }}">{{old('edit_description_ar_'.$listing->id,$listing->description_ar)}}</textarea>
+                                        row="6" col="6"  name="edit_description_ar_{{ $listing->id }}">{{old('edit_description_ar_'.$listing->id,$listing->description_ar)}}
+                                    </textarea>
                                 </div>
                                 <div>
                             </div>
@@ -139,7 +140,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">@lang('listing.done')</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">@lang('listing.close')</button>
+        
+                        {{-- <button type="button" class="btn btn-success" onclick="updateListingDescription(
+                            {{ $listing->id }},'{{ route('listings.update-listing-description') }}',
+                         '{{ csrf_token() }}', '{{ $listing->agency_id }}' , '{{ $listing->business_id }}' ,'{{ app()->getLocale()  }}' )">@lang('listing.modify')</button> --}}
                     </div>
                 </div>
         </div>

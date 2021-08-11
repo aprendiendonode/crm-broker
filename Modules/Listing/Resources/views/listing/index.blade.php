@@ -556,7 +556,9 @@ margin-bottom: 0px !important;
 
             ClassicEditor
                     .create(document.querySelector('#description_en'))
-                    .then()
+                    .then(
+                    
+                    )
                     .catch(error => {
 
                     });
@@ -1424,7 +1426,10 @@ function updateMain(input,table,listing_id){
 
         }
 
+
         function load_edit(listing,listing_data){
+
+            // close_edit(listing)
             var region = @json($agency_region);
             $('.lds-ring-row-'+listing).removeClass('d-none')
             $('.load_edit_listing_'+listing).removeClass('d-none')
@@ -1519,11 +1524,13 @@ function updateMain(input,table,listing_id){
                         
                             var markers = [];
 
-
-
-                        ClassicEditor
+                            ClassicEditor
                             .create(document.querySelector('#edit_description_en_' + listing))
-                            .then()
+                            .then(
+                                newEditor => {
+                                    editor_en   = newEditor;
+                                }
+                            )
                             .catch(error => {
 
                             });
@@ -1532,10 +1539,15 @@ function updateMain(input,table,listing_id){
                                 .create(document.querySelector('#edit_description_ar_' + listing), {
                                     language: 'ar'
                                 })
-                                .then()
+                                .then(
+                                    newEditor => {
+                                        editor_ar = newEditor;
+                                }
+                                )
                                 .catch(error => {
 
                                 });
+
 
                                 $('.lds-ring-row-'+listing).addClass('d-none')
                             
@@ -1581,36 +1593,7 @@ function updateMain(input,table,listing_id){
             document.getElementById(`depositValue_${id}`).value = currencyFormatter.format(depositPercenatage * price);
         }
     
-        function editShowRentDiv(id) {
-            console.log(id);
-            if($('.rent-radio-'+id)[0].checked){
-                $('#rent_div_'+id)[0].style.display = "block";
-                document.getElementById(`rent-sale-label-${id}`).innerHTML = "Rent";
-            }else {
-                document.getElementById(`rent-sale-label-${id}`).innerHTML = "Sale";
-                $('#rent_div_'+id)[0].style.display = "none";
-            }
-        }
-        function editShowSubRentDiv(id) {
-        
-            if($('.sub-rent-checkbox-'+id)[0].checked){
-                $('#sub_rent_div_'+id)[0].style.display = "block";
-            }else {
-                $('#sub_rent_div_'+id)[0].style.display = "none";
-            }
-                
-        }
-        
-        function editShowFurnishedQuestion(id){
-            question_status = $('.listing_type_'+id).find(':selected').data('furnished');
-            if(question_status == 'yes'){
-                $('.furnished_question_'+id).removeClass('d-none');
-            }else{
-                $('.furnished_question_'+id).addClass('d-none');
-            }
-        
-        }
-
+    
     </script>
 
 

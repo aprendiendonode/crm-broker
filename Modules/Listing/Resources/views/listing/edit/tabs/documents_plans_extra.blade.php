@@ -2,18 +2,18 @@
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a href="#documents" data-toggle="tab" aria-expanded="false" class="nav-link active">
+            <a href="#documents-{{ $listing->id }}" data-toggle="tab" aria-expanded="false" class="nav-link active">
                 @lang('listing.document')
             </a>
         </li>
         <li class="nav-item">
-            <a href="#floor-plans" data-toggle="tab" aria-expanded="false" class="nav-link ">
+            <a href="#floor-plans-{{ $listing->id }}" data-toggle="tab" aria-expanded="false" class="nav-link ">
                 @lang('listing.floor_plans')
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="#extra-info" data-toggle="tab" aria-expanded="false" class="nav-link ">
+            <a href="#extra-info-{{ $listing->id }}" data-toggle="tab" aria-expanded="false" class="nav-link ">
                 @lang('listing.extra_info')
             </a>
         </li>
@@ -23,7 +23,7 @@
 
 
     <div class="tab-content">
-        <div class="tab-pane active" id="documents">
+        <div class="tab-pane active" id="documents-{{ $listing->id }}">
             <button type="button" style="float: right;" class="btn btn-primary" data-toggle="modal" data-target="#documents-modal_{{ $listing->id }}">@lang('listing.edit')</button>
 
             <div class=" mb-4">
@@ -44,7 +44,7 @@
         
         </div>
 
-        <div class="tab-pane " id="floor-plans">
+        <div class="tab-pane " id="floor-plans-{{ $listing->id }}">
             <button type="button" style="float: right;" class="btn btn-primary" data-toggle="modal" data-target="#floorPlans-modal_{{ $listing->id }}">@lang('listing.edit')</button>
 
             <div class=" mb-4">
@@ -62,7 +62,7 @@
             </div>
         
         </div>
-        <div class="tab-pane " id="extra-info">
+        <div class="tab-pane " id="extra-info-{{ $listing->id }}">
             <button type="button" style="float: right;" class="btn btn-primary" data-toggle="modal" data-target="#extraInfo-modal_{{ $listing->id }}">@lang('listing.edit')</button>
 
             <div class=" mb-4">
