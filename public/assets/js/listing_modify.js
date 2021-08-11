@@ -70,8 +70,13 @@
                 cheque              : cheque,
             },
             success: function(data){
-            
-               var cheque_name = locale == 'en' ?  data.cheque.name_en : data.cheque.name_ar;
+                var cheque_name
+                if(cheque != ''){
+
+                    cheque_name   = locale == 'en' ?  data.cheque.name_en : data.cheque.name_ar;
+                }else {
+                    cheque_name   = '';
+                }
               
                 $('.listing-pricing-price-'+listing).text(price)
                 $('.listing-pricing-table-price-'+listing).text(price)
