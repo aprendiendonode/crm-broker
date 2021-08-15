@@ -1429,13 +1429,14 @@ function updateMain(input,table,listing_id){
 
         function load_edit(listing,listing_data){
 
-            // close_edit(listing)
+           
             var region = @json($agency_region);
             $('.lds-ring-row-'+listing).removeClass('d-none')
             $('.load_edit_listing_'+listing).removeClass('d-none')
             $('.close-edit-'+listing).removeClass('d-none')
             $('.load-edit-'+listing).addClass('d-none')
 
+            console.log('here before ajax')
             $.ajax({
                 url:"{{ route('listing.load-edit') }}",
                 method : "POST",
@@ -1445,7 +1446,8 @@ function updateMain(input,table,listing_id){
                 },
            
                 success : function(data){
-                   
+                    console.log('here inside ajax')
+
                 
                     $('.load_edit_listing_show_'+listing).append(data)
 
@@ -1549,14 +1551,8 @@ function updateMain(input,table,listing_id){
                                 });
 
 
-                                var listing_id = @json($listing->id);
-                                
-
-
-                                
-
-
-
+                                var listing_id = listing;
+     
                             $('#drag-and-drop-zone-'+listing_id).dmUploader({ 
 
                                 url: '{{ route("listing.temporary-photos") }}',
@@ -1590,7 +1586,7 @@ function updateMain(input,table,listing_id){
                                     },
 
                                     onUploadSuccess: function(id, data){
-                                        console.log(data)
+                                      
                                         edit_ui_multi_update_file_status(id, 'success', 'Upload Complete',listing_id);
                                         edit_ui_multi_update_file_progress(id, 100, 'success', false,listing_id);
 
@@ -1696,55 +1692,7 @@ function updateMain(input,table,listing_id){
 
                                     });
 
-                                    $('#document-drag-and-drop-zone-'+listing_id).dmUploader({ 
-                                        url: '{{ route("listing.temporary-documents") }}',
-                                        extraData: {
-                                        "agency": '{{ $agency }}'
-                                        },
-                                        headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                        },
-                                        maxFileSize: 3000000, 
-                                        allowedTypes: 'image/*',
-                                        extFilter: ["jpg", "jpeg","png","gif",'pdf','txt'],
-                                        onNewFile: function(id, file){
-                                        edit_document_ui_multi_add_file(id, file,listing_id);
 
-                                        if (typeof FileReader !== "undefined"){
-                                            var reader = new FileReader();
-
-                                            reader.readAsDataURL(file);
-                                        }
-                                        },
-                                        onBeforeUpload: function(id){
-                                        edit_document_ui_multi_update_file_progress(id, 0, '', true,listing_id);
-                                        edit_document_ui_multi_update_file_status(id, 'uploading', 'Uploading...',listing_id);
-                                        },
-
-                                        onUploadSuccess: function(id, data){
-
-                                        edit_document_ui_multi_update_file_status(id, 'success', 'Upload Complete',listing_id);
-                                        edit_document_ui_multi_update_file_progress(id, 100, 'success', false,listing_id);
-
-
-                                        var path = '{{asset("temporary/documents")}}/'+ data.document.document
-
-                                        $('#documentUploaderFile' + id + ' .listing_documents').val(data.document.folder);
-                                        $('#documentUploaderFile' + id).find('.document_rename').attr('id',data.document.id)
-                                        $('#documentUploaderFile' + id).find('.document_rename_value').attr('id','rename_'+data.document.id)
-                                        $('#documentUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.document.id)
-                                        $('#documentUploaderFile' + id).find('.title').attr('id','title_'+data.document.id)
-
-                                        $('#documentUploaderFile' + id).find('.remove-document').attr('id','remove-documentUploaderFile' + id)
-                                        $('#documentUploaderFile' + id).find('.document-id').val( data.document.id)
-
-                                        },
-                                        onUploadError: function(id, xhr, status, message){
-                                            edit_document_ui_multi_update_file_status(id, 'danger', message,listing_id);
-                                            edit_document_ui_multi_update_file_progress(id, 0, 'danger', false,listing_id);  
-                                        }
-
-                                        });
 
                                 $('.lds-ring-row-'+listing).addClass('d-none')
                             

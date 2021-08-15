@@ -47,7 +47,7 @@ class ListingController extends Controller
 
         ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
-        cache()->forget('listing_types');
+
         return view('listing::listing.create.index', [
             'agency_data' => $agency,
             'business' => $business,

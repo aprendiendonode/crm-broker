@@ -29,7 +29,7 @@
 <i
         onclick="event.preventDefault();
         
-         load_edit({{ $listing->id }},'{{ $listing }}')
+         load_edit({{ $listing->id }},{{ $listing }})
         "
         data-plugin="tippy"
         data-tippy-placement="top-start"
