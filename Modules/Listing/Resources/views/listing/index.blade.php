@@ -1549,6 +1549,203 @@ function updateMain(input,table,listing_id){
                                 });
 
 
+                                var listing_id = @json($listing->id);
+                                
+
+
+                                
+
+
+
+                            $('#drag-and-drop-zone-'+listing_id).dmUploader({ 
+
+                                url: '{{ route("listing.temporary-photos") }}',
+                                extraData: {
+                                "agency": '{{ $agency }}'
+                                },
+                                headers: {
+                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                maxFileSize: 3000000, 
+                                allowedTypes: 'image/*',
+                                extFilter: ["jpg", "jpeg","png","gif"],
+                                onNewFile: function(id, file){
+
+                                edit_ui_multi_add_file(id, file,listing_id);
+
+                                    if (typeof FileReader !== "undefined"){
+                                        var reader = new FileReader();
+                                        var img = $('#uploaderFile' + id+' .with-watermark').find('img');
+                                        
+                                        reader.onload = function (e) {
+                                        img.attr('src', e.target.result);
+                                        }
+                                        reader.readAsDataURL(file);
+                                    }
+                                },
+                                    onBeforeUpload: function(id){
+                                    
+                                        edit_ui_multi_update_file_progress(id, 0, '', true,listing_id);
+                                        edit_ui_multi_update_file_status(id, 'uploading', 'Uploading...',listing_id);
+                                    },
+
+                                    onUploadSuccess: function(id, data){
+                                        console.log(data)
+                                        edit_ui_multi_update_file_status(id, 'success', 'Upload Complete',listing_id);
+                                        edit_ui_multi_update_file_progress(id, 100, 'success', false,listing_id);
+
+                                        var img = $('#uploaderFile' + id+' .with-watermark').find('img');
+                                        var link = $('#uploaderFile' + id+' .with-enlarg-watermark').find('a');
+                                        var path = '{{asset("temporary/listings")}}/'+ data.photo.folder+'/'+ data.photo.watermark
+                                        img.attr('src',path);
+                                        link.attr('href',path);
+                                        $('#uploaderFile' + id).find('.watermark').attr('id','watermark-uploaderFile' + id)
+                                        var img = $('#uploaderFile' + id +' .no-watermark').find('img');
+                                        var link = $('#uploaderFile' + id+' .no-enlarg-watermark').find('a');
+                                        var path = '{{asset("temporary/listings")}}/'+ data.photo.folder+'/'+ data.photo.main
+
+                                        link.attr('href',path);
+                                        img.attr('src',path);
+                                        $('#uploaderFile' + id + ' .listing_photos').val(data.photo.folder);
+
+
+                                        $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)
+                                        $('#uploaderFile' + id).find('.photo-id').val( data.photo.id)
+                                        $('#uploaderFile' + id).find('.checked_main').attr('id','checked-main-uploaderFile' + id)
+                                        $('#uploaderFile' + id).find('.checked_main_hidden').attr('id','checked-main-uploaderFile' + id+'-hidden')
+                                    
+                                        $('#uploaderFile' + id).find('.listing-category-'+listing_id).attr('id','listing-category-' + id)
+
+                                    },
+                                    onUploadError: function(id, xhr, status, message){
+                                        console.log('error')
+                                        edit_ui_multi_update_file_status(id, 'danger', message,listing_id);
+                                        edit_ui_multi_update_file_progress(id, 0, 'danger', false,listing_id);  
+                                    },
+
+                                });
+
+
+
+                              $('#plan-drag-and-drop-zone-'+listing_id).dmUploader({ 
+                                    url: '{{ route("listing.temporary-plans") }}',
+                                    extraData: {
+                                    "agency": '{{ $agency }}'
+                                    },
+                                    headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    maxFileSize: 3000000, 
+                                    allowedTypes: 'image/*',
+                                    extFilter: ["jpg", "jpeg","png","gif",'pdf','txt'],
+                                    onNewFile: function(id, file){
+                                        edit_plan_ui_multi_add_file(id, file,listing_id);
+
+                                        if (typeof FileReader !== "undefined"){
+                                            var reader = new FileReader();
+                                            var img = $('#planUploaderFile' + id+' .plan-with-watermark').find('img');
+                                            
+                                            reader.onload = function (e) {
+                                            img.attr('src', e.target.result);
+                                            }
+                                            reader.readAsDataURL(file);
+                                        }
+                                    },
+                                    onBeforeUpload: function(id){
+                                        edit_plan_ui_multi_update_file_progress(id, 0, '', true,listing_id);
+                                        edit_plan_ui_multi_update_file_status(id, 'uploading', 'Uploading...',listing_id);
+                                    },
+
+                                    onUploadSuccess: function(id, data){
+
+                                        edit_plan_ui_multi_update_file_status(id, 'success', 'Upload Complete',listing_id);
+                                        edit_plan_ui_multi_update_file_progress(id, 100, 'success', false,listing_id);
+
+
+                                        $('#planUploaderFile' + id).find('.rename').attr('id',data.plan.id)
+                                        $('#planUploaderFile' + id).find('.rename_value').attr('id','rename_'+data.plan.id)
+                                        $('#planUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.plan.id)
+                                        $('#planUploaderFile' + id).find('.title').attr('id','title_'+data.plan.id)
+
+                                        var img = $('#planUploaderFile' + id+' .plan-with-watermark').find('img');
+                                        var link = $('#planUploaderFile' + id+' .plan-with-enlarg-watermark').find('a');
+                                        var path = '{{asset("temporary/plans")}}/'+data.plan.folder +'/'+data.plan.watermark
+                                        img.attr('src',path);
+                                        link.attr('href',path);
+                                        $('#planUploaderFile' + id).find('.plan-watermark').attr('id','watermark-planUploaderFile' + id)
+                                        var img = $('#planUploaderFile' + id +' .plan-no-watermark').find('img');
+                                        var link = $('#planUploaderFile' + id+' .plan-no-enlarg-watermark').find('a');
+                                        var path = '{{asset("temporary/plans")}}/'+data.plan.folder +'/'+ data.plan.main
+
+                                        link.attr('href',path);
+                                        img.attr('src',path);
+                                        $('#planUploaderFile' + id + ' .listing_plans').val(data.plan.folder);
+
+
+                                        $('#planUploaderFile' + id).find('.remove-plan').attr('id','remove-planUploaderFile' + id)
+                                        $('#planUploaderFile' + id).find('.plan-id').val( data.plan.id)
+
+                                    },
+                                    onUploadError: function(id, xhr, status, message){
+                                        edit_plan_ui_multi_update_file_status(id, 'danger', message,listing_id);
+                                        edit_plan_ui_multi_update_file_progress(id, 0, 'danger', false,listing_id);  
+                                    }
+
+
+
+
+                                    });
+
+                                    $('#document-drag-and-drop-zone-'+listing_id).dmUploader({ 
+                                        url: '{{ route("listing.temporary-documents") }}',
+                                        extraData: {
+                                        "agency": '{{ $agency }}'
+                                        },
+                                        headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        maxFileSize: 3000000, 
+                                        allowedTypes: 'image/*',
+                                        extFilter: ["jpg", "jpeg","png","gif",'pdf','txt'],
+                                        onNewFile: function(id, file){
+                                        edit_document_ui_multi_add_file(id, file,listing_id);
+
+                                        if (typeof FileReader !== "undefined"){
+                                            var reader = new FileReader();
+
+                                            reader.readAsDataURL(file);
+                                        }
+                                        },
+                                        onBeforeUpload: function(id){
+                                        edit_document_ui_multi_update_file_progress(id, 0, '', true,listing_id);
+                                        edit_document_ui_multi_update_file_status(id, 'uploading', 'Uploading...',listing_id);
+                                        },
+
+                                        onUploadSuccess: function(id, data){
+
+                                        edit_document_ui_multi_update_file_status(id, 'success', 'Upload Complete',listing_id);
+                                        edit_document_ui_multi_update_file_progress(id, 100, 'success', false,listing_id);
+
+
+                                        var path = '{{asset("temporary/documents")}}/'+ data.document.document
+
+                                        $('#documentUploaderFile' + id + ' .listing_documents').val(data.document.folder);
+                                        $('#documentUploaderFile' + id).find('.document_rename').attr('id',data.document.id)
+                                        $('#documentUploaderFile' + id).find('.document_rename_value').attr('id','rename_'+data.document.id)
+                                        $('#documentUploaderFile' + id).find('.save-title-success').attr('id','save_success_'+data.document.id)
+                                        $('#documentUploaderFile' + id).find('.title').attr('id','title_'+data.document.id)
+
+                                        $('#documentUploaderFile' + id).find('.remove-document').attr('id','remove-documentUploaderFile' + id)
+                                        $('#documentUploaderFile' + id).find('.document-id').val( data.document.id)
+
+                                        },
+                                        onUploadError: function(id, xhr, status, message){
+                                            edit_document_ui_multi_update_file_status(id, 'danger', message,listing_id);
+                                            edit_document_ui_multi_update_file_progress(id, 0, 'danger', false,listing_id);  
+                                        }
+
+                                        });
+
                                 $('.lds-ring-row-'+listing).addClass('d-none')
                             
 
