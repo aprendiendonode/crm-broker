@@ -46,9 +46,9 @@ class ListingController extends Controller
             'task_status',
             'descriptionTemplates'
 
-        ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
+        ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
-
+        cache()->forget('listing_types');
         return view('listing::listing.create.index', [
             'agency_data' => $agency,
             'business' => $business,
