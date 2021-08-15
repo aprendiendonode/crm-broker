@@ -970,7 +970,7 @@ class ListingRepo
 
     public function update($request, $id)
     {
-        // dd($request->all());
+        dd($request->all());
 
         $listing = Listing::where('business_id', auth()->user()->business_id)->where('id', $id)->firstOrFail();
 
@@ -979,13 +979,13 @@ class ListingRepo
 
             $video_title = $request->{'edit_video_title_' . $id};
             $video_link = $request->{'edit_video_link_' . $id};
-            $video_host = $request->{'edit_video_host_' . $id};
-            $cheque_date = $request->{'edit_cheque_date_' . $id};
-            $cheque_amount = $request->{'edit_cheque_amount_' . $id};
-            $cheque_percentage = $request->{'edit_cheque_percentage_' . $id};
-            $documents = $request->{'edit_documents_' . $id};
-            $floor_plans = $request->{'edit_floor_plans_' . $id};
-            $photos = $request->{'edit_photos_' . $id};
+            $video_host          = $request->{'edit_video_host_' . $id};
+            $cheque_date         = $request->{'edit_cheque_date_' . $id};
+            $cheque_amount       = $request->{'edit_cheque_amount_' . $id};
+            $cheque_percentage   = $request->{'edit_cheque_percentage_' . $id};
+            $documents           = $request->{'edit_documents_' . $id};
+            $floor_plans         = $request->{'edit_floor_plans_' . $id};
+            $photos              = $request->{'edit_photos_' . $id};
             $check_hidden_photos = $request->{'edit_checked_main_hidden_' . $id};
 
             $validator = Validator::make($request->all(), Listing::update_validation($request, $id, $listing));
@@ -1225,15 +1225,11 @@ class ListingRepo
 
             try {
                 DB::beginTransaction();
-
-
                 ListingPhoto::where('listing_id', $request->listing_id)->update(['photo_main' => 'no']);
-
-                ListingPhoto::findOrFail($request->id)->update(['photo_main' => 'yes']);
-
+                $photo =  ListingPhoto::findOrFail($request->id);
+                $photo->update(['photo_main' => 'yes']);
                 DB::commit();
-
-                return response()->json(['message' => trans('listing.updated')], 200);
+                return response()->json(['message' => trans('listing.updated'), 'photo' => $photo], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['message' => trans('agency.something_went_wrong')], 400);
