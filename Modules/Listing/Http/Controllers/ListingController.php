@@ -29,6 +29,7 @@ class ListingController extends Controller
     }
     public function index($agency)
     {
+       
         abort_if(Gate::denies('view_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->repository->index($agency);
     }
