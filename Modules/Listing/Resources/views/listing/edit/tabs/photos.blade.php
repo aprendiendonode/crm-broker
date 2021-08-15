@@ -10,7 +10,7 @@
                       data-target="#photos-modal_{{ $listing->id }}" class="dropdown-item"><i class="mdi mdi-pencil mr-1"></i>@lang('listing.edit')</a>
                     
                   </div>
-              </div> 
+    </div> 
 
 
 
