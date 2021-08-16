@@ -2,11 +2,12 @@
 
 namespace Modules\Listing\Http\Controllers;
 
-use Gate;
 use PDF;
 use File;
+use Gate;
 use App\Models\User;
 use App\Models\Agency;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Routing\Controller;
@@ -15,6 +16,7 @@ use Modules\Listing\Entities\Listing;
 use Modules\SuperAdmin\Entities\City;
 use Illuminate\Support\Facades\Validator;
 use Modules\Listing\Entities\ListingPhoto;
+use Modules\Listing\Entities\ListingVideo;
 use Modules\SuperAdmin\Entities\Community;
 use Modules\Listing\Entities\ListingCheque;
 use Modules\SuperAdmin\Entities\SubCommunity;
@@ -123,9 +125,17 @@ class ListingController extends Controller
 
 
 
+
+        $filtered = $listing->features ? collect($listing->features) : collect();
+        $features = $filtered->filter(function ($value, $key) {
+            return $value != 'no' && $value != '';
+        });
+
+
         return view('listing::listing.edit.index', [
-            'listing'    => $listing,
-            'agency_data' => $agency,
+            'listing'            => $listing,
+            'agency_data'        => $agency,
+            'features'           => $features,
             'agency'             => $agency->id,
             'agency_region'      => $agency->country ? $agency->country->iso2 : '',
             'lead_sources'       => $agency->lead_sources,
@@ -393,8 +403,7 @@ class ListingController extends Controller
 
 
                 $listing             = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-                $photos              = json_decode($request->photos);;
-                $check_hidden_photos = json_decode($request->checked_main_hidden);
+
 
                 $validator = Validator::make($request->all(), [
                     "photos"                             => ['required', 'string'],
@@ -403,6 +412,8 @@ class ListingController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['message' => $validator->errors()->all()[0]], 400);
                 }
+                $photos              = json_decode($request->photos);;
+                $check_hidden_photos = json_decode($request->checked_main_hidden);
                 if ($photos && is_array($photos)) {
                     if (!file_exists(public_path("listings"))) {
                         mkdir(public_path("listings"));
@@ -465,6 +476,122 @@ class ListingController extends Controller
     }
 
 
+
+
+
+    public function updateListingVideos(Request $request)
+    {
+
+
+        if ($request->ajax()) {
+            try {
+                $listing     = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+
+                $validator = Validator::make($request->all(), [
+                    "video_title"                             => ['required', 'string'],
+                    "video_link"                              => ['required', 'string'],
+                    "video_host"                              => ['required', 'string'],
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                }
+                $video_title =  json_decode($request->video_title);
+                $video_link  =  json_decode($request->video_link);
+                $video_host  =  json_decode($request->video_host);
+                if (count($video_host) != count($video_link) || count($video_host) != count($video_title)) {
+                    return response()->json(['message' => trans('listing.video_inputs_invalid')], 400);
+                }
+                if (count($video_title) > 0) {
+                    $listing->videos->each(function ($q) {
+                        $q->delete();
+                    });
+                    if ($video_title[0] != null && $video_host[0] != null && $video_link[0] != null) {
+
+                        foreach ($video_title as $key => $title) {
+                            ListingVideo::create([
+                                'listing_id' => $listing->id,
+                                'title'      => $title,
+                                'host'       => $video_host[$key],
+                                'link'       => $video_link[$key],
+                            ]);
+                        }
+                    }
+                }
+
+                return response()->json(['message' => trans('listing.video_added')], 200);
+            } catch (\Exception $th) {
+
+                return response()->json(['message' => trans('global.something_wrong')], 400);
+            }
+        }
+    }
+
+
+
+    public function updateListingFeatures(Request $request)
+    {
+
+
+        if ($request->ajax()) {
+            try {
+                $listing     = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+
+
+
+
+
+
+
+                $validator = Validator::make($request->all(), [
+                    "checkboxesFeatureName"                              => ['required', 'string'],
+                    "checkboxesFeatureValue"                             => ['required', 'string'],
+                    "inputsFeatureName"                                  => ['required', 'string'],
+                    "inputsFeatureValue"                                 => ['required', 'string'],
+                    "selectsFeatureName"                                 => ['required', 'string'],
+                    "selectsFeatureValue"                                => ['required', 'string'],
+
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                }
+                $checkboxesFeatureName   =  json_decode($request->checkboxesFeatureName);
+                $checkboxesFeatureValue  =  json_decode($request->checkboxesFeatureValue);
+                $checkboxes = [];
+                foreach ($checkboxesFeatureName as $key =>  $name) {
+                    $checkboxes[$name] =
+                        $checkboxesFeatureValue[$key];
+                }
+
+
+                $inputsFeatureName   =  json_decode($request->inputsFeatureName);
+                $inputsFeatureValue  =  json_decode($request->inputsFeatureValue);
+                $inputs = [];
+                foreach ($inputsFeatureName as $key =>  $name) {
+                    $inputs[$name] =
+                        $inputsFeatureValue[$key];
+                }
+
+                $selectsFeatureName   =  json_decode($request->selectsFeatureName);
+                $selectsFeatureValue  =  json_decode($request->selectsFeatureValue);
+                $selects = [];
+                foreach ($selectsFeatureName as $key =>  $name) {
+                    $selects[$name] =
+                        $selectsFeatureValue[$key];
+                }
+
+                $merged = array_merge($checkboxes, $inputs);
+                $all = array_merge($merged, $selects);
+
+
+                $listing->update(['features' => $all]);
+                return response()->json(['message' => trans('listing.modified')], 200);
+            } catch (\Exception $th) {
+
+                return response()->json(['message' => trans('global.something_wrong')], 400);
+            }
+        }
+    }
 
 
 

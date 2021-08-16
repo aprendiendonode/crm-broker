@@ -378,6 +378,8 @@ return [
     'yes'                           => 'Yes',
     'no'                            => 'No',
     'added_at'                      => 'Added At',
-    'upload'                        => 'Upload'
+    'upload'                        => 'Upload',
+    'video_added'                   => 'Video Added',
+    'add_video'                     => 'Add Video',
 
 ];

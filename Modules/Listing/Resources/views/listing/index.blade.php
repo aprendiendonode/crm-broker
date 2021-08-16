@@ -12,6 +12,7 @@
     <link href="{{ asset('assets/css/modals.css') }}" rel="stylesheet">
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG"></script>
      <script src="{{ asset('assets/js/listing_modify.js') }}"></script>
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
 
     <style>
         .toggle.android {
@@ -239,6 +240,9 @@ margin-bottom: 0px !important;
 
         @include('listing::listing.filter')
 
+                <!-- Go to www.addthis.com/dashboard to customize your tools -->
+               
+            
         <div class="table-responsive">
             <table class="table table-bordered toggle-circle mb-0" style="table-layout: fixed;">
                 <thead>
@@ -1169,104 +1173,7 @@ function toggleWatermark(input,table){
 
 
 
-        function editloadCheckedFeatures(type,id){
-
-
-
-            var  checkboxesFeature = $('.choosen-features-'+id+':checkbox:checked ').map(function() {
-                var name = this.name.replace('"',"");
-                name = name .replace('edit_features_'+id,"");
-                name = name .replace("[","");
-                name = name .replace("]","");
-                name = name .replace(/_/g," ");
-
-                const words = name.split(" ");
-
-                for (let i = 0; i < words.length; i++) {
-                    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-                }
-
-                  name = words.join(" ");
-
-                return name;
-            }).get();
-           var  inputsFeature = $('.choosen-features-inputs-'+id).map(function() {
-
-                        if(this.value != ''){
-
-                            var name = this.name.replace('"',"");
-                            name = name .replace('edit_features_'+id,"");
-                            name = name .replace("[","");
-                            name = name .replace("]","");
-                            name = name .replace(/_/g," ");
-
-                            const words = name.split(" ");
-
-                            for (let i = 0; i < words.length; i++) {
-                                words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-                            }
-
-                            name = words.join(" ");
-
-
-                            return name+' ( '+ this.value +')';
-                        }
-
-                }).get();
-
-           var  selectsFeature = $('.choosen-features-select-'+id).map(function() {
-            if(this.value != ''){
-                var name = this.name.replace('"',"");
-                name = name .replace('edit_features_'+id,"");
-                name = name .replace("[","");
-                name = name .replace("]","");
-                name = name .replace(/_/g," ");
-
-                const words = name.split(" ");
-
-                for (let i = 0; i < words.length; i++) {
-                    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-                }
-
-                  name = words.join(" ");
-
-                return name+' ( '+ this.value +')';
-            }
-
-
-              }).get();
-
-             var merged =  inputsFeature.concat(checkboxesFeature);
-             var all =  merged.concat(selectsFeature);
-
-              if(all.length > 0){
-
-                  var ul_html = '';
-                  ul_html+= '<ul>';
-                        for (let index = 0; index < all.length; index++) {
-
-                            ul_html += '<li>' + all[index]+'</li>';
-
-                        }
-
-                  ul_html+= '</ul>';
-                  const domEditableElement = document.querySelector( '.description-profile-modal-'+id+' .edit_description_'+type+'_'+id+' .ck-editor__editable' );
-
-                    const editorInstance = domEditableElement.ckeditorInstance;
-                    const htmlDP = editorInstance.data.processor;
-                    const viewFragment = htmlDP.toView(ul_html);
-                    const modelFragment = editorInstance.data.toModel( viewFragment );
-                    const insertPosition = editorInstance.model.document.selection.getFirstPosition();
-                    editorInstance.model.insertContent(modelFragment, insertPosition);
-              }else {
-
-                            var message = @json(trans('listing.choose_features_to_copy'));
-                            $('.features_copy_message_'+type+'_'+id).text(message)
-                            return;
-
-              }
-        }
-
+     
 
         function editshowTemplates(type,id){
             if(type == 'ar'){

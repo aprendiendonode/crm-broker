@@ -134,7 +134,7 @@ class Listing extends Model implements Feedable, HasMedia
     }
     public function photo_main()
     {
-        return $this->hasOne(ListingPhoto::class)->where('photo_main','yes');
+        return $this->hasOne(ListingPhoto::class)->where('photo_main', 'yes');
     }
     public function documents()
     {
@@ -300,16 +300,16 @@ class Listing extends Model implements Feedable, HasMedia
             "edit_note_" . $id                                     => ['sometimes', 'nullable', 'string'],
             "edit_features_" . $id                                 => ['required', 'array'],
 
-            "edit_video_title_" . $id                              => ['required', 'array'],
-            "edit_video_link_" . $id                               => ['required', 'array'],
-            "edit_video_host_" . $id                               => ['required', 'array'],
+            // "edit_video_title_" . $id                              => ['required', 'array'],
+            // "edit_video_link_" . $id                               => ['required', 'array'],
+            // "edit_video_host_" . $id                               => ['required', 'array'],
             "edit_description_en_" . $id                           => ['sometimes', 'nullable', 'string'],
             "edit_description_ar_" . $id                           => ['sometimes', 'nullable', 'string'],
             "edit_cheque_date_" . $id                              => ['required', 'array'],
             "edit_cheque_amount_" . $id                            => ['required', 'array'],
             "edit_cheque_percentage_" . $id                        => ['required', 'array'],
-            "edit_photos_" . $id                                   => ['sometimes', 'nullable', 'array'],
-            "edit_checked_main_hidden_" . $id                      => ['sometimes', 'nullable', 'array'],
+            // "edit_photos_" . $id                                   => ['sometimes', 'nullable', 'array'],
+            // "edit_checked_main_hidden_" . $id                      => ['sometimes', 'nullable', 'array'],
 
             // |regex:/^([0-9\s\-\+\(\)]*)$/
 

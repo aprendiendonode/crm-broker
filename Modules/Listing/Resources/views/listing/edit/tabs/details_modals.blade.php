@@ -290,13 +290,17 @@
 
         <div class="tab-pane " id="features-{{ $listing->id }}">
             <button type="button" style="float: right;" class="btn btn-primary" data-toggle="modal"
-             data-target="#featuresModal_{{ $listing->id }}">@lang('listing.edit')</button>
+             data-target="#featuresModal_{{ $listing->id }}">
+             @lang('listing.edit')
+            </button>
 
             <div class=" mb-4">
           
-                <div> @lang('listing.features'): </div>
-                <div> </div>
-            
+                <div> @lang('listing.features') : </div>
+
+                @foreach($features as $key => $value)
+                   <div> {{ Str::of($key)->title()->replace('_'," ")  }} @if($value != 'yes')  ( {{ Str::of($value)->title()->replace('_'," ")  }} ) @endif </div>
+                @endforeach   
             </div>
         
         </div>

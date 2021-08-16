@@ -139,5 +139,9 @@ Route::middleware(['checkauth', 'lang'])->group(function () {
             ->name('listings.update-listing-description');
         Route::post('update-listing-photos', 'ListingController@updateListingPhotos')
             ->name('listings.update-listing-photos');
+        Route::post('update-listing-videos', 'ListingController@updateListingVideos')
+            ->name('listings.update-listing-videos');
+        Route::post('update-listing-features', 'ListingController@updateListingFeatures')
+            ->name('listings.update-listing-features');
     });
 });

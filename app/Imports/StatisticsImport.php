@@ -24,7 +24,7 @@ use Modules\SuperAdmin\Entities\SubCommunity;
 use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 
 //class LeadsImport implements ToModel, WithChunkReading, WithValidation, WithHeadingRow, ShouldQueue
-class StatisticsImport  implements  ToModel, WithStartRow
+class StatisticsImport  implements ToModel, WithStartRow
 {
     public $business, $agency;
     public $const = null;
@@ -43,7 +43,7 @@ class StatisticsImport  implements  ToModel, WithStartRow
      */
     public function model(array $row)
     {
-
+        set_time_limit(-1);
         if (!$this->const) {
             $this->const = $row[22];
         }
@@ -99,6 +99,4 @@ class StatisticsImport  implements  ToModel, WithStartRow
 
         return 2;
     }
-
-
 }
