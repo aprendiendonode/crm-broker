@@ -409,11 +409,15 @@ class ListingController extends Controller
                     "photos"                             => ['required', 'string'],
                     "checked_main_hidden"                => ['sometimes', 'nullable', 'string'],
                 ]);
+
+                $has_new_main_photo = 'no';
+                $new_main_photo         = null;
                 if ($validator->fails()) {
                     return response()->json(['message' => $validator->errors()->all()[0]], 400);
                 }
                 $photos              = json_decode($request->photos);;
                 $check_hidden_photos = json_decode($request->checked_main_hidden);
+                // dd($photos, $check_hidden_photos);
                 if ($photos && is_array($photos)) {
                     if (!file_exists(public_path("listings"))) {
                         mkdir(public_path("listings"));
@@ -443,6 +447,14 @@ class ListingController extends Controller
                                 ]
                             );
 
+                            if ($moved->photo_main == 'yes') {
+
+                                $has_new_main_photo = 'yes';
+                                $new_photo_main     = $moved;
+                            }
+
+
+
                             if ($moved) {
                                 $files = File::files(public_path("temporary/listings/$photo->folder"));
                                 if (!file_exists(public_path("listings/photos/agency_$listing->agency_id"))) {
@@ -467,7 +479,10 @@ class ListingController extends Controller
                     }
                 }
 
-                return response()->json(['message' => trans('global.modified')], 200);
+                return response()->json([
+                    'message' => trans('global.modified'), 'has_new_main_photo' => $has_new_main_photo,
+                    'new_main_photo' => $new_photo_main, 'path' => asset('listings/photos/agency_' . $listing->agency_id . '/listing_' . $listing->id . '/photo_')
+                ], 200);
             } catch (\Exception $th) {
 
                 return response()->json(['message' => trans('global.something_wrong')], 400);

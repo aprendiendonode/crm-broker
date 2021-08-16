@@ -415,6 +415,11 @@
 
 
              toast(data.message, 'success')
+             if(data.has_new_main_photo == 'yes'){
+                $('.table-image').attr('src', data.path + data.new_main_photo.id + '/' + data.new_main_photo.main)
+
+
+             }
              $('#photos-modal_' + listing).modal('hide')
          },
          error: function (error) {
@@ -451,6 +456,7 @@
 
      var slicedForListingCategory = sliced_id.slice(12);
 
+   
      if ($('#listing-category-' + slicedForListingCategory).val() == '') {
          toast("Please Select a Category First", 'error')
          $('#' + input.id).prop('checked', false);
@@ -463,6 +469,13 @@
      }
      $(' .checked_main').prop('checked', false);
      $('.checked_main_hidden').val('no');
+
+    //  if (table == 'temporary') {
+    //     toast("Upload The Photo First", 'error')
+    //     $('#' + input.id).prop('checked', false);
+    //     $('#' + input.id).prop('checked', true);
+    //     return false;
+    // }
 
      $('#' + input.id).prop('checked', true);
 

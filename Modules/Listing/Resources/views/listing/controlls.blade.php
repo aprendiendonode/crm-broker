@@ -93,7 +93,17 @@
 
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">@lang('listing.main')</label>
-                <input type="checkbox"  name="checked_main" class="checked_main" onchange="updateMain(this,'temporary')">
+                
+                                                        
+                                                        
+           <input type="checkbox"  name="checked_main" class="checked_main" onchange="
+           updateMain(this,'temporary','{{ $listing->id }}','{{  route('listings.update-listing-main-photo') }}',
+                '{{ csrf_token() }}',
+                '{{ $listing->agency_id }}'
+                 , '{{ $listing->business_id }}',
+                 '{{ app()->getLocale()  }}' ,
+                '{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_') }}'
+                  )"> 
                 <input type="hidden"  name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden checked_main_hidden-{{ $listing->id }}" value="no">
               </div>
             </div>
