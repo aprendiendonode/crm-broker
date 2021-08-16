@@ -265,7 +265,7 @@
 
 @endcan
 
-@if($listing->status == 'archive')
+@if($listing->status == 'archive' && request('status_main') == 'archive')
 @can('delete_listing')
 
 

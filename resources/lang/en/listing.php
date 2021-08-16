@@ -381,5 +381,9 @@ return [
     'upload'                        => 'Upload',
     'video_added'                   => 'Video Added',
     'add_video'                     => 'Add Video',
+    'property_type'                 => 'Property Type',
+    'ref_id' => 'REF ID',
+    'agent' => 'Agent',
+    'updated' => 'Modify',
 
 ];

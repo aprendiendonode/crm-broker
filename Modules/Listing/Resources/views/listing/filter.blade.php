@@ -51,7 +51,7 @@
 
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
-                    <label for="" class="font-weight-medium text-muted">Propery Type</label>
+                    <label for="" class="font-weight-medium text-muted">@lang('listing.property_type')</label>
                     <select class="form-control select2" name="type" data-toggle="select2">
                         <option></option>
                         @forelse($listing_types as $type)
@@ -61,7 +61,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4">
+            {{-- <div class="col-md-6 col-lg-4">
                 <div class="form-group">
                     <label for="" class="font-weight-medium text-muted">Validation Status</label>
                     <select class="form-control select2" name="validationStatus" data-toggle="select2">
@@ -69,11 +69,11 @@
                     </select>
                 </div>
             </div>
-
+ --}}
 
 
             <div class="col-md-6 col-lg-4">
-                <label class="mb-1 font-weight-medium text-muted">Location</label>
+                <label class="mb-1 font-weight-medium text-muted">@lang('listing.location')</label>
 
                 <select class="form-control select2" name="location" data-toggle="select2">
                     <option></option>
@@ -85,9 +85,90 @@
 
             </div> 
 
+            <div class="form-group col-md-4">
+
+                <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.city')</label>
+                <div style="flex:2;">
+                    <select  onchange="getCommunitites('create',null,'{{ app()->getLocale() }}' ,'{{  route('listings.get-communities') }}' ,'{{ csrf_token() }}')" class="form-control select2 city-in-create" name="filter_city_id"
+                     data-toggle="select2" data-placeholder="@lang('listing.city')">
+                            <option value=""></option>
+                        
+                        @foreach($cities as $city)
+                            <option @if(request('filter_city_id') == $city->id  ) selected @endif value="{{ $city->id }}">
+                                {{ $city->{'name_'.app()->getLocale()} }}
+                            </option>
+                        @endforeach
+
+                    </select>
+              
+                </div>
+            </div>
+
+
+
+        <div class="form-group  col-md-4">
+
+            <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') </label>
+            <div style="flex:2;">
+                <select  onchange="getSubCommunities('create',null,'{{ app()->getLocale() }}','{{  route('listings.get-sub-communities') }}' ,'{{ csrf_token() }}')" class="form-control select2 community-in-create" name="filter_community_id"
+                 data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
+                        <option value=""></option>
+                    
+                  @if(request()->has('filter_city_id'))
+                    @if(request()->has('filter_community_id'))
+                        @foreach($communities->where('city_id',request('filter_city_id')) as $community)
+                            <option class="create-appended-communities"
+                                @if(request('filter_community_id') == $community->id)  
+                                    selected  
+                                    @endif
+                                    value="{{ $community->id }}">
+                
+                                {{ $community->{'name_'.app()->getLocale()}  }}
+                            </option>
+                        @endforeach
+                    @endif
+                @endif    
+                
+ 
+
+                </select>
+          
+            </div>
+        </div>
+
+
+        <div class="form-group  col-md-4">
+
+            <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.sub_community')</label>
+            <div style="flex:2;">
+                <select class="form-control select2 sub-community-in-create" name="filter_sub_community_id"
+                 data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
+                        <option value=""></option>
+
+                        @if(request()->has('filter_city_id') &&  request()->has('filter_community_id'))
+                    
+                        @if(request()->has('filter_sub_community_id') )
+                            @foreach($sub_communities->where('community_id',request('filter_community_id')) as $sub_community)
+                                <option class="create-appended-sub-communities"
+                                    @if(request('filter_sub_community_id') == $sub_community->id)  
+                                        selected  
+                                        @endif
+                                        value="{{ $sub_community->id }}"
+                                >
+                    
+                                    {{ $sub_community->{'name_'.app()->getLocale()}  }}
+                                </option>
+                            @endforeach
+                        @endif
+                    @endif  
+                </select>
+          
+            </div>
+        </div>
+
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
-                    <label class="mb-1 font-weight-medium text-muted">Beds</label>
+                    <label class="mb-1 font-weight-medium text-muted">@lang('listing.beds')</label>
                     <div class="d-flex">
                         <div class="mr-1" style="flex:1">
                             <select class="form-control select2" name="min_bed" data-toggle="select2"
@@ -120,7 +201,7 @@
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
-                    <label for="" class="font-weight-medium text-muted">Assigned</label>
+                    <label for="" class="font-weight-medium text-muted">@lang('listing.assigned')</label>
                     <select class="form-control select2" name="filter_user" data-toggle="select2">
                         <option value=""></option>
                         @forelse($staffs as $employee)
@@ -134,7 +215,7 @@
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
-                    <label for="" class="font-weight-medium text-muted">REF ID</label>
+                    <label for="" class="font-weight-medium text-muted">@lang('listing.ref_id')</label>
                     <select class="form-control select2" name="ref_id" data-toggle="select2">
                         <option></option>
                         @forelse($ref_ids as $id)
@@ -146,7 +227,7 @@
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="form-group" style="height: 64px;">
-                    <label class="font-weight-medium text-muted mr-3">Lsiting Type</label>
+                    <label class="font-weight-medium text-muted mr-3">@lang('listing.listing_type')</label>
                     <div class="d-flex flex-wrap">
                         <div class="radio mr-2" style="">
                             <input type="radio" name="searchListingType" id="searchLsitingRadio1" value="option3" checked>

@@ -98,12 +98,22 @@ class ListingRepo
             ])->where('agency_id', $agency->id)->where('business_id', $business);
 
 
-            if (request()->has('status_main')) {
+            if (request('status_main') && request('status_main') != 'all') {
                 $listings_query->where('status', request()->status_main);
             }
 
             if (request('purpose')) {
                 $listings_query->where('purpose', request('purpose'));
+            }
+
+            if (request('filter_city_id')) {
+                $listings_query->where('city_id', request('filter_city_id'));
+            }
+            if (request('filter_community_id')) {
+                $listings_query->where('community_id', request('filter_community_id'));
+            }
+            if (request('filter_sub_community_id')) {
+                $listings_query->where('sub_community_id', request('filter_sub_community_id'));
             }
 
             if (request('location')) {
