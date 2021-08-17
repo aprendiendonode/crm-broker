@@ -6,6 +6,7 @@ use Gate;
 
 use App\Models\User;
 use App\Models\Agency;
+use App\Models\Language;
 use App\Exports\TeamsExport;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -33,11 +34,12 @@ class CompanyProfileController extends Controller
             abort(404);
         }
         $countries = Country::all();
+        $languages = Language::all();
         $cities    = City::all();
 
         return view(
             'agency::company_profile.index',
-            compact('agency', 'business', 'countries', 'cities')
+            compact('agency', 'business', 'countries', 'cities', 'languages')
         );
     }
 
@@ -89,6 +91,7 @@ class CompanyProfileController extends Controller
                 'company_orn'      => 'sometimes|nullable|string',
 
                 'country_id'       => 'required|integer|exists:countries,id',
+                'language_id'       => 'required|integer|exists:languages,id',
                 'city_id'          => 'sometimes|nullable|integer|exists:cities,id',
 
 
@@ -139,6 +142,7 @@ class CompanyProfileController extends Controller
 
                 'country_id'       => $request->country_id,
                 'city_id'          => $request->city_id,
+                'language_id'          => $request->language_id,
 
             ]);
 

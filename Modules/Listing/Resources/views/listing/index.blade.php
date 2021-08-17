@@ -648,6 +648,7 @@ margin-bottom: 0px !important;
                 script.setAttribute('src', url);
                 script.setAttribute('async', '');
                 script.setAttribute('defer', '');
+                script.setAttribute('language', 'EN');
 
                 document.head.appendChild(script);
 

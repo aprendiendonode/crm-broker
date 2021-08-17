@@ -57,6 +57,7 @@ class Agency extends Model
         'business_id',
         'agency_token',
         'currency',
+        'language_id'
     ];
 
 
@@ -64,6 +65,10 @@ class Agency extends Model
     public function country()
     {
         return $this->belongsTo(Country::class);
+    }
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
     }
 
 

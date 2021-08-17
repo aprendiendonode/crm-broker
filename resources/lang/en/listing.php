@@ -387,5 +387,6 @@ return [
     'updated' => 'Modify',
     'duplicate' => 'Duplicate',
     'select_ref' => 'Select Reference',
+    'languages'     => 'Languages',
 
 ];

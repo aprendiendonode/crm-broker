@@ -54,7 +54,9 @@ class ListingController extends Controller
             'landlords',
             'tenants',
             'task_status',
-            'descriptionTemplates'
+            'descriptionTemplates',
+            'language',
+            'country'
 
         ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
@@ -76,6 +78,9 @@ class ListingController extends Controller
             'has_ref'               => $has_ref,
             'listing_by_ref'        => $listing_by_ref,
             'agency_region'         => $agency->country ? $agency->country->iso2 : '',
+            'agency_lat'            => $agency->country ? $agency->country->lat : '',
+            'agency_lng'            => $agency->country ? $agency->country->lng : '',
+            'agency_language'       => $agency->language->code ?? '',
 
             'lead_sources'          => $agency->lead_sources,
             'task_status'           => $agency->task_status,
