@@ -222,9 +222,6 @@ margin-bottom: 0px !important;
             </div>
 
             @can('add_listing')
-                {{-- <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
-                    <i class="fe-plus-square"></i> @lang('listing.add_listing')
-                </button> --}}
                 <a href="{{ url('listing/create/'.$agency) }}" type="button" class="btn btn-info waves-effect waves-light">
                     <i class="fe-plus-square"></i> @lang('listing.add_listing')
                 </a>
@@ -240,9 +237,6 @@ margin-bottom: 0px !important;
 
         @include('listing::listing.filter')
 
-                <!-- Go to www.addthis.com/dashboard to customize your tools -->
-               
-            
         <div class="table-responsive">
             <table class="table table-bordered toggle-circle mb-0" style="table-layout: fixed;">
                 <thead>
@@ -284,25 +278,25 @@ margin-bottom: 0px !important;
 
                                 @if($photo_table)
                                     @if($photo_table->active == 'main')
-                                    <a target="_blank" href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->main) }}">
+                                        <a target="_blank" href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->main) }}">
 
 
-                             
-                                    <img 
-                                    class="w-100 table-image"
+                                
+                                        <img 
+                                        class="w-100 table-image"
 
-                                     src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
+                                        src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
 
-                                    </a>
+                                        </a>
                                     @else
-                                    <a
-                                    target="_blank"
-                                     href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->watermark) }}">
-                                     <img
-                                     class="w-100 table-image"
-                                      src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
-                                    </a>
-                                 
+                                        <a
+                                         target="_blank"
+                                         href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->watermark) }}">
+                                        <img
+                                        class="w-100 table-image"
+                                        src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
+                                        </a>
+                                    
 
                                     @endif
                                 @endif
@@ -365,7 +359,7 @@ margin-bottom: 0px !important;
                     <tr  class=" more_info_{{ $listing->id }} d-none"  >
                         <td colspan="2"></td>
 
-                        <td colspan="12">
+                        <td colspan="11">
 
                            <div class="d-flex justify-content-start">
                             <i
