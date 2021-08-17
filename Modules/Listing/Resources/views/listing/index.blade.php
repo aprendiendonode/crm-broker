@@ -279,13 +279,14 @@ margin-bottom: 0px !important;
                                 @endphp
 
                                 @if($photo_table)
-                                    @if($photo_table->main == 'main')
+                                    @if($photo_table->active == 'main')
                                     <a target="_blank" href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->main) }}">
 
 
                              
                                     <img 
-                                    class="w-100"
+                                    class="w-100 table-image"
+
                                      src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
 
                                     </a>
@@ -294,7 +295,7 @@ margin-bottom: 0px !important;
                                     target="_blank"
                                      href="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->watermark) }}">
                                      <img
-                                     class="w-100"
+                                     class="w-100 table-image"
                                       src="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" alt="">
                                     </a>
                                  
@@ -1049,59 +1050,6 @@ function toggleWatermark(input,table){
 
 
     
-function updateMain(input,table,listing_id){
- 
-    // checked-main-uploaderFile89ljjtz9nx check box
-    // 89ljjtz9nx  select
-
-    var id         = input.id
-    var sliced_id  = id.slice(13);
-
-    var slicedForListingCategory = sliced_id.slice(12);
-
-    if($('#listing-category-'+slicedForListingCategory).val() == ''){
-        toast("Please Select a Category First",'error')
-        $('#'+input.id).prop('checked',false);
-        return false; 
-    }
-    if($('#listing-category-'+slicedForListingCategory).find(':selected').data('allowed') == 'no'){
-        toast("This Category Not Allowed To be Main Photo",'error')
-        $('#'+input.id).prop('checked',false);
-        return false;
-    }
-
-  
-     $(' .checked_main').prop('checked',false);
-
-     $('.checked_main_hidden').val('no');
-
-     $('#'+input.id).prop('checked',true);
-
-     $('#'+input.id+'-hidden').val('yes');
-     var  photo_id = $('#'+sliced_id+' .photo-id').val();
-     if(table == 'main'){
-        
-
-         $.ajax({
-        url:'{{  route("listings.update-listing-main-photo") }}',
-        type:'POST',
-        data:{
-            _token: '{{ csrf_token() }}',
-            id    : photo_id,
-            listing_id :listing_id
-       
-
-        },
-        success: function(data){
-
-        },
-        error: function(error){
-
-        },
-    })
-     }
-
-    }
 
 
    function updateListingCategory(input,table){
@@ -1137,19 +1085,7 @@ function updateMain(input,table,listing_id){
         
     }
 
-    function handleCloseModal(listing) {
-      
-
-  let isAllSelected = ![...document.querySelectorAll('.listing-category-'+listing)].some(el => el.value == '' );
-
-  if(isAllSelected) {
-    $('#photos-modal_'+listing).modal('toggle');
-  }else {
-    toast('please select all categories','error');
-  }
-  
-}
-
+ 
 </script>
 @endpush
 
@@ -1604,12 +1540,12 @@ function updateMain(input,table,listing_id){
                                         img.attr('src',path);
                                         $('#uploaderFile' + id + ' .listing_photos').val(data.photo.folder);
 
-
+                                        
                                         $('#uploaderFile' + id).find('.remove-photo').attr('id','remove-uploaderFile' + id)
                                         $('#uploaderFile' + id).find('.photo-id').val( data.photo.id)
                                         $('#uploaderFile' + id).find('.checked_main').attr('id','checked-main-uploaderFile' + id)
                                         $('#uploaderFile' + id).find('.checked_main_hidden').attr('id','checked-main-uploaderFile' + id+'-hidden')
-                                    
+                                        
                                         $('#uploaderFile' + id).find('.listing-category-'+listing_id).attr('id','listing-category-' + id)
 
                                     },

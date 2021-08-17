@@ -377,4 +377,121 @@
 
         })
     }
+    function updateListingPhotos(listing,route ,token,agency,business,locale){
 
+
+        
+        if(!handleCloseModal(listing)){
+            toast('please select all categories','error');
+            return;
+        }
+      
+        var photos = $('.listing-photos-for-submit-'+listing).map(function(){
+            return $(this).val()
+        }).get();
+        var checked_main_hidden = $('.checked_main_hidden-'+listing).map(function(){
+            return $(this).val()
+        }).get();
+
+        if(photos.length == 0){
+            toast('No Photos Uploaded','error')
+            return;
+        }
+
+
+     
+        $.ajax({
+            url:route ,
+            type:"POST",
+            data:{
+                _token                : token,
+                listing               : listing,
+                business              : business,
+                agency                : agency,
+                photos                : JSON.stringify(photos)  ,
+                checked_main_hidden   : JSON.stringify(checked_main_hidden)  
+            },
+            success: function(data){
+
+              
+                toast(data.message,'success')
+                $('#agent-modal-'+listing).modal('hide')
+            },
+            error: function(error){
+                toast('error','error')
+            }
+
+        })
+    }
+
+
+
+    function handleCloseModal(listing) {
+      
+
+        let isAllSelected = ![...document.querySelectorAll('.listing-category-'+listing)].some(el => el.value == '' );
+      
+        if(isAllSelected) {
+        //   $('#photos-modal_'+listing).modal('toggle');
+          return true;
+        }else {
+
+            return false;
+        //   toast('please select all categories','error');
+        }
+        
+      }
+      
+
+
+      function updateMain(input,table,listing_id,route,token,agency,business,locale,path){
+ 
+        var id         = input.id
+        var sliced_id  = id.slice(13);
+    
+        var slicedForListingCategory = sliced_id.slice(12);
+    
+        if($('#listing-category-'+slicedForListingCategory).val() == ''){
+            toast("Please Select a Category First",'error')
+            $('#'+input.id).prop('checked',false);
+            return false; 
+        }
+        if($('#listing-category-'+slicedForListingCategory).find(':selected').data('allowed') == 'no'){
+            toast("This Category Not Allowed To be Main Photo",'error')
+            $('#'+input.id).prop('checked',false);
+            return false;
+        }
+         $(' .checked_main').prop('checked',false);
+         $('.checked_main_hidden').val('no');
+    
+         $('#'+input.id).prop('checked',true);
+    
+         $('#'+input.id+'-hidden').val('yes');
+         var  photo_id = $('#'+sliced_id+' .photo-id').val();
+         if(table == 'main'){
+            
+    
+                $.ajax({
+                    url:route,
+                    type:'POST',
+                    data:{
+                        _token: token,
+                        id    : photo_id,
+                        listing_id :listing_id
+                
+    
+                    },
+                    success: function(data){
+                        $('.table-image').attr('src', path + data.photo.id +'/'+ data.photo.main)
+                        toast(data.message,'success')
+    
+    
+                    },
+                    error: function(error){
+    
+                    },
+                })
+         }
+    
+        }
+    

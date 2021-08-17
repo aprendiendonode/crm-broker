@@ -3,6 +3,8 @@
 namespace Modules\Listing\Http\Controllers;
 
 use Gate;
+use PDF;
+use File;
 use App\Models\User;
 use App\Models\Agency;
 use Illuminate\Http\Request;
@@ -12,9 +14,11 @@ use Illuminate\Support\Facades\DB;
 use Modules\Listing\Entities\Listing;
 use Modules\SuperAdmin\Entities\City;
 use Illuminate\Support\Facades\Validator;
+use Modules\Listing\Entities\ListingPhoto;
 use Modules\SuperAdmin\Entities\Community;
 use Modules\Listing\Entities\ListingCheque;
 use Modules\SuperAdmin\Entities\SubCommunity;
+use Modules\Listing\Entities\TemporaryListing;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Listing\Http\Repositories\ListingRepo;
 
@@ -382,6 +386,85 @@ class ListingController extends Controller
             }
         }
     }
+    public function updateListingPhotos(Request $request)
+    {
+
+        if ($request->ajax()) {
+            try {
+
+
+                $listing             = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+                $photos              = json_decode($request->photos);;
+                $check_hidden_photos = json_decode($request->checked_main_hidden);
+
+                $validator = Validator::make($request->all(), [
+                    "photos"                             => ['required', 'string'],
+                    "checked_main_hidden"                => ['sometimes', 'nullable', 'string'],
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                }
+                if ($photos && is_array($photos)) {
+                    if (!file_exists(public_path("listings"))) {
+                        mkdir(public_path("listings"));
+                    }
+                    if (!file_exists(public_path("listings/photos"))) {
+                        mkdir(public_path("listings/photos"));
+                    }
+
+                    foreach ($photos as $key => $folder) {
+                        $photo = TemporaryListing::where('folder', $folder)->first();
+                        if ($photo) {
+
+                            if (in_array('yes', $check_hidden_photos)) {
+                                ListingPhoto::where('listing_id', $listing->id)->update(['photo_main' => 'no']);
+                            }
+
+                            // dd($fixed_array_keys, $request->all());
+                            $moved = ListingPhoto::create(
+                                [
+                                    'listing_id'             => $listing->id,
+                                    'main'                   => $photo->main,
+                                    'watermark'              => $photo->watermark,
+                                    'active'                 => $photo->active,
+                                    'photo_main'             => $check_hidden_photos[$key],
+                                    'icon'                   => $photo->icon,
+                                    'listing_category_id'    =>  $photo->listing_category_id
+                                ]
+                            );
+
+                            if ($moved) {
+                                $files = File::files(public_path("temporary/listings/$photo->folder"));
+                                if (!file_exists(public_path("listings/photos/agency_$listing->agency_id"))) {
+                                    mkdir(public_path("listings/photos/agency_$listing->agency_id"));
+                                }
+                                if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"))) {
+                                    mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"));
+                                }
+                                if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"))) {
+                                    mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"));
+                                }
+                                $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
+                                foreach ($files as $file) {
+                                    File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
+                                }
+                                $removed_dir = public_path("temporary/listings/$photo->folder");
+                                if (file_exists($removed_dir)) {
+                                    rmdir($removed_dir);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return response()->json(['message' => trans('global.modified')], 200);
+            } catch (\Exception $th) {
+
+                return response()->json(['message' => trans('global.something_wrong')], 400);
+            }
+        }
+    }
+
 
 
 

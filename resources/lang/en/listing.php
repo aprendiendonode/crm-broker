@@ -375,7 +375,9 @@ return [
     'price_sqft'                    => 'PRICE/SQFT',
 
     'landlord_created'              => 'Landlord Created',
-    'yes'                                   => 'Yes',
-    'no'                                    => 'No'
+    'yes'                           => 'Yes',
+    'no'                            => 'No',
+    'added_at'                      => 'Added At',
+    'upload'                        => 'Upload'
 
 ];

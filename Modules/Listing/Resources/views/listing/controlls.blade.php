@@ -59,7 +59,7 @@
 
     </div>
 
-    <input type="hidden" name="edit_photos_{{ $listing->id }}[]" class="listing_photos">
+    <input type="hidden" name="edit_photos_{{ $listing->id }}[]" class="listing_photos listing-photos-for-submit-{{ $listing->id }}">
 
         <div class="media-body mb-1">
           <div class="d-flex justify-content-between my-2">
@@ -94,7 +94,7 @@
               <div class="form-group mb-0">
                 <label for="waterMark" class="mb-0">@lang('listing.main')</label>
                 <input type="checkbox"  name="checked_main" class="checked_main" onchange="updateMain(this,'temporary')">
-                <input type="hidden"  name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden" value="no">
+                <input type="hidden"  name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden checked_main_hidden-{{ $listing->id }}" value="no">
               </div>
             </div>
           </div>

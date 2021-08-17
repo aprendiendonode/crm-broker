@@ -35,7 +35,7 @@
                             <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-photo" 
                             id="remove-uploaderFile{{  $uniq_id }}" onclick="return confirm('are you sure ?') ? removePhoto(this,'main') : false"></i> 
 
-                                    <input type="hidden" class="photo-id" value={{ $photo->id }}>
+                                    <input type="hidden" class="photo-id"  value={{ $photo->id }}>
                                     <div class="with-watermark">
                                         <img class=" preview-img w-50 m-auto @if($photo->active != 'watermark') d-none @endif" 
                                         src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark)  }}"
@@ -101,7 +101,7 @@
                                                     <label for="waterMark" class="mb-0">@lang('listing.main')</label>
                                                 <input type="checkbox" 
                                                 id="checked-main-uploaderFile{{ $uniq_id }}"
-                                                 name="checked_main" class="checked_main" @if($photo->photo_main == 'yes') checked @endif onchange="updateMain(this,'main','{{ $listing->id }}')">
+                                                 name="checked_main" class="checked_main" @if($photo->photo_main == 'yes') checked @endif onchange="updateMain(this,'main','{{ $listing->id }}','{{  route("listings.update-listing-main-photo") }}','{{ csrf_token() }}', '{{ $listing->agency_id }}' , '{{ $listing->business_id }}' ,'{{ app()->getLocale()  }}' ,'{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_') }}')">
 
 
                                                 {{-- <input type="hidden"   id="checked-main-uploaderFile{{ $uniq_id }}-hidden" name="edit_checked_main_hidden_{{ $listing->id }}[]" class="checked_main_hidden" value="{{ $photo->photo_main }} "> --}}
@@ -162,9 +162,16 @@
             </div>
             
             <div class="modal-footer">  
-                <button type="button"  class="btn btn-primary" onclick="handleCloseModal('{{ $listing->id }}')" aria-hidden="true">
+                {{-- <button type="button"  class="btn btn-primary" onclick="handleCloseModal('{{ $listing->id }}')" aria-hidden="true">
                     @lang('listing.done')
-                </button>
+                </button> --}}
+
+                <button type="button" class="btn btn-primary" data-dismiss="modal">@lang('listing.close')</button>
+                <button type="button" class="btn btn-success" onclick="updateListingPhotos(
+                    {{ $listing->id }},'{{ route('listings.update-listing-photos') }}',
+                 '{{ csrf_token() }}', '{{ $listing->agency_id }}' , '{{ $listing->business_id }}' ,'{{ app()->getLocale()  }}' )">@lang('listing.upload')</button>
+  
+  
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -200,6 +207,7 @@
                     </h5>
             </div>
             <div class="modal-footer">
+              
                 <button data-toggle="modal" data-target="#photos-modal" data-dismiss="modal" type="button" class="btn btn-primary">
                     @lang('listing.done')
                 </button>
