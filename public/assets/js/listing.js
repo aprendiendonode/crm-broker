@@ -44,7 +44,7 @@
 
                     var editMap = new google.maps.Map(document.getElementById('map_'+listing), {
                             center: {lat: listing_data.loc_lat ? parseInt(listing_data.loc_lat) : 30.0444 , lng:  listing_data.loc_lng ? parseInt(listing_data.loc_lng ) : 31.2357  },
-                            zoom: 13,
+                            zoom: 12,
                             
                             mapTypeId: 'roadmap'
                         }); 

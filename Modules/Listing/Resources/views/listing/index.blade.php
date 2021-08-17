@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/modals.css') }}" rel="stylesheet">
-     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG"></script>
+     <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&libraries=places&language={{ $agency_language }}&region={{ $agency_region }}"></script>
      <script src="{{ asset('assets/js/listing_modify.js') }}"></script>
      <script src="{{ asset('assets/js/listing.js') }}"></script>
     <style>
@@ -579,7 +579,16 @@ margin-bottom: 0px !important;
 
     <script>
         $(document).ready(function () {
-
+            // var agency_region = @json($agency_region);
+            // var agency_language = @json($agency_language);
+            // var map_key = @json(env('GOOGLE_API_KEY'));
+            // injectGoogleMapsApiScript({
+            //         key        :  map_key,
+            //         libraries  : 'places',
+            //         language   : agency_language,
+            //         region     : agency_region,
+            //         callback   : 'initMap'
+            //     });
             ClassicEditor
                     .create(document.querySelector('#description_en'))
                     .then(
@@ -648,7 +657,7 @@ margin-bottom: 0px !important;
                 script.setAttribute('src', url);
                 script.setAttribute('async', '');
                 script.setAttribute('defer', '');
-                script.setAttribute('language', 'EN');
+                
 
                 document.head.appendChild(script);
 
