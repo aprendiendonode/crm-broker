@@ -91,17 +91,18 @@
             
                                                 </div>
 
-                                                <input type="hidden" name="purpose" value="{{ old('purpose') }}" class="purpose">
+                                                <input type="hidden" name="purpose" value="{{ old('purpose', $has_ref ? $listing_by_ref->purpose : '' ) }}" class="purpose">
                                                 <div class="form-group offset-md-3 col-md-6">
                                                     <label class="font-weight-medium text-muted" >@lang('listing.type')<span class="text-danger"> *</span></label>
                                                     
-                                                        <select disabled class="form-control select2 listing_type " onchange="showFurnishedQuestion();"  name="type_id" data-toggle="select2" data-placeholder="@lang('listing.listing_types')" required>
+                                                        <select @if(! $has_ref) disabled @endif class="form-control select2 listing_type "
+                                                         onchange="showFurnishedQuestion();"  name="type_id" data-toggle="select2" data-placeholder="@lang('listing.listing_types')" required>
                                                             <option value=""></option>
                                                                 <optgroup label="@lang('listing.residential')">
                                                                     @foreach($listing_types->where('type','residential') as $type)
                                                                     <option 
                                                                     data-furnished="{{ $type->furnished_question }}"
-                                                                    @if(old('type_id') == $type->id) selected @endif
+                                                                    @if(old('type_id',$has_ref ? $listing_by_ref->type_id : '') == $type->id) selected @endif
                                                                     value="{{ $type->id }}">{{ $type->{'name_'.app()->getLocale()} }}</option>
                                                                     @endforeach
                                         
@@ -117,7 +118,7 @@
                                                     
                                                 </div>
 
-                                           <div class="show-after-choosing-type row d-none">
+                                           <div class="show-after-choosing-type row @if(! $has_ref) d-none @endif">
 
                                                 <div class="form-group offset-md-3 col-md-6">
                                                     <div class="card-box">
@@ -132,10 +133,10 @@
                                                 <div class="form-group offset-md-3 col-md-6" >
                                                     <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.location')</label>
                                                     <div class="d-flex align-items-center" style="flex:2">
-                                                        <input type="text" class="form-control" name="location"  id="location_input"  value="{{ old('location') }}" 
+                                                        <input type="text" class="form-control" name="location"  id="location_input"  value="{{ old('location',$has_ref ? $listing_by_ref->location : '') }}" 
                                                          >
-                                                         <input type="hidden" name="loc_lat" id="latitude" value="{{ old('loc_lat') }}" >
-                                                         <input type="hidden" name="loc_lng" id="longitude" value="{{ old('loc_long') }}">
+                                                         <input type="hidden" name="loc_lat" id="latitude" value="{{ old('loc_lat',$has_ref ? $listing_by_ref->loc_lat : '') }}" >
+                                                         <input type="hidden" name="loc_lng" id="longitude" value="{{ old('loc_long',$has_ref ? $listing_by_ref->loc_lng : '') }}">
                                                      
                                                      
                                                     </div>
@@ -147,12 +148,12 @@
 
                                                     <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.city')<span class="text-danger">*</span></label>
                                                     <div style="flex:2;">
-                                                        <select required onchange="getCommunitites('create',null)" class="form-control select2 city-in-create" name="city_id"
+                                                        <select required onchange="getCommunitites('create',null,'{{ app()->getLocale() }}' ,'{{  route('listings.get-communities') }}' ,'{{ csrf_token() }}' )" class="form-control select2 city-in-create" name="city_id"
                                                          data-toggle="select2" data-placeholder="@lang('listing.city')">
                                                                 <option value=""></option>
                                                             
                                                             @foreach($cities as $city)
-                                                                <option @if(old('city_id') == $city->id  ) selected @endif value="{{ $city->id }}">
+                                                                <option @if(old('city_id',$has_ref ? $listing_by_ref->city_id : '') == $city->id  ) selected @endif value="{{ $city->id }}">
                                                                     {{ $city->{'name_'.app()->getLocale()} }}
                                                                 </option>
                                                             @endforeach
@@ -168,15 +169,15 @@
                                 
                                                 <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') <span class="text-danger">*</span></label>
                                                 <div style="flex:2;">
-                                                    <select required onchange="getSubCommunities('create',null)" class="form-control select2 community-in-create" name="community_id"
+                                                    <select required onchange="getSubCommunities('create',null,'{{ app()->getLocale() }}' ,'{{  route('listings.get-sub-communities') }}' ,'{{ csrf_token() }}')" class="form-control select2 community-in-create" name="community_id"
                                                      data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
                                                             <option value=""></option>
                                                         
-                                                      @if(old('city_id'))
-                                                        @if(old('community_id'))
-                                                            @foreach($communities->where('city_id',old('city_id')) as $community)
+                                                      @if(old('city_id',$has_ref ? $listing_by_ref->city_id : ''))
+                                                        @if(old('community_id',$has_ref ? $listing_by_ref->community_id : ''))
+                                                            @foreach($communities->where('city_id',old('city_id',$has_ref ? $listing_by_ref->city_id : '')) as $community)
                                                                 <option class="create-appended-communities"
-                                                                    @if(old('community_id') == $community->id)  
+                                                                    @if(old('community_id',$has_ref ? $listing_by_ref->community_id : '') == $community->id)  
                                                                         selected  
                                                                         @endif
                                                                         value="{{ $community->id }}">
@@ -203,11 +204,11 @@
                                                      data-toggle="select2" data-placeholder="@lang('listing.choose_community_first')">
                                                             <option value=""></option>
                                 
-                                                            @if(old('city_id') && old('community_id'))
-                                                            @if(old('sub_community_id'))
-                                                                @foreach($sub_communities->where('community_id',old('community_id')) as $sub_community)
+                                                            @if(old('city_id',$has_ref ? $listing_by_ref->city_id : '') && old('community_id',$has_ref ? $listing_by_ref->community_id : ''))
+                                                            @if(old('sub_community_id',$has_ref ? $listing_by_ref->sub_community_id : ''))
+                                                                @foreach($sub_communities->where('community_id',old('community_id',$has_ref ? $listing_by_ref->community_id : '')) as $sub_community)
                                                                     <option class="create-appended-sub-communities"
-                                                                        @if(old('sub_community_id') == $sub_community->id)  
+                                                                        @if(old('sub_community_id',$has_ref ? $listing_by_ref->sub_community_id : '') == $sub_community->id)  
                                                                             selected  
                                                                             @endif
                                                                             value="{{ $sub_community->id }}"
@@ -231,7 +232,7 @@
                                                             <option value=""></option>
                                                         
                                                         @foreach($listing_views as $view)
-                                                            <option @if(old('view_ids') && in_array($view->id,old('view_ids'))  ) selected @endif value="{{ $view->id }}">
+                                                            <option @if(old('view_ids',$has_ref ? $listing_by_ref->view_ids : []) && in_array($view->id,old('view_ids',$has_ref ? $listing_by_ref->view_ids : []))  ) selected @endif value="{{ $view->id }}">
                                                                 {{ $view->{'name_'.app()->getLocale()} }}
                                                             </option>
                                                         @endforeach
@@ -249,14 +250,14 @@
                                                     <input type="text" class="form-control mr-2"
                                                     placeholder="@lang('listing.unit')"
                                                      name="unit_no" data-plugin="tippy" data-tippy-placement="top-start" 
-                                                    title="Unit" id="unit"  value="{{ old('unit_no') }}">
+                                                    title="Unit" id="unit"  value="{{ old('unit_no',$has_ref ? $listing_by_ref->unit_no : '') }}">
                                                     <input type="text" class="form-control mr-2"
                                                      data-plugin="tippy" data-tippy-placement="top-start" title="Plot" placeholder="@lang('listing.plot')"
-                                                     name="plot_no" id="plot"  value="{{ old('plot_no') }}">
+                                                     name="plot_no" id="plot"  value="{{ old('plot_no',$has_ref ? $listing_by_ref->plot_no : '') }}">
                                                     <input type="text" data-plugin="tippy" 
                                                     placeholder="@lang('street')"
                                                     data-tippy-placement="top-start" title="Street" class="form-control"
-                                                     name="street_no" id="street"  value="{{ old('street_no') }}">
+                                                     name="street_no" id="street"  value="{{ old('street_no',$has_ref ? $listing_by_ref->street_no : '') }}">
                                                 </div>
                                             </div>
 
@@ -269,7 +270,7 @@
                                                 </span>
                                                 <span class="text-danger"> *</span></label>
                                                 <div class="input-group mb-2" >
-                                                    <input onkeyup="updatePrice()" onchange="updatePrice()" id="rent-sale-create" type="number" min="1" value="{{ old('price') }}" class="form-control decimal_convert" 
+                                                    <input onkeyup="updatePrice()" onchange="updatePrice()" id="rent-sale-create" type="number" min="1" value="{{ old('price',$has_ref ? $listing_by_ref->price : '') }}" class="form-control decimal_convert" 
                                                            name="price" id="rent" required>
                                                     {{-- <div class="input-group-prepend">
                                                         <div class="input-group-text">AED</div>
@@ -287,11 +288,11 @@
                                                             name ="comission_percent"
                                                             onchange="updatePrice()"
                                                             onkeyup="updatePrice()"
-                                                            value="{{ old('comission_percent') }}"
+                                                            value="{{ old('comission_percent',$has_ref ? $listing_by_ref->comission_percent : '') }}"
                                                              type="number" class="form-control"
                                                              min="1"
                                                              id="annaul-commission"
-                                                             data-tippy-placement="top-start" title=""
+                                                           
                                                              >
                                                             <div class="input-group-prepend">
                                                                 <div class="input-group-text">%</div>
@@ -300,7 +301,7 @@
                                                         <div class="input-group mb-2" >
                                                             <input
                                                             name="comission_value"
-                                                            value="{{ old('comission_value') }}"
+                                                            value="{{ old('comission_value',$has_ref ? $listing_by_ref->comission_value : '') }}"
                                                              type="text" class="form-control"
                                                               id="commissionValue"
                                                                data-tippy-placement="top-start"
@@ -327,7 +328,7 @@
                                                              name="deposite_percent"
                                                              onkeyup="updatePrice()"
                                                              onchange="updatePrice()"
-                                                             value="{{ old('deposite_percent') }}"
+                                                             value="{{ old('deposite_percent',$has_ref ? $listing_by_ref->deposite_percent : '') }}"
                                                              min="1"
                                                              type="number" class="form-control" 
                                                              id="deposit-percenatage"
@@ -340,7 +341,7 @@
                                                         <div class="input-group" >
                                                             <input 
                                                             name="deposite_value"
-                                                            value="{{ old('deposite_value') }}"
+                                                            value="{{ old('deposite_value',$has_ref ? $listing_by_ref->deposite_value : '') }}"
                                                             type="text" 
                                                             readonly
                                                             class="form-control" id="depositValue" >
@@ -360,16 +361,16 @@
                                                     <select name="rent_frequency" class="form-control select2" 
                                                        name="Frequency" data-toggle="select2" data-placeholder="@lang('listing.rent_frequency')">
                                                         <option value=""></option>
-                                                        <option @if(old('rent_frequency') == 'yearly') selected @endif value="yearly">
+                                                        <option @if(old('rent_frequency',$has_ref ? $listing_by_ref->rent_frequency : '') == 'yearly') selected @endif value="yearly">
                                                             @lang('listing.yearly')
                                                         </option>
-                                                        <option @if(old('rent_frequency') == 'monthly') selected @endif value="monthly">
+                                                        <option @if(old('rent_frequency',$has_ref ? $listing_by_ref->rent_frequency : '') == 'monthly') selected @endif value="monthly">
                                                             @lang('listing.monthly')
                                                         </option>
-                                                        <option @if(old('rent_frequency') == 'weekly') selected @endif value="weekly">
+                                                        <option @if(old('rent_frequency',$has_ref ? $listing_by_ref->rent_frequency : '') == 'weekly') selected @endif value="weekly">
                                                             @lang('listing.weekly')
                                                         </option>
-                                                        <option @if(old('rent_frequency') == 'daily') selected @endif value="daily">
+                                                        <option @if(old('rent_frequency',$has_ref ? $listing_by_ref->rent_frequency : '') == 'daily') selected @endif value="daily">
                                                             @lang('listing.daily')
                                                         </option>
                                                     </select>
@@ -381,11 +382,11 @@
                                                 <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.cheque')</label>
                                                  <select class="form-control select2"
                                                   name="listing_rent_cheque_id" 
-                                                  data-toggle="select2" data-placeholder="select">
+                                                  data-toggle="select2" data-placeholder="@lang('listing.select')">
                                                     <option value=""></option>
                                                     @foreach($cheques as $cheque)
                                                     <option
-                                                    @if($cheque->id == old('listing_rent_cheque_id')) selected @endif
+                                                    @if($cheque->id == old('listing_rent_cheque_id',$has_ref ? $listing_by_ref->listing_rent_cheque_id : '')) selected @endif
                                                      value="{{ $cheque->id }}">{{ $cheque->{'name_'.app()->getLocale()}  }}</option>
                                    
                                                     @endforeach
@@ -399,11 +400,11 @@
                                                 <label for="" style="flex:1">@lang('listing.beds')</label>
                                                 <select class="form-control select2" name="beds" data-toggle="select2" data-placeholder="select">
                                                    <option value=""></option>
-                                                   <option @if(old('beds') == 'studio') selected @endif value="studio"
+                                                   <option @if(old('beds',$has_ref ? $listing_by_ref->beds : '') == 'studio') selected @endif value="studio"
                                                           >@lang('listing.studio')</option>
                                        
                                                    @for($i = 1;$i <= 20 ;$i++)
-                                                     <option @if(old('beds') == $i) selected @endif value="{{ $i }}">{{ $i }}</option>
+                                                     <option @if(old('beds',$has_ref ? $listing_by_ref->beds : '') == $i) selected @endif value="{{ $i }}">{{ $i }}</option>
                                                    @endfor
                                                </select>
                   
@@ -414,7 +415,7 @@
                                                    <option value=""></option>
                    
                                                    @for($i = 1;$i <= 10 ;$i++)
-                                                     <option @if(old('baths') == $i) selected @endif value="{{ $i }}">{{ $i }}</option>
+                                                     <option @if(old('baths',$has_ref ? $listing_by_ref->baths : '') == $i) selected @endif value="{{ $i }}">{{ $i }}</option>
                                                    @endfor
                                                </select>
     
@@ -422,18 +423,18 @@
 
                                             <div class="form-group offset-md-3 col-md-3">
                                                 <label for="" style="flex:1">@lang('listing.parkings')</label>
-                                                <input type="text" style="flex:2"  class="form-control" name="parkings" value="{{ old('parkings') }}"  >
+                                                <input type="text" style="flex:2"  class="form-control" name="parkings" value="{{ old('parkings',$has_ref ? $listing_by_ref->parkings : '') }}"  >
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label for="" style="flex:1">@lang('listing.year_built')</label>
-                                                <input style="flex:2" type="text" class="form-control"  name="year_built" value="{{ old('year_built') }}" placeholder=""  >
+                                                <input style="flex:2" type="text" class="form-control"  name="year_built" value="{{ old('year_built',$has_ref ? $listing_by_ref->year_built : '') }}" placeholder=""  >
                                             </div>
 
 
                                             <div class="form-group offset-md-3 col-md-3">
                                                 <label for="" class="font-weight-medium text-muted">@lang('listing.plot_area')</label>
                                                 <div class="input-group mb-2">
-                                                    <input name="plot_area" type="number" class="form-control" value="{{ old('plot_area') }}"
+                                                    <input name="plot_area" type="number" class="form-control" value="{{ old('plot_area',$has_ref ? $listing_by_ref->plot_area : '') }}"
                                                     >
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">sqft</div>
@@ -445,7 +446,7 @@
                                                     <span class="text-danger">*</span>
                                                      </label>
                                                 <div class="input-group mb-2">
-                                                    <input type="number" class="form-control" value="{{ old('area') }}" name="area" required>
+                                                    <input type="number" class="form-control" value="{{ old('area',$has_ref ? $listing_by_ref->area : '') }}" name="area" required>
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">sqft</div>
                                                     </div>
@@ -482,7 +483,7 @@
                                                                 @foreach($developers as $developer)
                                                    
                                                                 <option 
-                                                                @if(old("developer_id") == $developer->id) selected @endif 
+                                                                @if(old("developer_id",$has_ref ? $listing_by_ref->developer_id : '') == $developer->id) selected @endif 
                                                                  value="{{ $developer->id}}">
                                                                     {{ $developer->{'name_'.app()->getLocale()} }}
                                                                 </option>
@@ -521,7 +522,7 @@
                                                             <option value="" class="font-weight-medium text-muted"></option>
                                                             @foreach($landlords as $landlord)
                                             
-                                                            <option @if(old("landlord_id") == $landlord->id) selected @endif  value="{{ $landlord->id}}">
+                                                            <option @if(old("landlord_id",$has_ref ? $listing_by_ref->landlord_id : '') == $landlord->id) selected @endif  value="{{ $landlord->id}}">
                                                                 {{ $landlord->name }}
                                                             </option>
                                                         @endforeach    
@@ -563,7 +564,7 @@
                                             <select  style="" class="form-control select_souce_id select2" name="source_id" data-toggle="select2" data-placeholder="@lang('listing.sources')" required>
                                                     <option value="" class="font-weight-medium text-muted"></option>
                                                     @forelse($lead_sources as $source)
-                                                        <option @if(old("source_id") == $source->id) selected @endif  value="{{ $source->id}}">
+                                                        <option @if(old("source_id",$has_ref ? $listing_by_ref->source_id : '') == $source->id) selected @endif  value="{{ $source->id}}">
                                                             {{ $source->{'name_'.app()->getLocale()} }}
                                                         </option>
                                                     @empty
@@ -589,7 +590,7 @@
                                         <option value=""></option>
                                         @foreach($staffs as $staff)
                                         <option
-                                        @if(old('assigned_to') == $staff->id) selected @endif
+                                        @if(old('assigned_to',$has_ref ? $listing_by_ref->assigned_to : '') == $staff->id) selected @endif
                                         value="{{ $staff->id }}">{{ $staff->{'name_'.app()->getLocale()} }}</option>
                                         @endforeach
                                     </select>
@@ -598,10 +599,10 @@
                                     <label for="status" class="font-weight-medium text-muted">  @lang('listing.status')</label>
                                     <select class="form-control select2" name="status" data-toggle="select2" data-placeholder="select" required>
                                         <option value=""></option>
-                                        <option @if(old('status','draft') == 'draft') selected @endif value="draft" >@lang('listing.draft')</option>
-                                        <option @if(old('status') == 'live') selected @endif value="live" >@lang('listing.live')</option>
-                                        <option @if(old('status') == 'archive') selected @endif value="archive" >@lang('listing.archive')</option>
-                                        <option @if(old('status') == 'review') selected @endif value="review" >@lang('listing.review')</option>
+                                        <option @if(old('status',$has_ref ? $listing_by_ref->status : 'draft') == 'draft') selected @endif value="draft" >@lang('listing.draft')</option>
+                                        <option @if(old('status',$has_ref ? $listing_by_ref->status : '') == 'live') selected @endif value="live" >@lang('listing.live')</option>
+                                        <option @if(old('status',$has_ref ? $listing_by_ref->status : '') == 'archive') selected @endif value="archive" >@lang('listing.archive')</option>
+                                        <option @if(old('status',$has_ref ? $listing_by_ref->status : '') == 'review') selected @endif value="review" >@lang('listing.review')</option>
                                     
                                     </select>
                                 </div>
@@ -611,8 +612,8 @@
                                     <label for="lsm" class="font-weight-medium text-muted">  @lang('listing.lsm')</label>
                                     <select class="form-control select2" name="lsm" data-toggle="select2" data-placeholder="select" required>
                                       
-                                        <option @if(old('lsm') == 'shared') selected @endif value="shared" >@lang('listing.shared')</option>
-                                        <option @if(old('lsm','private') == 'private') selected @endif value="private" >@lang('listing.private')</option>
+                                        <option @if(old('lsm',$has_ref ? $listing_by_ref->lsm : '') == 'shared') selected @endif value="shared" >@lang('listing.shared')</option>
+                                        <option @if(old('lsm',$has_ref ? $listing_by_ref->lsm : 'private') == 'private') selected @endif value="private" >@lang('listing.private')</option>
                                     
                                     </select>
                                 </div>
@@ -622,8 +623,8 @@
                                     <label for="furnished" class="font-weight-medium text-muted">  @lang('listing.furnished')</label>
                                     <select class="form-control select2" name="furnished" data-toggle="select2" data-placeholder="select" required>
                                       
-                                        <option @if(old('furnished') == 'yes') selected @endif value="yes" >@lang('listing.furnished')</option>
-                                        <option @if(old('furnished','no') == 'no') selected @endif value="no" >@lang('listing.unfurnished')</option>
+                                        <option @if(old('furnished',$has_ref ? $listing_by_ref->furnished : '') == 'yes') selected @endif value="yes" >@lang('listing.furnished')</option>
+                                        <option @if(old('furnished',$has_ref ? $listing_by_ref->furnished :'no') == 'no') selected @endif value="no" >@lang('listing.unfurnished')</option>
                                     
                                     </select>
 
@@ -631,21 +632,12 @@
                             </div>
 
                                      
-
-
-
-
-
-
-
-
-
-                     <div id="rent_div" class="form-group  col-md-12" style="display: none;">
+                     <div id="rent_div" class="form-group  col-md-12" @if($has_ref && $listing_by_ref->purpose != 'rent' ) style="display: none;" @endif>
                                 <div class="form-group  offset-md-3 col-md-6 d-flex align-items-center">
                                     <div class="checkbox checkbox-primary d-flex align-items-center" style="height:55px">
                                         <input type="hidden" name="rented" value="no">
                                         <input
-                                        @if(old('rented') == 'yes') checked @endif
+                                        @if(old('rented' ,$has_ref ? $listing_by_ref->rented : '') == 'yes') checked @endif
                                         id="rented1"
                                         name="rented"
                                         value="yes"
@@ -655,7 +647,7 @@
                                         </label>
                                     </div>
                                 </div>
-                              <div id="sub_rent_div" @if(old('rented','no') == 'no') style="display:none" @endif>
+                              <div id="sub_rent_div" @if(old('rented',$has_ref ? $listing_by_ref->rented : 'no') == 'no') style="display:none" @endif>
                                 <div class=" form-group offset-md-3 col-md-6">
                                     <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.tenant_start_date') <i data-plugin="tippy" data-tippy-placement="top-start" title="Tenancy Description" class="fas fa-info-circle"></i></label>
                                     <div style="flex:2">
@@ -663,7 +655,7 @@
                                             <div class="input-group mr-sm-2">
                                             <input
                                             type="text"
-                                            value="{{ old('tenancy_contract_start_date') }}"
+                                            value="{{ old('tenancy_contract_start_date',$has_ref ? $listing_by_ref->tenancy_contract_start_date : '') }}"
                                             name="tenancy_contract_start_date"
                                             id="basic-datepicker-1" class="form-control p-1 flatpicker" >
                                                 <div class="input-group-prepend">
@@ -681,7 +673,7 @@
                                             <div class="input-group mr-sm-2">
                                             <input
                                             type="text"
-                                            value="{{ old('tenancy_contract_end_date') }}"
+                                            value="{{ old('tenancy_contract_end_date',$has_ref ? $listing_by_ref->tenancy_contract_end_date : '') }}"
                                             name="tenancy_contract_end_date"
                                             
                                             id="basic-datepicker-1"
@@ -722,7 +714,7 @@
                                                     <option value="" class="font-weight-medium text-muted"></option>
                                                     @foreach($tenants as $tenant)
                                     
-                                                    <option @if(old("tenant_id") == $tenant->id) selected @endif  value="{{ $tenant->id}}">
+                                                    <option @if(old("tenant_id",$has_ref ? $listing_by_ref->tenant_id : '') == $tenant->id) selected @endif  value="{{ $tenant->id}}">
                                                         {{ $tenant->name }}
                                                     </option>
                                                 @endforeach    
@@ -814,7 +806,7 @@
                                                 <label class="font-weight-medium text-muted" for="">@lang('listing.title')
                                                              
                                                 </label>
-                                               <input type="text" class="form-control" value="{{ old('title') }}" 
+                                               <input type="text" class="form-control" value="{{ old('title',$has_ref ? $listing_by_ref->title : '') }}" 
                                                name="title" >
                                       
                                             </div>
@@ -848,7 +840,7 @@
                                         
                                         class="form-control"
                                         name="note" id="noteTextArea1"
-                                        cols="3" rows="3">{{ old('note') }}</textarea>
+                                        cols="3" rows="3">{{ old('note',$has_ref ? $listing_by_ref->note : '') }}</textarea>
                                     </div>
 
 
@@ -857,7 +849,7 @@
                                         <div class="checkbox checkbox-primary mb-2">
                                             <input type="hidden" name="never_lived_in" value="no">
                                             <input 
-                                            @if(old('never_lived_in') == 'yes') checked @endif
+                                            @if(old('never_lived_in',$has_ref ? $listing_by_ref->never_lived_in : '') == 'yes') checked @endif
                                             id="neverLivedIn"  type="checkbox" name="never_lived_in" value="yes">
                                             <label for="neverLivedIn">
                                                @lang('listing.never_lived_in') 
@@ -867,7 +859,7 @@
                                             <input  value="no" type="hidden" name="featured_on_company_website">
                                             <input
                                             value='yes'
-                                            @if(old('featured_on_company_website') == 'yes') checked @endif
+                                            @if(old('featured_on_company_website',$has_ref ? $listing_by_ref->featured_on_company_website : '') == 'yes') checked @endif
                                              id="featuredOnCompanywebsite" type="checkbox" name="featured_on_company_website">
                                             <label for="featuredOnCompanywebsite">
                                                 @lang('listing.featured_on_company_website')
@@ -875,7 +867,7 @@
                                         </div>
                                         <div class="checkbox checkbox-primary mb-2">
                                             <input  type="hidden" name="exclusive_rights" value="no"> 
-                                            <input id="exclusiveRights" name="exclusive_rights" type="checkbox" @if(old('exclusive_rights') == 'yes') checked @endif
+                                            <input id="exclusiveRights" name="exclusive_rights" type="checkbox" @if(old('exclusive_rights',$has_ref ? $listing_by_ref->exclusive_rights : '') == 'yes') checked @endif
                                              value="yes"
                                              >
                                             <label for="exclusiveRights">
@@ -941,7 +933,7 @@
                         @include('listing::listing.modals.create_modals') 
                              
                         <div class="div">
-                            <div class="d-none justify-content-center show-submit-after-choosing-type ">
+                            <div class="d-none justify-content-center @if(! $has_ref) show-submit-after-choosing-type  @endif">
 
                         
                                 <button type="submit" class="btn  btn-success waves-effect waves-light ml-2">
@@ -1012,11 +1004,7 @@ function updatePrice() {
     let price = +document.getElementById('rent-sale-create').value;
     let annualCommissionPercentage = +(document.getElementById('annaul-commission').value) / 100;
     let depositPercenatage = +(document.getElementById('deposit-percenatage').value) / 100;
-    // let commissionValue = document.getElementById('commissionValue');
     
-    console.log(annualCommissionPercentage);
-    console.log(price);
-    console.log(annualCommissionPercentage * price);
     document.getElementById('commissionValue').value = formatter.format(annualCommissionPercentage * price);
     document.getElementById('depositValue').value = formatter.format(depositPercenatage * price);
 }
@@ -1065,16 +1053,16 @@ var formatter = new Intl.NumberFormat('en-EG', {
 });
 
 
-function updatePrice() {
-    let price = +document.getElementById('rent-sale-create').value;
-    let annualCommissionPercentage = +(document.getElementById('annaul-commission').value) / 100;
-    let depositPercenatage = +(document.getElementById('deposit-percenatage').value) / 100;
-    // let commissionValue = document.getElementById('commissionValue');
+// function updatePrice() {
+//     let price = +document.getElementById('rent-sale-create').value;
+//     let annualCommissionPercentage = +(document.getElementById('annaul-commission').value) / 100;
+//     let depositPercenatage = +(document.getElementById('deposit-percenatage').value) / 100;
+//     // let commissionValue = document.getElementById('commissionValue');
     
 
-    document.getElementById('commissionValue').value = formatter.format(annualCommissionPercentage * price);
-    document.getElementById('depositValue').value = formatter.format(depositPercenatage * price);
-}
+//     document.getElementById('commissionValue').value = formatter.format(annualCommissionPercentage * price);
+//     document.getElementById('depositValue').value = formatter.format(depositPercenatage * price);
+// }
 
 function showRentDiv(type) {
 
@@ -1567,136 +1555,7 @@ function updateMain(input,table,listing_id){
     }
 
 
-    function getCommunitites(type,id){
-
-        var city_id ='';
-        if(type == "create"){
-            city_id = $('.city-in-create').val();
-
-        }else{
-            city_id = $('.city-in-edit-'+id).val();
-
-        }
-
-
-
-            $.ajax({
-            url:'{{  route("listings.get-communities") }}',
-            type:'POST',
-            data:{
-                _token: '{{ csrf_token() }}',
-                city_id    : city_id,
-            },
-            success: function(data){
-
-                var option = '';
-                var locale = @json(app()->getLocale());
-                data.communities.forEach(function(value,key){
-                    if(type == 'create'){
-                        option += '<option value="'+value.id+'" class="create-appended-communities">';
-                    } else{
-                        option += '<option value="'+value.id+'" class="edit-appended-communities-'+id+'">';
-                    }
-
-
-                        if(locale == 'en'){
-
-                            option += value.name_en;
-                        } else{
-                            option += value.name_ar;
-                        }
-                    option += '</option>';
-
-                });
-
-
-                if(type == "create"){
-                    $('.create-appended-communities').remove();
-                    $('.create-appended-sub-communities').remove();
-                    $('.community-in-create').append(option)
-
-
-                }else{
-                    $('.edit-appended-communities-'+id).remove();
-                    $('.edit-appended-sub-communities-'+id).remove();
-                    $('.community-in-edit-'+id).append(option)
-
-                }
-
-
-
-
-            },
-            error: function(error){
-
-            },
-            })
-
-
-    }
-
-    function getSubCommunities(type,id){
-        var community_id ='';
-        if(type == "create"){
-         community_id = $('.community-in-create').val();
-
-        }else{
-            community_id = $('.community-in-edit-'+id).val();
-        }
-
-
-        $.ajax({
-        url:'{{  route("listings.get-sub-communities") }}',
-        type:'POST',
-        data:{
-            _token: '{{ csrf_token() }}',
-            community_id    : community_id,
-        },
-        success: function(data){
-
-            var option = '';
-            var locale = @json(app()->getLocale());
-
-            data.sub_communities.forEach(function(value,key){
-                if(type == 'create'){
-                       option += '<option value="'+value.id+'" class="create-appended-sub-communities">';
-                    } else{
-                        option += '<option value="'+value.id+'" class="edit-appended-sub-communities-'+id+'">';
-                    }
-
-                    if(locale == 'en'){
-
-                        option += value.name_en;
-                    } else{
-                        option += value.name_ar;
-                    }
-                option += '</option>';
-
-            })
-
-
-            if(type == "create"){
-                $('.create-appended-sub-communities').remove();
-                $('.sub-community-in-create').append(option)
-
-            }else{
-                $('.edit-appended-sub-communities-'+id).remove();
-                $('.sub-community-in-edit-'+id).append(option)
-            }
-
-
-
-
-
-        },
-        error: function(error){
-
-        },
-        })
-
-
-
-    }
+  
 </script>
 {{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap"></script> --}}
 

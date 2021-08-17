@@ -378,6 +378,14 @@ return [
     'yes'                           => 'Yes',
     'no'                            => 'No',
     'added_at'                      => 'Added At',
-    'upload'                        => 'Upload'
+    'upload'                        => 'Upload',
+    'video_added'                   => 'Video Added',
+    'add_video'                     => 'Add Video',
+    'property_type'                 => 'Property Type',
+    'ref_id' => 'REF ID',
+    'agent' => 'Agent',
+    'updated' => 'Modify',
+    'duplicate' => 'Duplicate',
+    'select_ref' => 'Select Reference',
 
 ];

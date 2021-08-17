@@ -149,7 +149,7 @@
                     <div style="flex:2;">
                         <select
                           
-                         onchange="getCommunitites('edit',{{ $listing->id }})" 
+                         onchange="getCommunitites('edit',{{ $listing->id }},'{{ app()->getLocale() }}' ,'{{  route('listings.get-communities') }}' ,'{{ csrf_token() }}')" 
                          class="form-control select2 listing-city-{{ $listing->id }} city-in-edit-{{ $listing->id }}".
                           name="edit_city_id_{{ $listing->id }}"
                          data-toggle="select2" data-placeholder="@lang('listing.city')">
@@ -173,7 +173,7 @@
                 <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.community') <span class="text-danger">*</span></label>
                 <div style="flex:2;">
                     <select 
-                     onchange="getSubCommunities('edit',{{ $listing->id }})" 
+                     onchange="getSubCommunities('edit',{{ $listing->id }},'{{ app()->getLocale() }}','{{  route('listings.get-sub-communities') }}' ,'{{ csrf_token() }}')" 
                      class="form-control select2 listing-community-{{ $listing->id }} community-in-edit-{{ $listing->id }}" name="edit_community_id_{{ $listing->id }}"
                      data-toggle="select2" data-placeholder="@lang('listing.choose_city_first')">
                      <option value=""></option>

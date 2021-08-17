@@ -8,6 +8,18 @@
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description"/>
     <meta content="Coderthemes" name="author"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+
+    <meta property="og:title" content="{{ $listing->title }}" />
+
+    @php 
+    $photo_table = $listing->photos->where('photo_main','yes')->first();
+    @endphp
+    @if($photo_table)
+    <meta property="og:image" content="{{  asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo_table->id.'/'.$photo_table->icon) }}" /> 
+    @endif
+    <meta property="og:description" content="{{ $listing->title }}" />  
+    <meta property="og:url" content="{{ url()->current() }}" />
     <!-- App favicon -->
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -55,6 +67,9 @@
         <h2>{{ $listing->title }}</h2>
         <button class="btn btn-sm pdf-btn">Generate PDF</button>
     </div>    
+
+
+    <div class="addthis_inline_share_toolbox"></div>
     <div class="row">
         <div class="col-md-8">
             <div id="carouselExampleControls" class="carousel mb-3 slide" data-ride="carousel">
@@ -159,6 +174,7 @@
 
 <!-- Vendor js -->
 <script src="{{asset('assets/js/vendor.min.js')}}"></script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-611a20a2ce287709"></script>
 
 <script>
   $(document).ready(function () {

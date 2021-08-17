@@ -14,7 +14,7 @@
                     </span>
                     @lang('listing.to_add_floor_plans_for_your_listings_on_bayut.com_please_login_to_your')
 
-                     <a href="https://www.bayut.com/profolio">@lang('listing.portfolio')</a> @lang('listing.account')</p>
+                     {{-- <a href="https://www.bayut.com/profolio">@lang('listing.portfolio')</a> @lang('listing.account')</p> --}}
                 </div> 
 
 
@@ -166,8 +166,12 @@
                 </div>
             </div>
             <div class="modal-footer">  
-                <button type="button" class="btn btn-light" data-dismiss="modal">@lang('listing.close')</button>
-                <button type="button" class="btn btn-primary"  data-dismiss="modal" aria-hidden="true">@lang('listing.done')</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">@lang('listing.close')</button>
+                <button type="button" class="btn btn-success"
+                    onclick="updateListingFloorPlans(
+                    {{ $listing->id }},'{{ route('listings.update-listing-floors') }}',
+                 '{{ csrf_token() }}', '{{ $listing->agency_id }}' , '{{ $listing->business_id }}' ,'{{ app()->getLocale()  }}' )">@lang('listing.upload')</button>
+
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

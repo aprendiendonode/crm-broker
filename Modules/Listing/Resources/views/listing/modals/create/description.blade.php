@@ -29,14 +29,14 @@
                                 id="description_en"
                                     class="form-control textarea-en"
                                     style="min-height: 334px;"
-                                    row="6" col="6" name="description_en">{{old('description_en')}}</textarea>
+                                    row="6" col="6" name="description_en">{{old('description_en',$has_ref ? $listing_by_ref->description_en : '')}}</textarea>
                             </div>    
                             <div class="description_ar d-none">
                                 <textarea 
                                 id="description_ar"
                                     class="form-control textarea-ar"
                                     style="min-height: 334px;direction:rtl"
-                                    row="6" col="6"  name="description_ar">{{old('description_ar')}}</textarea>
+                                    row="6" col="6"  name="description_ar">{{old('description_ar',$has_ref ? $listing_by_ref->description_ar : '')}}</textarea>
                             </div>
                             <div>
                         </div>

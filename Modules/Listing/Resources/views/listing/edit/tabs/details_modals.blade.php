@@ -290,13 +290,17 @@
 
         <div class="tab-pane " id="features-{{ $listing->id }}">
             <button type="button" style="float: right;" class="btn btn-primary" data-toggle="modal"
-             data-target="#featuresModal_{{ $listing->id }}">@lang('listing.edit')</button>
+             data-target="#featuresModal_{{ $listing->id }}">
+             @lang('listing.edit')
+            </button>
 
             <div class=" mb-4">
           
-                <div> @lang('listing.features'): </div>
-                <div> </div>
-            
+                <div> @lang('listing.features') : </div>
+
+                @foreach($features as $key => $value)
+                   <div> {{ Str::of($key)->title()->replace('_'," ")  }} @if($value != 'yes')  ( {{ Str::of($value)->title()->replace('_'," ")  }} ) @endif </div>
+                @endforeach   
             </div>
         
         </div>
@@ -333,7 +337,7 @@
 
                     <div class="row">
 
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label for="status" class="font-weight-medium text-muted">  @lang('listing.status')</label>
                             <select class="form-control select2 listing-status-{{ $listing->id }}" name="edit_status_{{ $listing->id }}"
                                  data-toggle="select2" data-placeholder="@lang('listing.select')" required>
@@ -345,6 +349,31 @@
                             
                             </select>
                         </div>
+
+
+
+                        <div class="form-group col-md-6">
+
+                            <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.views')<span class="text-danger"> *</span></label>
+                            <div style="flex:2;">
+                                <select class="form-control select2 listing-views-{{ $listing->id }}" multiple="multiple" name="edit_view_ids_{{ $listing->id }}[]"
+                                 data-toggle="select2" data-placeholder="@lang('listing.views')">
+                                        <option value=""></option>
+                               
+                                    @foreach($listing_views as $view)
+                                        <option @if(old('edit_view_ids_'.$listing->id,$listing->view_ids) && in_array($view->id,old('edit_view_ids_'.$listing->id,$listing->view_ids))  ) selected @endif value="{{ $view->id }}">
+                                            {{ $view->{'name_'.app()->getLocale()} }}
+                                        </option>
+                                    @endforeach
+                
+                                </select>
+                          
+                            </div>
+                        </div>
+
+
+
+
                       
                         <div class="col-md-6 form-group ">
                             <label class="font-weight-medium text-muted">

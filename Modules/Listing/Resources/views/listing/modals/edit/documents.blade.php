@@ -110,8 +110,14 @@
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">@lang('listing.done')</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">@lang('listing.close')</button>
+                <button type="button" class="btn btn-success"
+                    onclick="updateListingDocuments(
+                    {{ $listing->id }},'{{ route('listings.update-listing-documents') }}',
+                 '{{ csrf_token() }}', '{{ $listing->agency_id }}' , '{{ $listing->business_id }}' ,'{{ app()->getLocale()  }}' )">@lang('listing.upload')</button>
+
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
