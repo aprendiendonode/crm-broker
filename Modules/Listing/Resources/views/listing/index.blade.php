@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="{{ asset('assets/libs/uploader-master/dist/css/jquery.dm-uploader.min.css') }}">
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/modals.css') }}" rel="stylesheet">
-     <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&libraries=places&language={{ $agency_language }}&region={{ $agency_region }}"></script>
+    
+   
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language={{ $agency_language }}&region={{ $agency_region }}"></script>
      <script src="{{ asset('assets/js/listing_modify.js') }}"></script>
      <script src="{{ asset('assets/js/listing.js') }}"></script>
     <style>
