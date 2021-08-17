@@ -16,7 +16,7 @@
                             <div class="form-group mb-2">
                                 <label class="font-weight-medium text-muted" for="">@lang('listing.key_location')</label>
                                 <input 
-                                  type="text" class="form-control" value="{{ old('key_location') }}" 
+                                  type="text" class="form-control" value="{{ old('key_location',$has_ref ? $listing_by_ref->key_location : '') }}" 
                                   name="key_location"
                                  >
                              
@@ -25,7 +25,7 @@
                             <div class="form-group mb-2">
                                 <label class="font-weight-medium text-muted" for="">@lang('listing.govfield1')</label>
                                 <input 
-                                  type="text" class="form-control" value="{{ old('govfield1') }}" 
+                                  type="text" class="form-control" value="{{ old('govfield1',$has_ref ? $listing_by_ref->govfield1 : '') }}" 
                                   name="govfield1"
                                  >
                             
@@ -33,7 +33,7 @@
                             <div class="form-group mb-2">
                                 <label class="font-weight-medium text-muted" for="">@lang('listing.govfield2')</label>
                                 <input 
-                                  type="text" class="form-control" value="{{ old('govfield2') }}" 
+                                  type="text" class="form-control" value="{{ old('govfield2',$has_ref ? $listing_by_ref->govfield2 : '') }}" 
                                   name="govfield2"
                                  >
                        
@@ -43,7 +43,7 @@
                             <div class="form-group">
                                 <label class="font-weight-medium text-muted" style="flex:1">@lang('listing.yearly_service_charges')</label>
                                 <div class="input-group mb-2">
-                                    <input type="number" class="form-control" name="yearly_service_charges" value="{{ old('yearly_service_charges') }}"
+                                    <input type="number" class="form-control" name="yearly_service_charges" value="{{ old('yearly_service_charges',$has_ref ? $listing_by_ref->yearly_service_charges : '') }}"
                                     id="yearly_service_charges">
                                     <div class="input-group-prepend">
                                         {{-- <div class="input-group-text">AED</div> --}}
@@ -55,7 +55,7 @@
 
                                 <label class="font-weight-medium text-muted" for="">@lang('listing.monthly_cooling_charges')</label>
                                 <input 
-                                  type="number" class="form-control" value="{{ old('monthly_cooling_charges') }}" 
+                                  type="number" class="form-control" value="{{ old('monthly_cooling_charges',$has_ref ? $listing_by_ref->monthly_cooling_charges : '') }}" 
                                   name="monthly_cooling_charges"
                                  >
                                
@@ -64,7 +64,7 @@
 
                                 <label class="font-weight-medium text-muted" for="">@lang('listing.monthly_cooling_provider')</label>
                                 <input 
-                                  type="text" class="form-control" value="{{ old('monthly_cooling_provider') }}" 
+                                  type="text" class="form-control" value="{{ old('monthly_cooling_provider',$has_ref ? $listing_by_ref->monthly_cooling_provider : '') }}" 
                                   name="monthly_cooling_provider"
                                  >
                                

@@ -221,6 +221,8 @@
 
      var purpose = $('.listing-purpose-' + listing).val()
      var status = $('.listing-status-' + listing).val()
+     var views = $('.listing-views-' + listing).val()
+     console.log(views)
      var lsm = $('.listing-lsm-' + listing).val()
      var title = $('.listing-title-' + listing).val()
      var type = $('.listing-type-' + listing).val()
@@ -271,6 +273,7 @@
              tenant_start_date: tenant_start_date,
              tenant_end_date: tenant_end_date,
              tenant: tenant,
+             views : JSON.stringify(views) ,
 
 
          },
@@ -343,10 +346,7 @@
 
  function updateListingDescription(listing, route, token, agency, business, locale) {
 
-     console.log(
-
-         editor_en.getData(), editor_ar.getData()
-     )
+     
      $.ajax({
          url: route,
          type: "POST",
@@ -469,13 +469,6 @@
      }
      $(' .checked_main').prop('checked', false);
      $('.checked_main_hidden').val('no');
-
-    //  if (table == 'temporary') {
-    //     toast("Upload The Photo First", 'error')
-    //     $('#' + input.id).prop('checked', false);
-    //     $('#' + input.id).prop('checked', true);
-    //     return false;
-    // }
 
      $('#' + input.id).prop('checked', true);
 
@@ -953,3 +946,67 @@ function getSubCommunities(type,id,locale,route,token){
 
 
 }
+
+
+function updateListingDocuments(listing, route, token, agency, business, locale) {
+    var documents = $('.listing-documents-for-submit-' + listing).map(function () {
+        return $(this).val()
+    }).get();
+    if (documents.length == 0) {
+        toast('No Documents Uploaded', 'error')
+        return;
+    }
+    $.ajax({
+        url: route,
+        type: "POST",
+        data: {
+            _token: token,
+            listing: listing,
+            business: business,
+            agency: agency,
+            documents: JSON.stringify(documents),         
+        },
+        success: function (data) {
+            toast(data.message, 'success')
+            $('#documents-modal_' + listing).modal('hide')
+        },
+        error: function (error) {
+            toast('error', 'error')
+        }
+
+    })
+}
+
+
+
+
+function updateListingFloorPlans(listing, route, token, agency, business, locale) {
+    var floors = $('.listing-floors-for-submit-' + listing).map(function () {
+        return $(this).val()
+    }).get();
+    if (floors.length == 0) {
+        toast('No Floors Uploaded', 'error')
+        return;
+    }
+    $.ajax({
+        url: route,
+        type: "POST",
+        data: {
+            _token: token,
+            listing: listing,
+            business: business,
+            agency: agency,
+            floors: JSON.stringify(floors),         
+        },
+        success: function (data) {
+            toast(data.message, 'success')
+            $('#floorPlans-modal_' + listing).modal('hide')
+        },
+        error: function (error) {
+            toast('error', 'error')
+        }
+
+    })
+}
+
+

@@ -36,7 +36,7 @@
                                 @lang('listing.commission')
                             </td>
                             <td class="listing-pricing-commission-{{ $listing->id }}">
-                                {{  $listing->commission .' - '. $listing->comission_percent .'%'  }}
+                                {{  $listing->comission_value .' - '. $listing->comission_percent .'%'  }}
                                 <!-- ko foreach: externalListings --><!-- /ko -->
                             </td>
                         </tr>

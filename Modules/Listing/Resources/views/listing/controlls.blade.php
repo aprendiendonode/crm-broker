@@ -29,7 +29,17 @@
 <i
         onclick="event.preventDefault();
         
-         load_edit({{ $listing->id }},{{ $listing }})
+         load_edit(
+             {{ $agency }},
+             '{{ route('listing.temporary-photos') }}',
+             '{{ route('listing.temporary-plans') }}',
+             '{{ route('listing.temporary-documents') }}',
+             ' {{asset('temporary/plans')}}',
+             '{{asset('temporary/listings')}}',
+             '{{asset('temporary/documents')}}',
+             {{ $listing->id }},{{ $listing }},
+             '{{ $agency_region }}',
+             '{{ route('listing.load-edit') }}','{{ csrf_token() }}')
         "
         data-plugin="tippy"
         data-tippy-placement="top-start"
@@ -145,7 +155,7 @@
 
     </div>
 
-    <input type="hidden" name="edit_floor_plans_{{ $listing->id }}[]" class="listing_plans">
+    <input type="hidden" name="edit_floor_plans_{{ $listing->id }}[]" class="listing_plans listing-floors-for-submit-{{ $listing->id }}">
 
         <div class="media-body mb-1">
 
@@ -213,13 +223,13 @@
     justify-content: space-between;
     flex-direction: column;
     height: 100%;">
-<input type="hidden" class="document-id" >
-<i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this,'temporary') : false"></i> 
+  <input type="hidden" class="document-id" >
+ <i class="far fa-times-circle cursor-pointer text-danger fa-2x remove-document" onclick="return confirm('are you sure ?') ? removeDocument(this,'temporary') : false"></i> 
     <div class="document">
         <i class="fa fa-file-contract fa-4x "></i>
     </div>
 
-    <input type="hidden" name="edit_documents_{{ $listing->id }}[]" class="listing_documents">
+    <input type="hidden" name="edit_documents_{{ $listing->id }}[]" class="listing_documents listing-documents-for-submit-{{ $listing->id }}">
 
         <div class="media-body mb-1">
         <div class="d-flex justify-content-between my-2">

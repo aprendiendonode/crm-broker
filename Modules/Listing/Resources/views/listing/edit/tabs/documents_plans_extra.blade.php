@@ -30,7 +30,7 @@
            
                 @if($listing->documents)
                     @foreach($listing->documents as $document)
-                    <div>@lang('listing.title'): {{ $listing->title }}</div>
+                    <div>@lang('listing.title'): {{ $document->title }}</div>
              
                     @endforeach
                 @endif

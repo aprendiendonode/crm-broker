@@ -385,5 +385,7 @@ return [
     'ref_id' => 'REF ID',
     'agent' => 'Agent',
     'updated' => 'Modify',
+    'duplicate' => 'Duplicate',
+    'select_ref' => 'Select Reference',
 
 ];

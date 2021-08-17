@@ -278,10 +278,7 @@ class Listing extends Model implements Feedable, HasMedia
 
 
             "edit_portals_" . $id                                  => ['sometimes', 'nullable', 'array'],
-            "edit_view_ids_" . $id                                 => ['sometimes', 'nullable', 'array'],
-            "edit_view_ids_" . $id . ".*"                          => ['sometimes', 'nullable', Rule::exists('listing_views', 'id')->where(function ($q) use ($request, $listing) {
-                $q->where('agency_id', $listing->agency_id);
-            })],
+
 
 
 
