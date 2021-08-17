@@ -237,6 +237,18 @@ crossorigin="anonymous"
 
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="language" class="font-weight-medium text-muted">@lang('listing.languages')</label>
+                        <select required onchange="toggleCities()" class="form-control select2 " name="language_id"
+                                id="language"
+                                data-toggle="select2">
+                            <option value="">Select</option>
+                            @foreach($languages as $language)
+                                <option value="{{$language->id}}" {{ old('language_id',$agency->language_id) == $language->id ? 'selected' : ''}}>{{ Str::ucfirst($language->name) ?? ''}}</option>
+                            @endforeach
+
+                        </select>
+                    </div>
 
 
                     <div class="form-group d-none city_append">

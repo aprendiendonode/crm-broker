@@ -1033,14 +1033,15 @@ function updatePrice() {
         $(".clockpicker").clockpicker({
             twelvehour :false
         });
-
-
+         var agency_region = @json($agency_region);
+         var agency_language = @json($agency_language);
+         var map_key = @json(env('GOOGLE_API_KEY'));
         injectGoogleMapsApiScript({
-                    key: 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
-                    libraries: 'places',
-                    language: 'ar',
-                    region: 'EG',
-                    callback: 'initMap',
+                    key       : map_key,
+                    libraries : 'places',
+                    language  : agency_language,
+                    region    : agency_region,
+                    callback  : 'initMap',
                 });
 
 
@@ -1105,6 +1106,7 @@ function showFurnishedQuestion(){
 
 <script>
     var googleMapsScriptIsInjected;
+ 
      function injectGoogleMapsApiScript(options){
 
         if(googleMapsScriptIsInjected){
@@ -1123,6 +1125,7 @@ function showFurnishedQuestion(){
             script.setAttribute('src', url);
             script.setAttribute('async', '');
             script.setAttribute('defer', '');
+           
 
             document.head.appendChild(script);
 
@@ -1132,6 +1135,8 @@ function showFurnishedQuestion(){
 
 
     var region = @json($agency_region);
+    var agency_lat = @json($agency_lat);
+    var agency_lng = @json($agency_lng);
         function initMap() {
 
            
@@ -1152,8 +1157,8 @@ function showFurnishedQuestion(){
 
 
         var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat:30.0444, lng: 31.2357 },
-                zoom: 13,
+                center: {lat: parseInt(agency_lat), lng: parseInt(agency_lng) },
+                zoom: 7,
                 
                 mapTypeId: 'roadmap'
             }); 

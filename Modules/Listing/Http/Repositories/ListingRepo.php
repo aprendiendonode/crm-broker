@@ -81,7 +81,9 @@ class ListingRepo
                 'landlords',
                 'tenants',
                 'task_status',
-                'descriptionTemplates'
+                'descriptionTemplates',
+                'country',
+                'language',
 
             ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $agency)->where('business_id', $business)->firstOrFail();
 
@@ -155,7 +157,9 @@ class ListingRepo
                     'agency_data' => $agency,
                     'agency' => $agency->id,
                     'agency_region' => $agency->country ? $agency->country->iso2 : '',
-
+                    'agency_lat'            => $agency->country ? $agency->country->lat : '',
+                    'agency_lng'            => $agency->country ? $agency->country->lng : '',
+                    'agency_language'       => $agency->language->code ?? '',
                     'staffs' => staff($agency->id), //filter
                     'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
                         return DB::table('listing_types')->get();
