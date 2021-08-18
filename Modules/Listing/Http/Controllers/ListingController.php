@@ -50,53 +50,8 @@ class ListingController extends Controller
     public function create($agency, Request $request)
     {
         $business = auth()->user()->business_id;
-
         $viewModel = new CreateListingViewModel($agency, $business, $request);
-        dd($viewModel);
-        return view('listing::listing.create.index', [
-
-            'business'              => $business,
-            'agency'                => $agency->id,
-            'staffs'                => staff($agency->id),
-
-            'agency_region'         => $agency->country ? $agency->country->iso2 : '',
-            'agency_lat'            => $agency->country ? $agency->country->lat : '',
-            'agency_lng'            => $agency->country ? $agency->country->lng : '',
-            'agency_language'       => $agency->language->code ?? '',
-
-            'lead_sources'          => $agency->lead_sources,
-            'task_status'           => $agency->task_status,
-            'task_types'            => $agency->task_types,
-            'developers'            => $agency->developers,
-            'cheques'               => $agency->cheques,
-            'landlords'             => $agency->landlords,
-            'tenants'               => $agency->tenants,
-            'descriptionTemplates'  => $agency->descriptionTemplates,
-            'portals' =>
-            cache()->remember('portals', 60 * 60 * 24, function () {
-                return DB::table('portals')->get();
-            }),
-            'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
-                return DB::table('listing_types')->get();
-            }),
-            'listing_views' => $agency->listing_views,
-            'cities' =>  cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
-                return DB::table('cities')->where('country_id', $agency->country_id)->get();
-            }),
-            'communities' =>
-            cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
-                return DB::table('communities')->where('country_id', $agency->country_id)->get();
-            }),
-            'sub_communities' =>
-            cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
-                return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
-            }),
-            'listing_categories' =>
-            cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
-                return DB::table('listing_categories')->get();
-            }),
-
-        ]);
+        return view('listing::listing.create.index', $viewModel);
     }
 
     public function store(Request $request)
