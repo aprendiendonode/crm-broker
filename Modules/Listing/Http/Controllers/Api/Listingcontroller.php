@@ -50,8 +50,8 @@ class ListingController extends Controller
             $data = [];
             foreach ($listingsAll as $item) {
 
-                if ($item->photos->isEmpty() != true) {
-                    $image = $item->photos->first()->active == 'main' ? asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photos->first()->id . '/' . $item->photos->first()->main) : asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photos->first()->id . '/' . $item->photos->first()->watermark);
+                if ($item->photo_main->isEmpty() != true) {
+                    $image = $item->photo_main->first()->active == 'main' ? asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photo_main->first()->id . '/' . $item->photo_main->first()->main) : asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photo_main->first()->id . '/' . $item->photo_main->first()->watermark);
                 } else {
                     $image = null;
                 }
@@ -132,8 +132,8 @@ class ListingController extends Controller
             $data = [];
             foreach ($listingsAll as $item) {
 
-                if ($item->photos->isEmpty() != true) {
-                    $image = $item->photos->first()->active == 'main' ? asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photos->first()->id . '/' . $item->photos->first()->main) : asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photos->first()->id . '/' . $item->photos->first()->watermark);
+                if ($item->photo_main->isEmpty() != true) {
+                    $image = $item->photo_main->first()->active == 'main' ? asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photo_main->first()->id . '/' . $item->photo_main->first()->main) : asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photo_main->first()->id . '/' . $item->photo_main->first()->watermark);
                 } else {
                     $image = null;
                 }
@@ -200,8 +200,16 @@ class ListingController extends Controller
             'documents', 'plans', 'addedBy', 'photo_main','agent','type','cheques','city', 'community', 'subCommunity',
             )->first();
 
-            if (!empty($listing->photo_main)) {
-                $photonemain = asset('listings/photos/agency_' . $agency->id . '/listing_' . $listing->id . '/photo_' . $listing->photo_main->id . '/' . $listing->photo_main->main);
+            if (!empty($listing->photo_main->first())) {
+                if($listing->photo_main->first()->active == 'main'){
+
+                    $photonemain = asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$listing->photo_main->first()->id.'/'.$listing->photo_main->first()->main);
+                }
+               else{
+                   
+                   $photonemain = asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$listing->photo_main->first()->id.'/'.$listing->photo_main->first()->watermark);
+               }
+            
             } else {
                 $photonemain = '';
             }
@@ -421,8 +429,8 @@ class ListingController extends Controller
             $data = [];
             foreach ($listingsAll->get() as $item) {
 
-                if ($item->photos->isEmpty() != true) {
-                    $image = $item->photos->first()->active == 'main' ? asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photos->first()->id . '/' . $item->photos->first()->main) : asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photos->first()->id . '/' . $item->photos->first()->watermark);
+                if ($item->photo_main->isEmpty() != true) {
+                    $image = $item->photo_main->first()->active == 'main' ? asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photo_main->first()->id . '/' . $item->photo_main->first()->main) : asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photo_main->first()->id . '/' . $item->photo_main->first()->watermark);
                 } else {
                     $image = null;
                 }
