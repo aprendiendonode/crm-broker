@@ -382,7 +382,7 @@ function getCommunitites(type,id,locale,route,token){
         success: function(data){
 
             var option = '';
-            var locale = locale;
+        
             data.communities.forEach(function(value,key){
                 if(type == 'create'){
                     option += '<option value="'+value.id+'" class="create-appended-communities">';
@@ -447,7 +447,7 @@ function getSubCommunities(type,id,locale,route,token){
     success: function(data){
 
         var option = '';
-        var locale = locale;
+     
 
         data.sub_communities.forEach(function(value,key){
             if(type == 'create'){

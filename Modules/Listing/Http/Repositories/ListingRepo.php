@@ -2186,7 +2186,7 @@ class ListingRepo
                 $sub_communities = Community::with('sub_communities')->where('id', $request->community_id)->firstOrFail()->sub_communities;
                 return response()->json(['message' => trans('listing.success'), 'sub_communities' => $sub_communities], 200);
             } catch (\Exception $e) {
-
+                dd($e);
                 return response()->json(['message' => trans('agency.something_went_wrong')], 400);
             }
         }
