@@ -53,7 +53,7 @@ class ListingController extends Controller
         $viewModel = new CreateListingViewModel($agency, $business, $request);
         dd($viewModel);
         return view('listing::listing.create.index', [
-
+            'agency_data'           => $agency,
             'business'              => $business,
             'agency'                => $agency->id,
             'staffs'                => staff($agency->id),
