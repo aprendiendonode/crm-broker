@@ -34,7 +34,6 @@
         "spatie/laravel-medialibrary": "^7.0.0",
         "spatie/laravel-permission": "^4.0",
         "spatie/laravel-ray": "^1.13", 
-         "spatie/data-transfer-object": "^2.2",
         "spatie/laravel-model-states": "^1.6",
         "spatie/laravel-query-builder": "^3.0",
         "spatie/laravel-view-models": "^1.3",
