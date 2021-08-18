@@ -203,7 +203,13 @@ class ListingController extends Controller
             } else {
                 $photonemain = '';
             }
+            if (!empty($listing->agent)) {
+                $agent_image = $listing->agent->image != null ? asset('profile_images/'.$listing->agent->image) : '' ;
+            } else {
+                $agent_image = '';
+            }
             $listing['image'] = $photonemain;
+            $listing['agent_image'] = $agent_image;
 
             //  image 
             $image = [];

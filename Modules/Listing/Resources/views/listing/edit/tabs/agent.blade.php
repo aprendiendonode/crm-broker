@@ -1,5 +1,5 @@
 <div class="card-box">
-
+ 
         <button type="button" style="float: right;" class="btn btn-primary mb-2" data-toggle="modal" data-target="#agent-modal-{{ $listing->id }}">@lang('listing.edit')</button>
 
         <div class=" mb-4">
