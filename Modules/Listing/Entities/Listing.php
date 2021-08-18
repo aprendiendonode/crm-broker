@@ -2,6 +2,7 @@
 
 namespace Modules\Listing\Entities;
 
+use Modules\Sales\Entities\Call;
 use App\Models\User;
 use App\Models\Agency;
 use Spatie\Feed\Feedable;

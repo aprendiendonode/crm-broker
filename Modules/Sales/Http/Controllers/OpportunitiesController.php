@@ -2,6 +2,10 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use Modules\Sales\Entities\ContractDocument;
+use Modules\Sales\Entities\ContractRecurring;
+use Modules\Sales\Entities\ClientContract;
+use Modules\Sales\Entities\Client;
 use Gate;
 
 use Illuminate\Http\Request;
@@ -764,7 +768,7 @@ class OpportunitiesController extends Controller
         } catch (\Exception $e) {
 
             DB::rollback();
-            dd($e->getMessage());
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-client-tab',  $request->opportunity_id);
         }
     }

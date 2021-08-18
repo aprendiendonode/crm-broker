@@ -85,13 +85,12 @@ if (!function_exists('upload_image')) {
                 $fileName = time() . '-' . uniqid() . '-' . 'watermark.png';
 
                 Image::make($image)->resize($watermark[2], $watermark[3])->opacity($watermark[1])->save($path . '/' . $fileName);
-
             } else {
 
-                $main =  time() . '-' . uniqid() ;
-                $fileName = $main. '-' . 'watermark.png';
-                Image::make($file->getRealPath())->save(public_path("upload/watermarks/main/".$fileName));
-                $image = public_path("upload/watermarks/main/".$fileName);
+                $main =  time() . '-' . uniqid();
+                $fileName = $main . '-' . 'watermark.png';
+                Image::make($file->getRealPath())->save(public_path("upload/watermarks/main/" . $fileName));
+                $image = public_path("upload/watermarks/main/" . $fileName);
 
                 Image::make($image)->resize($watermark[2], $watermark[3])->opacity($watermark[1])->save($path . '/' . $fileName);
             }
@@ -265,24 +264,24 @@ if (!function_exists('staff')) {
     }
 }
 
+if (!function_exists('staff')) {
+    function array_replace_key($search, $replace, array $subject)
+    {
+        $updatedArray = [];
 
-function array_replace_key($search, $replace, array $subject)
-{
-    $updatedArray = [];
+        foreach ($subject as $key => $value) {
+            if (!is_array($value) && $key == $search) {
+                $updatedArray = array_merge($updatedArray, [$replace => $value]);
 
-    foreach ($subject as $key => $value) {
-        if (!is_array($value) && $key == $search) {
-            $updatedArray = array_merge($updatedArray, [$replace => $value]);
+                continue;
+            }
 
-            continue;
+            $updatedArray = array_merge($updatedArray, [$key => $value]);
         }
 
-        $updatedArray = array_merge($updatedArray, [$key => $value]);
+        return $updatedArray;
     }
-
-    return $updatedArray;
 }
-
 if (!function_exists('deleteDirectory')) {
 
     function deleteDirectory($dir)

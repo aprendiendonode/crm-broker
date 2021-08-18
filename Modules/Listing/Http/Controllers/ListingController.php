@@ -128,7 +128,7 @@ class ListingController extends Controller
 
                 return response()->json(['message' => trans('global.modified'), 'cheque' => $cheque], 200);
             } catch (\Exception $th) {
-                dd($th);
+
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
         }

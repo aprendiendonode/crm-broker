@@ -61,18 +61,7 @@ crossorigin="anonymous"
         </button>
         @endcan 
     </div>
-    
-    @can('add_opportunity')
-    
-    <div class="mb-2 check_opportunity "  style="display: none;opacity:0;transition:0.7s">
-        @include('sales::opportunities.check_before_create')
-    </div>
-    
-    <div class="mb-2 add_opportunity " @if(!session()->has('open-tab')) style="display: none;opacity:0;transition:0.7s" @endif>
-        @include('sales::opportunities.create')
-    </div>
-    @endcan
-    
+   
     
     <button class="btn btn-primary mb-2" onclick="show_filter()">@lang('sales.filter') <i class="fa fa-search"></i></button>   
     <a class="btn btn-outline-primary mb-2" href="{{ url('sales/opportunities/'.request('agency')) }}">@lang('sales.reset_filters')</a>

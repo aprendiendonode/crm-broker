@@ -42,17 +42,17 @@ class AuthorityMiddleware
                 });
 
                 if (!($agency_found->count() == 1)) {
-                    abort('404');
+                    abort(404);
                 }
             } elseif (moderator()) {
                 $agencies = explode(',', auth()->user()->can_access);
                 if (!in_array($agency_id, $agencies)) {
-                    abort('404');
+                    abort(404);
                 }
             } else {
                 if (!(auth()->user()->agency_id == $agency_id)) {
 
-                    abort('404');
+                    abort(404);
                 }
             }
 

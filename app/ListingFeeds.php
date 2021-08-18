@@ -1,5 +1,8 @@
 <?php
 
+namespace App;
+
+
 use Modules\Listing\Entities\Listing;
 
 class ListingFeeds

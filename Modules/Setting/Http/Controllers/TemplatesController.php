@@ -47,14 +47,7 @@ class TemplatesController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('setting::create');
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -160,7 +153,7 @@ class TemplatesController extends Controller
      */
     public function destroy()
     {
-        Template::where('id',request('template_id'))->where('system','no')->delete();
+        Template::where('id', request('template_id'))->where('system', 'no')->delete();
 
         return back()->withInput()->with(flash(trans('settings.template_delete'), 'success'));
     }

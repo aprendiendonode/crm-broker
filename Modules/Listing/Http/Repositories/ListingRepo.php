@@ -786,7 +786,7 @@ class ListingRepo
                 return response()->json(['message' => trans('listing.landlord_created'), 'data' => $landlord], 200);
             } catch (\Exception $e) {
                 DB::rollback();
-                dd($e->getMessage());
+
                 return response()->json(['message' => trans('agency.something_went_wrong')], 400);
             }
         }
@@ -1188,7 +1188,7 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_modified'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }
