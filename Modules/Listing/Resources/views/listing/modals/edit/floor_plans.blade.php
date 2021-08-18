@@ -9,10 +9,11 @@
                 <div class="text-center mb-3">
                     <i class="fas fa-puzzle-piece fa-2x"></i>
                     <h4>@lang('listing.floor_plans')</h4>
-                    <p> <span style="color:red;">
+                    {{-- <p>  --}}
+                        {{-- <span style="color:red;">
                         @lang('listing.floor_plans_uploaded_in_this_section_will_not_be_displayed_on_bayut.com')
                     </span>
-                    @lang('listing.to_add_floor_plans_for_your_listings_on_bayut.com_please_login_to_your')
+                    @lang('listing.to_add_floor_plans_for_your_listings_on_bayut.com_please_login_to_your') --}}
 
                      {{-- <a href="https://www.bayut.com/profolio">@lang('listing.portfolio')</a> @lang('listing.account')</p> --}}
                 </div> 
