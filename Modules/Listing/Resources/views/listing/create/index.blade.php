@@ -1035,9 +1035,9 @@ function updatePrice() {
         });
          var agency_region = @json($agency_region);
          var agency_language = @json($agency_language);
-         var map_key = @json(env('GOOGLE_API_KEY'));
+         
         injectGoogleMapsApiScript({
-                    key       : map_key,
+                    key       : 'AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU',
                     libraries : 'places',
                     language  : agency_language,
                     region    : agency_region,
