@@ -1,0 +1,8 @@
+[07-Aug-2021 19:17:57 America/Boise] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Database\Eloquent\Model' not found in /home1/lawkovmy/public_html/broker/app/FaildLead.php:7
+Stack trace:
+#0 {main}
+  thrown in /home1/lawkovmy/public_html/broker/app/FaildLead.php on line 7
+[07-Aug-2021 19:17:57 America/Boise] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Database\Eloquent\Model' not found in /home1/lawkovmy/public_html/broker/app/FaildLead.php:7
+Stack trace:
+#0 {main}
+  thrown in /home1/lawkovmy/public_html/broker/app/FaildLead.php on line 7
