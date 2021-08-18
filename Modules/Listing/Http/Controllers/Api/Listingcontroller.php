@@ -196,7 +196,9 @@ class ListingController extends Controller
 
             $business = Business::where('business_token', $request->business_token)->firstOrFail();
             $agency   = Agency::where('business_id', $business->id)->where('agency_token', $request->agency_token)->with('country')->firstOrFail();
-            $listing  = Listing::where([['agency_id', $agency->id], ['id', $request->listing_id]])->with('videos', 'photos', 'documents', 'plans', 'addedBy', 'photo_main')->first();
+            $listing  = Listing::where([['agency_id', $agency->id], ['id', $request->listing_id]])->with('videos', 'photos', 
+            'documents', 'plans', 'addedBy', 'photo_main','agent','type','cheques','city', 'community', 'subCommunity',
+            )->first();
 
             if (!empty($listing->photo_main)) {
                 $photonemain = asset('listings/photos/agency_' . $agency->id . '/listing_' . $listing->id . '/photo_' . $listing->photo_main->id . '/' . $listing->photo_main->main);
