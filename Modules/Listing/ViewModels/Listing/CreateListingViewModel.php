@@ -13,19 +13,17 @@ class CreateListingViewModel extends ViewModel
 {
     public $agency_id;
     public $agency;
+    public $listing;
     public $business;
     public $request;
     public $has_ref = false;
     public $listing_by_ref = null;
-    public function __construct($agency_id, $business, Request $request)
+    public function __construct($agency_id = null, $business, Request $request, Listing $listing = null)
     {
         $this->agency_id = $agency_id;
         $this->business  = $business;
         $this->request   = $request;
-    }
-
-    public function agency_data(): Agency
-    {
+        $this->listing   = $listing;
 
         $this->agency = Agency::with([
             'lead_sources',
@@ -36,6 +34,15 @@ class CreateListingViewModel extends ViewModel
             'language',
             'country'
         ])->where('id', $this->agency_id)->where('business_id', $this->business)->firstOrFail();
+    }
+
+    public function listing(): Listing
+    {
+
+        return $this->listing ?? new Listing();
+    }
+    public function agency_data(): Agency
+    {
 
         return $this->agency;
     }
@@ -50,6 +57,11 @@ class CreateListingViewModel extends ViewModel
         }
 
         return $this->listing_by_ref;
+    }
+
+    public function has_ref()
+    {
+        return $this->has_ref;
     }
 
     public function agency()
@@ -152,5 +164,16 @@ class CreateListingViewModel extends ViewModel
         return  cache()->remember('listing_categories', 60 * 60 * 24, function () {
             return DB::table('listing_categories')->get();
         });
+    }
+    public function features()
+    {
+        if ($this->listing) {
+            $filtered = $this->listing->features ? collect($this->listing->features) : collect();
+            $features = $filtered->filter(function ($value, $key) {
+                return $value != 'no' && $value != '';
+            });
+
+            return $features;
+        }
     }
 }

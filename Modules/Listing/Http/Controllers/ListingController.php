@@ -69,71 +69,10 @@ class ListingController extends Controller
 
     public function load_edit_view(Request $request)
     {
-        // dd($request);
-
-        $listing = Listing::findorfail($request->listing);
-        $agency = Agency::with([
-            'lead_sources',
-            'landlords',
-            'tenants',
-            'task_status',
-            'descriptionTemplates'
-
-        ])->withCount(['listingsAll', 'listingsReview', 'listingsArchive', 'listingsDraft', 'listingsLive'])->where('id', $listing->agency_id)->firstOrFail();
-
-
-
-
-        $filtered = $listing->features ? collect($listing->features) : collect();
-        $features = $filtered->filter(function ($value, $key) {
-            return $value != 'no' && $value != '';
-        });
-
-
-        return view('listing::listing.edit.index', [
-            'listing'            => $listing,
-            'agency_data'        => $agency,
-            'features'           => $features,
-            'agency'             => $agency->id,
-            'agency_region'      => $agency->country ? $agency->country->iso2 : '',
-            'lead_sources'       => $agency->lead_sources,
-            'task_status'        => $agency->task_status,
-            'task_types'         => $agency->task_types,
-            'developers'         => $agency->developers,
-            'cheques'            => $agency->cheques,
-            'landlords'          => $agency->landlords,
-            'tenants'            => $agency->tenants,
-            'portals'            =>
-            cache()->remember('portals', 60 * 60 * 24, function () {
-                return DB::table('portals')->get();
-            }),
-            'cities' =>
-            cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
-                return DB::table('cities')->where('country_id', $agency->country_id)->get();
-            }),
-            'communities' =>
-            cache()->remember('communities', 60 * 60 * 24, function () use ($agency) {
-                return DB::table('communities')->where('country_id', $agency->country_id)->get();
-            }),
-            'sub_communities' =>
-            cache()->remember('sub_communities', 60 * 60 * 24, function () use ($agency) {
-                return DB::table('sub_communities')->where('country_id', $agency->country_id)->get();
-            }),
-            'listing_categories' =>
-            cache()->remember('listing_categories', 60 * 60 * 24, function () use ($agency) {
-                return DB::table('listing_categories')->get();
-            }),
-            'listing_types' => cache()->remember('listing_types', 60 * 60 * 24, function () {
-                return DB::table('listing_types')->get();
-            }),
-            'listing_views' => $agency->listing_views,
-            'staffs' => staff($agency->id),
-            'descriptionTemplates' => $agency->descriptionTemplates
-
-
-            // 'agency'     => $listing->agency_id,
-            // 'business'   => $listing->agency_id,
-        ]);
+        $business = auth()->user()->business_id;
+        $listing = Listing::findOrFail($request->listing);
+        $viewModel = new CreateListingViewModel($listing->agency_id, $business, $request,  $listing);
+        return view('listing::listing.edit.index', $viewModel);
     }
 
 
