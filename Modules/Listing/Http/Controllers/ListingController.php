@@ -28,6 +28,7 @@ use Modules\Listing\Entities\TemporaryListing;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Listing\Entities\TemporaryDocument;
 use Modules\Listing\Http\Repositories\ListingRepo;
+use Modules\Listing\ViewModels\Listing\CreateListingViewModel;
 
 
 class ListingController extends Controller
@@ -46,38 +47,18 @@ class ListingController extends Controller
     }
 
 
-    public function create($agency)
+    public function create($agency, Request $request)
     {
         $business = auth()->user()->business_id;
 
-        $agency = Agency::with([
-            'lead_sources',
-            'landlords',
-            'tenants',
-            'task_status',
-            'descriptionTemplates',
-            'language',
-            'country'
-
-        ])->where('id', $agency)->where('business_id', $business)->firstOrFail();
-
-        $listing_by_ref = null;
-        $has_ref = false;
-        if (request('ref')) {
-
-            $listing_by_ref = Listing::where('listing_ref', request('ref'))->where('agency_id', $agency->id)->first();
-            if ($listing_by_ref) {
-                $has_ref = true;
-            }
-        }
+        $viewModel = new CreateListingViewModel($agency, $business, $request);
+        dd($viewModel);
         return view('listing::listing.create.index', [
-            'agency_data'           => $agency,
+
             'business'              => $business,
             'agency'                => $agency->id,
             'staffs'                => staff($agency->id),
 
-            'has_ref'               => $has_ref,
-            'listing_by_ref'        => $listing_by_ref,
             'agency_region'         => $agency->country ? $agency->country->iso2 : '',
             'agency_lat'            => $agency->country ? $agency->country->lat : '',
             'agency_lng'            => $agency->country ? $agency->country->lng : '',
