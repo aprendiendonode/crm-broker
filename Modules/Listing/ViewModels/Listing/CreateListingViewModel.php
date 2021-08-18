@@ -3,8 +3,9 @@
 namespace Modules\Listing\ViewModels\Listing;
 
 use App\Models\Agency;
-use Spatie\ViewModels\ViewModel;
 use Illuminate\Http\Request;
+use Spatie\ViewModels\ViewModel;
+use Illuminate\Support\Facades\DB;
 use Modules\Listing\Entities\Listing;
 use Modules\Listing\Http\Controllers\ListingController;
 
@@ -25,6 +26,7 @@ class CreateListingViewModel extends ViewModel
 
     public function agency_data(): Agency
     {
+
         $this->agency = Agency::with([
             'lead_sources',
             'landlords',
@@ -33,10 +35,11 @@ class CreateListingViewModel extends ViewModel
             'descriptionTemplates',
             'language',
             'country'
-        ])->where('id', $this->agency)->where('business_id', $this->business)->firstOrFail();
+        ])->where('id', $this->agency_id)->where('business_id', $this->business)->firstOrFail();
+
         return $this->agency;
     }
-    public function listing_by_ref(): Listing
+    public function listing_by_ref()
     {
 
         if ($this->request->ref) {
@@ -119,10 +122,11 @@ class CreateListingViewModel extends ViewModel
             return DB::table('portals')->get();
         });
     }
-    public function portals()
+
+    public function listing_types()
     {
-        return  cache()->remember('portals', 60 * 60 * 24, function () {
-            return DB::table('portals')->get();
+        return  cache()->remember('listing_types', 60 * 60 * 24, function () {
+            return DB::table('listing_types')->get();
         });
     }
     public function cities()
