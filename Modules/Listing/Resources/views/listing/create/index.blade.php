@@ -11,6 +11,9 @@
     <link href="{{ asset('assets/libs/uploader-master/src/css/styles.css') }}" rel="stylesheet">
  
     <link href="{{ asset('assets/css/modals.css') }}" rel="stylesheet">
+
+
+    <script src="{{ asset('assets/js/listing.js') }}"></script>
     <style>
         .toggle.android {
             border-radius: 0px;
