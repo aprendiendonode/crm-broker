@@ -3,6 +3,7 @@
 use App\Models\Agency;
 use App\Models\Business;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +15,10 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::get('/clear-cache', function() {
+    $exitCode = Artisan::call('cache:clear');
+    // return what you want
+});
 Route::prefix('listing')->group(function () {
     Route::get('home', 'Api\ListingController@home');
     Route::get('Listing', 'Api\ListingController@index');

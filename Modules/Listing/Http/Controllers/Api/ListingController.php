@@ -41,7 +41,7 @@ class ListingController extends Controller
             $agency   = Agency::where('business_id', $business->id)->where('agency_token',$request->agency_token)->firstOrFail();
          
             $listing_types= cache()->remember('listing_types', 60 * 60 * 24, function () {
-                return DB::table('listing_types')->get(['name_en','name_ar','id']);
+                return DB::table('listing_types')->get();
                 });
             $cities=  cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
                     return DB::table('cities')->where('country_id', $agency->country_id)->get();
@@ -116,7 +116,7 @@ class ListingController extends Controller
             $business = Business::where('business_token', $request->business_token)->firstOrFail();
             $agency   = Agency::where('business_id', $business->id)->where('agency_token', $request->agency_token)->firstOrFail();
             $listing_types = cache()->remember('listing_types', 60 * 60 * 24, function () {
-                return DB::table('listing_types')->get(['name_en', 'name_ar', 'id']);
+                return DB::table('listing_types')->get();
             });
             $cities =  cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
                 return DB::table('cities')->where('country_id', $agency->country_id)->get();
@@ -457,7 +457,7 @@ class ListingController extends Controller
                 array_push($data, $id);
             }
             $listing_types = cache()->remember('listing_types', 60 * 60 * 24, function () {
-                return DB::table('listing_types')->get(['name_en', 'name_ar', 'id']);
+                return DB::table('listing_types')->get();
             });
             $cities =  cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
                 return DB::table('cities')->where('country_id', $agency->country_id)->get();
