@@ -1,0 +1,197 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\ClientAnswerEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/ClientAnswerEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\ClientQuestionEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/ClientQuestionEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\ClientTaskEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/ClientTaskEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\LeadTaskEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/LeadTaskEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\ListingTaskEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/ListingTaskEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\OpportunityAnswerEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/OpportunityAnswerEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\OpportunityEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/OpportunityEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\OpportunityQuestionEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/OpportunityQuestionEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\OpportunityResultEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/OpportunityResultEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\OpportunityTaskEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/OpportunityTaskEvent.php
+
+		-
+			message: "#^Return typehint of method App\\\\Events\\\\StatisticsFinishedEvent\\:\\:broadcastOn\\(\\) has invalid type App\\\\Events\\\\Channel\\.$#"
+			count: 1
+			path: app/Events/StatisticsFinishedEvent.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$agencies\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/LoginController.php
+
+		-
+			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/LoginController.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/LoginController.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$dir\\.$#"
+			count: 1
+			path: app/Http/Controllers/LanguageController.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Http\\\\Controllers\\\\LanguageController\\:\\:buildArray\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/LanguageController.php
+
+		-
+			message: "#^Instantiated class App\\\\Http\\\\Controllers\\\\Filesystem not found\\.$#"
+			count: 1
+			path: app/Http/Controllers/LanguageController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\User\\:\\:\\$agencies\\.$#"
+			count: 2
+			path: app/Http/Middleware/AuthorityMiddleware.php
+
+		-
+			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
+			count: 1
+			path: app/Http/Middleware/AuthorityMiddleware.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: app/Http/Middleware/AuthorityMiddleware.php
+
+		-
+			message: "#^Parameter \\#1 \\$code of function abort expects Illuminate\\\\Contracts\\\\Support\\\\Responsable\\|int\\|Symfony\\\\Component\\\\HttpFoundation\\\\Response, string given\\.$#"
+			count: 3
+			path: app/Http/Middleware/AuthorityMiddleware.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Sales\\\\Entities\\\\Lead\\:\\:\\$reference\\.$#"
+			count: 1
+			path: app/Imports/LeadsImport.php
+
+		-
+			message: "#^Class App\\\\Models\\\\City not found\\.$#"
+			count: 1
+			path: app/Models/Agency.php
+
+		-
+			message: "#^Call to private method where\\(\\) of parent class Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasOneOrMany\\<TRelatedModel of Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\.$#"
+			count: 1
+			path: app/Models/Lead2.php
+
+		-
+			message: "#^Class App\\\\Models\\\\Call not found\\.$#"
+			count: 1
+			path: app/Models/Lead2.php
+
+		-
+			message: "#^Class App\\\\Models\\\\LeadQualifications not found\\.$#"
+			count: 1
+			path: app/Models/Lead2.php
+
+		-
+			message: "#^Class App\\\\Models\\\\LeadSource not found\\.$#"
+			count: 1
+			path: app/Models/Lead2.php
+
+		-
+			message: "#^Class App\\\\Models\\\\LeadType not found\\.$#"
+			count: 1
+			path: app/Models/Lead2.php
+
+		-
+			message: "#^Property App\\\\Models\\\\Owner\\:\\:\\$guard \\(array\\) does not accept default value of type string\\.$#"
+			count: 1
+			path: app/Models/Owner.php
+
+		-
+			message: "#^Class App\\\\Models\\\\Country not found\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Activity\\\\Entities\\\\Task\\:\\:\\$custom_reminder\\.$#"
+			count: 1
+			path: app/helpers.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Activity\\\\Entities\\\\Task\\:\\:\\$deadline\\.$#"
+			count: 10
+			path: app/helpers.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Activity\\\\Entities\\\\Task\\:\\:\\$period_reminder\\.$#"
+			count: 1
+			path: app/helpers.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Activity\\\\Entities\\\\Task\\:\\:\\$time\\.$#"
+			count: 5
+			path: app/helpers.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Activity\\\\Entities\\\\Task\\:\\:\\$type_reminder\\.$#"
+			count: 2
+			path: app/helpers.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Activity\\\\Entities\\\\Task\\:\\:\\$type_reminder_number\\.$#"
+			count: 4
+			path: app/helpers.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Setting\\\\Entities\\\\EmailNotifyReminder\\:\\:\\$day\\.$#"
+			count: 1
+			path: app/helpers.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Setting\\\\Entities\\\\EmailNotifyReminder\\:\\:\\$time\\.$#"
+			count: 1
+			path: app/helpers.php
+
+		-
+			message: "#^Access to an undefined property Modules\\\\Setting\\\\Entities\\\\EmailNotifyReminder\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/helpers.php
+

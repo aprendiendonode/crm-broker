@@ -269,6 +269,15 @@ class ListingRepo
             $inputs['added_by'] = auth()->user()->id;
             $listing = Listing::create($inputs);
 
+
+            if (array_key_exists('portals', $inputs)) {
+                foreach ($inputs['portals'] as $portal) {
+                    PortalListing::create([
+                        'listing_id' => $listing->id,
+                        'portal_id' => $portal
+                    ]);
+                }
+            }
             //* move photos from temporary to listing_photos
             if ($photos && is_array($photos)) {
                 if (!file_exists(public_path("listings"))) {
