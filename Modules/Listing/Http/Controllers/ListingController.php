@@ -27,7 +27,9 @@ use Modules\SuperAdmin\Entities\SubCommunity;
 use Modules\Listing\Entities\TemporaryListing;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Listing\Entities\TemporaryDocument;
+use Domain\Listings\Actions\CreateListingAction;
 use Modules\Listing\Http\Repositories\ListingRepo;
+use Domain\Listings\DataTransferObjects\ListingData;
 use Modules\Listing\ViewModels\Listing\ListingFormViewModel;
 use Modules\Listing\ViewModels\Listing\CreateListingViewModel;
 
@@ -55,11 +57,23 @@ class ListingController extends Controller
         return view('listing::listing.create.index', $viewModel);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, CreateListingAction $createListingAction)
     {
         abort_if(Gate::denies('add_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return $this->repository->store($request);
+        DB::beginTransaction();
+        try {
+            $listingData = ListingData::fromRequest($request);
+            $listing = $createListingAction($listingData);
+            DB::commit();
+            return back()->with(flash(trans('listing.listing_created'), 'success'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
+        }
     }
+
+
+
 
     public function show($listing_id, $listing_ref)
     {
@@ -128,7 +142,7 @@ class ListingController extends Controller
 
                 return response()->json(['message' => trans('global.modified'), 'cheque' => $cheque], 200);
             } catch (\Exception $th) {
-                dd($th);
+
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
         }

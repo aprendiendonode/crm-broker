@@ -16,43 +16,8 @@ use Modules\Setting\Http\Requests\UpdateProfile;
 
 class ProfilesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
-    {
-        return view('setting::index');
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('setting::create');
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('setting::show');
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -65,7 +30,7 @@ class ProfilesController extends Controller
 
         $user = User::findorfail($id);
         $countries = Country::all();
-        //        dd($user);
+
         return view('setting::profile.edit', compact('user', 'countries'));
     }
 

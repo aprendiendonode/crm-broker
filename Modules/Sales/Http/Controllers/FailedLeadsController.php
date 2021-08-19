@@ -4,17 +4,13 @@ namespace Modules\Sales\Http\Controllers;
 
 use App\FaildLead;
 use App\Imports\LeadsImport;
-use App\Jobs\SendFailedLeadsMail;
 use App\Models\SystemTemplate;
 use Gate;
-
-use App\Models\City;
 
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Agency;
 use App\Jobs\SendEmail;
-use App\Models\Country;
 use App\Mail\EmailGeneral;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
@@ -74,16 +70,14 @@ class FailedLeadsController extends Controller
 
         if (request('filter_reference') != null) {
             $failed_leads->where('reference', request('filter_reference'));
-
         }
 
-        $failed_leads= $failed_leads->paginate($per_page);
+        $failed_leads = $failed_leads->paginate($per_page);
 
 
         return view(
-            'sales::failed_leads.index', compact('failed_leads', 'agency','pagination')
+            'sales::failed_leads.index',
+            compact('failed_leads', 'agency', 'pagination')
         );
     }
-
-
 }

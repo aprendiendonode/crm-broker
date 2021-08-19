@@ -50,7 +50,10 @@
         "nunomaduro/collision": "^4.1",
         "nunomaduro/larastan": "^0.7.12",
         "orchestra/testbench": "~5.0",
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5",
+        "barryvdh/laravel-ide-helper": "2.6.*",
+        "composer/composer": "^1.10@dev"
+     
     },
     "config": {
         "optimize-autoloader": true,

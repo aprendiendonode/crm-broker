@@ -6,6 +6,16 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * App\Models\Owner
+ *
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Owner newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Owner newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Owner query()
+ * @mixin \Eloquent
+ */
 class Owner extends Authenticatable
 {
     use Notifiable;
@@ -16,7 +26,7 @@ class Owner extends Authenticatable
      * @var array
      */
 
-    protected $guard = 'owner';
+    protected  $guard = 'owner';
     protected $fillable = [
         'name_en', 'name_ar', 'email', 'password', 'business_id'
     ];

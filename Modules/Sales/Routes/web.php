@@ -26,62 +26,6 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
         // manage staff routes
 
-        Route::get('month/{agency}', function () {
-
-
-            // dd(date('Y-m', strtotime('-1 months', strtotime('2021-03'))));
-            // $period_count = 28;
-
-            $month        =  '2021-03';
-            $date_of_join = '2021-03-01';
-
-            // dd(date('Y-m', strtotime($month . ' - 1 month')));
-            $count  = cal_days_in_month(CAL_GREGORIAN, (date('m', strtotime($month)) - 1), date('Y', strtotime($month)));
-
-            $before_month = date('Y-m', strtotime($month . ' - 1 month'));
-
-            // dd($count, $before_month, date('Y-m-d', strtotime($before_month . '-' . $count)));
-
-            if (date('Y-m', strtotime($date_of_join)) > $before_month) {
-
-                if ($count < 30) {
-
-                    $difference = 30 - $count;
-
-
-                    if ($difference > 0) {
-
-                        for ($i = 0; $i < $difference; $i++) {
-
-                            dump($i);
-                        }
-                    }
-                }
-            }
-
-
-
-            dd('here');
-            // $count = cal_days_in_month(CAL_GREGORIAN, (date('m', strtotime($month)) - 1), date('Y', strtotime($month)));
-            $count = cal_days_in_month(CAL_GREGORIAN, (date('Y-m', strtotime($month)) - 1), date('Y', strtotime($month)));
-            dd($count);
-
-
-            if ($count < 30) {
-                $diff = 30 - $count;
-
-                for ($i = 1; $i <= $diff; $i++) {
-                    //     $data_absent = array(
-                    //         'user_id' => $user->user_id,
-                    //         'date'    => $date,
-
-                    //         'method' =>'count_holiday'
-                    //     );
-
-                    //     $this->db->insert('tbl_absent', $data_absent);
-                }
-            }
-        });
         Route::get('leads/{agency}', 'LeadsController@index')->name('sales.leads');
         Route::get('leads/update-all-leads/{agency}', function () {
             Lead::query()->update(['status' => 'active']);

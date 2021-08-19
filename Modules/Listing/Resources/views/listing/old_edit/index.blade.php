@@ -11,12 +11,12 @@
           @endif
       
     
-      @include('listing::listing.edit.location_price')
+      {{-- @include('listing::listing.edit.location_price')
       @include('listing::listing.edit.listing_details')
       @include('listing::listing.edit.associates')
       @include('listing::listing.modals.edit_modals')
 
-   
+    --}}
 
     </div>
     
