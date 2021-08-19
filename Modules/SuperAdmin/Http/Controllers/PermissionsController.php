@@ -24,14 +24,6 @@ class PermissionsController extends Controller
         return view('superadmin::permissions.index', compact('permissions', 'paginate', 'permissions_groups'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('superadmin::create');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -46,7 +38,7 @@ class PermissionsController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|unique:permission_groups,name',
                 'permission_group_id' => 'required'
-            
+
             ]);
 
             if ($validator->fails()) {
@@ -61,34 +53,12 @@ class PermissionsController extends Controller
 
             DB::commit();
             return back()->with(flash(trans('superadmin.permissionsGroup.created'), 'success'));
-
         } catch (\Throwable $th) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('superadmin.permissionsGroup.something_went_wrong'), 'error'))->with('open-tab', 'yes');
-
         }
-        
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('superadmin::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('superadmin::edit');
-    }
 
     /**
      * Update the specified resource in storage.
@@ -104,7 +74,7 @@ class PermissionsController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|unique:permission_groups,name,' . $id,
                 'permission_group_id' => 'required'
-            
+
             ]);
 
             if ($validator->fails()) {
@@ -121,11 +91,9 @@ class PermissionsController extends Controller
 
             DB::commit();
             return back()->with(flash(trans('superadmin.permissions.created'), 'success'));
-
         } catch (\Throwable $th) {
             DB::rollback();
             return back()->withInput()->with(flash(trans('superadmin.permissions.something_went_wrong'), 'error'))->with('open-tab', 'yes');
-
         }
     }
 

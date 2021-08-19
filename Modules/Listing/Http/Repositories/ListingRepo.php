@@ -212,251 +212,251 @@ class ListingRepo
         }
     }
 
-    public function store($request)
-    {
-        $business = Business::where('id', $request->business_id)->firstOrFail();
-        if ($business->id != auth()->user()->business_id) {
+    // public function store($request)
+    // {
+    //     $business = Business::where('id', $request->business_id)->firstOrFail();
+    //     if ($business->id != auth()->user()->business_id) {
 
-            abort(404);
-        }
-        $agency = Agency::where('id', $request->agency_id)->where('business_id', $business->id)->firstOrFail();
+    //         abort(404);
+    //     }
+    //     $agency = Agency::where('id', $request->agency_id)->where('business_id', $business->id)->firstOrFail();
 
-        DB::beginTransaction();
-        try {
+    //     DB::beginTransaction();
+    //     try {
 
-            $video_title = $request->video_title;
-            $video_link = $request->video_link;
-            $video_host = $request->video_host;
-            $cheque_date = $request->cheque_date;
-            $cheque_amount = $request->cheque_amount;
-            $cheque_percentage = $request->cheque_percentage;
-            $documents = $request->documents;
-            $floor_plans = $request->floor_plans;
-            $photos = $request->photos;
+    //         $video_title = $request->video_title;
+    //         $video_link = $request->video_link;
+    //         $video_host = $request->video_host;
+    //         $cheque_date = $request->cheque_date;
+    //         $cheque_amount = $request->cheque_amount;
+    //         $cheque_percentage = $request->cheque_percentage;
+    //         $documents = $request->documents;
+    //         $floor_plans = $request->floor_plans;
+    //         $photos = $request->photos;
 
-            $validator = Validator::make($request->all(), Listing::store_validation($request));
-            if ($validator->fails()) {
-                return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-tab', '');
-            }
+    //         $validator = Validator::make($request->all(), Listing::store_validation($request));
+    //         if ($validator->fails()) {
+    //             return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-tab', '');
+    //         }
 
-            if (count($cheque_date) != count($cheque_amount) || count($cheque_date) != count($cheque_percentage)) {
-                return back()->withInput()->with(flash(trans('listing.cheque_inputs_invalid'), 'danger'))
-                    ->with('open-tab', '');
-            }
-            if (count($video_host) != count($video_link) || count($video_host) != count($video_title)) {
-                return back()->withInput()->with(flash(trans('listing.video_inputs_invalid'), 'danger'))
-                    ->with('open-tab', '');
-            }
+    //         if (count($cheque_date) != count($cheque_amount) || count($cheque_date) != count($cheque_percentage)) {
+    //             return back()->withInput()->with(flash(trans('listing.cheque_inputs_invalid'), 'danger'))
+    //                 ->with('open-tab', '');
+    //         }
+    //         if (count($video_host) != count($video_link) || count($video_host) != count($video_title)) {
+    //             return back()->withInput()->with(flash(trans('listing.video_inputs_invalid'), 'danger'))
+    //                 ->with('open-tab', '');
+    //         }
 
-            $inputs = $validator->validated();
-            unset($inputs['video_title']);
-            unset($inputs['video_link']);
-            unset($inputs['video_host']);
-            unset($inputs['cheque_date']);
-            unset($inputs['cheque_amount']);
-            unset($inputs['cheque_percentage']);
-            unset($inputs['photos']);
-            unset($inputs['floor_plans']);
-            unset($inputs['documents']);
-            /*   dd('here', $inputs); */
+    //         $inputs = $validator->validated();
+    //         unset($inputs['video_title']);
+    //         unset($inputs['video_link']);
+    //         unset($inputs['video_host']);
+    //         unset($inputs['cheque_date']);
+    //         unset($inputs['cheque_amount']);
+    //         unset($inputs['cheque_percentage']);
+    //         unset($inputs['photos']);
+    //         unset($inputs['floor_plans']);
+    //         unset($inputs['documents']);
+    //         /*   dd('here', $inputs); */
 
-            if (!array_key_exists('view_ids', $inputs)) {
-                $inputs['view_ids'] = [];
-            }
-            if (!array_key_exists('portals', $inputs)) {
-                $inputs['portals'] = [];
-            }
-            $inputs['added_by'] = auth()->user()->id;
-            $listing = Listing::create($inputs);
-
-
-            if (array_key_exists('portals', $inputs)) {
-                foreach ($inputs['portals'] as $portal) {
-                    PortalListing::create([
-                        'listing_id' => $listing->id,
-                        'portal_id' => $portal
-                    ]);
-                }
-            }
-            //* move photos from temporary to listing_photos
-            if ($photos && is_array($photos)) {
-                if (!file_exists(public_path("listings"))) {
-                    mkdir(public_path("listings"));
-                }
-                if (!file_exists(public_path("listings/photos"))) {
-                    mkdir(public_path("listings/photos"));
-                }
-
-                foreach ($photos as $key => $folder) {
-                    $photo = TemporaryListing::where('folder', $folder)->first();
-                    if ($photo) {
-                        $moved = ListingPhoto::create(
-                            [
-                                'listing_id' => $listing->id,
-                                'main' => $photo->main,
-                                'watermark' => $photo->watermark,
-                                'active' => $photo->active,
-                                'photo_main' => $request->checked_main_hidden[$key],
-                                'icon' => $photo->icon,
-                                'listing_category_id' => $photo->listing_category_id,
-                            ]
-                        );
-
-                        if ($moved) {
-                            $files = File::files(public_path("temporary/listings/$photo->folder"));
-                            if (!file_exists(public_path("listings/photos/agency_$listing->agency_id"))) {
-                                mkdir(public_path("listings/photos/agency_$listing->agency_id"));
-                            }
-                            if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"))) {
-                                mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"));
-                            }
-                            if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"))) {
-                                mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"));
-                            }
-                            $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
-                            foreach ($files as $file) {
+    //         if (!array_key_exists('view_ids', $inputs)) {
+    //             $inputs['view_ids'] = [];
+    //         }
+    //         if (!array_key_exists('portals', $inputs)) {
+    //             $inputs['portals'] = [];
+    //         }
+    //         $inputs['added_by'] = auth()->user()->id;
+    //         $listing = Listing::create($inputs);
 
 
-                                File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
-                            }
-                            $removed_dir = public_path("temporary/listings/$photo->folder");
-                            if (file_exists($removed_dir)) {
-                                rmdir($removed_dir);
-                            }
-                        }
-                    }
-                }
-            }
-            //* move plans from temporary to listing_plans
+    //         if (array_key_exists('portals', $inputs)) {
+    //             foreach ($inputs['portals'] as $portal) {
+    //                 PortalListing::create([
+    //                     'listing_id' => $listing->id,
+    //                     'portal_id' => $portal
+    //                 ]);
+    //             }
+    //         }
+    //         //* move photos from temporary to listing_photos
+    //         if ($photos && is_array($photos)) {
+    //             if (!file_exists(public_path("listings"))) {
+    //                 mkdir(public_path("listings"));
+    //             }
+    //             if (!file_exists(public_path("listings/photos"))) {
+    //                 mkdir(public_path("listings/photos"));
+    //             }
 
-            if ($floor_plans && is_array($floor_plans)) {
-                if (!file_exists(public_path("listings"))) {
-                    mkdir(public_path("listings"));
-                }
-                if (!file_exists(public_path("listings/plans"))) {
-                    mkdir(public_path("listings/plans"));
-                }
+    //             foreach ($photos as $key => $folder) {
+    //                 $photo = TemporaryListing::where('folder', $folder)->first();
+    //                 if ($photo) {
+    //                     $moved = ListingPhoto::create(
+    //                         [
+    //                             'listing_id' => $listing->id,
+    //                             'main' => $photo->main,
+    //                             'watermark' => $photo->watermark,
+    //                             'active' => $photo->active,
+    //                             'photo_main' => $request->checked_main_hidden[$key],
+    //                             'icon' => $photo->icon,
+    //                             'listing_category_id' => $photo->listing_category_id,
+    //                         ]
+    //                     );
 
-                foreach ($floor_plans as $folder) {
-                    $plan = TemporaryPlan::where('folder', $folder)->first();
-                    if ($plan) {
-                        $moved = ListingPlan::create(
-                            [
-                                'listing_id' => $listing->id,
-                                'main' => $plan->main,
-                                'watermark' => $plan->watermark,
-                                'active' => $plan->active,
-                                'title' => $plan->title,
-                            ]
-                        );
+    //                     if ($moved) {
+    //                         $files = File::files(public_path("temporary/listings/$photo->folder"));
+    //                         if (!file_exists(public_path("listings/photos/agency_$listing->agency_id"))) {
+    //                             mkdir(public_path("listings/photos/agency_$listing->agency_id"));
+    //                         }
+    //                         if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"))) {
+    //                             mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"));
+    //                         }
+    //                         if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"))) {
+    //                             mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"));
+    //                         }
+    //                         $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
+    //                         foreach ($files as $file) {
 
-                        if ($moved) {
-                            $files = File::files(public_path("temporary/plans/$plan->folder"));
 
-                            if (!file_exists(public_path("listings/plans/agency_$listing->agency_id"))) {
-                                mkdir(public_path("listings/plans/agency_$listing->agency_id"));
-                            }
-                            if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id"))) {
-                                mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id"));
-                            }
-                            if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"))) {
-                                mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"));
-                            }
-                            $new_folder = public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id");
-                            foreach ($files as $file) {
-                                File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
-                            }
-                            $removed_dir = public_path("temporary/plans/$plan->folder");
-                            if (file_exists($removed_dir)) {
-                                rmdir($removed_dir);
-                            }
-                        }
-                    }
-                }
-            }
+    //                             File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
+    //                         }
+    //                         $removed_dir = public_path("temporary/listings/$photo->folder");
+    //                         if (file_exists($removed_dir)) {
+    //                             rmdir($removed_dir);
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         //* move plans from temporary to listing_plans
 
-            //* move documents from temporary to listing_documents
+    //         if ($floor_plans && is_array($floor_plans)) {
+    //             if (!file_exists(public_path("listings"))) {
+    //                 mkdir(public_path("listings"));
+    //             }
+    //             if (!file_exists(public_path("listings/plans"))) {
+    //                 mkdir(public_path("listings/plans"));
+    //             }
 
-            if ($documents && is_array($documents)) {
-                if (!file_exists(public_path("listings"))) {
-                    mkdir(public_path("listings"));
-                }
-                if (!file_exists(public_path("listings/documents"))) {
-                    mkdir(public_path("listings/documents"));
-                }
+    //             foreach ($floor_plans as $folder) {
+    //                 $plan = TemporaryPlan::where('folder', $folder)->first();
+    //                 if ($plan) {
+    //                     $moved = ListingPlan::create(
+    //                         [
+    //                             'listing_id' => $listing->id,
+    //                             'main' => $plan->main,
+    //                             'watermark' => $plan->watermark,
+    //                             'active' => $plan->active,
+    //                             'title' => $plan->title,
+    //                         ]
+    //                     );
 
-                foreach ($documents as $folder) {
-                    $document = TemporaryDocument::where('folder', $folder)->first();
-                    if ($document) {
-                        $moved = ListingDocument::create(
-                            [
-                                'listing_id' => $listing->id,
-                                'document' => $document->document,
-                                'title' => $document->title,
-                            ]
-                        );
+    //                     if ($moved) {
+    //                         $files = File::files(public_path("temporary/plans/$plan->folder"));
 
-                        if ($moved) {
-                            $files = File::files(public_path("temporary/documents/$document->folder"));
+    //                         if (!file_exists(public_path("listings/plans/agency_$listing->agency_id"))) {
+    //                             mkdir(public_path("listings/plans/agency_$listing->agency_id"));
+    //                         }
+    //                         if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id"))) {
+    //                             mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id"));
+    //                         }
+    //                         if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"))) {
+    //                             mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"));
+    //                         }
+    //                         $new_folder = public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id");
+    //                         foreach ($files as $file) {
+    //                             File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
+    //                         }
+    //                         $removed_dir = public_path("temporary/plans/$plan->folder");
+    //                         if (file_exists($removed_dir)) {
+    //                             rmdir($removed_dir);
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
 
-                            if (!file_exists(public_path("listings/documents/agency_$listing->agency_id"))) {
-                                mkdir(public_path("listings/documents/agency_$listing->agency_id"));
-                            }
-                            if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id"))) {
-                                mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id"));
-                            }
-                            if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"))) {
-                                mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"));
-                            }
-                            $new_folder = public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id");
-                            foreach ($files as $file) {
-                                File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
-                            }
-                            $removed_dir = public_path("temporary/documents/$document->folder");
-                            if (file_exists($removed_dir)) {
-                                rmdir($removed_dir);
-                            }
-                        }
-                    }
-                }
-            }
-            //* save videos
+    //         //* move documents from temporary to listing_documents
 
-            if (count($video_title) > 0) {
-                if ($video_title[0] != null && $video_host[0] != null && $video_link[0] != null) {
+    //         if ($documents && is_array($documents)) {
+    //             if (!file_exists(public_path("listings"))) {
+    //                 mkdir(public_path("listings"));
+    //             }
+    //             if (!file_exists(public_path("listings/documents"))) {
+    //                 mkdir(public_path("listings/documents"));
+    //             }
 
-                    foreach ($video_title as $key => $title) {
-                        ListingVideo::create([
-                            'listing_id' => $listing->id,
-                            'title' => $title,
-                            'host' => $video_host[$key],
-                            'link' => $video_link[$key],
-                        ]);
-                    }
-                }
-            }
+    //             foreach ($documents as $folder) {
+    //                 $document = TemporaryDocument::where('folder', $folder)->first();
+    //                 if ($document) {
+    //                     $moved = ListingDocument::create(
+    //                         [
+    //                             'listing_id' => $listing->id,
+    //                             'document' => $document->document,
+    //                             'title' => $document->title,
+    //                         ]
+    //                     );
 
-            if (count($cheque_date) > 0) {
-                if ($cheque_date[0] != null && $cheque_amount[0] != null && $cheque_percentage[0] != null) {
-                    foreach ($cheque_date as $key => $date) {
-                        ListingChequeCalculator::create([
-                            'listing_id' => $listing->id,
-                            'date' => $date,
-                            'value' => $cheque_amount[$key],
-                            'percent' => $cheque_percentage[$key],
-                        ]);
-                    }
-                }
-            }
+    //                     if ($moved) {
+    //                         $files = File::files(public_path("temporary/documents/$document->folder"));
 
-            DB::commit();
-            return back()->with(flash(trans('listing.listing_created'), 'success'));
-        } catch (\Exception $e) {
-            DB::rollBack();
+    //                         if (!file_exists(public_path("listings/documents/agency_$listing->agency_id"))) {
+    //                             mkdir(public_path("listings/documents/agency_$listing->agency_id"));
+    //                         }
+    //                         if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id"))) {
+    //                             mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id"));
+    //                         }
+    //                         if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"))) {
+    //                             mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"));
+    //                         }
+    //                         $new_folder = public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id");
+    //                         foreach ($files as $file) {
+    //                             File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
+    //                         }
+    //                         $removed_dir = public_path("temporary/documents/$document->folder");
+    //                         if (file_exists($removed_dir)) {
+    //                             rmdir($removed_dir);
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         //* save videos
 
-            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
-        }
-    }
+    //         if (count($video_title) > 0) {
+    //             if ($video_title[0] != null && $video_host[0] != null && $video_link[0] != null) {
+
+    //                 foreach ($video_title as $key => $title) {
+    //                     ListingVideo::create([
+    //                         'listing_id' => $listing->id,
+    //                         'title' => $title,
+    //                         'host' => $video_host[$key],
+    //                         'link' => $video_link[$key],
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+
+    //         if (count($cheque_date) > 0) {
+    //             if ($cheque_date[0] != null && $cheque_amount[0] != null && $cheque_percentage[0] != null) {
+    //                 foreach ($cheque_date as $key => $date) {
+    //                     ListingChequeCalculator::create([
+    //                         'listing_id' => $listing->id,
+    //                         'date' => $date,
+    //                         'value' => $cheque_amount[$key],
+    //                         'percent' => $cheque_percentage[$key],
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+
+    //         DB::commit();
+    //         return back()->with(flash(trans('listing.listing_created'), 'success'));
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+
+    //         return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
+    //     }
+    // }
 
 
     public function tenant($request)
@@ -786,7 +786,7 @@ class ListingRepo
                 return response()->json(['message' => trans('listing.landlord_created'), 'data' => $landlord], 200);
             } catch (\Exception $e) {
                 DB::rollback();
-                dd($e->getMessage());
+
                 return response()->json(['message' => trans('agency.something_went_wrong')], 400);
             }
         }
@@ -1188,7 +1188,7 @@ class ListingRepo
             return back()->with(flash(trans('listing.listing_modified'), 'success'))->with('open-edit-tab', $id);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-edit-tab', $id);
         }
     }

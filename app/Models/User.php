@@ -2,13 +2,114 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Modules\Activity\Entities\Task;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Modules\SuperAdmin\Entities\Country;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
+/**
+ * App\Models\User
+ *
+ * @property int $id
+ * @property string|null $name_en
+ * @property string|null $name_ar
+ * @property string|null $brn
+ * @property string|null $description_en
+ * @property string|null $zip
+ * @property string|null $whatsapp
+ * @property string|null $skype
+ * @property string|null $active
+ * @property string|null $type
+ * @property int|null $business_id
+ * @property string|null $country_code
+ * @property string|null $city_code
+ * @property string|null $phone
+ * @property string|null $cell_code
+ * @property string|null $cell
+ * @property string|null $fax_country_code
+ * @property string|null $fax_city_code
+ * @property string|null $staff_fax
+ * @property string|null $address
+ * @property string|null $image
+ * @property string $email
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property string $password
+ * @property string|null $remember_token
+ * @property int|null $nationality_id
+ * @property int|null $agency_id
+ * @property int|null $team_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $can_access
+ * @property string|null $description_ar
+ * @property string|null $language
+ * @property string $default_mode
+ * @property string $default_width
+ * @property string $default_position
+ * @property string $default_sidebar_color
+ * @property string $default_sidebar_size
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Agency[] $agencies
+ * @property-read int|null $agencies_count
+ * @property-read \App\Models\Agency|null $agency
+ * @property-read \App\Models\Business|null $business
+ * @property-read \Modules\SuperAdmin\Entities\Country|null $nationality
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
+ * @property-read int|null $permissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
+ * @property-read int|null $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Activity\Entities\Task[] $tasks
+ * @property-read int|null $tasks_count
+ * @property-read \App\Models\Team|null $team
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User permission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User role($roles, $guard = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereAgencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereBrn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereBusinessId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCanAccess($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCell($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCellCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCityCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCountryCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDefaultMode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDefaultPosition($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDefaultSidebarColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDefaultSidebarSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDefaultWidth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDescriptionAr($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDescriptionEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereFaxCityCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereFaxCountryCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereLanguage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereNameAr($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereNameEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereNationalityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereSkype($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereStaffFax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTeamId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereWhatsapp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereZip($value)
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable
 {
     use Notifiable, HasRoles;

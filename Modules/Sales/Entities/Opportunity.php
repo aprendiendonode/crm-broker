@@ -7,6 +7,213 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Activity\Entities\Task;
 
+/**
+ * Modules\Sales\Entities\Opportunity
+ *
+ * @property int $id
+ * @property string|null $probability_of_winning
+ * @property string|null $next_action
+ * @property string|null $next_action_date
+ * @property string|null $forecast_closing_date
+ * @property string|null $expected_revenue
+ * @property int|null $stage_id
+ * @property int|null $agency_id
+ * @property int|null $business_id
+ * @property int|null $converted_by
+ * @property string|null $assigned_to
+ * @property string|null $salutation
+ * @property int|null $source_id
+ * @property int|null $type_id
+ * @property int|null $qualification_id
+ * @property int|null $communication_id
+ * @property int|null $priority_id
+ * @property string|null $company
+ * @property string|null $website
+ * @property string|null $po_box
+ * @property string|null $passport
+ * @property string|null $passport_expiration_date
+ * @property string|null $first_name
+ * @property string|null $sec_name
+ * @property string|null $full_name
+ * @property string|null $partner_name
+ * @property string|null $date_of_birth
+ * @property string|null $email1
+ * @property string|null $email2
+ * @property string|null $email3
+ * @property int|null $nationality_id
+ * @property int|null $city_id
+ * @property string|null $phone1
+ * @property string|null $phone2
+ * @property string|null $phone3
+ * @property string|null $phone4
+ * @property string|null $landline
+ * @property string|null $fax
+ * @property string|null $developer
+ * @property string|null $community
+ * @property string|null $building_name
+ * @property string|null $property_purpose
+ * @property string|null $property_no
+ * @property string|null $property_reference
+ * @property int|null $property_id
+ * @property string|null $size_sqft
+ * @property string|null $size_sqm
+ * @property int|null $bedrooms
+ * @property int|null $bathrooms
+ * @property int|null $parkings
+ * @property string|null $skype
+ * @property string|null $country_code
+ * @property string|null $country_flag
+ * @property string|null $timezone
+ * @property string|null $country
+ * @property string|null $address
+ * @property string|null $other
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $status
+ * @property string|null $stage
+ * @property string|null $converting_approval
+ * @property string|null $hold_reason
+ * @property string|null $reject_reason
+ * @property int|null $rejected_by
+ * @property string|null $reject_date
+ * @property int|null $hold_by
+ * @property string|null $hold_date
+ * @property int|null $submit_for_approve_by
+ * @property string|null $submit_for_approve_date
+ * @property string|null $sub_community
+ * @property string $property_type
+ * @property string|null $table_name
+ * @property string|null $national_id
+ * @property string|null $phone1_code
+ * @property string|null $phone2_code
+ * @property string|null $phone3_code
+ * @property string|null $phone4_code
+ * @property string|null $campaign_id
+ * @property string|null $campaign_name
+ * @property string|null $campaign_lead_id
+ * @property string|null $campaign_form_id
+ * @property string|null $campaign_ad_id
+ * @property string|null $campaign_ad_name
+ * @property string|null $campaign_adset_name
+ * @property string|null $loc_lat
+ * @property string|null $loc_lng
+ * @property string|null $phone1_symbol
+ * @property string|null $phone2_symbol
+ * @property string|null $phone3_symbol
+ * @property string|null $phone4_symbol
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Sales\Entities\OpportunityAssignTracking[] $assigns
+ * @property-read int|null $assigns_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Sales\Entities\Call[] $calls
+ * @property-read int|null $calls_count
+ * @property-read \Modules\Sales\Entities\Client $client
+ * @property-read \App\Models\User|null $convertedBy
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Sales\Entities\OpportunityAssignTracking[] $current_assign
+ * @property-read int|null $current_assign_count
+ * @property-read \App\Models\User|null $holdBy
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Sales\Entities\OpportunityQuestion[] $questions
+ * @property-read int|null $questions_count
+ * @property-read \App\Models\User|null $rejectedBy
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Sales\Entities\OpportunityResult[] $results
+ * @property-read int|null $results_count
+ * @property-read \App\Models\User|null $submitForApproveBy
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Modules\Activity\Entities\Task[] $tasks
+ * @property-read int|null $tasks_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereAgencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereAssignedTo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereBathrooms($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereBedrooms($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereBuildingName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereBusinessId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCampaignAdId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCampaignAdName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCampaignAdsetName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCampaignFormId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCampaignId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCampaignLeadId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCampaignName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCommunicationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCommunity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCompany($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereConvertedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereConvertingApproval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCountryCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCountryFlag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereDateOfBirth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereDeveloper($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereEmail1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereEmail2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereEmail3($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereExpectedRevenue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereFax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereForecastClosingDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereFullName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereHoldBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereHoldDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereHoldReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereLandline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereLocLat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereLocLng($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereNationalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereNationalityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereNextAction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereNextActionDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereOther($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereParkings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePartnerName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePassport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePassportExpirationDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone1Code($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone1Symbol($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone2Code($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone2Symbol($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone3($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone3Code($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone3Symbol($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone4($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone4Code($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePhone4Symbol($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePoBox($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePriorityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereProbabilityOfWinning($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePropertyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePropertyNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePropertyPurpose($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePropertyReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity wherePropertyType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereQualificationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereRejectDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereRejectReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereRejectedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereSalutation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereSecName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereSizeSqft($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereSizeSqm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereSkype($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereSourceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereStage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereStageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereSubCommunity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereSubmitForApproveBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereSubmitForApproveDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereTableName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereTimezone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Modules\Sales\Entities\Opportunity whereWebsite($value)
+ * @mixin \Eloquent
+ */
 class Opportunity extends Model
 {
 
