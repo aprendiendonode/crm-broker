@@ -225,7 +225,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4">
+            {{-- <div class="col-md-6 col-lg-4">
                 <div class="form-group" style="height: 64px;">
                     <label class="font-weight-medium text-muted mr-3">@lang('listing.listing_type')</label>
                     <div class="d-flex flex-wrap">
@@ -255,7 +255,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
 

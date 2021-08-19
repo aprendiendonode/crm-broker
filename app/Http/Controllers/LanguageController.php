@@ -15,14 +15,16 @@ class LanguageController extends Controller
         $dir     = base_path() . '/resources/lang/';
         $glob    = glob($dir . "*", GLOB_ONLYDIR);
         $arrLang = array_map(
-            function ($value) use ($dir){
+            function ($value) use ($dir) {
                 return str_replace($dir, '', $value);
-            }, $glob
+            },
+            $glob
         );
         $arrLang = array_map(
-            function ($value) use ($dir){
+            function ($value) {
                 return preg_replace('/[0-9]+/', '', $value);
-            }, $arrLang
+            },
+            $arrLang
         );
         $arrLang = array_filter($arrLang);
 
@@ -40,7 +42,8 @@ class LanguageController extends Controller
         }
         $arrLabel = json_decode(file_get_contents($dir . '.json'));
         $arrFiles = array_diff(
-            scandir($dir), array(
+            scandir($dir),
+            array(
                 '..',
                 '.',
             )
@@ -56,7 +59,6 @@ class LanguageController extends Controller
         }
 
         return view('lang.index', compact('languages', 'currantLang', 'arrLabel', 'arrMessage'));
-
     }
 
     public function storeLanguageData(Request $request, $currantLang)
@@ -93,6 +95,5 @@ class LanguageController extends Controller
         } else {
             return redirect()->back();
         }
-
     }
 }

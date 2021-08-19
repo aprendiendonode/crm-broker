@@ -28,6 +28,7 @@ use Modules\Listing\Entities\TemporaryListing;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Listing\Entities\TemporaryDocument;
 use Modules\Listing\Http\Repositories\ListingRepo;
+use Modules\Listing\ViewModels\Listing\ListingFormViewModel;
 use Modules\Listing\ViewModels\Listing\CreateListingViewModel;
 
 
@@ -41,7 +42,7 @@ class ListingController extends Controller
     }
     public function index($agency)
     {
-       
+
         abort_if(Gate::denies('view_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->repository->index($agency);
     }
@@ -50,7 +51,7 @@ class ListingController extends Controller
     public function create($agency, Request $request)
     {
         $business = auth()->user()->business_id;
-        $viewModel = new CreateListingViewModel($agency, $business, $request);
+        $viewModel = new ListingFormViewModel($agency, $business, $request);
         return view('listing::listing.create.index', $viewModel);
     }
 
@@ -72,7 +73,7 @@ class ListingController extends Controller
     {
         $business = auth()->user()->business_id;
         $listing = Listing::findOrFail($request->listing);
-        $viewModel = new CreateListingViewModel($listing->agency_id, $business, $request,  $listing);
+        $viewModel = new ListingFormViewModel($listing->agency_id, $business, $request,  $listing);
         return view('listing::listing.edit.index', $viewModel);
     }
 

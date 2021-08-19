@@ -134,7 +134,7 @@ class Listing extends Model implements Feedable, HasMedia
     }
     public function photo_main()
     {
-        return $this->hasOne(ListingPhoto::class)->where('photo_main', 'yes');
+        return $this->hasMany(ListingPhoto::class)->where('photo_main', 'yes');
     }
     public function documents()
     {

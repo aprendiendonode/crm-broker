@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Listing\Entities\Listing;
 use Modules\Listing\Http\Controllers\ListingController;
 
-class CreateListingViewModel extends ViewModel
+class ListingFormViewModel extends ViewModel
 {
     public $agency_id;
     public $agency;
