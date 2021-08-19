@@ -8,8 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Listing\Entities\Listing;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Listing\Transformers\Api\ListingResource;
+// use Modules\Listing\Transformers\Api\ListingResourceCollection;
 
 class ListingController extends Controller
 {
@@ -253,8 +256,8 @@ class ListingController extends Controller
             $data = [];
             foreach ($listingsAll as $item) {
 
-                if ($item->photos->isEmpty() != true) {
-                    $imagelisting = $item->photos->first()->active == 'main' ? asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photos->first()->id . '/' . $item->photos->first()->main) : asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photos->first()->id . '/' . $item->photos->first()->watermark);
+                if ($item->photo_main->isEmpty() != true) {
+                    $imagelisting = $item->photo_main->first()->active == 'main' ? asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photo_main->first()->id . '/' . $item->photo_main->first()->main) : asset('listings/photos/agency_' . $agency->id . '/listing_' . $item->id . '/photo_' . $item->photo_main->first()->id . '/' . $item->photo_main->first()->watermark);
                 } else {
                     $imagelisting = null;
                 }
@@ -476,6 +479,109 @@ class ListingController extends Controller
             return response()->json(array(
                 'status' => $e->getMessage()
             ), 401);
+        }
+    }
+
+        /**
+     * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return Renderable
+     */
+    public function neerbyme(Request $request)
+    {
+        try {
+
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'business_token'  => 'required',
+                    'agency_token'  => 'required',
+                    'let'  => 'required',
+                    'lang' => 'required',
+                 
+                ]
+            );
+
+            if ($validator->fails()) {
+                return response()->json(array('status' => 'Error', 'message' => $validator->errors()->all()[0]), 401);
+            }
+            $latitude       =  $request->let;
+            $longitude      =  $request->lang;
+            // $distance      =  '20';
+            $business = Business::where('business_token', $request->business_token)->firstOrFail();
+            $agency   = Agency::where('business_id', $business->id)->where('agency_token', $request->agency_token)->firstOrFail();
+            $listingsAll = Listing::whereHas('portalsList', function ($q) {
+                $q->where('portal_id', 2);
+            })->where([['agency_id', $agency->id]])->with(['photos', 'photo_main']);
+
+            $listing_types = cache()->remember('listing_types', 60 * 60 * 24, function () {
+                return DB::table('listing_types')->get();
+            });
+            $cities =  cache()->remember('cities', 60 * 60 * 24, function () use ($agency) {
+                return DB::table('cities')->where('country_id', $agency->country_id)->get();
+            });
+            if ($latitude && $longitude) {
+             
+                $listingsAll       = $listingsAll->select("*", DB::raw('(6371  * acos( cos( radians('.$latitude.') ) * cos( radians( loc_lat ) ) * cos( radians( loc_lng ) - radians('.$longitude.') ) + sin( radians('.$latitude.') ) * sin( radians(loc_lat) ) ) ) AS distance'))->orderBy(DB::raw('ISNULL(distance), distance'), 'ASC');
+
+            }
+            $listingsAll= $listingsAll->paginate();
+            
+            $data=ListingResource::collection($listingsAll);
+         
+
+            return response()->json(array(
+                'status' => 'success',
+                'listing' => $data->response()->getData(true),
+                'type' => $request->type,
+                'listing_types' => $listing_types,
+                'cities' => $cities,
+
+            ), 200);
+        } catch (\Exception $e) {
+            // dd($e->getMessage());
+            return response()->json(array(
+                'status' => $e->getMessage()
+            ), 401);
+        }
+    }
+
+    function location(){
+        try {
+
+            // 39.74311
+            $latitude       =      request('lat');
+            // -105.152332
+            $longitude      =      request('lng');
+            $stations = '';
+            if (request('fuel')) {
+                $fuel = explode(',', request('fuel'));
+                $stations       =      Station::with(['stationFuels', 'stationFuels.fuel'])->whereHas('stationFuels', function ($q) use ($fuel) {
+                    return $q->whereIn('fuel_id', $fuel);
+                });
+            } else {
+                $stations       =      Station::with(['stationFuels', 'stationFuels.fuel']);
+            }
+
+            if (request('lat') && request('lng')) {
+                $stations       = $stations->select("*", DB::raw("6371 * acos(cos(radians(" . $latitude . "))
+                   * cos(radians(lat)) * cos(radians(lng) - radians(" . $longitude . "))
+                   + sin(radians(" . $latitude . ")) * sin(radians(lat))) AS distance"));
+
+                if (request('distance')) {
+
+                    $stations          =       $stations->having('distance', '<', request('distance'));
+                }
+                $stations       =       $stations->orderBy('distance', 'asc');
+            } else {
+                $stations       =       $stations->select("*");
+            }
+            $stations          =       $stations->get();
+            return response()->json(['status' => 'success', 'stations' => $stations], 200);
+        } catch (\exception $e) {
+
+            return response()->json(['status' => 'failed', 'message' => __('global.something_went_wrong')], 400);
         }
     }
 }
