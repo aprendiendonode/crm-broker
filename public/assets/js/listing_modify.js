@@ -207,7 +207,7 @@
              $('#extraInfo-modal_' + listing).modal('hide')
          },
          error: function (error) {
-             toast('error', 'error')
+             toast(error.responseJSON.message, 'error')
          }
 
      })
@@ -222,7 +222,6 @@
      var purpose = $('.listing-purpose-' + listing).val()
      var status = $('.listing-status-' + listing).val()
      var views = $('.listing-views-' + listing).val()
-     console.log(views)
      var lsm = $('.listing-lsm-' + listing).val()
      var title = $('.listing-title-' + listing).val()
      var type = $('.listing-type-' + listing).val()
@@ -301,10 +300,10 @@
              $('.listing-details-tenant-start-date-' + listing).text(tenant_end_date)
              $('.listing-details-tenant-' + listing).text(tenant)
              toast(data.message, 'success')
-             $('#extraInfo-modal_' + listing).modal('hide')
+             $('#details-modal-' + listing).modal('hide')
          },
          error: function (error) {
-             toast('error', 'error')
+            toast(error.responseJSON.message, 'error')
          }
 
      })

@@ -30,9 +30,24 @@ use Modules\Listing\Entities\TemporaryDocument;
 use Domain\Listings\Actions\CreateListingAction;
 use Modules\Listing\Http\Repositories\ListingRepo;
 use Domain\Listings\DataTransferObjects\ListingData;
+use Domain\Listings\Actions\UpdateListingAgentAction;
+use Domain\Listings\Actions\UpdateListingPhotosAction;
+use Domain\Listings\Actions\UpdateListingDetailsAction;
+use Domain\Listings\Actions\UpdateListingPricingAction;
+use Domain\Listings\Actions\UpdateListingLocationAction;
+use Domain\Listings\Actions\UpdateListingExtraInfoAction;
 use Modules\Listing\ViewModels\Listing\ListingFormViewModel;
+use Modules\Listing\ViewModels\Listing\ListingShowViewModel;
+use Modules\Listing\Http\Requests\UpdateListingPhotosRequest;
+use Modules\Listing\Http\Requests\UpdateListingDetailsRequest;
 use Modules\Listing\ViewModels\Listing\CreateListingViewModel;
-
+use Domain\Listings\DataTransferObjects\ListingUpdateAgentData;
+use Domain\Listings\DataTransferObjects\ListingUpdatePhotosData;
+use Modules\Listing\Http\Requests\UpdateListingExtraInfoRequest;
+use Domain\Listings\DataTransferObjects\ListingUpdateDetailsData;
+use Domain\Listings\DataTransferObjects\ListingUpdatePricingData;
+use Domain\Listings\DataTransferObjects\ListingUpdateLocationData;
+use Domain\Listings\DataTransferObjects\ListingUpdateExtraInfoData;
 
 class ListingController extends Controller
 {
@@ -78,7 +93,8 @@ class ListingController extends Controller
     public function show($listing_id, $listing_ref)
     {
         abort_if(Gate::denies('view_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return $this->repository->show($listing_id, $listing_ref);
+        $viewModel = new ListingShowViewModel($listing_id);
+        return view('listing::listing.front',  $viewModel);
     }
 
 
@@ -93,16 +109,11 @@ class ListingController extends Controller
 
 
 
-    public function updateListingAgent(Request $request)
+    public function updateListingAgent(Request $request, UpdateListingAgentAction $updateListingAgentAction)
     {
         if ($request->ajax()) {
             try {
-                $listing = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-                $agent = User::where('id', $request->agent)->where('business_id', $request->business)->firstOrFail();
-                $listing->update([
-                    'assigned_to'      => $request->agent
-                ]);
-
+                $agent = $updateListingAgentAction(ListingUpdateAgentData::fromRequest($request));
                 return response()->json(['message' => trans('global.modified'), 'agent' => $agent], 200);
             } catch (\Exception $th) {
                 return response()->json(['message' => trans('global.something_wrong')], 400);
@@ -112,84 +123,14 @@ class ListingController extends Controller
 
 
 
-    public function updateListingPricing(Request $request)
+    public function updateListingPricing(Request $request, UpdateListingPricingAction $updateListingPricingAction)
     {
         if ($request->ajax()) {
             try {
-                $listing = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-                $cheque =  ListingCheque::where('id', $request->cheque)->where('business_id', $request->business)->where('agency_id', $request->agency)->firstOrFail();
-
-                $validator = Validator::make($request->all(), [
-                    "price"                                   => ['required', 'string'],
-                    "rent_frequency"                          => ['sometimes', 'nullable', 'string', 'in:yearly,monthly,weekly,daily'],
-                    "commission_percent"                       => ['sometimes', 'nullable', 'numeric'],
-                    "commission_value"                         => ['sometimes', 'nullable', 'string'],
-                    "deposite_percent"                        => ['sometimes', 'nullable', 'numeric'],
-                    "deposite_value"                          => ['sometimes', 'nullable', 'string'],
-                ]);
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
-                }
-                $listing->update([
-                    'price'                  => $request->price,
-                    'rent_frequency'         => $request->rent_frequency,
-                    'comission_percent'      => $request->commission_percent,
-                    'comission_value'        => $request->commission_value,
-                    'deposite_percent'       => $request->deposite_percent,
-                    'deposite_value'         => $request->deposite_value,
-                    'listing_rent_cheque_id' => $cheque->id,
-                ]);
-
+                $cheque = $updateListingPricingAction(ListingUpdatePricingData::fromRequest($request));
                 return response()->json(['message' => trans('global.modified'), 'cheque' => $cheque], 200);
             } catch (\Exception $th) {
 
-                return response()->json(['message' => trans('global.something_wrong')], 400);
-            }
-        }
-    }
-
-
-
-    public function updateListingLocation(Request $request)
-    {
-
-        if ($request->ajax()) {
-            try {
-                $listing   = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-                $city      =  City::findOrFail($request->city);
-                $community =  Community::findOrFail($request->community);
-                $sub_community = '';
-                if ($request->sub_community) {
-
-                    $sub_community       =  SubCommunity::findOrFail($request->sub_community);
-                }
-
-                $validator = Validator::make($request->all(), [
-                    "loc_lat"                                  => ['sometimes', 'nullable', 'string'],
-                    "loc_lng"                                  => ['sometimes', 'nullable', 'string'],
-                    "location"                                 => ['sometimes', 'nullable', 'string'],
-                    "sub_community"                            => ['sometimes', 'nullable', 'string', 'exists:sub_communities,id'],
-                    "unit"                                     => ['sometimes', 'nullable', 'string'],
-                    "plot"                                     => ['sometimes', 'nullable', 'string'],
-                    "street"                                   => ['sometimes', 'nullable', 'string'],
-                ]);
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
-                }
-                $listing->update([
-                    'loc_lat'                   => $request->loc_lat,
-                    'loc_lng'                   => $request->loc_lng,
-                    'location'                  => $request->location,
-                    'sub_community_id'          => $request->sub_community,
-                    'community_id'              => $request->community,
-                    'city_id'                   => $request->city,
-                    'unit_no'                   => $request->unit,
-                    'plot_no'                   => $request->plot,
-                    'street_no'                 => $request->street,
-                ]);
-
-                return response()->json(['message' => trans('global.modified'), 'city' => $city, 'community' => $community, 'sub_community' => $sub_community], 200);
-            } catch (\Exception $th) {
                 dd($th);
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
@@ -197,37 +138,27 @@ class ListingController extends Controller
     }
 
 
-    public function updateListingExtraInfo(Request $request)
+
+    public function updateListingLocation(Request $request, UpdateListingLocationAction $updateListingLocationAction)
+    {
+        if ($request->ajax()) {
+            try {
+                $listing = $updateListingLocationAction(ListingUpdateLocationData::fromRequest($request));
+                return response()->json(['message' => trans('global.modified'), 'city' =>  $listing['city'], 'community' => $listing['community'], 'sub_community' => $listing['sub_community']], 200);
+            } catch (\Exception $th) {
+                return response()->json(['message' => trans('global.something_wrong')], 400);
+            }
+        }
+    }
+
+    public function updateListingExtraInfo(UpdateListingExtraInfoRequest $request, UpdateListingExtraInfoAction $updateListingExtraInfoAction)
     {
 
         if ($request->ajax()) {
             try {
-                $listing   = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-
-                $validator = Validator::make($request->all(), [
-                    "key_location"                             => ['sometimes', 'nullable', 'string'],
-                    "govfield1"                                => ['sometimes', 'nullable', 'string'],
-                    "govfield2"                                => ['sometimes', 'nullable', 'string'],
-                    "yearly_service_charges"                   => ['sometimes', 'nullable', 'numeric'],
-                    "monthly_cooling_charges"                  => ['sometimes', 'nullable', 'numeric'],
-                    "monthly_cooling_provider"                 => ['sometimes', 'nullable', 'numeric'],
-
-                ]);
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
-                }
-                $listing->update([
-                    'key_location'               => $request->key_location,
-                    'govfield1'                  => $request->govfield1,
-                    'govfield2'                  => $request->govfield2,
-                    'yearly_service_charges'     => $request->yearly_service_charges,
-                    'monthly_cooling_charges'    => $request->monthly_cooling_charges,
-                    'monthly_cooling_provider'   => $request->monthly_cooling_provider,
-                ]);
-
+                $updateListingExtraInfoAction(ListingUpdateExtraInfoData::fromRequest($request));
                 return response()->json(['message' => trans('global.modified')], 200);
             } catch (\Exception $th) {
-
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
         }
@@ -235,182 +166,31 @@ class ListingController extends Controller
 
 
 
-    public function updateListingDetails(Request $request)
+    public function updateListingDetails(UpdateListingDetailsRequest $request, UpdateListingDetailsAction $listingUpdateDetailsAction)
     {
         if ($request->ajax()) {
             try {
-                $listing   = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-                $views     = json_decode($request->views);
-                $validator = Validator::make($request->all(), [
-                    "purpose"                                  => ['required', 'in:sale,rent,short'],
-                    "views"                                    => ['sometimes', 'nullable', 'string'],
-
-                    "title"                                    => ['sometimes', 'nullable', 'string'],
-                    "type" => [
-                        'required', 'integer', Rule::exists('listing_types', 'id')
-                    ],
-                    "status"                                   => ['required', 'in:draft,live,archive,review'],
-                    "never_lived_in"                           => ['sometimes', 'nullable', 'in:yes,no'],
-                    "featured_on_company_website"              => ['sometimes', 'nullable', 'in:yes,no'],
-                    "exclusive_rights"                         => ['sometimes', 'nullable', 'in:yes,no'],
-                    "beds"                                     => ['sometimes', 'nullable', 'string'],
-                    "baths"                                    => ['sometimes', 'nullable', 'integer'],
-                    "parkings"                                 => ['sometimes', 'nullable', 'integer'],
-                    "year_built"                               => ['sometimes', 'nullable', 'integer'],
-                    "developer"                                => ['sometimes', 'nullable', Rule::exists('developers', 'id')->where(function ($q) use ($request, $listing) {
-                        $q->where('agency_id', $listing->agency_id);
-                    })],
-                    "plot_area"                                => ['sometimes', 'nullable', 'numeric'],
-                    "area"                                     => ['required', 'numeric'],
-                    "lsm"                                      => ['required', 'in:private,shared'],
-                    "landlord"                                 => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request, $listing) {
-                        $q->where('agency_id', $listing->agency_id);
-                    })],
-                    "rented"                                   => ['required', 'in:yes,no'],
-                    "tenant_start_date"                        => ['sometimes', 'nullable',  "before_or_equal:tenant_end_date_{$request->listing}", 'date_format:Y-m-d'],
-                    "tenant_end_date"                          => ['sometimes', 'nullable',  "after_or_equal:tenant_start_date_{$request->listing}", 'date_format:Y-m-d'],
-                    "tenant"                                   => ['sometimes', 'nullable', Rule::exists('clients', 'id')->where(function ($q) use ($request, $listing) {
-                        $q->where('agency_id', $listing->agency_id);
-                    })],
-                    "source"                                   => ['required', Rule::exists('lead_sources', 'id')->where(function ($q) use ($request, $listing) {
-                        $q->where('agency_id', $listing->agency_id);
-                    })],
-                ]);
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
-                }
-
-                if (count($views) > 0) {
-                    foreach ($views as $view) {
-                        $view =  ListingView::where('id', $view)->where('agency_id', $listing->agency_id)->first();
-                        if (!$view) {
-                            return response()->json(['message' => 'View Not Valid'], 400);
-                        }
-                    }
-                }
-
-                $listing->update([
-                    "purpose"                                  => $request->purpose,
-                    "status"                                  => $request->status,
-                    "title"                                    => $request->title,
-                    "type_id"                                  => $request->type,
-                    "never_lived_in"                           => $request->never_lived_in,
-                    "featured_on_company_website"              => $request->featured_on_company_website,
-                    "exclusive_rights"                         => $request->exclusive_rights,
-                    "beds"                                     => $request->beds,
-                    "baths"                                    => $request->baths,
-                    "parkings"                                 => $request->parkings,
-                    "year_built"                               => $request->year_built,
-                    "developer_id"                             => $request->developer,
-                    "plot_area"                                => $request->plot_area,
-                    "area"                                     => $request->area,
-                    "lsm"                                      => $request->lsm,
-                    "landlord_id"                              => $request->landlord,
-                    "rented"                                   => $request->rented,
-                    "tenancy_contract_start_date"              => $request->tenant_start_date,
-                    "tenancy_contract_end_date"                => $request->tenant_end_date,
-                    "tenant_id"                                => $request->tenant,
-                    "source_id"                                => $request->source,
-                    'view_ids'                                 => $views
-                ]);
-
+                $listingUpdateDetailsAction(ListingUpdateDetailsData::fromRequest($request));
                 return response()->json(['message' => trans('global.modified')], 200);
             } catch (\Exception $th) {
-
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
         }
     }
-    public function updateListingPhotos(Request $request)
+    public function updateListingPhotos(UpdateListingPhotosRequest $request, UpdateListingPhotosAction $updateListingPhotosAction)
     {
 
         if ($request->ajax()) {
             try {
 
-
-                $listing             = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-
-
-                $validator = Validator::make($request->all(), [
-                    "photos"                             => ['required', 'string'],
-                    "checked_main_hidden"                => ['sometimes', 'nullable', 'string'],
-                ]);
-
-                $has_new_main_photo = 'no';
-                $new_main_photo         = null;
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
-                }
-                $photos              = json_decode($request->photos);;
-                $check_hidden_photos = json_decode($request->checked_main_hidden);
-                // dd($photos, $check_hidden_photos);
-                if ($photos && is_array($photos)) {
-                    if (!file_exists(public_path("listings"))) {
-                        mkdir(public_path("listings"));
-                    }
-                    if (!file_exists(public_path("listings/photos"))) {
-                        mkdir(public_path("listings/photos"));
-                    }
-
-                    foreach ($photos as $key => $folder) {
-                        $photo = TemporaryListing::where('folder', $folder)->first();
-                        if ($photo) {
-
-                            if (in_array('yes', $check_hidden_photos)) {
-                                ListingPhoto::where('listing_id', $listing->id)->update(['photo_main' => 'no']);
-                            }
-
-                            // dd($fixed_array_keys, $request->all());
-                            $moved = ListingPhoto::create(
-                                [
-                                    'listing_id'             => $listing->id,
-                                    'main'                   => $photo->main,
-                                    'watermark'              => $photo->watermark,
-                                    'active'                 => $photo->active,
-                                    'photo_main'             => $check_hidden_photos[$key],
-                                    'icon'                   => $photo->icon,
-                                    'listing_category_id'    =>  $photo->listing_category_id
-                                ]
-                            );
-
-                            if ($moved->photo_main == 'yes') {
-
-                                $has_new_main_photo = 'yes';
-                                $new_photo_main     = $moved;
-                            }
-
-
-
-                            if ($moved) {
-                                $files = File::files(public_path("temporary/listings/$photo->folder"));
-                                if (!file_exists(public_path("listings/photos/agency_$listing->agency_id"))) {
-                                    mkdir(public_path("listings/photos/agency_$listing->agency_id"));
-                                }
-                                if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"))) {
-                                    mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"));
-                                }
-                                if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"))) {
-                                    mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"));
-                                }
-                                $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
-                                foreach ($files as $file) {
-                                    File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
-                                }
-                                $removed_dir = public_path("temporary/listings/$photo->folder");
-                                if (file_exists($removed_dir)) {
-                                    rmdir($removed_dir);
-                                }
-                            }
-                        }
-                    }
-                }
-
+                $listing = $updateListingPhotosAction(ListingUpdatePhotosData::fromRequest($request));
                 return response()->json([
-                    'message' => trans('global.modified'), 'has_new_main_photo' => $has_new_main_photo,
-                    'new_main_photo' => $new_photo_main, 'path' => asset('listings/photos/agency_' . $listing->agency_id . '/listing_' . $listing->id . '/photo_')
+                    'message'            => trans('global.modified'),
+                    'has_new_main_photo' => $listing['has_new_main_photo'],
+                    'new_main_photo'     => $listing['new_main_photo'],
+                    'path'               => $listing['path']
                 ], 200);
             } catch (\Exception $th) {
-
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
         }

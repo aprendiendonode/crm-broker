@@ -73,8 +73,6 @@ class CreateListingAction
         }
         $inputs['added_by'] = auth()->user()->id;
         $listing = Listing::create($inputs);
-
-
         if (array_key_exists('portals', $inputs) && is_array($inputs['portals'])) {
 
             foreach ($inputs['portals'] as $portal) {
@@ -84,8 +82,6 @@ class CreateListingAction
                 ]);
             }
         }
-
-
         //* move photos from temporary to listing_photos
         if ($photos && is_array($photos)) {
             if (!file_exists(public_path("listings"))) {
@@ -183,9 +179,6 @@ class CreateListingAction
                 }
             }
         }
-
-        //* move documents from temporary to listing_documents
-
         if ($documents && is_array($documents)) {
             if (!file_exists(public_path("listings"))) {
                 mkdir(public_path("listings"));
