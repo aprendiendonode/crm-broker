@@ -25,4 +25,5 @@ Route::prefix('listing')->group(function () {
     Route::get('Listing/{type}', 'Api\ListingController@index');
     Route::get('single', 'Api\ListingController@singleListing');
     Route::get('search', 'Api\ListingController@search');
+    Route::get('neerbyme', 'Api\ListingController@neerbyme');
 });
