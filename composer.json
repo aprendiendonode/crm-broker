@@ -29,6 +29,7 @@
         "nwidart/laravel-modules": "^8.2",
         "patrickschur/language-detection": "^5.1",
         "pusher/pusher-php-server": "^4.0",
+        "realrashid/sweet-alert": "^4.0",
         "renatomarinho/laravel-page-speed": "^2.0",
         "spatie/data-transfer-object": "^1.13",
         "spatie/laravel-feed": "^2.2",

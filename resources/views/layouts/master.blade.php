@@ -18,7 +18,6 @@
 
 <!-- Plugins css -->
     <link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css"/>
-{{-- <link href="{{asset('assets/libs/selectize/css/selectize.bootstrap3.css')}}" rel="stylesheet" type="text/css" /> --}}
 
 <!-- App css -->
         @if(auth()->user()->default_mode == 'light')
@@ -36,8 +35,7 @@
            @endif
     <!-- icons -->
     <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"
-          type="text/css"/>
+   
     <style>
         .error {
             color: red;
@@ -1091,7 +1089,7 @@ justify-content: space-between; min-height: 92vh;">
     </div> <!-- end slimscroll-menu-->
 </div>
 <!-- /Right-bar -->
-
+@include('sweetalert::alert')
 <!-- Right bar overlay-->
 <div class="rightbar-overlay"></div>
 <!-- Vendor js -->
@@ -1107,69 +1105,11 @@ justify-content: space-between; min-height: 92vh;">
         flatpickr(".flatpicker");
     });
 </script>
-{{-- <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script> --}}
-
-{{-- <script src="{{asset('assets/libs/selectize/js/standalone/selectize.min.js')}}"></script> --}}
-
-<!-- Dashboar 1 init js-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script>
-    toastr.options = {
-        "closeButton": false,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": false,
-        "positionClass": "toast-bottom-right",
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "600",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut",
-        "progressBar": true,
-
-    }
-
-    function toast(message, type) {
-        if (type == "success") {
-            toastr.success(message)
-        } else if (type == "error") {
-            toastr.error(message)
-
-        }
-        else if (type == "danger") {
-            toastr.error(message)
-
-        }
-        else if (type == "warning") {
-            toastr.warning(message)
-
-        }
-        else if (type == "info") {
-            toastr.info(message)
-
-        }
-
-    }
-
-</script>
 
 
-@if(Session::has('message'))
-    <script>
-
-        var type = "{{ Session::get('alert-type', 'info') }}";
-
-        toast('{{ session('message') }}', type)
-
-    </script>
-@endif
 <!-- App js-->
 @stack('js')
+
 <script>
 function changeDefaultMode(mode){
 

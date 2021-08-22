@@ -156,10 +156,16 @@ if (!function_exists('flash')) {
     function flash($message = 'No Message Set', $type = 'info')
     {
 
-        return [
-            'message' => $message,
-            'alert-type' => $type
-        ];
+        if ($type == 'error') {
+            return [
+                'toast_error' => $message,
+            ];
+        }
+        if ($type == 'success') {
+            return [
+                'toast_success' => $message,
+            ];
+        }
     }
 }
 

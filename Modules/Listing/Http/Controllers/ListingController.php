@@ -34,6 +34,7 @@ use Domain\Listings\Actions\UpdateListingAgentAction;
 use Domain\Listings\Actions\UpdateListingPhotosAction;
 use Domain\Listings\Actions\UpdateListingDetailsAction;
 use Domain\Listings\Actions\UpdateListingPricingAction;
+use Modules\Listing\Http\Requests\CreateListingRequest;
 use Domain\Listings\Actions\UpdateListingLocationAction;
 use Domain\Listings\Actions\UpdateListingExtraInfoAction;
 use Modules\Listing\ViewModels\Listing\ListingFormViewModel;
@@ -67,18 +68,17 @@ class ListingController extends Controller
 
     public function create($agency, Request $request)
     {
+
         $business = auth()->user()->business_id;
         $viewModel = new ListingFormViewModel($agency, $business, $request);
         return view('listing::listing.create.index', $viewModel);
     }
 
-    public function store(Request $request, CreateListingAction $createListingAction)
+    public function store(CreateListingRequest $request, CreateListingAction $createListingAction)
     {
-        abort_if(Gate::denies('add_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         DB::beginTransaction();
         try {
-            $listingData = ListingData::fromRequest($request);
-            $listing = $createListingAction($listingData);
+            $createListingAction(ListingData::fromRequest($request));
             DB::commit();
             return back()->with(flash(trans('listing.listing_created'), 'success'));
         } catch (\Exception $e) {
@@ -120,8 +120,6 @@ class ListingController extends Controller
             }
         }
     }
-
-
 
     public function updateListingPricing(Request $request, UpdateListingPricingAction $updateListingPricingAction)
     {

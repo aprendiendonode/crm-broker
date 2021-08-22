@@ -17,7 +17,6 @@ class UpdateListingDetailsAction
 
     public function __invoke(ListingUpdateDetailsData $listingUpdateDetailsData): Listing
     {
-
         $listing   = Listing::where('business_id', $listingUpdateDetailsData->business)->where('id', $listingUpdateDetailsData->listing)->firstOrFail();
         $listing->update([
             "purpose"                                  => $listingUpdateDetailsData->purpose,

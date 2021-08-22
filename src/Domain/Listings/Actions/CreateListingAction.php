@@ -20,6 +20,15 @@ use Modules\Listing\Entities\ListingChequeCalculator;
 
 class CreateListingAction
 {
+
+    private UploadListingDocumentAction $uploadListingDocumentAction;
+
+    public function __construct(UploadListingDocumentAction $uploadListingDocumentAction)
+    {
+        $this->uploadListingDocumentAction = $uploadListingDocumentAction;
+    }
+
+
     public function __invoke(ListingData $listingData): Listing
     {
 
@@ -38,32 +47,19 @@ class CreateListingAction
         $documents = $listingData->documents;
         $floor_plans = $listingData->floor_plans;
         $photos = $listingData->photos;
-
-        $validator = Validator::make($listingData->all(), Listing::store_validation($listingData));
-        if ($validator->fails()) {
-            return back()->withInput()->with(flash($validator->errors()->all()[0], 'danger'))->with('open-tab', '');
-        }
-
-        if (count($cheque_date) != count($cheque_amount) || count($cheque_date) != count($cheque_percentage)) {
-            return back()->withInput()->with(flash(trans('listing.cheque_inputs_invalid'), 'danger'))
-                ->with('open-tab', '');
-        }
-        if (count($video_host) != count($video_link) || count($video_host) != count($video_title)) {
-            return back()->withInput()->with(flash(trans('listing.video_inputs_invalid'), 'danger'))
-                ->with('open-tab', '');
-        }
-
-        $inputs = $validator->validated();
-        unset($inputs['video_title']);
-        unset($inputs['video_link']);
-        unset($inputs['video_host']);
-        unset($inputs['cheque_date']);
-        unset($inputs['cheque_amount']);
-        unset($inputs['cheque_percentage']);
-        unset($inputs['photos']);
-        unset($inputs['floor_plans']);
-        unset($inputs['documents']);
-        /*   dd('here', $inputs); */
+        $inputs = collect($listingData)->except([
+            'video_title',
+            'video_link',
+            'video_host',
+            'cheque_date',
+            'cheque_amount',
+            'cheque_percentage',
+            'photos',
+            'floor_plans',
+            'documents',
+        ]);
+        // dd($inputs);
+        $inputs = $inputs->toArray();
 
         if (!array_key_exists('view_ids', $inputs)) {
             $inputs['view_ids'] = [];
@@ -71,8 +67,65 @@ class CreateListingAction
         if (!array_key_exists('portals', $inputs)) {
             $inputs['portals'] = [];
         }
-        $inputs['added_by'] = auth()->user()->id;
-        $listing = Listing::create($inputs);
+
+        $listing = Listing::create(
+            [
+                "business_id"                => $inputs['business_id'],
+                "agency_id"                  => $inputs['agency_id'],
+                "type_id"                    => $inputs['type_id'],
+                "loc_lat"                    => $inputs['loc_lat'],
+                "loc_lng"                    => $inputs['loc_lng'],
+                "purpose"                    => $inputs['purpose'],
+                "location"                   => $inputs['location'],
+                "city_id"                    => $inputs['city_id'],
+                "community_id"               => $inputs['community_id'],
+                "sub_community_id"           => $inputs['sub_community_id'],
+                "unit_no"                    => $inputs['unit_no'],
+                "plot_no"                    => $inputs['plot_no'],
+                "street_no"                  => $inputs['street_no'],
+                "portals"                    => $inputs['portals'],
+                "view_ids"                   => $inputs['view_ids'],
+                "price"                      => $inputs['price'],
+                "rent_frequency"             => $inputs['rent_frequency'],
+                "comission_percent"          => $inputs['comission_percent'],
+                "comission_value"            => $inputs['comission_value'],
+                "never_lived_in"             => $inputs['never_lived_in'],
+                "featured_on_company_website" => $inputs['featured_on_company_website'],
+                "exclusive_rights"           => $inputs['exclusive_rights'],
+                "beds"                       => $inputs['beds'],
+                "baths"                      => $inputs['baths'],
+                "parkings"                   => $inputs['parkings'],
+                "year_built"                 => $inputs['year_built'],
+                "developer_id"               => $inputs['developer_id'],
+                "plot_area"                  => $inputs['plot_area'],
+                "area"                       => $inputs['area'],
+                "deposite_percent"           => $inputs['deposite_percent'],
+                "deposite_value"             => $inputs['deposite_value'],
+                "listing_rent_cheque_id"     => $inputs['listing_rent_cheque_id'],
+                "title"                      => $inputs['title'],
+                "lsm"                        => $inputs['lsm'],
+                "landlord_id"                => $inputs['landlord_id'],
+                "rented"                     => $inputs['rented'],
+                "tenancy_contract_start_date" => $inputs['tenancy_contract_start_date'],
+                "tenancy_contract_end_date"  => $inputs['tenancy_contract_end_date'],
+                "tenant_id"                  => $inputs['tenant_id'],
+                "source_id"                  => $inputs['source_id'],
+                "assigned_to"                => $inputs['assigned_to'],
+                "status"                     => $inputs['status'],
+                "note"                       => $inputs['note'],
+                "features"                   => $inputs['features'],
+                "key_location"               => $inputs['key_location'],
+                "govfield1"                  => $inputs['govfield1'],
+                "govfield2"                  => $inputs['govfield2'],
+                "yearly_service_charges"     => $inputs['yearly_service_charges'],
+                "monthly_cooling_charges"    => $inputs['monthly_cooling_charges'],
+                "monthly_cooling_provider"   => $inputs['monthly_cooling_provider'],
+                "description_en"             => $inputs['description_en'],
+                "description_ar"             => $inputs['description_ar'],
+                "added_by"                   => auth()->user()->id
+            ]
+        );
+
         if (array_key_exists('portals', $inputs) && is_array($inputs['portals'])) {
 
             foreach ($inputs['portals'] as $portal) {
@@ -82,6 +135,7 @@ class CreateListingAction
                 ]);
             }
         }
+
         //* move photos from temporary to listing_photos
         if ($photos && is_array($photos)) {
             if (!file_exists(public_path("listings"))) {
@@ -119,8 +173,6 @@ class CreateListingAction
                         }
                         $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
                         foreach ($files as $file) {
-
-
                             File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
                         }
                         $removed_dir = public_path("temporary/listings/$photo->folder");
@@ -180,47 +232,8 @@ class CreateListingAction
             }
         }
         if ($documents && is_array($documents)) {
-            if (!file_exists(public_path("listings"))) {
-                mkdir(public_path("listings"));
-            }
-            if (!file_exists(public_path("listings/documents"))) {
-                mkdir(public_path("listings/documents"));
-            }
 
-            foreach ($documents as $folder) {
-                $document = TemporaryDocument::where('folder', $folder)->first();
-                if ($document) {
-                    $moved = ListingDocument::create(
-                        [
-                            'listing_id' => $listing->id,
-                            'document' => $document->document,
-                            'title' => $document->title,
-                        ]
-                    );
-
-                    if ($moved) {
-                        $files = File::files(public_path("temporary/documents/$document->folder"));
-
-                        if (!file_exists(public_path("listings/documents/agency_$listing->agency_id"))) {
-                            mkdir(public_path("listings/documents/agency_$listing->agency_id"));
-                        }
-                        if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id"))) {
-                            mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id"));
-                        }
-                        if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"))) {
-                            mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"));
-                        }
-                        $new_folder = public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id");
-                        foreach ($files as $file) {
-                            File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
-                        }
-                        $removed_dir = public_path("temporary/documents/$document->folder");
-                        if (file_exists($removed_dir)) {
-                            rmdir($removed_dir);
-                        }
-                    }
-                }
-            }
+            ($this->uploadListingDocumentAction)($listing, $documents);
         }
         //* save videos
 
