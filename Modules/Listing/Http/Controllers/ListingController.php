@@ -30,23 +30,31 @@ use Modules\Listing\Entities\TemporaryDocument;
 use Domain\Listings\Actions\CreateListingAction;
 use Modules\Listing\Http\Repositories\ListingRepo;
 use Domain\Listings\DataTransferObjects\ListingData;
+use Domain\Listings\Actions\CreateListingVideoAction;
 use Domain\Listings\Actions\UpdateListingAgentAction;
 use Domain\Listings\Actions\UpdateListingPhotosAction;
 use Domain\Listings\Actions\UpdateListingDetailsAction;
+use Domain\Listings\Actions\UpdateListingFeatureAction;
 use Domain\Listings\Actions\UpdateListingPricingAction;
 use Modules\Listing\Http\Requests\CreateListingRequest;
 use Domain\Listings\Actions\UpdateListingLocationAction;
 use Domain\Listings\Actions\UpdateListingExtraInfoAction;
+use Modules\Listing\Http\Requests\UpdateListingVideoRequest;
 use Modules\Listing\ViewModels\Listing\ListingFormViewModel;
 use Modules\Listing\ViewModels\Listing\ListingShowViewModel;
 use Modules\Listing\Http\Requests\UpdateListingPhotosRequest;
 use Modules\Listing\Http\Requests\UpdateListingDetailsRequest;
+use Modules\Listing\Http\Requests\UpdateListingFeatureRequest;
 use Modules\Listing\Http\Requests\UpdateListingPricingRequest;
 use Modules\Listing\ViewModels\Listing\CreateListingViewModel;
+use Domain\Listings\DataTransferObjects\ListingCreateVideoData;
 use Domain\Listings\DataTransferObjects\ListingUpdateAgentData;
+use Modules\Listing\Http\Requests\UpdateListingDocumentRequest;
+use Modules\Listing\Http\Requests\UpdateListingLocationRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdatePhotosData;
 use Modules\Listing\Http\Requests\UpdateListingExtraInfoRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdateDetailsData;
+use Domain\Listings\DataTransferObjects\ListingUpdateFeatureData;
 use Domain\Listings\DataTransferObjects\ListingUpdatePricingData;
 use Domain\Listings\DataTransferObjects\ListingUpdateLocationData;
 use Domain\Listings\DataTransferObjects\ListingUpdateExtraInfoData;
@@ -84,6 +92,7 @@ class ListingController extends Controller
             return back()->with(flash(trans('listing.listing_created'), 'success'));
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
         }
     }
@@ -129,7 +138,6 @@ class ListingController extends Controller
                 $cheque = $updateListingPricingAction(ListingUpdatePricingData::fromRequest($request));
                 return response()->json(['message' => trans('global.modified'), 'cheque' => $cheque], 200);
             } catch (\Exception $th) {
-                dd($th);
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
         }
@@ -137,12 +145,16 @@ class ListingController extends Controller
 
 
 
-    public function updateListingLocation(Request $request, UpdateListingLocationAction $updateListingLocationAction)
+    public function updateListingLocation(UpdateListingLocationRequest $request, UpdateListingLocationAction $updateListingLocationAction)
     {
         if ($request->ajax()) {
+
             try {
                 $listing = $updateListingLocationAction(ListingUpdateLocationData::fromRequest($request));
-                return response()->json(['message' => trans('global.modified'), 'city' =>  $listing['city'], 'community' => $listing['community'], 'sub_community' => $listing['sub_community']], 200);
+                return response()->json([
+                    'message' => trans('global.modified'), 'city' =>  $listing['city'],
+                    'community' => $listing['community'], 'sub_community' => $listing['sub_community']
+                ], 200);
             } catch (\Exception $th) {
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
@@ -195,50 +207,14 @@ class ListingController extends Controller
     }
 
 
-
-
-
-    public function updateListingVideos(Request $request)
+    public function updateListingVideos(UpdateListingVideoRequest $request, CreateListingVideoAction $createListingVideoAction)
     {
-
         if ($request->ajax()) {
             try {
                 $listing     = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-
-                $validator = Validator::make($request->all(), [
-                    "video_title"                             => ['required', 'string'],
-                    "video_link"                              => ['required', 'string'],
-                    "video_host"                              => ['required', 'string'],
-                ]);
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
-                }
-                $video_title =  json_decode($request->video_title);
-                $video_link  =  json_decode($request->video_link);
-                $video_host  =  json_decode($request->video_host);
-                if (count($video_host) != count($video_link) || count($video_host) != count($video_title)) {
-                    return response()->json(['message' => trans('listing.video_inputs_invalid')], 400);
-                }
-                if (count($video_title) > 0) {
-                    $listing->videos->each(function ($q) {
-                        $q->delete();
-                    });
-                    if ($video_title[0] != null && $video_host[0] != null && $video_link[0] != null) {
-
-                        foreach ($video_title as $key => $title) {
-                            ListingVideo::create([
-                                'listing_id' => $listing->id,
-                                'title'      => $title,
-                                'host'       => $video_host[$key],
-                                'link'       => $video_link[$key],
-                            ]);
-                        }
-                    }
-                }
-
+                $createListingVideoAction($listing, ListingCreateVideoData::fromRequest($request));
                 return response()->json(['message' => trans('listing.video_added')], 200);
             } catch (\Exception $th) {
-
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
         }
@@ -246,66 +222,13 @@ class ListingController extends Controller
 
 
 
-    public function updateListingFeatures(Request $request)
+    public function updateListingFeatures(UpdateListingFeatureRequest $request, UpdateListingFeatureAction $updateListingFeatureAction)
     {
-
-
         if ($request->ajax()) {
             try {
-                $listing     = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-
-
-
-
-
-
-
-                $validator = Validator::make($request->all(), [
-                    "checkboxesFeatureName"                              => ['required', 'string'],
-                    "checkboxesFeatureValue"                             => ['required', 'string'],
-                    "inputsFeatureName"                                  => ['required', 'string'],
-                    "inputsFeatureValue"                                 => ['required', 'string'],
-                    "selectsFeatureName"                                 => ['required', 'string'],
-                    "selectsFeatureValue"                                => ['required', 'string'],
-
-                ]);
-
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
-                }
-                $checkboxesFeatureName   =  json_decode($request->checkboxesFeatureName);
-                $checkboxesFeatureValue  =  json_decode($request->checkboxesFeatureValue);
-                $checkboxes = [];
-                foreach ($checkboxesFeatureName as $key =>  $name) {
-                    $checkboxes[$name] =
-                        $checkboxesFeatureValue[$key];
-                }
-
-
-                $inputsFeatureName   =  json_decode($request->inputsFeatureName);
-                $inputsFeatureValue  =  json_decode($request->inputsFeatureValue);
-                $inputs = [];
-                foreach ($inputsFeatureName as $key =>  $name) {
-                    $inputs[$name] =
-                        $inputsFeatureValue[$key];
-                }
-
-                $selectsFeatureName   =  json_decode($request->selectsFeatureName);
-                $selectsFeatureValue  =  json_decode($request->selectsFeatureValue);
-                $selects = [];
-                foreach ($selectsFeatureName as $key =>  $name) {
-                    $selects[$name] =
-                        $selectsFeatureValue[$key];
-                }
-
-                $merged = array_merge($checkboxes, $inputs);
-                $all = array_merge($merged, $selects);
-
-
-                $listing->update(['features' => $all]);
+                $all =  $updateListingFeatureAction(ListingUpdateFeatureData::fromRequest($request));
                 return response()->json(['message' => trans('listing.modified')], 200);
             } catch (\Exception $th) {
-
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
         }
@@ -314,26 +237,13 @@ class ListingController extends Controller
 
 
 
-    public function updateListingDocuments(Request $request)
+    public function updateListingDocuments(UpdateListingDocumentRequest $request)
     {
-
         if ($request->ajax()) {
             try {
-
-
                 $listing             = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
 
-
-                $validator = Validator::make($request->all(), [
-                    "documents"                             => ['required', 'string'],
-                ]);
-
-
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
-                }
-                $documents              = json_decode($request->documents);
-
+                $documents              = $request->documents;
                 if ($documents && is_array($documents)) {
                     if (!file_exists(public_path("listings"))) {
                         mkdir(public_path("listings"));

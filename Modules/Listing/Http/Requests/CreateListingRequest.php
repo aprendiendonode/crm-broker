@@ -3,9 +3,11 @@
 namespace Modules\Listing\Http\Requests;
 
 use Illuminate\Validation\Rule;
+use App\Rules\ArrayIndexNotNull;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Listing\Rules\ComareArrayCount;
+use Modules\Listing\Rules\VideoArrayFirstIndexNotNull;
 
 class CreateListingRequest extends FormRequest
 {
@@ -95,7 +97,9 @@ class CreateListingRequest extends FormRequest
             "monthly_cooling_charges"                  => ['sometimes', 'nullable', 'numeric'],
             "monthly_cooling_provider"                 => ['sometimes', 'nullable', 'numeric'],
 
-            "video_title"                              => ['required', 'array', new ComareArrayCount(request('video_link'), request('video_host'))],
+            "video_title"                              => [
+                'required', 'array', new ComareArrayCount(request('video_link'), request('video_host'))
+            ],
             "video_link"                               => ['required', 'array'],
             "video_host"                               => ['required', 'array'],
             "description_en"                           => ['sometimes', 'nullable', 'string'],

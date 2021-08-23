@@ -370,7 +370,8 @@
              $('#description-modal-' + listing).modal('hide')
          },
          error: function (error) {
-             toast('error', 'error')
+             toast(error.responseJSON.message, 'error')
+
          }
 
      })
@@ -422,7 +423,8 @@
              $('#photos-modal_' + listing).modal('hide')
          },
          error: function (error) {
-             toast('error', 'error')
+             toast(error.responseJSON.message, 'error')
+
          }
 
      })
@@ -549,7 +551,8 @@
              $('#videos-modal_' + listing).modal('hide')
          },
          error: function (error) {
-             toast('error', 'error')
+             toast(error.responseJSON.message, 'error')
+
          }
 
      })
@@ -667,14 +670,6 @@
     }
       }).get();
 
-
-
-console.log(checkboxesFeatureName,
-    checkboxesFeatureValue,
-    inputsFeatureName,
-    inputsFeatureValue,
-    selectsFeatureName,
-    selectsFeatureValue)
      $.ajax({
         url: route,
         type: "POST",
@@ -696,7 +691,9 @@ console.log(checkboxesFeatureName,
             $('#featuresModal_' + listing).modal('hide')
         },
         error: function (error) {
-            toast('error', 'error')
+            
+            toast(error.responseJSON.message, 'error')
+
         }
 
     })
@@ -840,7 +837,9 @@ function updateListingDocuments(listing, route, token, agency, business, locale)
             $('#documents-modal_' + listing).modal('hide')
         },
         error: function (error) {
-            toast('error', 'error')
+            toast(error.responseJSON.message, 'error')
+
+        
         }
 
     })

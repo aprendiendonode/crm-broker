@@ -47,7 +47,8 @@ return [
     'residential'          => 'Residental',
     'type'                 => 'Type',
 
-
+    'update'    => 'Update',
+    'modified' => 'Modified',
 
 
     'location_price'       => 'Location & Price',

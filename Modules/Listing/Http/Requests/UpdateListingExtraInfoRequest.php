@@ -2,6 +2,7 @@
 
 namespace Modules\Listing\Http\Requests;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -31,6 +32,6 @@ class UpdateListingExtraInfoRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::allows('edit_listing');
     }
 }

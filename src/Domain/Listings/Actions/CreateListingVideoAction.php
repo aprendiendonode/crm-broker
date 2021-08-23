@@ -5,6 +5,7 @@ namespace Domain\Listings\Actions;
 
 use Modules\Listing\Entities\Listing;
 use Modules\Listing\Entities\ListingVideo;
+use Domain\Listings\DataTransferObjects\ListingCreateVideoData;
 
 
 class CreateListingVideoAction
@@ -12,15 +13,19 @@ class CreateListingVideoAction
 
 
 
-    public function __invoke(Listing $listing, array $video_title, array $video_host, array $video_link)
+    public function __invoke(Listing $listing,  $listingCreateVideoData)
     {
 
-        foreach ($video_title as $key => $title) {
+
+        $listing->videos->each(function ($q) {
+            $q->delete();
+        });
+        foreach ($listingCreateVideoData->video_title as $key => $title) {
             ListingVideo::create([
                 'listing_id' => $listing->id,
-                'title' => $title,
-                'host' => $video_host[$key],
-                'link' => $video_link[$key],
+                'title'      => $title,
+                'host'       => $listingCreateVideoData->video_host[$key],
+                'link'       => $listingCreateVideoData->video_link[$key],
             ]);
         }
     }
