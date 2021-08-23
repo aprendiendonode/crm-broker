@@ -242,7 +242,6 @@ class ListingController extends Controller
         if ($request->ajax()) {
             try {
                 $listing             = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-
                 $documents              = $request->documents;
                 if ($documents && is_array($documents)) {
                     if (!file_exists(public_path("listings"))) {
