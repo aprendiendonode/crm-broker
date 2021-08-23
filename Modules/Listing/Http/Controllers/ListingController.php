@@ -41,6 +41,7 @@ use Modules\Listing\ViewModels\Listing\ListingFormViewModel;
 use Modules\Listing\ViewModels\Listing\ListingShowViewModel;
 use Modules\Listing\Http\Requests\UpdateListingPhotosRequest;
 use Modules\Listing\Http\Requests\UpdateListingDetailsRequest;
+use Modules\Listing\Http\Requests\UpdateListingPricingRequest;
 use Modules\Listing\ViewModels\Listing\CreateListingViewModel;
 use Domain\Listings\DataTransferObjects\ListingUpdateAgentData;
 use Domain\Listings\DataTransferObjects\ListingUpdatePhotosData;
@@ -121,14 +122,13 @@ class ListingController extends Controller
         }
     }
 
-    public function updateListingPricing(Request $request, UpdateListingPricingAction $updateListingPricingAction)
+    public function updateListingPricing(UpdateListingPricingRequest $request, UpdateListingPricingAction $updateListingPricingAction)
     {
         if ($request->ajax()) {
             try {
                 $cheque = $updateListingPricingAction(ListingUpdatePricingData::fromRequest($request));
                 return response()->json(['message' => trans('global.modified'), 'cheque' => $cheque], 200);
             } catch (\Exception $th) {
-
                 dd($th);
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
@@ -200,7 +200,6 @@ class ListingController extends Controller
 
     public function updateListingVideos(Request $request)
     {
-
 
         if ($request->ajax()) {
             try {

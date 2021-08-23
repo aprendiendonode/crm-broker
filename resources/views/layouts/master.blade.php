@@ -1089,7 +1089,29 @@ justify-content: space-between; min-height: 92vh;">
     </div> <!-- end slimscroll-menu-->
 </div>
 <!-- /Right-bar -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @include('sweetalert::alert')
+
+
+<script>
+     
+    function  toast(message,type){
+
+        Swal.fire({
+                title:message,
+                icon: type,
+              
+                showClass: {
+                  popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                  popup: 'animate__animated animate__fadeOutUp'
+                }
+              })
+
+    }
+</script>
 <!-- Right bar overlay-->
 <div class="rightbar-overlay"></div>
 <!-- Vendor js -->

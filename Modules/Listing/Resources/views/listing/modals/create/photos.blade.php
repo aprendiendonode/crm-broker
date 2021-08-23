@@ -199,7 +199,19 @@ function handleCreateCloseModal() {
     console.log('off')
     $('#photos-modal').modal('toggle');
   }else {
-    toast('please select all categories','error');
+      Swal.fire({
+    title: 'Please Select all Categories',
+    icon: 'info',
+
+    showClass: {
+      popup: 'animate__animated animate__fadeInDown'
+    },
+    hideClass: {
+      popup: 'animate__animated animate__fadeOutUp'
+    }
+  })
+
+    // toast('please select all categories','error');
   }
   
 }

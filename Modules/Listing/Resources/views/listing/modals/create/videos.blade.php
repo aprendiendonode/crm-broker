@@ -42,8 +42,7 @@
                 </button>
             </div>
             <div class="modal-footer">  
-                <button type="button" class="btn btn-light" data-dismiss="modal">@lang('listing.close')</button>
-                <button type="button" class="btn btn-primary">@lang('listing.done')</button>
+                <button type="button" class="btn btn-primary close" data-dismiss="modal">@lang('listing.close')</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

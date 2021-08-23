@@ -29,7 +29,7 @@
                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary close" data-dismiss="modal" aria-hidden="true">Done</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Done</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

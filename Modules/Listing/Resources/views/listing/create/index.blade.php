@@ -1057,16 +1057,6 @@ var formatter = new Intl.NumberFormat('en-EG', {
 });
 
 
-// function updatePrice() {
-//     let price = +document.getElementById('rent-sale-create').value;
-//     let annualCommissionPercentage = +(document.getElementById('annaul-commission').value) / 100;
-//     let depositPercenatage = +(document.getElementById('deposit-percenatage').value) / 100;
-//     // let commissionValue = document.getElementById('commissionValue');
-    
-
-//     document.getElementById('commissionValue').value = formatter.format(annualCommissionPercentage * price);
-//     document.getElementById('depositValue').value = formatter.format(depositPercenatage * price);
-// }
 
 function showRentDiv(type) {
 
@@ -1115,8 +1105,6 @@ function showFurnishedQuestion(){
         if(googleMapsScriptIsInjected){
             return;
         }
-
-
             const optionsQuery = Object.keys(options)
                 .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(options[k])}`)
                 .join('&');
@@ -1523,7 +1511,11 @@ function updateMain(input,table,listing_id){
   if(isAllSelected) {
     $('#photos-modal_'+listing).modal('toggle');
   }else {
-    toast('please select all categories','error');
+
+    swal("Done!", 'please select all categories', "error");
+
+    //   toast('please select all categories','error');
+
   }
   
 }
@@ -1563,7 +1555,6 @@ function updateMain(input,table,listing_id){
     }
 
 
-  
 </script>
 {{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXmcaeAp18vaypkcvsxt5qZcgFlXjeKnU&libraries=places&language=ar&region=EG&callback=initMap"></script> --}}
 

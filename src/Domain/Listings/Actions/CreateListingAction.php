@@ -5,27 +5,35 @@ namespace Domain\Listings\Actions;
 use App\Models\Agency;
 use App\Models\Business;
 use Modules\Listing\Entities\Listing;
-use Illuminate\Support\Facades\Validator;
-use Modules\Listing\Entities\ListingPlan;
-use Modules\Listing\Entities\ListingPhoto;
-use Modules\Listing\Entities\ListingVideo;
 use Modules\Listing\Entities\PortalListing;
-use Modules\Listing\Entities\TemporaryPlan;
-use Modules\Listing\Entities\ListingDocument;
-use Modules\Listing\Entities\TemporaryListing;
-use Modules\Listing\Entities\TemporaryDocument;
 use Domain\Listings\DataTransferObjects\ListingData;
-use Modules\Listing\Entities\ListingChequeCalculator;
-
 
 class CreateListingAction
 {
 
     private UploadListingDocumentAction $uploadListingDocumentAction;
+    private UploadListingPlanAction $uploadListingPlanAction;
+    private CreateListingVideoAction $createListingVideoAction;
+    private CreateListingChequeAction $createListingChequeAction;
+    private UploadListingPhotoAction $uploadListingPhotoAction;
+    private CreateListingPortalAction $createListingPortalAction;
 
-    public function __construct(UploadListingDocumentAction $uploadListingDocumentAction)
-    {
+    public function __construct(
+        UploadListingDocumentAction $uploadListingDocumentAction,
+        UploadListingPlanAction $uploadListingPlanAction,
+        CreateListingVideoAction $createListingVideoAction,
+        CreateListingChequeAction $createListingChequeAction,
+        UploadListingPhotoAction $uploadListingPhotoAction,
+        CreateListingPortalAction $createListingPortalAction
+
+
+    ) {
         $this->uploadListingDocumentAction = $uploadListingDocumentAction;
+        $this->uploadListingPlanAction = $uploadListingPlanAction;
+        $this->createListingVideoAction = $createListingVideoAction;
+        $this->createListingChequeAction = $createListingChequeAction;
+        $this->uploadListingPhotoAction = $uploadListingPhotoAction;
+        $this->createListingPortalAction = $createListingPortalAction;
     }
 
 
@@ -127,143 +135,30 @@ class CreateListingAction
         );
 
         if (array_key_exists('portals', $inputs) && is_array($inputs['portals'])) {
-
-            foreach ($inputs['portals'] as $portal) {
-                PortalListing::create([
-                    'listing_id' => $listing->id,
-                    'portal_id' => $portal
-                ]);
-            }
+            ($this->createListingPortalAction)($listing, $inputs['portals']);
         }
-
         //* move photos from temporary to listing_photos
         if ($photos && is_array($photos)) {
-            if (!file_exists(public_path("listings"))) {
-                mkdir(public_path("listings"));
-            }
-            if (!file_exists(public_path("listings/photos"))) {
-                mkdir(public_path("listings/photos"));
-            }
-
-            foreach ($photos as $key => $folder) {
-                $photo = TemporaryListing::where('folder', $folder)->first();
-                if ($photo) {
-                    $moved = ListingPhoto::create(
-                        [
-                            'listing_id' => $listing->id,
-                            'main' => $photo->main,
-                            'watermark' => $photo->watermark,
-                            'active' => $photo->active,
-                            'photo_main' => $listingData->checked_main_hidden[$key],
-                            'icon' => $photo->icon,
-                            'listing_category_id' => $photo->listing_category_id,
-                        ]
-                    );
-
-                    if ($moved) {
-                        $files = File::files(public_path("temporary/listings/$photo->folder"));
-                        if (!file_exists(public_path("listings/photos/agency_$listing->agency_id"))) {
-                            mkdir(public_path("listings/photos/agency_$listing->agency_id"));
-                        }
-                        if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"))) {
-                            mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id"));
-                        }
-                        if (!file_exists(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"))) {
-                            mkdir(public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id"));
-                        }
-                        $new_folder = public_path("listings/photos/agency_$listing->agency_id/listing_$listing->id/photo_$moved->id");
-                        foreach ($files as $file) {
-                            File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
-                        }
-                        $removed_dir = public_path("temporary/listings/$photo->folder");
-                        if (file_exists($removed_dir)) {
-                            rmdir($removed_dir);
-                        }
-                    }
-                }
-            }
+            ($this->uploadListingPhotoAction)($listing, $photos);
         }
-
         //* move plans from temporary to listing_plans
-
         if ($floor_plans && is_array($floor_plans)) {
-            if (!file_exists(public_path("listings"))) {
-                mkdir(public_path("listings"));
-            }
-            if (!file_exists(public_path("listings/plans"))) {
-                mkdir(public_path("listings/plans"));
-            }
-
-            foreach ($floor_plans as $folder) {
-                $plan = TemporaryPlan::where('folder', $folder)->first();
-                if ($plan) {
-                    $moved = ListingPlan::create(
-                        [
-                            'listing_id' => $listing->id,
-                            'main' => $plan->main,
-                            'watermark' => $plan->watermark,
-                            'active' => $plan->active,
-                            'title' => $plan->title,
-                        ]
-                    );
-
-                    if ($moved) {
-                        $files = File::files(public_path("temporary/plans/$plan->folder"));
-
-                        if (!file_exists(public_path("listings/plans/agency_$listing->agency_id"))) {
-                            mkdir(public_path("listings/plans/agency_$listing->agency_id"));
-                        }
-                        if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id"))) {
-                            mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id"));
-                        }
-                        if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"))) {
-                            mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"));
-                        }
-                        $new_folder = public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id");
-                        foreach ($files as $file) {
-                            File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
-                        }
-                        $removed_dir = public_path("temporary/plans/$plan->folder");
-                        if (file_exists($removed_dir)) {
-                            rmdir($removed_dir);
-                        }
-                    }
-                }
-            }
+            ($this->uploadListingPlanAction)($listing, $floor_plans);
         }
         if ($documents && is_array($documents)) {
-
             ($this->uploadListingDocumentAction)($listing, $documents);
         }
         //* save videos
-
         if (count($video_title) > 0) {
             if ($video_title[0] != null && $video_host[0] != null && $video_link[0] != null) {
-
-                foreach ($video_title as $key => $title) {
-                    ListingVideo::create([
-                        'listing_id' => $listing->id,
-                        'title' => $title,
-                        'host' => $video_host[$key],
-                        'link' => $video_link[$key],
-                    ]);
-                }
+                ($this->createListingVideoAction)($listing, $video_title, $video_host, $video_link);
             }
         }
-
         if (count($cheque_date) > 0) {
             if ($cheque_date[0] != null && $cheque_amount[0] != null && $cheque_percentage[0] != null) {
-                foreach ($cheque_date as $key => $date) {
-                    ListingChequeCalculator::create([
-                        'listing_id' => $listing->id,
-                        'date' => $date,
-                        'value' => $cheque_amount[$key],
-                        'percent' => $cheque_percentage[$key],
-                    ]);
-                }
+                ($this->createListingChequeAction)($listing, $video_title, $video_host, $video_link);
             }
         }
-
         return $listing;
     }
 }

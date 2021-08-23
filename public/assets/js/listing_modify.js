@@ -86,7 +86,7 @@
              $('#pricing-modal-' + listing).modal('hide')
          },
          error: function (error) {
-             toast('error', 'error')
+              toast(error.responseJSON.message, 'error')
          }
 
      })
