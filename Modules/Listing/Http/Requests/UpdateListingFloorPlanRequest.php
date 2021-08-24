@@ -2,27 +2,32 @@
 
 namespace Modules\Listing\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Http\FormRequest;
-use Modules\Listing\Rules\ComareArrayCount;
 
-class UpdateListingDocumentRequest extends FormRequest
+
+class UpdateListingFloorPlanRequest extends FormRequest
 {
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+
 
 
     protected function prepareForValidation()
     {
         $this->merge([
-            'documents' => json_decode($this->input('documents'), true),
-
+            'floors'              => json_decode($this->input('floors'), true),
         ]);
     }
 
+
     public function rules()
     {
-
         return [
-            "documents"   => ['required', 'array'],
+            "floors"                             => ['required', 'array', 'present'],
         ];
     }
 

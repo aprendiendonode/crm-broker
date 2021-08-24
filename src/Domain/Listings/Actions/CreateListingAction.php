@@ -111,6 +111,7 @@ class CreateListingAction
                 "deposite_value"             => $inputs['deposite_value'],
                 "listing_rent_cheque_id"     => $inputs['listing_rent_cheque_id'],
                 "title"                      => $inputs['title'],
+                "title_localized"            => $inputs['title_localized'],
                 "lsm"                        => $inputs['lsm'],
                 "landlord_id"                => $inputs['landlord_id'],
                 "rented"                     => $inputs['rented'],

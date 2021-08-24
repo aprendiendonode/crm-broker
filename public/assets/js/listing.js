@@ -132,7 +132,7 @@
                         },
                         maxFileSize: 3000000, 
                         allowedTypes: 'image/*',
-                        extFilter: ["jpg", "jpeg","png","gif"],
+                        extFilter: ["jpg", "jpeg","png","gif",'svg'],
                         onNewFile: function(id, file){
 
                         edit_ui_multi_add_file(id, file,listing_id);
@@ -182,7 +182,7 @@
 
                             },
                             onUploadError: function(id, xhr, status, message){
-                                console.log('error')
+                              
                                 edit_ui_multi_update_file_status(id, 'danger', message,listing_id);
                                 edit_ui_multi_update_file_progress(id, 0, 'danger', false,listing_id);  
                             },
@@ -200,8 +200,8 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             maxFileSize: 3000000, 
-                            allowedTypes: 'image/*',
-                            extFilter: ["jpg", "jpeg","png","gif",'pdf','txt'],
+                        
+                            extFilter: ["jpg", "jpeg","png","gif"],
                             onNewFile: function(id, file){
                                 edit_plan_ui_multi_add_file(id, file,listing_id);
 
@@ -271,11 +271,10 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
                                 maxFileSize: 3000000, 
-                                allowedTypes: 'image/*',
-                                extFilter: ["jpg", "jpeg","png","gif",'pdf','txt'],
+                                // allowedTypes: 'image/*',
+                                extFilter: ['pdf','txt','doc','csv','xlsx','xls','docx','ppt','odt','ods','odp'],
                                 onNewFile: function(id, file){
                                 edit_document_ui_multi_add_file(id, file,listing_id);
-
                                 if (typeof FileReader !== "undefined"){
                                     var reader = new FileReader();
 
@@ -490,3 +489,47 @@ function getSubCommunities(type,id,locale,route,token){
 
 }
 
+
+
+function add_tenant(agency,business,locale,route,token){
+    var name  =  $('.tenant_name').val();
+    var email  =  $('.tenant_email').val();
+    var phone  =  $('.tenant_phone').val();
+    var salutation  =  $('.tenant_salutation').val();
+    var source_id  =  $('.tenant_source_id').val();
+ 
+    if(name == ''){
+        $('.error-message').text('invalid data');
+        return false;
+    }
+    
+    $.ajax({
+        url:route,
+        type:'POST',
+        data:{
+            name : name,
+            email : email,
+            phone : phone,
+            salutation : salutation,
+            source_id : source_id,
+            agency  : agency,
+            business: business,
+            _token  :token
+        },
+        success: function(data){
+            $('.error-message').text('');
+            name = data.data.name
+            html = '<option value='+data.data.id+' >'+name+'</option>'
+            $('.select_tenant_id').append(html)
+               $('.tenant_name').val('');
+            $('#add_tenant').modal('hide');
+
+            toast(data.message, 'success')
+
+        },
+        error: function (error) {
+      
+            toast(error.responseJSON.message,'error')
+        }
+    })
+}

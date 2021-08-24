@@ -66,6 +66,7 @@ class CreateListingRequest extends FormRequest
                 $q->where('agency_id', request('agency_id'));
             })],
             "title"                                    => ['sometimes', 'nullable', 'string'],
+            "title_localized"                          => ['sometimes', 'nullable', 'string'],
             "lsm"                                      => ['required', 'in:private,shared'],
             // "permit_no"                                => ['sometimes', 'nullable', 'string'],
             // "rera_property_no_status"                  => ['required', 'in:invalid,valid'],

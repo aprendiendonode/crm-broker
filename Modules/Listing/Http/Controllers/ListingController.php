@@ -26,38 +26,63 @@ use Modules\Listing\Entities\ListingDocument;
 use Modules\SuperAdmin\Entities\SubCommunity;
 use Modules\Listing\Entities\TemporaryListing;
 use Symfony\Component\HttpFoundation\Response;
+use Domain\Listings\Actions\CreateTenantAction;
 use Modules\Listing\Entities\TemporaryDocument;
 use Domain\Listings\Actions\CreateListingAction;
+use Domain\Listings\Actions\CreateLandlordAction;
+use Domain\Listings\Actions\CreateDeveloperAction;
 use Modules\Listing\Http\Repositories\ListingRepo;
+use Domain\Listings\Actions\UploadListingPlanAction;
 use Domain\Listings\DataTransferObjects\ListingData;
 use Domain\Listings\Actions\CreateListingVideoAction;
 use Domain\Listings\Actions\UpdateListingAgentAction;
 use Domain\Listings\Actions\UpdateListingPhotosAction;
+use Domain\Listings\Actions\UploadTemporaryPlanAction;
 use Domain\Listings\Actions\UpdateListingDetailsAction;
 use Domain\Listings\Actions\UpdateListingFeatureAction;
 use Domain\Listings\Actions\UpdateListingPricingAction;
+use Domain\Listings\Actions\UploadTemporaryPhotoAction;
 use Modules\Listing\Http\Requests\CreateListingRequest;
 use Domain\Listings\Actions\UpdateListingLocationAction;
+use Domain\Listings\Actions\UploadListingDocumentAction;
 use Domain\Listings\Actions\UpdateListingExtraInfoAction;
+use Domain\Listings\Actions\UpdateListingMainPhotoAction;
+use Domain\Listings\DataTransferObjects\CreateTenantData;
+use Domain\Listings\Actions\UploadTemporaryDocumentAction;
+use Domain\Listings\DataTransferObjects\CreateLandlordData;
+use Domain\Listings\Actions\UpdateListingUploadsTitleAction;
+use Domain\Listings\DataTransferObjects\CreateDeveloperData;
 use Modules\Listing\Http\Requests\UpdateListingVideoRequest;
 use Modules\Listing\ViewModels\Listing\ListingFormViewModel;
 use Modules\Listing\ViewModels\Listing\ListingShowViewModel;
+use Modules\Listing\Http\Requests\CreateListingTenantRequest;
 use Modules\Listing\Http\Requests\UpdateListingPhotosRequest;
+use Modules\Listing\Http\Requests\UploadTemporaryPlanRequest;
+use Domain\Listings\Actions\UpdateListingUploadCategoryAction;
+use Domain\Listings\Actions\UploadListingUploadCategoryAction;
 use Modules\Listing\Http\Requests\UpdateListingDetailsRequest;
 use Modules\Listing\Http\Requests\UpdateListingFeatureRequest;
 use Modules\Listing\Http\Requests\UpdateListingPricingRequest;
+use Modules\Listing\Http\Requests\UploadTemporaryPhotoRequest;
 use Modules\Listing\ViewModels\Listing\CreateListingViewModel;
 use Domain\Listings\DataTransferObjects\ListingCreateVideoData;
 use Domain\Listings\DataTransferObjects\ListingUpdateAgentData;
+use Modules\Listing\Http\Requests\CreateListingLandlordRequest;
 use Modules\Listing\Http\Requests\UpdateListingDocumentRequest;
 use Modules\Listing\Http\Requests\UpdateListingLocationRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdatePhotosData;
+use Modules\Listing\Http\Requests\CreateListingDeveloperRequest;
 use Modules\Listing\Http\Requests\UpdateListingExtraInfoRequest;
+use Modules\Listing\Http\Requests\UpdateListingFloorPlanRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdateDetailsData;
 use Domain\Listings\DataTransferObjects\ListingUpdateFeatureData;
 use Domain\Listings\DataTransferObjects\ListingUpdatePricingData;
+use Modules\Listing\Http\Requests\UploadTemporaryDocumentRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdateLocationData;
 use Domain\Listings\DataTransferObjects\ListingUpdateExtraInfoData;
+use Modules\Listing\Http\Requests\UpdateListingUploadsTitleRequest;
+use Modules\Listing\Http\Requests\UpdateListingUploadCategoryRequest;
+use Domain\Listings\DataTransferObjects\UpdateListingUploadsTitleData;
 
 class ListingController extends Controller
 {
@@ -92,13 +117,9 @@ class ListingController extends Controller
             return back()->with(flash(trans('listing.listing_created'), 'success'));
         } catch (\Exception $e) {
             DB::rollBack();
-
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
         }
     }
-
-
-
 
     public function show($listing_id, $listing_ref)
     {
@@ -107,8 +128,6 @@ class ListingController extends Controller
         return view('listing::listing.front',  $viewModel);
     }
 
-
-
     public function load_edit_view(Request $request)
     {
         $business = auth()->user()->business_id;
@@ -116,8 +135,6 @@ class ListingController extends Controller
         $viewModel = new ListingFormViewModel($listing->agency_id, $business, $request,  $listing);
         return view('listing::listing.edit.index', $viewModel);
     }
-
-
 
     public function updateListingAgent(Request $request, UpdateListingAgentAction $updateListingAgentAction)
     {
@@ -142,8 +159,6 @@ class ListingController extends Controller
             }
         }
     }
-
-
 
     public function updateListingLocation(UpdateListingLocationRequest $request, UpdateListingLocationAction $updateListingLocationAction)
     {
@@ -173,8 +188,6 @@ class ListingController extends Controller
             }
         }
     }
-
-
 
     public function updateListingDetails(UpdateListingDetailsRequest $request, UpdateListingDetailsAction $listingUpdateDetailsAction)
     {
@@ -206,7 +219,6 @@ class ListingController extends Controller
         }
     }
 
-
     public function updateListingVideos(UpdateListingVideoRequest $request, CreateListingVideoAction $createListingVideoAction)
     {
         if ($request->ajax()) {
@@ -220,8 +232,6 @@ class ListingController extends Controller
         }
     }
 
-
-
     public function updateListingFeatures(UpdateListingFeatureRequest $request, UpdateListingFeatureAction $updateListingFeatureAction)
     {
         if ($request->ajax()) {
@@ -234,57 +244,13 @@ class ListingController extends Controller
         }
     }
 
-
-
-
-    public function updateListingDocuments(UpdateListingDocumentRequest $request)
+    public function updateListingDocuments(UpdateListingDocumentRequest $request, UploadListingDocumentAction $updateListingDocumentAction)
     {
         if ($request->ajax()) {
             try {
-                $listing             = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-                $documents              = $request->documents;
-                if ($documents && is_array($documents)) {
-                    if (!file_exists(public_path("listings"))) {
-                        mkdir(public_path("listings"));
-                    }
-                    if (!file_exists(public_path("listings/documents"))) {
-                        mkdir(public_path("listings/documents"));
-                    }
-
-                    foreach ($documents as $folder) {
-                        $document = TemporaryDocument::where('folder', $folder)->first();
-                        if ($document) {
-                            $moved = ListingDocument::create(
-                                [
-                                    'listing_id' => $listing->id,
-                                    'document' => $document->document,
-                                    'title' => $document->title,
-                                ]
-                            );
-
-                            if ($moved) {
-                                $files = File::files(public_path("temporary/documents/$document->folder"));
-
-                                if (!file_exists(public_path("listings/documents/agency_$listing->agency_id"))) {
-                                    mkdir(public_path("listings/documents/agency_$listing->agency_id"));
-                                }
-                                if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id"))) {
-                                    mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id"));
-                                }
-                                if (!file_exists(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"))) {
-                                    mkdir(public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id"));
-                                }
-                                $new_folder = public_path("listings/documents/agency_$listing->agency_id/listing_$listing->id/document_$moved->id");
-                                foreach ($files as $file) {
-                                    File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
-                                }
-                                $removed_dir = public_path("temporary/documents/$document->folder");
-                                if (file_exists($removed_dir)) {
-                                    rmdir($removed_dir);
-                                }
-                            }
-                        }
-                    }
+                $listing  = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+                if ($request->documents && is_array($request->documents)) {
+                    $updateListingDocumentAction($listing, $request->documents);
                 }
                 return response()->json([
                     'message' => trans('global.modified')
@@ -295,74 +261,15 @@ class ListingController extends Controller
         }
     }
 
-
-
-    public function updateListingFloors(Request $request)
+    public function updateListingFloors(UpdateListingFloorPlanRequest $request, UploadListingPlanAction $uploadListingPlanAction)
     {
 
         if ($request->ajax()) {
             try {
-
-
-                $listing             = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
-
-
-                $validator = Validator::make($request->all(), [
-                    "floors"                             => ['required', 'string'],
-                ]);
-
-
-                if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->all()[0]], 400);
+                $listing    = Listing::where('business_id', $request->business)->where('id', $request->listing)->firstOrFail();
+                if ($request->floors && is_array($request->floors)) {
+                    $uploadListingPlanAction($listing, $request->floors);
                 }
-                $floor_plans              = json_decode($request->floors);
-
-                if ($floor_plans && is_array($floor_plans)) {
-                    if (!file_exists(public_path("listings"))) {
-                        mkdir(public_path("listings"));
-                    }
-                    if (!file_exists(public_path("listings/plans"))) {
-                        mkdir(public_path("listings/plans"));
-                    }
-
-                    foreach ($floor_plans as $folder) {
-                        $plan = TemporaryPlan::where('folder', $folder)->first();
-                        if ($plan) {
-                            $moved = ListingPlan::create(
-                                [
-                                    'listing_id' => $listing->id,
-                                    'main' => $plan->main,
-                                    'watermark' => $plan->watermark,
-                                    'active' => $plan->active,
-                                    'title' => $plan->title,
-                                ]
-                            );
-
-                            if ($moved) {
-                                $files = File::files(public_path("temporary/plans/$plan->folder"));
-
-                                if (!file_exists(public_path("listings/plans/agency_$listing->agency_id"))) {
-                                    mkdir(public_path("listings/plans/agency_$listing->agency_id"));
-                                }
-                                if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id"))) {
-                                    mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id"));
-                                }
-                                if (!file_exists(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"))) {
-                                    mkdir(public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id"));
-                                }
-                                $new_folder = public_path("listings/plans/agency_$listing->agency_id/listing_$listing->id/plan_$moved->id");
-                                foreach ($files as $file) {
-                                    File::move($file->getRealPath(), $new_folder . '/' . $file->getFileName());
-                                }
-                                $removed_dir = public_path("temporary/plans/$plan->folder");
-                                if (file_exists($removed_dir)) {
-                                    rmdir($removed_dir);
-                                }
-                            }
-                        }
-                    }
-                }
-
                 return response()->json([
                     'message' => trans('global.modified')
                 ], 200);
@@ -371,70 +278,94 @@ class ListingController extends Controller
             }
         }
     }
-
-
-
-    public function locations($agency)
+    public function tenant(CreateListingTenantRequest $request, CreateTenantAction $createTenantAction)
     {
 
-        return view('listing::location');
+        if ($request->ajax()) {
+            DB::beginTransaction();
+            try {
+                $tenant = $createTenantAction(CreateTenantData::fromRequest($request));
+                DB::commit();
+                return response()->json(['message' => trans('listing.tenant_created'), 'data' => $tenant], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
     }
-    public function uploader($agency)
+    public function landlord(CreateListingLandlordRequest $request, CreateLandlordAction $createLandlordAction)
     {
-        return view('listing::uploader');
-    }
-
-    public function tenant(Request $request, ListingRepo $repo)
-    {
-
-        abort_if(Gate::denies('manage_listing_setting'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-
-        return $repo->tenant($request);
-    }
-    public function landlord(Request $request, ListingRepo $repo)
-    {
-
-        abort_if(Gate::denies('manage_listing_setting'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-
-        return $repo->landlord($request);
-    }
-    public function developer(Request $request, ListingRepo $repo)
-    {
-
-        abort_if(Gate::denies('manage_listing_setting'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-
-        return $repo->developer($request);
+        if ($request->ajax()) {
+            DB::beginTransaction();
+            try {
+                $landlord = $createLandlordAction(CreateLandlordData::fromRequest($request));
+                DB::commit();
+                return response()->json(['message' => trans('listing.landlord_created'), 'data' => $landlord], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
     }
 
 
-    public function temporary_photos(Request $request)
+    public function developer(CreateListingDeveloperRequest $request, CreateDeveloperAction $createDeveloperAction)
     {
-        return $this->repository->temporary_photos($request);
-    }
-    public function temporary_plans(Request $request)
-    {
-        return $this->repository->temporary_plans($request);
-    }
-    public function temporary_documents(Request $request)
-    {
-        return $this->repository->temporary_documents($request);
-    }
-    public function modify_title(Request $request)
-    {
-        return $this->repository->modify_title($request);
+        if ($request->ajax()) {
+            DB::beginTransaction();
+            try {
+                $developer =  $createDeveloperAction(CreateDeveloperData::fromRequest($request));
+                DB::commit();
+                return response()->json(['message' => trans('listing.developer_created'), 'data' => $developer], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
     }
 
-    public function update(Request $request, $id)
+
+    public function temporary_photos(UploadTemporaryPhotoRequest $request, UploadTemporaryPhotoAction $uploadTemporaryPhotoAction)
     {
-        return $this->repository->update($request, $id);
+
+        $temporary_photo = $uploadTemporaryPhotoAction(request()->file('file'), $request);
+        return [
+            'photo' => $temporary_photo
+        ];
     }
-    public function brochure(Request $request, $type, $agency)
+    public function temporary_plans(UploadTemporaryPlanRequest $request, UploadTemporaryPlanAction $uploadTemporaryPlanAction)
     {
-        return $this->repository->brochure($request, $type, $agency);
+        $temporary_plan = $uploadTemporaryPlanAction(request()->file('file'), $request);
+        return [
+            'plan' => $temporary_plan
+        ];
     }
+    public function temporary_documents(UploadTemporaryDocumentRequest $request, UploadTemporaryDocumentAction $uploadListingDocumentAction)
+    {
+        $temporary_document = $uploadListingDocumentAction(request()->file('file'), $request);
+        return [
+            'document' => $temporary_document
+        ];
+    }
+    public function modify_title(UpdateListingUploadsTitleRequest $request, UpdateListingUploadsTitleAction $updateListingUploadsTitleAction)
+    {
+        if ($request->ajax()) {
+            DB::beginTransaction();
+
+            try {
+
+                $title = $updateListingUploadsTitleAction(UpdateListingUploadsTitleData::fromRequest($request));
+                DB::commit();
+                return response()->json(['message' => trans('listing.title_modified'), 'data' => $title], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
+    }
+
+
+
     public function remove_listing_temporary(Request $request)
     {
         return $this->repository->remove_listing_temporary($request);
@@ -443,14 +374,47 @@ class ListingController extends Controller
     {
         return $this->repository->update_listing_temporary_active($request);
     }
-    public function update_listing_main_photo(Request $request)
+    public function update_listing_main_photo(Request $request, UpdateListingMainPhotoAction $updateListingMainPhotoAction)
     {
-        return $this->repository->update_listing_main_photo($request);
+        if ($request->ajax()) {
+            try {
+                DB::beginTransaction();
+                $photo =   $updateListingMainPhotoAction($request);
+                DB::commit();
+                return response()->json(['message' => trans('listing.updated'), 'photo' => $photo], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
     }
-    public function update_listing_temporary_category(Request $request)
+
+
+
+
+    public function update_listing_temporary_category(UpdateListingUploadCategoryRequest $request, UpdateListingUploadCategoryAction $updateListingUploadCategoryAction)
     {
-        return $this->repository->update_listing_temporary_category($request);
+
+        if ($request->ajax()) {
+            try {
+                DB::beginTransaction();
+                $updateListingUploadCategoryAction($request);
+                DB::commit();
+                return response()->json(['message' => trans('listing.updated')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
     }
+
+
+
+
+
+
+
+
     public function share_listing($agency, ListingRepo $repository)
     {
         abort_if(Gate::denies('share_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -565,5 +529,19 @@ class ListingController extends Controller
     public function move_to_archive(Request $request)
     {
         return $this->repository->move_to_archive($request);
+    }
+
+    public function brochure(Request $request, $type, $agency)
+    {
+        $listing = Listing::findorfail($request->listing);
+
+        if ($type == 'single') {
+
+            $pdf = PDF::loadView('listing::listing.brochure_single', ['listing' => $listing]);
+            return $pdf->stream($listing->title . '.pdf');
+        } else {
+            $pdf = PDF::loadView('listing::listing.brochure_multi', ['listing' => $listing]);
+            return $pdf->stream($listing->title . '.pdf');
+        }
     }
 }

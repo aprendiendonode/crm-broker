@@ -141,7 +141,10 @@
             
                     
                     <div class="form-group text-center">
-                        <button class="btn btn-rounded btn-primary" onclick="event.preventDefault();add_tenant()" >@lang('sales.confirm')</button>
+                        <button class="btn btn-rounded btn-primary" onclick="event.preventDefault();add_tenant(
+                            {{ $listing->agency_id }},{{ $listing->business_id}}, '{{ app()->getLocale() }}',
+                            '{{ route('listing.tenant-store')  }}','{{ csrf_token() }}'
+                        )" >@lang('sales.confirm')</button>
                     </div>
                 </form>
             </div>
@@ -418,54 +421,7 @@ if(new_status == '' || id == '' ){
         })
     }
     
-      function add_tenant(){
-        var name  =  $('.tenant_name').val();
-        var email  =  $('.tenant_email').val();
-        var phone  =  $('.tenant_phone').val();
-        var salutation  =  $('.tenant_salutation').val();
-        var source_id  =  $('.tenant_source_id').val();
-      
-        var agency   =  @json($agency);
-        var business =  @json($business);
-
-        var locale = @json(app()->getLocale());
-    
-        if(name == ''){
-            $('.error-message').text('invalid data');
-            return false;
-        }
-        
-        $.ajax({
-            url:"{{ route('listing.tenant-store')  }}",
-            type:'POST',
-            data:{
-                name : name,
-                email : email,
-                phone : phone,
-                salutation : salutation,
-                source_id : source_id,
-                agency  : agency,
-                business: business,
-                _token  :'{{ csrf_token() }}'
-            },
-            success: function(data){
-                $('.error-message').text('');
-                name = data.data.name
-                html = '<option value='+data.data.id+' >'+name+'</option>'
-                $('.select_tenant_id').append(html)
-                   $('.tenant_name').val('');
-                $('#add_tenant').modal('hide');
-
-                toast(data.message, 'success')
-
-            },
-            error: function (error) {
-          
-                toast(error.responseJSON.message,'error')
-            }
-        })
-    }
-    
+ 
 
     function add_landlord(){
         var name  =  $('.landlord_name').val();

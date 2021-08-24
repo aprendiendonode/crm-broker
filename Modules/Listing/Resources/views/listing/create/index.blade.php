@@ -813,6 +813,14 @@
                                                name="title" >
                                       
                                             </div>
+                                            <div class="form-group offset-md-3 col-md-6">
+                                                <label class="font-weight-medium text-muted" for="">@lang('listing.localized_title')
+                                                             
+                                                </label>
+                                               <input type="text" class="form-control" value="{{ old('title', $has_ref ? $listing_by_ref->title_localized : '') }}" 
+                                                 name="title_localized" >
+                                      
+                                            </div>
                                
                                             <div class="form-group  offset-md-3 col-md-6">
                                                     <label class="font-weight-medium text-muted">@lang('listing.description')</label>
@@ -967,8 +975,6 @@
             </a>   
     </div>
 </div>
-
-
 
 @include('listing::listing.settings_modals') 
 
