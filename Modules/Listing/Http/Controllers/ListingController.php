@@ -193,10 +193,19 @@ class ListingController extends Controller
     {
         if ($request->ajax()) {
             try {
-                $listingUpdateDetailsAction(ListingUpdateDetailsData::fromRequest($request));
-                return response()->json(['message' => trans('global.modified')], 200);
+
+                $listing =  $listingUpdateDetailsAction(ListingUpdateDetailsData::fromRequest($request));
+                return response()->json([
+                    'message'   => trans('global.modified'), 'source' => $listing->source->{'name_' . app()->getLocale()} ?? '',
+                    'developer' => $listing->developer->{'name_' . app()->getLocale()} ?? '',
+                    'landlord'  => $listing->landlord->{'name'} ?? '',
+                    'tenant'    => $listing->tenant->{'name'}  ?? '',
+                ], 200);
             } catch (\Exception $th) {
-                return response()->json(['message' => trans('global.something_wrong')], 400);
+                return response()->json([
+                    'message' => trans('global.something_wrong')
+
+                ], 400);
             }
         }
     }

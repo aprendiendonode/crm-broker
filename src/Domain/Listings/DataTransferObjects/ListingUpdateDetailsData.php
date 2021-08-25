@@ -15,6 +15,7 @@ class ListingUpdateDetailsData extends DataTransferObject
     public        $status;
     public        $lsm;
     public        $title;
+    public        $title_localized;
     public        $type;
     public        $beds;
     public        $parkings;
@@ -44,6 +45,7 @@ class ListingUpdateDetailsData extends DataTransferObject
             'status'         => $request->status,
             'lsm'            => $request->lsm,
             'title'          => $request->title,
+            'title_localized' => $request->title_localized,
             'type'           => $request->type,
             'beds'           => $request->beds,
             'parkings'       => $request->parkings,
@@ -51,7 +53,7 @@ class ListingUpdateDetailsData extends DataTransferObject
             'year_built'     => $request->year_built,
             'plot_area'      => $request->plot_area,
             'area'           => $request->area,
-            'source'         => $request->sources,
+            'source'         => $request->source,
             'landlord'       => $request->landlord,
             'developer'      => $request->developer,
             'rented'         => $request->rented,

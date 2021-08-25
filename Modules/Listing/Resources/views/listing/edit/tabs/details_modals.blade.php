@@ -159,7 +159,7 @@
                                 @lang('listing.landlord')
                             </td>
                             <td class="listing-details-landlord-{{ $listing->id }}">
-                                {{ $listing->landlord->{'name_'.app()->getLocale()} ?? '' }}
+                                {{ $listing->landlord->{'name'} ?? '' }}
                                 <!-- ko foreach: externalListings --><!-- /ko -->
                             </td>
                         </tr>
@@ -191,7 +191,7 @@
                                     @lang('listing.tenant')
                                 </td>
                                 <td class="listing-details-tenant-{{ $listing->id }}">
-                                    {{ $listing->tenant->{'name_'.app()->getLocale()} ?? '' }}
+                                    {{ $listing->tenant->{'name'} ?? '' }}
                                     <!-- ko foreach: externalListings --><!-- /ko -->
                                 </td>
                             </tr>
@@ -372,10 +372,26 @@
                         </div>
 
 
-
+                        <div class="col-md-6 form-group">
+                            <label class="font-weight-medium text-muted" for="">@lang('listing.title')
+                                        
+                            </label>
+                            <input type="text" class="listing-title-{{ $listing->id }} form-control" value="{{ old('edit_title_'.$listing->id,$listing->title) }}" 
+                            name="edit_title_{{ $listing->id }}" >
+                    
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label class="font-weight-medium text-muted" for="">@lang('listing.localized_title')
+                                        
+                            </label>
+                            <input type="text" class="listing-title-localized-{{ $listing->id }} form-control" 
+                            value="{{ old('edit_title_localized_'.$listing->id,$listing->title_localized) }}" 
+                            name="edit_title_localized_{{ $listing->id }}" >
+                    
+                        </div>
 
                       
-                        <div class="col-md-6 form-group ">
+                        <div class="col-md-4 form-group ">
                             <label class="font-weight-medium text-muted">
                                 @lang('listing.purpose')
                             </label>
@@ -405,7 +421,7 @@
 
     
     
-                        <div class="col-md-6 form-group " style="height: 64px;">
+                        <div class="col-md-4 form-group " style="height: 64px;">
                                   <label class="font-weight-medium text-muted">@lang('listing.lsm')</label>
 
                                     <select 
@@ -428,16 +444,9 @@
                         </div>
        
               
-                        <div class="col-md-6 form-group">
-                            <label class="font-weight-medium text-muted" for="">@lang('listing.title')
-                                        
-                            </label>
-                            <input type="text" class="listing-title-{{ $listing->id }} form-control" value="{{ old('edit_title_'.$listing->id,$listing->title) }}" 
-                            name="edit_title_{{ $listing->id }}" >
-                    
-                        </div>
+                  
 
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-4 form-group">
                         <label class="font-weight-medium text-muted" style="flex:1;">@lang('listing.type')<span class="text-danger"> *</span></label>
                         <div style="flex:2;">
                             <select class="listing-type-{{ $listing->id }} form-control select2 listing_type_{{ $listing->id }}" onchange="editShowFurnishedQuestion({{ $listing->id }});"   name="edit_type_id_{{ $listing->id }}" data-toggle="select2" data-placeholder="@lang('listing.listing_types')" required>
@@ -464,8 +473,8 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 form-group ">
-                        <div class="form-group" style="flex:1">
+                   
+                        <div class="form-group col-md-4" >
                             <label for="" style="flex:1">@lang('listing.beds')</label>
                              <select class="listing-beds-{{ $listing->id }} form-control select2" name="edit_beds_{{ $listing->id }}" data-toggle="select2" data-placeholder="@lang('listing.select')">
                                 <option value=""></option>
@@ -479,7 +488,7 @@
                             </select>
 
                         </div>
-                        <div class="form-group" style="flex:1">
+                        <div class="form-group col-md-4" >
                             <label for="" style="flex:1">@lang('listing.baths')</label>
                             <select class="listing-baths-{{ $listing->id }} form-control select2" name="edit_baths_{{ $listing->id }}" data-toggle="select2" data-placeholder="@lang('listing.select')">
                                <option value=""></option>
@@ -489,14 +498,18 @@
                                @endfor
                            </select>
                         </div>
-                    </div>  
+                    
+                    
 
-                    <div class="col-md-6 form-group ">
+                 
+                    <div class="col-md-4 form-group ">
                         <div class=" form-group" style="flex:1">
                             <label for="" style="flex:1">@lang('listing.parkings')</label>
                             <input type="text" style="flex:2"  class="listing-parkings-{{ $listing->id }} form-control" name="edit_parkings_{{ $listing->id }}"
                              value="{{ old('edit_parkings_'.$listing->id,$listing->parkings) }}"  >
-                        </div>
+                            </div>
+                    </div>
+                    <div class="col-md-4 form-group ">
                         <div class=" form-group" style="flex:1">
                             <label for="" style="flex:1">@lang('listing.year_built')</label>
                             <input style="flex:2" type="text" class="listing-year-built-{{ $listing->id }} form-control"  name="edit_year_built_{{ $listing->id }}" 
@@ -504,8 +517,7 @@
                         </div>
                     </div>  
                     
-                    
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-4 form-group">
                         <label for="" class="font-weight-medium text-muted">@lang('listing.plot_area')</label>
                         <div class="input-group mb-2">
                             <input name="edit_plot_area_{{ $listing->id }}" type="number" class="listing-plot-area-{{ $listing->id }} form-control"
@@ -516,7 +528,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 form-group">
+            
+                    <div class="col-md-4 form-group">
                         <label class="font-weight-medium text-muted" for="">@lang('listing.area')
                             <span class="text-danger">*</span>
                         </label>
@@ -529,7 +542,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 form-group ">
+                    <div class="col-md-4 form-group ">
                         <label class="font-weight-medium text-muted">
                             @lang('listing.sources')
                         </label>
@@ -569,7 +582,7 @@
                         </div>
                         </div>
                     </div>
-                    <div class="col-md-6 form-group ">
+                    <div class="col-md-4 form-group ">
                         <label class="font-weight-medium text-muted">
                             @lang('listing.landlord')
                         </label>
@@ -606,7 +619,7 @@
                             </div>
                    </div>
                                                         
-                        <div class="col-md-6 form-group  ">
+                        <div class="col-md-4 form-group  ">
                             <label class="font-weight-medium text-muted">
                                 @lang('listing.developer')
                             </label>
@@ -645,7 +658,7 @@
                             </div>
                        </div>
 
-                        <div class="col-md-6"></div>
+                      
 
               
 

@@ -2,7 +2,7 @@
     enctype="multipart/form-data">
     @csrf
     @method('PATCH')
-    <div class="d-flex justify-content-start mb-2">
+    {{-- <div class="d-flex justify-content-start mb-2">
 
         <button onclick="event.preventDefault();close_edit({{ $listing->id }})" type="button"
             class="btn  btn-outline-success waves-effect waves-light">
@@ -11,7 +11,7 @@
         <button type="submit" class="btn  btn-success waves-effect waves-light ml-2">
             <span class="btn-label"><i class="mdi mdi-check-all"></i></span>@lang('agency.modify')
         </button>
-    </div>
+    </div> --}}
     <div class="row">
 
 
@@ -65,7 +65,7 @@
 
     </div>
 
-    <div class="d-flex justify-content-start">
+    {{-- <div class="d-flex justify-content-start">
 
         <button onclick="event.preventDefault();close_edit({{ $listing->id }})" type="button"
             class="btn  btn-outline-success waves-effect waves-light">
@@ -74,7 +74,7 @@
         <button type="submit" class="btn  btn-success waves-effect waves-light ml-2">
             <span class="btn-label"><i class="mdi mdi-check-all"></i></span>@lang('agency.modify')
         </button>
-    </div>
+    </div> --}}
 
     @include('listing::listing.modals.edit_modals')
 
