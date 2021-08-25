@@ -18,32 +18,17 @@ class UpdateListingLocationAction
     public function __invoke(ListingUpdateLocationData $listingUpdateLocationData)
     {
 
-        $listing   = Listing::where('business_id', $listingUpdateLocationData->business)->where('id', $listingUpdateLocationData->listing)->firstOrFail();
-        $city      =  City::findOrFail($listingUpdateLocationData->city);
-        $community =  Community::findOrFail($listingUpdateLocationData->community);
-        $sub_community = '';
-        if ($listingUpdateLocationData->sub_community) {
+        $listing         =  Listing::where('business_id', $listingUpdateLocationData->business)->where('id', $listingUpdateLocationData->listing)->firstOrFail();
+        $city            =  City::findOrFail($listingUpdateLocationData->city);
+        $community       =  Community::findOrFail($listingUpdateLocationData->community);
+        $sub_community   =  '';
+        $sub_community   =  SubCommunity::where('id', $listingUpdateLocationData->sub_community)->first();
 
-            $sub_community       =  SubCommunity::findOrFail($listingUpdateLocationData->sub_community);
-        }
-
-        $validator = Validator::make($listingUpdateLocationData->all(), [
-            "loc_lat"                                  => ['sometimes', 'nullable', 'string'],
-            "loc_lng"                                  => ['sometimes', 'nullable', 'string'],
-            "location"                                 => ['sometimes', 'nullable', 'string'],
-            "sub_community"                            => ['sometimes', 'nullable', 'string', 'exists:sub_communities,id'],
-            "unit"                                     => ['sometimes', 'nullable', 'string'],
-            "plot"                                     => ['sometimes', 'nullable', 'string'],
-            "street"                                   => ['sometimes', 'nullable', 'string'],
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->all()[0]], 400);
-        }
         $listing->update([
             'loc_lat'                   => $listingUpdateLocationData->loc_lat,
             'loc_lng'                   => $listingUpdateLocationData->loc_lng,
             'location'                  => $listingUpdateLocationData->location,
-            'sub_community_id'          => $listingUpdateLocationData->sub_community,
+            'sub_community_id'          => $sub_community->id ?? null,
             'community_id'              => $listingUpdateLocationData->community,
             'city_id'                   => $listingUpdateLocationData->city,
             'unit_no'                   => $listingUpdateLocationData->unit,

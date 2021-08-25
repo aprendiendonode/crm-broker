@@ -41,6 +41,7 @@ class ListingData extends DataTransferObject
     public  $deposite_value;
     public  $listing_rent_cheque_id;
     public  $title;
+    public  $title_localized;
     public  $lsm;
     public  $landlord_id;
     public  $rented;
@@ -111,6 +112,7 @@ class ListingData extends DataTransferObject
             "deposite_value"                           => $request->deposite_value,
             "listing_rent_cheque_id"                   => $request->listing_rent_cheque_id,
             "title"                                    => $request->title,
+            "title_localized"                          => $request->title_localized,
             "lsm"                                      => $request->lsm,
             "landlord_id"                              => $request->landlord_id,
             "rented"                                   => $request->rented,

@@ -3,9 +3,11 @@
 namespace Modules\Listing\Http\Requests;
 
 use Illuminate\Validation\Rule;
+use App\Rules\ArrayIndexNotNull;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Listing\Rules\ComareArrayCount;
+use Modules\Listing\Rules\VideoArrayFirstIndexNotNull;
 
 class CreateListingRequest extends FormRequest
 {
@@ -64,6 +66,7 @@ class CreateListingRequest extends FormRequest
                 $q->where('agency_id', request('agency_id'));
             })],
             "title"                                    => ['sometimes', 'nullable', 'string'],
+            "title_localized"                          => ['sometimes', 'nullable', 'string'],
             "lsm"                                      => ['required', 'in:private,shared'],
             // "permit_no"                                => ['sometimes', 'nullable', 'string'],
             // "rera_property_no_status"                  => ['required', 'in:invalid,valid'],
@@ -95,7 +98,9 @@ class CreateListingRequest extends FormRequest
             "monthly_cooling_charges"                  => ['sometimes', 'nullable', 'numeric'],
             "monthly_cooling_provider"                 => ['sometimes', 'nullable', 'numeric'],
 
-            "video_title"                              => ['required', 'array', new ComareArrayCount(request('video_link'), request('video_host'))],
+            "video_title"                              => [
+                'required', 'array', new ComareArrayCount(request('video_link'), request('video_host'))
+            ],
             "video_link"                               => ['required', 'array'],
             "video_host"                               => ['required', 'array'],
             "description_en"                           => ['sometimes', 'nullable', 'string'],

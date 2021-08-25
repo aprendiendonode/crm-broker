@@ -111,6 +111,7 @@ class CreateListingAction
                 "deposite_value"             => $inputs['deposite_value'],
                 "listing_rent_cheque_id"     => $inputs['listing_rent_cheque_id'],
                 "title"                      => $inputs['title'],
+                "title_localized"            => $inputs['title_localized'],
                 "lsm"                        => $inputs['lsm'],
                 "landlord_id"                => $inputs['landlord_id'],
                 "rented"                     => $inputs['rented'],
@@ -149,9 +150,12 @@ class CreateListingAction
             ($this->uploadListingDocumentAction)($listing, $documents);
         }
         //* save videos
+
+        // dd($video_title);
         if (count($video_title) > 0) {
+            $collection =  collect($listingData)->only('video_title', 'video_link', 'video_host');
             if ($video_title[0] != null && $video_host[0] != null && $video_link[0] != null) {
-                ($this->createListingVideoAction)($listing, $video_title, $video_host, $video_link);
+                ($this->createListingVideoAction)($listing, (object)$collection->toArray());
             }
         }
         if (count($cheque_date) > 0) {
