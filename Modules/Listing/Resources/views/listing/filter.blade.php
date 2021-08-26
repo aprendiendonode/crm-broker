@@ -1,7 +1,7 @@
 <div class="mb-2">
 
     <form  method="GET" autocomplete="off">
-        <h4>Quick Search</h4>
+        <h4>@lang('listing.advanced_search')</h4>
     <div class="row">
             <div class="col-md-6 col-lg-4">
                 <div class="form-group d-flex align-items-center" style="height: 64px;">
@@ -10,19 +10,27 @@
                         <div class="radio mr-3">
                             <input type="radio" name="purpose" id="searchAnyRadio1" value="" checked >
                             <label for="searchAnyRadio1">
-                                Any
+                                @lang('listing.any')
                             </label>
                         </div>
                         <div class="radio mr-3">
                             <input type="radio" name="purpose" id="searchRentRadio1" value="rent" @if(request()->has('purpose') && request('purpose') == 'rent') checked @endif>
                             <label for="searchRentRadio1">
-                                Rent
+                                @lang('listing.rent')
                             </label>
                         </div>
                         <div class="radio">
                             <input type="radio" name="purpose" id="searchSaleRadio2" value="sale" @if(request()->has('purpose') && request('purpose') == 'sale') checked @endif>
                             <label for="searchSaleRadio2">
-                                Sale
+                                @lang('listing.sale')
+                                
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="purpose" id="searchSaleRadio3" value="short" @if(request()->has('purpose') && request('purpose') == 'short') checked @endif>
+                            <label for="searchSaleRadio3">
+                                @lang('listing.short')
+                                
                             </label>
                         </div>
                     </div>

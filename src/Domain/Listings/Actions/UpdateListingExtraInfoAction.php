@@ -17,7 +17,7 @@ class UpdateListingExtraInfoAction
 
     public function __invoke(ListingUpdateExtraInfoData $listingUpdateExtraInfoData)
     {
-        $listing   = Listing::where('business_id', $listingUpdateExtraInfoData->business)->where('id', $listingUpdateExtraInfoData->listing)->firstOrFail();
+        $listing   = Listing::where('business_id', auth()->user()->business_id)->where('id', $listingUpdateExtraInfoData->listing)->firstOrFail();
         $listing->update([
             'key_location'               => $listingUpdateExtraInfoData->key_location,
             'govfield1'                  => $listingUpdateExtraInfoData->govfield1,

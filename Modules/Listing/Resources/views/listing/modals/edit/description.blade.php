@@ -1,3 +1,4 @@
+
 <div id="description-modal-{{ $listing->id }}" class="modal fade description-profile-modal-{{ $listing->id }}" tabindex="-1" role="dialog" aria-labelledby="extraInfoLabel" aria-hidden="true">
     <div class="modal-dialog modal-full-width">
             <div class="modal-content">
@@ -5,6 +6,13 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
+
+                    <form action="{{ route('listings.update-listing-description') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="listing_id" value="{{ $listing->id }}">
+                        <input type="hidden" name="business" value="{{ $listing->business_id }}">
+                        <input type="hidden" name="agency" value="{{ $listing->agency_id }}">
+                 
                     <div class="text-center mb-3">
                             <i class="fas fa-info-circle text-primary fa-2x"></i>
                             <h4>
@@ -140,13 +148,16 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">@lang('listing.close')</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">@lang('listing.done')</button>
+                        <button type="submit" formaction="{{ route('listings.update-listing-description') }}" class="btn btn-success" >@lang('listing.modify')</button>
         
                         {{-- <button type="button" class="btn btn-success" onclick="updateListingDescription(
                             {{ $listing->id }},'{{ route('listings.update-listing-description') }}',
                          '{{ csrf_token() }}', '{{ $listing->agency_id }}' , '{{ $listing->business_id }}' ,'{{ app()->getLocale()  }}' )">@lang('listing.modify')</button> --}}
                     </div>
                 </div>
+
+            </form>
         </div>
     </div>
 </div>

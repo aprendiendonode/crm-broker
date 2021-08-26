@@ -18,7 +18,7 @@ class UpdateListingPhotosAction
     public function __invoke(ListingUpdatePhotosData $listingUpdatePhotosData): array
     {
 
-        $listing    = Listing::where('business_id', $listingUpdatePhotosData->business)->where('id', $listingUpdatePhotosData->listing)->firstOrFail();
+        $listing    = Listing::where('business_id', auth()->user()->business_id)->where('id', $listingUpdatePhotosData->listing)->firstOrFail();
         $has_new_main_photo     = 'no';
         $new_photo_main         = null;
         if (!file_exists(public_path("listings"))) {

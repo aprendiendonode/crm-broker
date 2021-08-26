@@ -1,7 +1,4 @@
-<form id="edit-staff-form-{{ $listing->id }}" action="{{ route('listing.update',$listing->id) }}" method="POST"
-    enctype="multipart/form-data">
-    @csrf
-    @method('PATCH')
+
     {{-- <div class="d-flex justify-content-start mb-2">
 
         <button onclick="event.preventDefault();close_edit({{ $listing->id }})" type="button"
@@ -79,4 +76,4 @@
     @include('listing::listing.modals.edit_modals')
 
 
-</form>
+

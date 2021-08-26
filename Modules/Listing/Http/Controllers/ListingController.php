@@ -50,6 +50,7 @@ use Domain\Listings\Actions\UpdateListingExtraInfoAction;
 use Domain\Listings\Actions\UpdateListingMainPhotoAction;
 use Domain\Listings\DataTransferObjects\CreateTenantData;
 use Domain\Listings\Actions\UploadTemporaryDocumentAction;
+use Domain\Listings\Actions\UpdateListingDescriptionAction;
 use Domain\Listings\DataTransferObjects\CreateLandlordData;
 use Domain\Listings\Actions\UpdateListingUploadsTitleAction;
 use Domain\Listings\DataTransferObjects\CreateDeveloperData;
@@ -59,6 +60,7 @@ use Modules\Listing\ViewModels\Listing\ListingShowViewModel;
 use Modules\Listing\Http\Requests\CreateListingTenantRequest;
 use Modules\Listing\Http\Requests\UpdateListingPhotosRequest;
 use Modules\Listing\Http\Requests\UploadTemporaryPlanRequest;
+use Modules\Listing\ViewModels\Listing\ListingIndexViewModel;
 use Domain\Listings\Actions\UpdateListingUploadCategoryAction;
 use Domain\Listings\Actions\UploadListingUploadCategoryAction;
 use Modules\Listing\Http\Requests\UpdateListingDetailsRequest;
@@ -82,8 +84,10 @@ use Domain\Listings\DataTransferObjects\ListingUpdateFeatureData;
 use Domain\Listings\DataTransferObjects\ListingUpdatePricingData;
 use Modules\Listing\Http\Requests\UploadTemporaryDocumentRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdateLocationData;
+use Modules\Listing\Http\Requests\UpdateListingDescriptionRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdateExtraInfoData;
 use Modules\Listing\Http\Requests\UpdateListingUploadsTitleRequest;
+use Domain\Listings\DataTransferObjects\ListingUpdateDescriptionData;
 use Modules\Listing\Http\Requests\UpdateListingUploadCategoryRequest;
 use Domain\Listings\DataTransferObjects\UpdateListingUploadsTitleData;
 
@@ -95,11 +99,12 @@ class ListingController extends Controller
     {
         $this->repository = $repository;
     }
-    public function index($agency)
+    public function index($agency, Request $request)
     {
 
         abort_if(Gate::denies('view_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return $this->repository->index($agency);
+        $viewModel = new ListingIndexViewModel($agency, $request);
+        return view('listing::listing.index', $viewModel);
     }
 
 
@@ -121,9 +126,6 @@ class ListingController extends Controller
             return back()->with(flash(trans('listing.listing_created'), 'success'));
         } catch (\Exception $e) {
             DB::rollBack();
-            dd(
-                $e
-            );
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
         }
     }
@@ -193,6 +195,17 @@ class ListingController extends Controller
             } catch (\Exception $th) {
                 return response()->json(['message' => trans('global.something_wrong')], 400);
             }
+        }
+    }
+    public function updateListingDescription(UpdateListingDescriptionRequest $request, UpdateListingDescriptionAction $updateListingDescriptionAction)
+    {
+
+        try {
+            $updateListingDescriptionAction(ListingUpdateDescriptionData::fromRequest($request));
+            return redirect(url('listing/controll/' . $request->agency . '?listing_id=' . $request->listing_id))->with(flash(trans('listing.description_updated'), 'success'));
+        } catch (\Exception $e) {
+
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
         }
     }
 

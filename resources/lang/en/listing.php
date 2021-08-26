@@ -51,6 +51,13 @@ return [
     'modified'                 => 'Modified',
     'tenant_created'           => 'Tenant Created',
     'localized_title'           => 'Localized Title',
+    'description_updated'       => 'Description Modified',
+    'advanced_search'           => 'Advanced Search',
+    'close_search'              => 'Close Search',
+    'any'                       => 'Any',
+    'sale'                      => 'Sale',
+    'short'                     => 'Short',
+
 
     'developer_created'        => 'Developer Created',
     'location_price'           => 'Location & Price',

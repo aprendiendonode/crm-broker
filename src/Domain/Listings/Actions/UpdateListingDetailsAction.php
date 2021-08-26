@@ -19,7 +19,7 @@ class UpdateListingDetailsAction
     {
 
 
-        $listing   = Listing::where('business_id', $listingUpdateDetailsData->business)->where('id', $listingUpdateDetailsData->listing)->firstOrFail();
+        $listing   = Listing::where('business_id', auth()->user()->business_id)->where('id', $listingUpdateDetailsData->listing)->firstOrFail();
         $listing->update([
             "purpose"                                  => $listingUpdateDetailsData->purpose,
             "status"                                   => $listingUpdateDetailsData->status,
