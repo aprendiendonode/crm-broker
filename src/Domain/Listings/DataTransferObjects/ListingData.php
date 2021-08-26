@@ -66,6 +66,7 @@ class ListingData extends DataTransferObject
     public  $cheque_amount;
     public  $cheque_percentage;
     public  $photos;
+    public  $checked_main_hidden;
     public  $video_title;
     public  $video_link;
     public  $video_host;
@@ -141,6 +142,7 @@ class ListingData extends DataTransferObject
             'documents'                                => $request->documents,
             'floor_plans'                              => $request->floor_plans,
             'photos'                                   => $request->photos,
+            'checked_main_hidden'                      => $request->checked_main_hidden,
 
 
         ]);

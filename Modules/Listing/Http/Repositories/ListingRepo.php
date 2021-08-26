@@ -693,55 +693,6 @@ class ListingRepo
 
     public function remove_listing_temporary($request)
     {
-        if ($request->ajax()) {
-
-            try {
-                DB::beginTransaction();
-                if ($request->table == 'temporary') {
-                    if ($request->type == 'photo') {
-                        $photo = TemporaryListing::findOrFail($request->id);
-                        deleteDirectory(public_path("temporary/listings/" . $photo->folder));
-                        $photo->delete();
-                    }
-                    if ($request->type == 'plan') {
-                        $plan = TemporaryPlan::findOrFail($request->id);
-                        deleteDirectory(public_path("temporary/plans/" . $plan->folder));
-
-                        $plan->delete();
-                    }
-                    if ($request->type == 'document') {
-                        $document = TemporaryDocument::findOrFail($request->id);
-                        deleteDirectory(public_path("temporary/documents/" . $document->folder));
-                        $document->delete();
-                    }
-                }
-                if ($request->table == 'main') {
-
-                    if ($request->type == 'photo') {
-                        $photo = ListingPhoto::findOrFail($request->id);
-                        deleteDirectory(public_path('listings/photos/agency_' . $photo->listing->agency_id . '/listing_' . $photo->listing->id . '/photo_' . $photo->id));
-                        $photo->delete();
-                    }
-                    if ($request->type == 'plan') {
-                        $plan = ListingPlan::findOrFail($request->id);
-                        deleteDirectory(public_path('listings/plans/agency_' . $plan->listing->agency_id . '/listing_' . $plan->listing->id . '/plan_' . $plan->id));
-
-                        $plan->delete();
-                    }
-                    if ($request->type == 'document') {
-                        $document = ListingDocument::findOrFail($request->id);
-                        deleteDirectory(public_path('listings/documents/agency_' . $document->listing->agency_id . '/listing_' . $document->listing->id . '/document_' . $document->id));
-                        $document->delete();
-                    }
-                }
-                DB::commit();
-
-                return response()->json(['message' => trans('listing.removed')], 200);
-            } catch (\Exception $e) {
-                DB::rollback();
-                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
-            }
-        }
     }
 
 

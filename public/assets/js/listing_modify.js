@@ -348,7 +348,9 @@
 
  function updateListingDescription(listing, route, token, agency, business, locale) {
 
-     
+        console.log(editor_en.getData())
+
+     return
      $.ajax({
          url: route,
          type: "POST",

@@ -36,6 +36,7 @@ use Domain\Listings\Actions\UploadListingPlanAction;
 use Domain\Listings\DataTransferObjects\ListingData;
 use Domain\Listings\Actions\CreateListingVideoAction;
 use Domain\Listings\Actions\UpdateListingAgentAction;
+use Domain\Listings\Actions\RemoveListingUploadAction;
 use Domain\Listings\Actions\UpdateListingPhotosAction;
 use Domain\Listings\Actions\UploadTemporaryPlanAction;
 use Domain\Listings\Actions\UpdateListingDetailsAction;
@@ -65,6 +66,7 @@ use Modules\Listing\Http\Requests\UpdateListingFeatureRequest;
 use Modules\Listing\Http\Requests\UpdateListingPricingRequest;
 use Modules\Listing\Http\Requests\UploadTemporaryPhotoRequest;
 use Modules\Listing\ViewModels\Listing\CreateListingViewModel;
+use Domain\Listings\Actions\RemoveListingTemporaryUploadAction;
 use Domain\Listings\DataTransferObjects\ListingCreateVideoData;
 use Domain\Listings\DataTransferObjects\ListingUpdateAgentData;
 use Modules\Listing\Http\Requests\CreateListingLandlordRequest;
@@ -72,6 +74,7 @@ use Modules\Listing\Http\Requests\UpdateListingDocumentRequest;
 use Modules\Listing\Http\Requests\UpdateListingLocationRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdatePhotosData;
 use Modules\Listing\Http\Requests\CreateListingDeveloperRequest;
+use Modules\Listing\Http\Requests\RemoveListingTemporaryRequest;
 use Modules\Listing\Http\Requests\UpdateListingExtraInfoRequest;
 use Modules\Listing\Http\Requests\UpdateListingFloorPlanRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdateDetailsData;
@@ -110,6 +113,7 @@ class ListingController extends Controller
 
     public function store(CreateListingRequest $request, CreateListingAction $createListingAction)
     {
+
         DB::beginTransaction();
         try {
             $createListingAction(ListingData::fromRequest($request));
@@ -117,6 +121,9 @@ class ListingController extends Controller
             return back()->with(flash(trans('listing.listing_created'), 'success'));
         } catch (\Exception $e) {
             DB::rollBack();
+            dd(
+                $e
+            );
             return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
         }
     }
@@ -375,9 +382,30 @@ class ListingController extends Controller
 
 
 
-    public function remove_listing_temporary(Request $request)
-    {
-        return $this->repository->remove_listing_temporary($request);
+    public function remove_listing_temporary(
+        RemoveListingTemporaryRequest $request,
+        RemoveListingTemporaryUploadAction $removeListingTemporaryUploadAction,
+        RemoveListingUploadAction $removeListingUploadAction
+    ) {
+
+        if ($request->ajax()) {
+
+            try {
+                DB::beginTransaction();
+                if ($request->table == 'temporary') {
+                    $removeListingTemporaryUploadAction($request->type, $request->id);
+                }
+                if ($request->table == 'main') {
+                    $removeListingUploadAction($request->type, $request->id);
+                }
+                DB::commit();
+
+                return response()->json(['message' => trans('listing.removed')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
     }
     public function update_listing_temporary_active(Request $request)
     {

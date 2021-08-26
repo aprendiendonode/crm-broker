@@ -11,7 +11,7 @@ use Modules\Listing\Rules\CheckPhoneInLead;
 use Modules\Listing\Rules\CheckEmailInOpportunity;
 use Modules\Listing\Rules\CheckPhoneInOpportunity;
 
-class UploadTemporaryDocumentRequest extends FormRequest
+class RemoveListingTemporaryRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -22,8 +22,9 @@ class UploadTemporaryDocumentRequest extends FormRequest
     {
 
         return [
-            'file'   => ['required', 'file'],
-            'agency' => ['required', 'integer', 'exists:agencies,id'],
+
+            'table' => ['required', 'in:temporary,main'],
+            'type' => ['required', 'in:photo,plan,document'],
         ];
     }
     public function authorize()
