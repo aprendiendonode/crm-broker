@@ -50,6 +50,7 @@ Route::middleware(['checkauth'])->group(function () {
         Route::post('changepassword', 'StaffController@change_password');
         Route::post('deleteuser', 'StaffController@destroy');
         Route::post('make-moderator', 'StaffController@moderator');
+        Route::post('staff/change-team', 'StaffController@change_team');
 
 
         //team

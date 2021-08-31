@@ -1,4 +1,52 @@
 
+                            @can('edit_team')                   <!-- Center modal content -->
+                            <div class="modal fade" id="change_team_{{ $staff->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-md">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title text-center" id="myCenterModalLabel"> <i class="fas fa-users"></i>  @lang('agency.change_team') @lang('agency.of') {{  $staff->{'name_'.app()->getLocale()} }}</h5>
+
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        </div>
+                                        <div class="modal-body">
+
+
+                                            <form  action="{{ url('agency/staff/change-team') }}" method="POST" >
+
+                                                @csrf
+                                                @if($business)
+                                                    <input type="hidden" name="business_id" value="{{ $business }}">
+                                                @endif
+                                                @if($agency)
+                                                    <input type="hidden" name="agency_id" value="{{ $agency }}">
+                                                @endif
+                                                <input type="hidden" name="staff_id" value="{{ $staff->id }}">
+
+                                                <select class="form-control select2" name="team_id" data-toggle="select2" data-placeholder="@lang('agency.change_team')">
+                                                    <option value=""></option>
+
+                                                    @forelse($teams as $team)
+                                                        <option value="{{ $team->id }}" @if($staff->team_id == $team->id) selected  @endif>{{ $team->{'name_'.app()->getLocale()} }}</option>
+
+                                                    @empty
+
+                                                        <option value="" >@lang('agency.no_records')</option>
+
+                                                    @endforelse
+                                                </select>
+                                                {{--@if($staffs && $staffs->where('team_id','!=' ,$team->id)->count() > 0)--}}
+                                                    <div class="form-group text-center pt-3">
+                                                        <button class="btn btn-rounded btn-primary" type="submit">@lang('agency.add_member')</button>
+
+                                                        {{--@endif--}}
+                                                    </div>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                            @endcan
 
                             @can('edit_staff')                   <!-- Center modal content -->
                             <div class="modal fade" id="changePassword_{{ $staff->id }}" tabindex="-1" role="dialog" aria-hidden="true">
