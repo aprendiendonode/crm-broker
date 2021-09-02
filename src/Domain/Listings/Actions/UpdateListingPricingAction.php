@@ -14,9 +14,9 @@ class UpdateListingPricingAction
 
     public function __invoke(ListingUpdatePricingData $listingUpdatePricingData)
     {
-        $listing = Listing::where('business_id', $listingUpdatePricingData->business)->where('id', $listingUpdatePricingData->listing)->firstOrFail();
+        $listing = Listing::where('business_id', auth()->user()->business_id)->where('id', $listingUpdatePricingData->listing)->firstOrFail();
 
-        $cheque =  ListingCheque::where('id', $listingUpdatePricingData->cheque)->where('business_id', $listingUpdatePricingData->business)
+        $cheque =  ListingCheque::where('id', $listingUpdatePricingData->cheque)->where('business_id', auth()->user()->business_id)
             ->where('agency_id', $listingUpdatePricingData->agency)->first();
         $listing->update([
             'price'                  => $listingUpdatePricingData->price,

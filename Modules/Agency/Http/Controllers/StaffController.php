@@ -2,6 +2,9 @@
 
 namespace Modules\Agency\Http\Controllers;
 
+use App\Http\Requests\ChangeStaffTeamRequest;
+use Domain\Staffs\Actions\StaffChangeTeamAction;
+use Domain\Staffs\DataTransferObjects\StaffChangeTeamData;
 use Gate;
 use App\Models\Team;
 use App\Models\User;
@@ -492,4 +495,19 @@ class StaffController extends Controller
             return  back()->withInput()->with(flash(trans('agency.proccess_wasnt_saved'), 'error'));
         }
     }
+
+    public function change_team(ChangeStaffTeamRequest $request,StaffChangeTeamAction $staffChangeTeamAction)
+    {
+        DB::beginTransaction();
+
+        try {
+            $staffChangeTeamAction(StaffChangeTeamData::fromRequest($request));
+            DB::commit();
+            return back()->with(flash(trans('agency.team_updated'), 'success'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('agency.something_went_wrong'), 'error'));
+        }
+    }
+
 }

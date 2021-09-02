@@ -2,13 +2,14 @@
 
 namespace Modules\Listing\Entities;
 
-use Modules\Sales\Entities\Call;
 use App\Models\User;
 use App\Models\Agency;
-use App\Observers\ListingObserver;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 use Illuminate\Validation\Rule;
+use Modules\Sales\Entities\Call;
+use App\Observers\ListingObserver;
+use Modules\Sales\Entities\Client;
 use Modules\Activity\Entities\Task;
 use Modules\Sales\Entities\Developer;
 use Modules\SuperAdmin\Entities\City;
@@ -16,10 +17,10 @@ use Spatie\MediaLibrary\Models\Media;
 use Modules\Sales\Entities\LeadSource;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Activity\Entities\ListingNote;
+
 use Modules\SuperAdmin\Entities\Community;
 
 use Spatie\MediaLibrary\HasMedia\HasMedia;
-
 use Modules\SuperAdmin\Entities\ListingType;
 use Modules\SuperAdmin\Entities\SubCommunity;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
@@ -147,6 +148,14 @@ class Listing extends Model implements Feedable, HasMedia
     public function view()
     {
         return $this->belongsTo(ListingView::class);
+    }
+    public function tenant()
+    {
+        return $this->belongsTo(Client::class, 'tenant_id');
+    }
+    public function landlord()
+    {
+        return $this->belongsTo(Client::class, 'landlord_id');
     }
     public function developer()
     {

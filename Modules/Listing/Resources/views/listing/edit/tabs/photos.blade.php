@@ -26,12 +26,12 @@
 
               @if($photo->active != 'watermark')
                   <div class="carousel-item  @if($loop->index == 0) active @endif ">
-                      <img class="d-block img-fluid" src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark) }}" >
+                      <img class="d-block img-fluid" src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main) }}" >
                   </div>
               @else
 
                   <div class="carousel-item @if($loop->index == 0) active @endif ">
-                      <img class="d-block img-fluid" src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->main) }}" >
+                      <img class="d-block img-fluid" src="{{ asset('listings/photos/agency_'.$listing->agency_id.'/listing_'.$listing->id.'/photo_'.$photo->id.'/'.$photo->watermark) }}" >
                   </div>
               @endif
       

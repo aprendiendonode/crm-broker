@@ -348,6 +348,22 @@ function show_duplicate_div(){
     
 }
 
+function show_filter_div(){
+    console.log($('.show-fliter-div').hasClass('d-none'))
+    if( $('.show-fliter-div').hasClass('d-none')){
+     
+        $('.show-search-button').addClass('d-none')
+        $('.hide-search-button').removeClass('d-none')
+     $('.show-fliter-div').removeClass('d-none')
+     }else{
+
+        $('.show-search-button').removeClass('d-none')
+        $('.hide-search-button').addClass('d-none')
+         $('.show-fliter-div').addClass('d-none')
+     }
+     
+ }
+
 
 function generate_duplicate_link(url){
   var ref = $('.duplicate-listing-select').val()

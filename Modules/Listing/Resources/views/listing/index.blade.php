@@ -263,9 +263,16 @@ margin-bottom: 0px !important;
         
         @endcan
 
+        <div class="show-fliter-div d-none" >
+          @include('listing::listing.filter')
+         </div>
 
-        @include('listing::listing.filter')
-
+       <button type='button' class="btn btn-primary mt-1 mb-2 show-search-button" onclick="show_filter_div()">
+           @lang('listing.advanced_search')
+       </button>
+       <button type='button' class="btn btn-secondary mt-1 mb-2 hide-search-button d-none" onclick="show_filter_div()">
+           @lang('listing.close_search')
+       </button>
         <div class="table-responsive">
             <table class="table table-bordered toggle-circle mb-0" style="table-layout: fixed;">
                 <thead>

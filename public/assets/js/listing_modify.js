@@ -224,6 +224,7 @@
      var views = $('.listing-views-' + listing).val()
      var lsm = $('.listing-lsm-' + listing).val()
      var title = $('.listing-title-' + listing).val()
+     var title_localized = $('.listing-title-localized-' + listing).val()
      var type = $('.listing-type-' + listing).val()
      var beds = $('.listing-beds-' + listing).val()
      var parkings = $('.listing-parkings-' + listing).val()
@@ -242,7 +243,6 @@
      var tenant_end_date = $('.listing-tenant-end-date-' + listing).val()
      var tenant = $('.listing-tenant-' + listing).val()
 
-
      $.ajax({
          url: route,
          type: "POST",
@@ -255,6 +255,7 @@
              status: status,
              lsm: lsm,
              title: title,
+             title_localized: title_localized,
              type: type,
              beds: beds,
              parkings: parkings,
@@ -282,23 +283,25 @@
              $('.listing-details-status-' + listing).text(status)
              $('.listing-details-lsm-' + listing).text(lsm)
              $('.listing-details-title-' + listing).text(title)
+             $('.listing-details-title-localized-' + listing).text(title_localized)
              $('.listing-details-type-' + listing).text(type)
              $('.listing-details-beds-' + listing).text(beds)
              $('.listing-details-parkings-' + listing).text(parkings)
              $('.listing-details-baths-' + listing).text(baths)
              $('.listing-details-year-built-' + listing).text(year_built)
-             $('.listing-details-year-area-' + listing).text(plot_area)
+             $('.listing-details-plot-area-' + listing).text(plot_area)
              $('.listing-details-area-' + listing).text(area)
-             $('.listing-details-sources-' + listing).text(sources)
-             $('.listing-details-landlord-' + listing).text(landlord)
-             $('.listing-details-developer-' + listing).text(developer)
+        
+             $('.listing-details-source-' + listing).text(data.source)
+             $('.listing-details-landlord-' + listing).text(data.landlord)
+             $('.listing-details-developer-' + listing).text(data.developer)
              $('.listing-details-rented-' + listing).text(rented)
              $('.listing-details-never-lived-in-' + listing).text(never_lived_in)
              $('.listing-details-featured-on-company-website-' + listing).text(featured_on_company_website)
              $('.listing-details-exclusive-rights-' + listing).text(exclusive_rights)
              $('.listing-details-tenant-start-date-' + listing).text(tenant_start_date)
              $('.listing-details-tenant-start-date-' + listing).text(tenant_end_date)
-             $('.listing-details-tenant-' + listing).text(tenant)
+             $('.listing-details-tenant-' + listing).text(data.tenant)
              toast(data.message, 'success')
              $('#details-modal-' + listing).modal('hide')
          },
@@ -345,7 +348,9 @@
 
  function updateListingDescription(listing, route, token, agency, business, locale) {
 
-     
+        console.log(editor_en.getData())
+
+     return
      $.ajax({
          url: route,
          type: "POST",

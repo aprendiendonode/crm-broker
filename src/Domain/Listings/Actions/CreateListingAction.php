@@ -45,16 +45,17 @@ class CreateListingAction
 
             abort(404);
         }
-        $agency = Agency::where('id', $listingData->agency_id)->where('business_id', $business->id)->firstOrFail();
-        $video_title = $listingData->video_title;
-        $video_link = $listingData->video_link;
-        $video_host = $listingData->video_host;
-        $cheque_date = $listingData->cheque_date;
-        $cheque_amount = $listingData->cheque_amount;
-        $cheque_percentage = $listingData->cheque_percentage;
-        $documents = $listingData->documents;
-        $floor_plans = $listingData->floor_plans;
-        $photos = $listingData->photos;
+        $agency              = Agency::where('id', $listingData->agency_id)->where('business_id', $business->id)->firstOrFail();
+        $video_title         = $listingData->video_title;
+        $video_link          = $listingData->video_link;
+        $video_host          = $listingData->video_host;
+        $cheque_date         = $listingData->cheque_date;
+        $cheque_amount       = $listingData->cheque_amount;
+        $cheque_percentage   = $listingData->cheque_percentage;
+        $documents           = $listingData->documents;
+        $floor_plans         = $listingData->floor_plans;
+        $photos              = $listingData->photos;
+        $checked_main_hidden = $listingData->checked_main_hidden;
         $inputs = collect($listingData)->except([
             'video_title',
             'video_link',
@@ -140,7 +141,7 @@ class CreateListingAction
         }
         //* move photos from temporary to listing_photos
         if ($photos && is_array($photos)) {
-            ($this->uploadListingPhotoAction)($listing, $photos);
+            ($this->uploadListingPhotoAction)($listing, $photos, $checked_main_hidden);
         }
         //* move plans from temporary to listing_plans
         if ($floor_plans && is_array($floor_plans)) {

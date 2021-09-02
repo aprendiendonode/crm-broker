@@ -17,11 +17,14 @@ class UpdateListingDetailsAction
 
     public function __invoke(ListingUpdateDetailsData $listingUpdateDetailsData): Listing
     {
-        $listing   = Listing::where('business_id', $listingUpdateDetailsData->business)->where('id', $listingUpdateDetailsData->listing)->firstOrFail();
+
+
+        $listing   = Listing::where('business_id', auth()->user()->business_id)->where('id', $listingUpdateDetailsData->listing)->firstOrFail();
         $listing->update([
             "purpose"                                  => $listingUpdateDetailsData->purpose,
             "status"                                   => $listingUpdateDetailsData->status,
             "title"                                    => $listingUpdateDetailsData->title,
+            "title_localized"                          => $listingUpdateDetailsData->title_localized,
             "type_id"                                  => $listingUpdateDetailsData->type,
             "never_lived_in"                           => $listingUpdateDetailsData->never_lived_in,
             "featured_on_company_website"              => $listingUpdateDetailsData->featured_on_company_website,

@@ -36,6 +36,7 @@ use Domain\Listings\Actions\UploadListingPlanAction;
 use Domain\Listings\DataTransferObjects\ListingData;
 use Domain\Listings\Actions\CreateListingVideoAction;
 use Domain\Listings\Actions\UpdateListingAgentAction;
+use Domain\Listings\Actions\RemoveListingUploadAction;
 use Domain\Listings\Actions\UpdateListingPhotosAction;
 use Domain\Listings\Actions\UploadTemporaryPlanAction;
 use Domain\Listings\Actions\UpdateListingDetailsAction;
@@ -49,6 +50,7 @@ use Domain\Listings\Actions\UpdateListingExtraInfoAction;
 use Domain\Listings\Actions\UpdateListingMainPhotoAction;
 use Domain\Listings\DataTransferObjects\CreateTenantData;
 use Domain\Listings\Actions\UploadTemporaryDocumentAction;
+use Domain\Listings\Actions\UpdateListingDescriptionAction;
 use Domain\Listings\DataTransferObjects\CreateLandlordData;
 use Domain\Listings\Actions\UpdateListingUploadsTitleAction;
 use Domain\Listings\DataTransferObjects\CreateDeveloperData;
@@ -58,6 +60,7 @@ use Modules\Listing\ViewModels\Listing\ListingShowViewModel;
 use Modules\Listing\Http\Requests\CreateListingTenantRequest;
 use Modules\Listing\Http\Requests\UpdateListingPhotosRequest;
 use Modules\Listing\Http\Requests\UploadTemporaryPlanRequest;
+use Modules\Listing\ViewModels\Listing\ListingIndexViewModel;
 use Domain\Listings\Actions\UpdateListingUploadCategoryAction;
 use Domain\Listings\Actions\UploadListingUploadCategoryAction;
 use Modules\Listing\Http\Requests\UpdateListingDetailsRequest;
@@ -65,6 +68,7 @@ use Modules\Listing\Http\Requests\UpdateListingFeatureRequest;
 use Modules\Listing\Http\Requests\UpdateListingPricingRequest;
 use Modules\Listing\Http\Requests\UploadTemporaryPhotoRequest;
 use Modules\Listing\ViewModels\Listing\CreateListingViewModel;
+use Domain\Listings\Actions\RemoveListingTemporaryUploadAction;
 use Domain\Listings\DataTransferObjects\ListingCreateVideoData;
 use Domain\Listings\DataTransferObjects\ListingUpdateAgentData;
 use Modules\Listing\Http\Requests\CreateListingLandlordRequest;
@@ -72,6 +76,7 @@ use Modules\Listing\Http\Requests\UpdateListingDocumentRequest;
 use Modules\Listing\Http\Requests\UpdateListingLocationRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdatePhotosData;
 use Modules\Listing\Http\Requests\CreateListingDeveloperRequest;
+use Modules\Listing\Http\Requests\RemoveListingTemporaryRequest;
 use Modules\Listing\Http\Requests\UpdateListingExtraInfoRequest;
 use Modules\Listing\Http\Requests\UpdateListingFloorPlanRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdateDetailsData;
@@ -79,8 +84,10 @@ use Domain\Listings\DataTransferObjects\ListingUpdateFeatureData;
 use Domain\Listings\DataTransferObjects\ListingUpdatePricingData;
 use Modules\Listing\Http\Requests\UploadTemporaryDocumentRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdateLocationData;
+use Modules\Listing\Http\Requests\UpdateListingDescriptionRequest;
 use Domain\Listings\DataTransferObjects\ListingUpdateExtraInfoData;
 use Modules\Listing\Http\Requests\UpdateListingUploadsTitleRequest;
+use Domain\Listings\DataTransferObjects\ListingUpdateDescriptionData;
 use Modules\Listing\Http\Requests\UpdateListingUploadCategoryRequest;
 use Domain\Listings\DataTransferObjects\UpdateListingUploadsTitleData;
 
@@ -92,11 +99,12 @@ class ListingController extends Controller
     {
         $this->repository = $repository;
     }
-    public function index($agency)
+    public function index($agency, Request $request)
     {
 
         abort_if(Gate::denies('view_listing'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return $this->repository->index($agency);
+        $viewModel = new ListingIndexViewModel($agency, $request);
+        return view('listing::listing.index', $viewModel);
     }
 
 
@@ -110,6 +118,7 @@ class ListingController extends Controller
 
     public function store(CreateListingRequest $request, CreateListingAction $createListingAction)
     {
+
         DB::beginTransaction();
         try {
             $createListingAction(ListingData::fromRequest($request));
@@ -188,15 +197,35 @@ class ListingController extends Controller
             }
         }
     }
+    public function updateListingDescription(UpdateListingDescriptionRequest $request, UpdateListingDescriptionAction $updateListingDescriptionAction)
+    {
+
+        try {
+            $updateListingDescriptionAction(ListingUpdateDescriptionData::fromRequest($request));
+            return redirect(url('listing/controll/' . $request->agency . '?listing_id=' . $request->listing_id))->with(flash(trans('listing.description_updated'), 'success'));
+        } catch (\Exception $e) {
+
+            return back()->withInput()->with(flash(trans('sales.something_went_wrong'), 'error'))->with('open-tab', '');
+        }
+    }
 
     public function updateListingDetails(UpdateListingDetailsRequest $request, UpdateListingDetailsAction $listingUpdateDetailsAction)
     {
         if ($request->ajax()) {
             try {
-                $listingUpdateDetailsAction(ListingUpdateDetailsData::fromRequest($request));
-                return response()->json(['message' => trans('global.modified')], 200);
+
+                $listing =  $listingUpdateDetailsAction(ListingUpdateDetailsData::fromRequest($request));
+                return response()->json([
+                    'message'   => trans('global.modified'), 'source' => $listing->source->{'name_' . app()->getLocale()} ?? '',
+                    'developer' => $listing->developer->{'name_' . app()->getLocale()} ?? '',
+                    'landlord'  => $listing->landlord->{'name'} ?? '',
+                    'tenant'    => $listing->tenant->{'name'}  ?? '',
+                ], 200);
             } catch (\Exception $th) {
-                return response()->json(['message' => trans('global.something_wrong')], 400);
+                return response()->json([
+                    'message' => trans('global.something_wrong')
+
+                ], 400);
             }
         }
     }
@@ -366,9 +395,30 @@ class ListingController extends Controller
 
 
 
-    public function remove_listing_temporary(Request $request)
-    {
-        return $this->repository->remove_listing_temporary($request);
+    public function remove_listing_temporary(
+        RemoveListingTemporaryRequest $request,
+        RemoveListingTemporaryUploadAction $removeListingTemporaryUploadAction,
+        RemoveListingUploadAction $removeListingUploadAction
+    ) {
+
+        if ($request->ajax()) {
+
+            try {
+                DB::beginTransaction();
+                if ($request->table == 'temporary') {
+                    $removeListingTemporaryUploadAction($request->type, $request->id);
+                }
+                if ($request->table == 'main') {
+                    $removeListingUploadAction($request->type, $request->id);
+                }
+                DB::commit();
+
+                return response()->json(['message' => trans('listing.removed')], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['message' => trans('agency.something_went_wrong')], 400);
+            }
+        }
     }
     public function update_listing_temporary_active(Request $request)
     {

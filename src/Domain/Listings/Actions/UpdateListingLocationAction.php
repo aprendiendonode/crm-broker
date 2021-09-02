@@ -18,7 +18,7 @@ class UpdateListingLocationAction
     public function __invoke(ListingUpdateLocationData $listingUpdateLocationData)
     {
 
-        $listing         =  Listing::where('business_id', $listingUpdateLocationData->business)->where('id', $listingUpdateLocationData->listing)->firstOrFail();
+        $listing         =  Listing::where('business_id', auth()->user()->business_id)->where('id', $listingUpdateLocationData->listing)->firstOrFail();
         $city            =  City::findOrFail($listingUpdateLocationData->city);
         $community       =  Community::findOrFail($listingUpdateLocationData->community);
         $sub_community   =  '';

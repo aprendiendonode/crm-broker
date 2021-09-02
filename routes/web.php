@@ -91,6 +91,16 @@ Route::middleware(['checkauth',  'lang'])->group(function () {
         return response()->json(['status' => 'success'], 200);
     });
 });
+
+Route::get('change_agency', function () {
+
+    $current_url = explode('/',request()->current);
+    $current_url[sizeof($current_url)-1] = request()->agency_id;
+    $next_url = implode('/',$current_url);
+
+    return redirect()->to($next_url);
+})->name('change_agency');
+
 Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
 

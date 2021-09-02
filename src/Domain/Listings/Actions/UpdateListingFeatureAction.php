@@ -15,7 +15,7 @@ class UpdateListingFeatureAction
 
     public function __invoke(ListingUpdateFeatureData $listingUpdateFeatureData)
     {
-        $listing     = Listing::where('business_id', $listingUpdateFeatureData->business)->where('id', $listingUpdateFeatureData->listing)->firstOrFail();
+        $listing     = Listing::where('business_id', auth()->user()->business_id)->where('id', $listingUpdateFeatureData->listing)->firstOrFail();
         $checkboxesFeatureName   =  $listingUpdateFeatureData->checkboxesFeatureName;
         $checkboxesFeatureValue  =  $listingUpdateFeatureData->checkboxesFeatureValue;
         $checkboxes = [];

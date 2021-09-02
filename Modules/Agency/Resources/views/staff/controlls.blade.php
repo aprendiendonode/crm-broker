@@ -27,7 +27,7 @@
   data-plugin="tippy" 
   data-tippy-placement="top-start" 
   title="@lang('agency.change_team')"
-
+  data-toggle="modal" data-target="#change_team_{{ $staff->id }}"
   class="fe-users cursor-pointer feather-16">
 </i>
 @endcan

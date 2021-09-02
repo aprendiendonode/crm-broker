@@ -22,7 +22,7 @@ class UploadTemporaryDocumentRequest extends FormRequest
     {
 
         return [
-            'file'   => ['required', 'file', 'mimes:doc,csv,xlsx,xls,docx,ppt,odt,ods,odp,pdf',],
+            'file'   => ['required', 'file'],
             'agency' => ['required', 'integer', 'exists:agencies,id'],
         ];
     }
