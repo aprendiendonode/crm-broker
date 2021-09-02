@@ -183,60 +183,44 @@ body[data-sidebar-size=condensed]:not([data-layout=compact]){
                     </a>
                 </li>
 
-                <li class="dropdown d-none d-lg-inline-block topbar-dropdown">
-                    <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown"
-                       href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <i class="fe-grid noti-icon"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-lg dropdown-menu-right">
+                @php
+                    //$agencies = App\Models\Agency::where('business_id',auth()->user()->business_id)->get();
 
-                        <div class="p-lg-1">
-                            <div class="row no-gutters">
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{asset('assets/images/brands/slack.png')}}" alt="slack">
-                                        <span>Slack</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{asset('assets/images/brands/github.png')}}" alt="Github">
-                                        <span>GitHub</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{asset('assets/images/brands/dribbble.png')}}" alt="dribbble">
-                                        <span>Dribbble</span>
-                                    </a>
-                                </div>
-                            </div>
+                    $agencies = cache()->remember('cache_agencies_'.auth()->user()->business_id, 60 * 60 * 24, function ()  {
+                                    return App\Models\Agency::where('business_id',auth()->user()->business_id)->get();
+                                });
+                @endphp
+                {{--@if(owner() || moderator())--}}
+                {{--<li class="dropdown d-none d-lg-inline-block topbar-dropdown">--}}
+                    {{--<a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown"--}}
+                       {{--href="#" role="button" aria-haspopup="false" aria-expanded="false">--}}
+                        {{--<i class="fe-grid noti-icon"></i>--}}
+                    {{--</a>--}}
+                        {{--<div class="dropdown-menu dropdown-lg dropdown-menu-right">--}}
 
-                            <div class="row no-gutters">
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{asset('assets/images/brands/bitbucket.png')}}" alt="bitbucket">
-                                        <span>Bitbucket</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{asset('assets/images/brands/dropbox.png')}}" alt="dropbox">
-                                        <span>Dropbox</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{asset('assets/images/brands/g-suite.png')}}" alt="G Suite">
-                                        <span>G Suite</span>
-                                    </a>
-                                </div>
+                            {{--<div class="p-lg-1">--}}
+                                    {{--<div class="row no-gutters">--}}
+                                        {{--@forelse($agencies as $agency)--}}
+                                        {{--<div class="col-4">--}}
+                                            {{--<form action="{{route('change_agency')}}" id="change_agency_{{$agency->id}}">--}}
+                                                {{--<input type="hidden" name="current" value="{{ url()->current() }}">--}}
+                                                {{--<input type="hidden" name="agency_id" value="{{$agency->id }}">--}}
 
-                            </div>
-                        </div>
+                                                {{--<a class="dropdown-icon-item " onclick="event.preventDefault();document.getElementById('change_agency_{{$agency->id}}').submit();">--}}
+                                                    {{--<img src="{{$agency->image != null ? asset('company_profile_images/'.$agency->image) : asset('assets/images/default-agency.jpg')}}" alt="{{ $agency->{'company_name_en_'.app()->getLocale()} ?? '' }}">--}}
+                                                    {{--<span>{{ $agency->{'company_name_'.app()->getLocale()} ?? '' }}</span>--}}
+                                                {{--</a>--}}
+                                            {{--</form>--}}
+                                        {{--</div>--}}
+                                        {{--@empty--}}
+                                        {{--@endforelse--}}
+                                    {{--</div>--}}
 
-                    </div>
-                </li>
+                            {{--</div>--}}
+
+                        {{--</div>--}}
+                {{--</li>--}}
+                {{--@endif--}}
 
                 <li class="dropdown d-none d-lg-inline-block topbar-dropdown">
                     @if(auth()->user()->language == 'en' || auth()->user()->language == null)

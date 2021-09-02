@@ -89,8 +89,10 @@
                                                     <i class="dripicons-information h1 text-danger"></i>
                                                     <h4 class="mt-2">@lang('agency.head_up')</h4>
                                                     <p class="mt-3">@lang('agency.delete_warning')</p>
-                                                    <form action="{{ url('agency/deleteuser') }}" method="post">
+                                                    <form action="{{ url('delete_moderator/'.$staff->id) }}" method="post">
                                                         @csrf
+
+                                                        {{ method_field('DELETE') }}
                                                         <input  type="hidden" name="user_id" value="{{ $staff->id }}">
                                                         <button type="submit" class="btn btn-danger my-2">@lang('agency.confirm_delete')</button>
                                                         <button type="button" class="btn btn-success my-2" data-dismiss="modal">@lang('agency.cancel')</button>
@@ -111,7 +113,7 @@
            
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myCenterModalLabel">@lang('agency.make_staff_moderator')</h5>
+                    <h5 class="modal-title" id="myCenterModalLabel">@lang('moderator.add_moderator_agencies')</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
@@ -119,13 +121,15 @@
                     <form action="{{ url('agency/make-moderator') }}" method="POST" class="px-3" action="#">
                         @csrf
                         <input type="hidden" name="user_id" value="{{ $staff->id }}">
+                        <input type="hidden" name="moderator" value="yes">
                         <div class="form-group">
                             <label class="mb-1 font-weight-medium text-muted">@lang('agency.agency')</label>
 
                         <select class="form-control select2-multiple" name="agencies[]" data-toggle="select2" multiple="multiple" data-placeholder="@lang('agency.choose_agency')">
                             @forelse(auth()->user()->agencies as $agency)
-                                <option value="{{ $agency->id }}" @if($staff->agency_id == $agency->id) selected @endif>{{ $agency->{'company_name_'.app()->getLocale()} }}</option>
-                            @empty 
+                                {{--<option value="{{ $agency->id }}" @if($staff->agency_id == $agency->id) selected @endif>{{ $agency->{'company_name_'.app()->getLocale()} }}</option>--}}
+                                <option value="{{ $agency->id }}" @if(in_array($agency->id, explode(',',$staff->can_access))) selected @endif>{{ $agency->{'company_name_'.app()->getLocale()} }}</option>
+                            @empty
                             @endforelse    
                         
                             

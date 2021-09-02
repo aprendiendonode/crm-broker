@@ -2,6 +2,9 @@
 
 namespace Modules\Agency\Http\Controllers;
 
+use Modules\Agency\Http\Requests\ChangeStaffTeamRequest;
+use Domain\Staffs\Actions\StaffChangeTeamAction;
+use Domain\Staffs\DataTransferObjects\StaffChangeTeamData;
 use Gate;
 use App\Models\Team;
 use App\Models\User;
@@ -34,7 +37,7 @@ class StaffController extends Controller
         $per_page  = 3;
 
         $staffs = null;
-        $staffs = User::where('type', 'staff')->where('agency_id', $agency)->where('business_id', auth()->user()->business_id);
+        $staffs = User::with('listings')->where('type', 'staff')->where('agency_id', $agency)->where('business_id', auth()->user()->business_id);
 
         if (request('staff') != null) {
             $staffs->where('id', request('staff'));
@@ -486,10 +489,26 @@ class StaffController extends Controller
 
 
             DB::commit();
-            return back()->with(flash(trans('agency.staff_promoted'), 'success'));
+            return back()->with(flash( $request->moderator ? trans('moderator.moderator_promoted') : trans('agency.staff_promoted'), 'success'));
         } catch (\Exception $e) {
             DB::rollback();
+//            throw $e;
             return  back()->withInput()->with(flash(trans('agency.proccess_wasnt_saved'), 'error'));
         }
     }
+
+    public function change_team(ChangeStaffTeamRequest $request,StaffChangeTeamAction $staffChangeTeamAction)
+    {
+        DB::beginTransaction();
+
+        try {
+            $staffChangeTeamAction(StaffChangeTeamData::fromRequest($request));
+            DB::commit();
+            return back()->with(flash(trans('agency.team_updated'), 'success'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with(flash(trans('agency.something_went_wrong'), 'error'));
+        }
+    }
+
 }

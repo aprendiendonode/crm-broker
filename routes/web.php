@@ -90,7 +90,34 @@ Route::middleware(['checkauth',  'lang'])->group(function () {
         ]);
         return response()->json(['status' => 'success'], 200);
     });
+
+
+    //moderator
+
+    Route::post('manage_moderator', 'ModeratorController@store');
+    Route::patch('manage_moderator/{moderator_id}', 'ModeratorController@update');
+//        Route::post('update_privileges', 'ModeratorController@update_privileges');
+//        Route::post('changepassword', 'ModeratorController@change_password');
+        Route::delete('delete_moderator/{moderator_id}', 'ModeratorController@destroy');
+//        Route::post('make-moderator', 'ModeratorController@moderator');
+    Route::post('moderator/change-team', 'ModeratorController@change_team');
+
+
 });
+
+Route::get('change_agency', function () {
+
+//    request()->merge([
+//        'agency' => 44,
+//    ]);
+//    dd(request(),request('agency'),request()->merge(['agency' => 44,]),url()->current() ,redirect()->back(),url()->previous());
+    $current_url = explode('/',request()->current);
+    $current_url[sizeof($current_url)-1] = request()->agency_id;
+    $next_url = implode('/',$current_url);
+
+    return redirect()->to($next_url);
+})->name('change_agency');
+
 Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
 
@@ -221,6 +248,13 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
         return view('dashboard');
     });
+
+    // manage moderators routes
+    Route::get('moderator/{agency}', 'ModeratorController@index');
+    Route::get('moderator/{agency}/privileges/{staff}', 'ModeratorController@privileges');
+    Route::get('export_moderator/{agency}', 'ModeratorController@export');
+    Route::get('moderator/change_activation/{moderator_id}', 'ModeratorController@change_activation');
+
 });
 
 

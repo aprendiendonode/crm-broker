@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title',trans('agency.staff'))
+@section('title',trans('moderator.moderators'))
 @section('css')
 
 
@@ -38,44 +38,44 @@
 
             <div class="d-flex justify-content-between mb-3">
                <h4>
-                   @lang('agency.manage_staff')
+                   @lang('moderator.manage_moderators')
                </h4>
 
                @can('add_staff')
                 <button onclick="show_add_div()" type="button" class="btn btn-info waves-effect waves-light">
-                    <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('agency.add_staff')
+                    <span class="btn-label"><i class="fe-plus-square"></i></span>@lang('moderator.add_moderator')
                 </button>
                 @endcan 
             </div>
 
             @can('add_staff')
             <div class="mb-2 add_staff " @if(!session()->has('open-tab')) style="display: none;opacity:0;transition:0.7s" @endif>
-                @include('agency::staff.create')
+                @include('moderator.create')
             </div>
             @endcan
 
 
-            @include('agency::staff.filter')
+            @include('moderator.filter')
 
             <div>
                 <table  class="table table-bordered toggle-circle mb-0">
                     <thead>
                     <tr>
-                        <th>@lang('agency.name') </th>
-                        <th > @lang('agency.email') </th>
-                        <th > @lang('agency.primary_no') </th>
-                        <th > @lang('agency.secondry_no') </th>
-                        <th > @lang('agency.team') </th>
-                        <th > @lang('agency.listings_rent') </th>
-                        <th > @lang('agency.listings_sell') </th>
-                        <th > @lang('agency.listings_short') </th>
-                        <th > @lang('agency.controlls') </th>
+                        <th>@lang('moderator.name') </th>
+                        <th > @lang('moderator.email') </th>
+                        <th > @lang('moderator.primary_no') </th>
+                        <th > @lang('moderator.secondry_no') </th>
+                        <th > @lang('moderator.team') </th>
+                        <th > @lang('moderator.listings_rent') </th>
+                        <th > @lang('moderator.listings_sell') </th>
+                        <th > @lang('moderator.listings_short') </th>
+                        <th > @lang('moderator.controlls') </th>
                       
                     </tr>
                     </thead>
                     <tbody>
 
-                        @forelse($staffs as $staff)
+                        @forelse($moderators as $staff)
                         <tr>
                             <td>{{ ucfirst( $staff->{'name_'.app()->getLocale()} )}}</td>
                             <td>{{ $staff->email}}</td>
@@ -86,12 +86,12 @@
                             <td>{{ $staff->listings && $staff->listings->where('purpose', 'sale') ? $staff->listings->where('purpose', 'sale')->count() : 0 }}  </td>
                             <td>{{ $staff->listings && $staff->listings->where('purpose', 'short') ? $staff->listings->where('purpose', 'short')->count() : 0 }}</td>
                             <td>
-                                @include('agency::staff.controlls')
+                                @include('moderator.controlls')
                                
                             </td>
 
                         
-                            @include('agency::staff.modals')
+                            @include('moderator.modals')
   
                         </tr>
                         @can('edit_staff')
@@ -99,7 +99,7 @@
                             <tr  class="edit_staff_{{ $staff->id }}"  @if( (session()->has('open-edit-tab') && session('open-edit-tab') ==  $staff->id ))  @else style="display: none;opacity:0;transition:0.7s" @endif >
                                 <td colspan="8">
 
-                                    @include('agency::staff.edit',['edited_staff' => $staff])
+                                    @include('moderator.edit',['edited_staff' => $staff])
 
                                 </td>
                             </tr>
@@ -111,14 +111,17 @@
                 </table>
                 <div class="d-flex justify-content-between">
 
-                    <div class="mt-2">
-                        {{ $staffs->links() }}
-                    </div>
+                    @if($pagination)
+                        <div class="mt-2">
+                            {{ $moderators->links() }}
+                        </div>
+                    @endif
+
                     @can('can_generate_reports')
                     <a 
                     data-plugin="tippy" 
                     data-tippy-placement="bottom-start" 
-                    title="@lang('agency.export_help')" href="{{ url('agency/export/'.request('agency')) }}" class="mt-2">@lang('agency.generate_report')
+                    title="@lang('moderator.export_help')" href="{{ url('export_moderator/'.request('agency')) }}" class="mt-2">@lang('moderator.generate_report')
                     </a>
                     @endcan
                 </div>
@@ -167,7 +170,7 @@
         $('.select2').select2();
         $('.select2-multiple').select2();
 
-        var  staffs = @json($staffs);
+        var  staffs = @json($moderators);
         for(var i = 0; i < staffs.data.length; i++){
             
         ClassicEditor

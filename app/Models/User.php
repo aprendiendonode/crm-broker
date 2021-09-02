@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Modules\Activity\Entities\Task;
+use Modules\Listing\Entities\Listing;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Modules\SuperAdmin\Entities\Country;
@@ -192,5 +193,10 @@ class User extends Authenticatable
         }
 
         return $tasks;
+    }
+
+    public function listings()
+    {
+        return $this->hasMany(Listing::class,'assigned_to');
     }
 }
