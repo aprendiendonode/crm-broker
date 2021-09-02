@@ -31,6 +31,8 @@ class ListingResource extends JsonResource
             'shorttime_from' => $this->shorttime_from ?? '',
             'shorttime_to' => $this->shorttime_to ?? '',
             'location' => $this->location ?? '',
+            'loc_lat' => (float) $this->loc_lat ?? '',
+            'loc_lng' => (float) $this->loc_lng ?? '',
             'distance' => $this->distance ?? '',
             
             ];

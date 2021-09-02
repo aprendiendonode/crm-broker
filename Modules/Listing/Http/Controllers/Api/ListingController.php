@@ -491,7 +491,7 @@ class ListingController extends Controller
             });
             if ($latitude && $longitude) {
              
-                $listingsAll       = $listingsAll->select("*", DB::raw('(6371  * acos( cos( radians('.$latitude.') ) * cos( radians( loc_lat ) ) * cos( radians( loc_lng ) - radians('.$longitude.') ) + sin( radians('.$latitude.') ) * sin( radians(loc_lat) ) ) ) AS distance'))->orderBy(DB::raw('ISNULL(distance), distance'), 'ASC');
+                $listingsAll       = $listingsAll->select("*", DB::raw('(0.621371 * 3959 * acos( cos( radians('.$latitude.') ) * cos( radians( loc_lat ) ) * cos( radians( loc_lng ) - radians('.$longitude.') ) + sin( radians('.$latitude.') ) * sin( radians(loc_lat) ) ) ) AS distance'))->orderBy(DB::raw('ISNULL(distance), distance'), 'ASC');
 
             }
             $listingsAll= $listingsAll->paginate();
