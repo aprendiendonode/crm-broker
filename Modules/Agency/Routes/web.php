@@ -20,6 +20,11 @@ Route::middleware(['checkauth', 'authority'])->group(function () {
         Route::get('staff/{agency}/privileges/{staff}', 'StaffController@privileges');
         Route::get('export/{agency}', 'StaffController@export');
 
+//        // manage moderators routes
+//        Route::get('moderator/{agency}', 'ModeratorController@index');
+//        Route::get('moderator/{agency}/privileges/{staff}', 'ModeratorController@privileges');
+//        Route::get('export/{agency}', 'ModeratorController@export');
+
         // team routes
 
         Route::get('teams/{agency}', 'TeamController@index');
@@ -51,6 +56,16 @@ Route::middleware(['checkauth'])->group(function () {
         Route::post('deleteuser', 'StaffController@destroy');
         Route::post('make-moderator', 'StaffController@moderator');
         Route::post('staff/change-team', 'StaffController@change_team');
+
+         //moderator
+
+//        Route::post('manage_moderator', 'ModeratorController@store');
+//        Route::patch('manage_moderator/{moderator_id}', 'ModeratorController@update');
+////        Route::post('update_privileges', 'ModeratorController@update_privileges');
+////        Route::post('changepassword', 'ModeratorController@change_password');
+////        Route::post('deleteuser', 'ModeratorController@destroy');
+////        Route::post('make-moderator', 'ModeratorController@moderator');
+//        Route::post('moderator/change-team', 'ModeratorController@change_team');
 
 
         //team

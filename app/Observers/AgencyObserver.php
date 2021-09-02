@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Agency;
+use App\Models\Agency;
 
 class AgencyObserver
 {

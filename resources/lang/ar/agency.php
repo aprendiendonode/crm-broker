@@ -106,6 +106,7 @@ return array (
   'listings' => 'القوائم',
   'listings_rent' => 'قوائم الايجار',
   'listings_sell' => 'قوائم البيع',
+  'listings_short' => 'قوائم قصيرة',
   'make_staff_moderator' => 'قم بتعيين مشرف فريق العمل',
   'manage_staff' => 'إدارة الموظفين',
   'manage_team' => 'إدارة الفريق',

@@ -314,7 +314,13 @@
                 </li>
 
             {{-- @endcanany --}}
-
+            @if(owner())
+                <li>
+                    <a href="{{ url('moderator/'.request('agency')) }}">
+                        <i class="fas fa-users"></i>
+                        @lang('moderator.manage_moderators')</a>
+                </li>
+            @endif
 
             @canany(['view_staff', 'view_team', 'manage_agency_profile', 'manage_agency_settings'])
                 <li>
