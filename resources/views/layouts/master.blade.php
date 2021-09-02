@@ -37,6 +37,10 @@
     <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
    
     <style>
+
+body[data-sidebar-size=condensed]:not([data-layout=compact]){
+    min-height: 100vh;
+}
         .error {
             color: red;
             font-size: 14px;
