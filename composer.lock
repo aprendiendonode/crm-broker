@@ -9984,16 +9984,16 @@
         },
         {
             "name": "facade/ignition",
-            "version": "2.11.4",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facade/ignition.git",
-                "reference": "1b8d83c5dac7c5ee8429daf284ce3f19b1d17ea2"
+                "reference": "74dcc32a2895a126d1e5f2cd3bbab499cac66db1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facade/ignition/zipball/1b8d83c5dac7c5ee8429daf284ce3f19b1d17ea2",
-                "reference": "1b8d83c5dac7c5ee8429daf284ce3f19b1d17ea2",
+                "url": "https://api.github.com/repos/facade/ignition/zipball/74dcc32a2895a126d1e5f2cd3bbab499cac66db1",
+                "reference": "74dcc32a2895a126d1e5f2cd3bbab499cac66db1",
                 "shasum": ""
             },
             "require": {
@@ -10056,7 +10056,7 @@
                 "issues": "https://github.com/facade/ignition/issues",
                 "source": "https://github.com/facade/ignition"
             },
-            "time": "2021-08-17T11:45:33+00:00"
+            "time": "2021-08-24T09:53:54+00:00"
         },
         {
             "name": "filp/whoops",
@@ -10186,16 +10186,16 @@
         },
         {
             "name": "imanghafoori/laravel-microscope",
-            "version": "v1.0.193",
+            "version": "v1.0.194",
             "source": {
                 "type": "git",
                 "url": "https://github.com/imanghafoori1/laravel-microscope.git",
-                "reference": "7a68afb972baa07d3c32b30d6e87ba767ea3b759"
+                "reference": "f221a12854e1090b727b6aec4427e22e9dc2bad1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/imanghafoori1/laravel-microscope/zipball/7a68afb972baa07d3c32b30d6e87ba767ea3b759",
-                "reference": "7a68afb972baa07d3c32b30d6e87ba767ea3b759",
+                "url": "https://api.github.com/repos/imanghafoori1/laravel-microscope/zipball/f221a12854e1090b727b6aec4427e22e9dc2bad1",
+                "reference": "f221a12854e1090b727b6aec4427e22e9dc2bad1",
                 "shasum": ""
             },
             "require": {
@@ -10243,9 +10243,9 @@
             ],
             "support": {
                 "issues": "https://github.com/imanghafoori1/laravel-microscope/issues",
-                "source": "https://github.com/imanghafoori1/laravel-microscope/tree/v1.0.193"
+                "source": "https://github.com/imanghafoori1/laravel-microscope/tree/v1.0.194"
             },
-            "time": "2021-08-19T19:32:53+00:00"
+            "time": "2021-08-24T11:28:18+00:00"
         },
         {
             "name": "imanghafoori/php-search-replace",
