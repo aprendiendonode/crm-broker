@@ -637,12 +637,10 @@ leads.data.forEach(function(value,key){
             exists = true;
             exists_value = @json(session('open-edit-tab'));
         @endif 
-        if(exists_value != lead.id ){
+        if(lead && exists_value != lead.id ){
 
             exists =  false ;
         }
-      
-        
       
         if(id == 'edit_lead_'+row_id){
                 injectGoogleMapsApiScript({

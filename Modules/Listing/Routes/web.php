@@ -30,8 +30,6 @@ Route::middleware(['checkauth', 'authority', 'lang'])->group(function () {
 
 
         Route::get('listing-cheque/{agency}', 'ListingChequeController@index');
-
-
         Route::get('locations/{agency}', 'ListingController@locations');
         Route::get('uploader/{agency}', 'ListingController@uploader');
         Route::get('download-brochure-pdf/{type}/{listing}/{agency}', 'ListingController@brochure');
